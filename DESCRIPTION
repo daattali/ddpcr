@@ -1,0 +1,23 @@
+Package: ddpcrS3
+Title: Analysis and visualization of droplet digital PCR, designed around a wild-type negative BRAF-V600 assay
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre"))
+    )
+Description: TODO add desc
+URL: https://github.com/daattali/ddpcrS3
+Depends:
+    R (>= 3.1.0)
+Imports:
+    dplyr (>= 0.4.0),
+    magrittr (>= 1.5),
+    mixtools (>= 1.0.2),
+    readr
+Suggests:
+    ggplot2 (>= 1.0.0),
+    knitr (>= 1.7),
+    lazyeval,
+    testthat (>= 0.9.1)
+License: MIT + file LICENSE
+LazyData: true
+VignetteBuilder: knitr
