@@ -1,3 +1,75 @@
+data_file_regex <- "(.*)_([A-H][0-1][0-9])_Amplitude.csv"
+
+get_name_from_data_files <- function(data_files) {
+  data_files_names <- gsub(data_file_regex, "\\1", data_files)
+  
+  if (data_files_names %>% unique %>% length > 1) {
+    warn_msg("not all data files have the same name")
+  }  
+  
+  # in case there are multiple file names, use the most common one
+  name <- table(data_files_names) %>% sort(decreasing = TRUE) %>% names %>% .[1]
+}
+
+read_dir <- function(plate, dir) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  
+  if (!is_dir(dir)) {
+    err_msg(sprintf("could not find directory `%s`", dir))
+  }
+
+  # find all the data files
+  data_files <- list.files(dir, pattern = data_file_regex)
+                           
+  name <- get_name_from_data_files(data_files) %>% suppressWarnings
+  
+  # find all potential metadata files and try to identify the right one
+  meta_files <-
+    list.files(dir, pattern = ".csv") %>%
+    setdiff(data_files)
+  ideal_meta_file <- sprintf("%s.csv", name)
+  
+  if (meta_files %>% length > 1) {
+    if (ideal_meta_file %in% meta_files) {
+      meta_file <- ideal_meta_file
+    } else {
+      meta_file <- meta_files[1]
+    }
+    warn_msg(sprintf("found multiple possible metadata files; using `%s`",
+                     meta_file))
+  } else {
+    meta_file <- meta_files[1]
+  }
+  
+  read_files(data_files, meta_file)
+}
+
+read_files <- function(data_files, meta_file) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  
+  tstart <- proc.time()
+  
+
+  
+  # make sure all given data files are valid paths
+  all_files <- 
+    vapply(data_files, is_file, FUN.VALUE = logical(1), USE.NAMES = FALSE) %>%
+    all
+  if (!all_files) {
+    err_msg("could not find all files in `data_files`")
+  }
+  
+  if (private$debug) {
+    tend <- proc.time()
+    message(sprintf("Time to read data: %s seconds", round(tend-tstart)[1]))
+  }
+  
+  
+  
+  plate
+}
+
+
 loadData <- function() {
   if (private$debug) {
     tstart <- proc.time()

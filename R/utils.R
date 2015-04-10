@@ -1,13 +1,25 @@
-# Convert all columns of a dataframe to factors
-factorize <- function(df) {
-  df[] <- lapply(df, as.factor)
-  df
+err_msg <- function(x) {
+  stop(sprintf("ddpcr: %s", x), call. = FALSE)
 }
 
-quiet <- function(expr) {
-  if (Sys.info()['sysname'] == "Windows") {
-    capture.output(expr, file = "NUL")  
-  } else {
-    capture.output(expr, file = "/dev/null")
+warn_msg <- function(x) {
+  warning(sprintf("ddpcr: %s", x), call. = FALSE)
+}
+
+is_dir <- function(path) {
+  path %<>% as.character
+  fileinfo <- file.info(path)
+  if (is.na(fileinfo$isdir)) {
+    return(FALSE)
   }
+  fileinfo$isdir
+}
+
+is_file <- function(path) {
+  path %<>% as.character
+  fileinfo <- file.info(path)
+  if (is.na(fileinfo$isdir)) {
+    return(FALSE)
+  }
+  !(fileinfo$isdir)
 }
