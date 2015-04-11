@@ -17,7 +17,7 @@ CLUSTER_RAIN       <- 4
 
 SEED <- 8
 
-PLATE_INFO <-
+FULL_PLATE_META <-
   expand.grid(LETTERS[1:8], 1:12, stringsAsFactors = FALSE) %>%
   magrittr::set_colnames(c("row", "col")) %>%
   dplyr::mutate_("well" = ~ sprintf("%s%02d", row, col))

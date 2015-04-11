@@ -26,7 +26,7 @@ plate <- function(dir, data_files, meta_file, name) {
   plate <- plate_empty()
   
   if (!missing(dir)) {
-    read_dir(plate)
+    read_dir(plate, dir)
   }
   if (missing(dir) && missing(data_files)) {
     err_msg("either `dir` or `data_files` must be specified")
