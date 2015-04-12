@@ -12,7 +12,7 @@ empty_plate <- function() {
 }
 
 #' @export
-plate <- function(dir, data_files, meta_file, name) {
+new_plate <- function(dir, data_files, meta_file, name) {
   plate <- empty_plate()
   plate <- read_plate(plate, dir, data_files, meta_file)
   
@@ -76,6 +76,11 @@ name <- function(x) {
 params <- function(x) {
   stopifnot(x %>% inherits("ddpcr_plate"))
   x[['params']]
+}
+`params<-` <- function(x, value) {
+  stopifnot(x %>% inherits("ddpcr_plate"))
+  x[['params']] <- value
+  x
 }
 
 #' @export
