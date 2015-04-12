@@ -46,8 +46,3 @@ merge_dfs_overwrite_col <- function(olddf, newdf, colname, bycol = "well") {
     dplyr::select_(lazyeval::interp(~ -colname, colname = as.name(colname_y)))
   result
 }
-
-
-
-d %>% dplyr::mutate_(.dots=setNames(sprintf("sum(%s)", cc), "ff"))
-d %>% dplyr::mutate_(new = lazyeval::interp(~sum(ccc), ccc=as.name(cc)))

@@ -92,40 +92,44 @@ read_files <- function(plate, data_files, meta_file) {
         dplyr::select_(~ 1:2) %>%
         dplyr::mutate_(.dots = setNames(list(~ wellNum), "well"))
       wdat
-    })
-  plate_data %<>%
+    }) %>%
     dplyr::bind_rows() %>%
     magrittr::set_colnames(c("FAM", "HEX", "well")) %>%
     dplyr::select_(~ one_of(c("well", "HEX", "FAM")))   %>%
     dplyr::mutate_(.dots = setNames(list(~ CLUSTER_UNDEFINED), "cluster"))
-  plate_data(plate) <- plate_data
   
+  # start with a default metadata
+  plate_meta <- DEFAULT_PLATE_META
   
-  dplyr::left_join(d,m,by="well") %>% dplyr::mutate(sample.x = ifelse(is.na(sample.y), sample.x, sample.y)) %>% dplyr::rename_(.dots = setNames(list("sample.x"), "sample")) %>% dplyr::select_(~ -sample.y)
-  
-  
-  # read the meta data (we only care about the well -> sample mapping)
+   # read the meta data file (we only care about the well -> sample mapping)
   if (!is.null(meta_file)) {
     meta_cols_keep <- c("well", "sample")
-    plate_meta_raw <-
+    plate_meta_samples <-
       read.csv(meta_file, stringsAsFactors = FALSE)  %>%
-      s
-    colnames(plateMetaRaw) %<>% tolower
-    plateColsKeep <- c("well", "sample")
-    plateMeta <- plateMetaRaw %>%
-      dplyr::select_(~ one_of(plateColsKeep)) %>%
+      magrittr::set_colnames(colnames(.) %>% tolower) %>%
+      dplyr::select_(~ one_of(meta_cols_keep)) %>%
       unique
     
-  }
+    plate_meta <-
+      merge_dfs_overwrite_col(plate_meta, plate_meta_samples, "sample", "well")
+  } 
 
-  
-  
-  
-  
+  # populate the metadata with some initial variables
+  wells_used <- plate_data[['well']] %>% unique
+  plate_meta[['used']] <- plate_meta[['well']] %in% wells_used
+  plate_meta <-
+    plate_data %>%
+    dplyr::group_by_("well") %>%
+    dplyr::summarise_("drops_initial" = ~ n()) %>%
+    dplyr::left_join(plate_meta, ., by = "well") %>%
+    dplyr::arrange_(~ desc(used), ~ row, ~ col)
   
   # set the plate's name based on the file paths
   name(plate) <- get_consensus_name_from_data_files(data_files)
   
+  # save the data and metadata and update the plate status
+  plate_data(plate) <- plate_data
+  plate_meta(plate) <- plate_meta
   status(plate) <- STATUS_LOADED
   
   tend <- proc.time()
@@ -134,25 +138,12 @@ read_files <- function(plate, data_files, meta_file) {
   plate
 }
 
-
-#   }  
-# 
-#   plateMeta %<>%
-#     dplyr::filter_(lazyeval::interp(~ well %in% wellFileWells, well = quote(well)))
-# 
-#   
-#   # Populate the metadata with well rows/columns and some initial variables
-#   plateMeta <- dplyr::left_join(PLATE_INFO, plateMeta, by = "well")
-#   plateMeta$used <- !is.na(plateMeta$sample)
-#   plateMeta <-
-#     plateData %>%
-#     dplyr::group_by_("well") %>%
-#     dplyr::summarise_("dropsInitial" = ~ n()) %>%
-#     dplyr::left_join(plateMeta, ., by = "well") %>%
-#     dplyr::arrange_(lazyeval::interp(~desc(used), used = quote(used)))
-#   
-#   # Set the variables in the plate object
-#   private$plateData <- plateData
-#   private$plateMeta <- plateMeta
-#   private$status <- STATUS_LOADED
-#   
+read_plate <- function(plate, dir, data_files, meta_file) {
+  if (!missing(dir)) {
+    read_dir(plate, dir)
+  } else if (!missing(data_files)) {
+    read_files(plate, data_files, meta_file)
+  } else {
+    err_msg("either `dir` or `data_files` must be specified")
+  }
+}
