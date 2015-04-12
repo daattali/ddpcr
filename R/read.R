@@ -24,6 +24,8 @@ get_consensus_name_from_data_files <- function(data_files) {
     names %>%
     .[1] %>%
     basename
+  
+  name
 }
 
 read_dir <- function(plate, dir) {
@@ -32,11 +34,11 @@ read_dir <- function(plate, dir) {
   if (!is_dir(dir)) {
     err_msg(sprintf("could not find directory `%s`", dir))
   }
-
+  
   # find all the data files
   data_files <- list.files(dir, pattern = DATA_FILE_REGEX, full.names = TRUE)
                            
-  name <- get_consensus_name_from_data_files(data_files) %>% suppressWarnings
+  name <- suppressWarnings(get_consensus_name_from_data_files(data_files))
   
   # find all potential metadata files and try to identify the right one
   meta_files <-
