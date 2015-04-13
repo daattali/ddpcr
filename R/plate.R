@@ -4,7 +4,7 @@ empty_plate <- function() {
       plate_data = NULL,
       plate_meta = NULL,
       name = NULL,
-      status = STATUS_INIT,
+      status = STATUS_UNDEFINED,
       params = DEFAULT_PARAMS
     ),
     class = "ddpcr_plate"

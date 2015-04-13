@@ -2,14 +2,17 @@ DATA_FILE_REGEX <- "^(.*)_([A-H][0-1][0-9])_Amplitude.csv$"
 DATA_FILE_REGEX_NAME <- "\\1"
 DATA_FILE_REGEX_WELL <- "\\2"
 
+# extract the name of a file from a filename
 get_name_from_data_file <- function(data_file) {
   gsub(DATA_FILE_REGEX, DATA_FILE_REGEX_NAME, data_file)
 }
 
+# extract the well from a filename
 get_well_from_data_file <- function(data_file) {
   gsub(DATA_FILE_REGEX, DATA_FILE_REGEX_WELL, data_file)
 }
 
+# extract the most common filename from a list of files
 get_consensus_name_from_data_files <- function(data_files) {
   data_files_names <- get_name_from_data_file(data_files)
   
@@ -28,6 +31,23 @@ get_consensus_name_from_data_files <- function(data_files) {
   name
 }
 
+# find the data files in a directory
+find_data_files <- function(dir) {
+  list.files(dir, pattern = DATA_FILE_REGEX, full.names = TRUE)
+}
+
+# find the metadata file in a directory, or return NULL if it doesn't exist
+find_meta_file <- function(dir, name) {
+  meta_file <- file.path(dir, sprintf("%s.csv", name))
+  if (is_file(meta_file)) {
+    return(meta_file)
+  } else {
+    warn_msg(sprintf("could not find metadata file; looked for `%s`", meta_file))
+    return(NULL)
+  }
+}
+
+# read a plate data from a given directory
 read_dir <- function(plate, dir) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
@@ -35,32 +55,15 @@ read_dir <- function(plate, dir) {
     err_msg(sprintf("could not find directory `%s`", dir))
   }
   
-  # find all the data files
-  data_files <- list.files(dir, pattern = DATA_FILE_REGEX, full.names = TRUE)
-                           
+  # find the data files in the directory and use them to read the plate
+  data_files <- find_data_files(dir)
   name <- suppressWarnings(get_consensus_name_from_data_files(data_files))
-  
-  # find all potential metadata files and try to identify the right one
-  meta_files <-
-    list.files(dir, pattern = ".csv$", full.names = TRUE) %>%
-    setdiff(data_files)
-  ideal_meta_file <- file.path(dir, sprintf("%s.csv", name))
-  
-  if (meta_files %>% length > 1) {
-    if (ideal_meta_file %in% meta_files) {
-      meta_file <- ideal_meta_file
-    } else {
-      meta_file <- meta_files[1]
-    }
-    warn_msg(sprintf("found multiple possible metadata files; using `%s`",
-                     basename(metafile)))
-  } else {
-    meta_file <- meta_files[1]
-  }
+  meta_file <- find_meta_file(dir, name)
   
   read_files(plate, data_files, meta_file)
 }
 
+# read a plate data from a given list of files
 read_files <- function(plate, data_files, meta_file) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
@@ -79,7 +82,7 @@ read_files <- function(plate, data_files, meta_file) {
   if (missing(meta_file)) {
     meta_file <- NULL
     warn_msg("no metadata file provided")
-  } else if (!is_file(meta_file)) {
+  } else if (!is.null(meta_file) && !is_file(meta_file)) {
     err_msg("could not find metadata file")
   }
   
@@ -132,7 +135,7 @@ read_files <- function(plate, data_files, meta_file) {
   # save the data and metadata and update the plate status
   plate_data(plate) <- plate_data
   plate_meta(plate) <- plate_meta
-  status(plate) <- STATUS_LOADED
+  status(plate) <- STATUS_INIT
   
   tend <- proc.time()
   message(sprintf("Time to read data: %s seconds", round(tend-tstart)[1]))
@@ -140,6 +143,7 @@ read_files <- function(plate, data_files, meta_file) {
   plate
 }
 
+# read a plate data from a directory or list of files
 read_plate <- function(plate, dir, data_files, meta_file) {
   if (!missing(dir)) {
     read_dir(plate, dir)
