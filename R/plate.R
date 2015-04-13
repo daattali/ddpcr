@@ -3,6 +3,7 @@ empty_plate <- function() {
     list(
       plate_data = NULL,
       plate_meta = NULL,
+      outliers = NULL,
       name = NULL,
       status = STATUS_UNDEFINED,
       params = DEFAULT_PARAMS
@@ -47,6 +48,17 @@ plate_data <- function(x) {
 `plate_data<-` <- function(x, value) {
   stopifnot(x %>% inherits("ddpcr_plate"))
   x[['plate_data']] <- value
+  x
+}
+
+#' @export
+outliers <- function(x) {
+  stopifnot(x %>% inherits("ddpcr_plate"))
+  x[['outliers']]
+}
+`outliers<-` <- function(x, value) {
+  stopifnot(x %>% inherits("ddpcr_plate"))
+  x[['outliers']] <- value
   x
 }
 
@@ -101,8 +113,7 @@ wells_failed <- function(x) {
 analyze = function(x) {
   stopifnot(x %>% inherits("ddpcr_plate"))
   
-  #self$loadData()         # step 0 - load data
-  #self$removeOutliers()   # step 1 - remove outlier droplets
+  x %<>% remove_outliers   # step 1 - remove outlier droplets
   #self$removeFailures()   # step 2 - remove failed wells
   #self$markEmpty()        # step 3 - remove empty droplets
   #self$classifyDroplets() # step 4 - classify droplets as mutant/wildtype/rain
@@ -111,19 +122,25 @@ analyze = function(x) {
 
 #' @export
 print.ddpcr_plate <- function(x, ...) {
-  cat("Dataset name: ", x %>% name, "\n", sep = "")
-  cat("Analysis status: ", x %>% status, "\n", sep = "")
-  cat("Drops data:\n", sep = "")
-  cat(x %>% plate_data %>% str)
-  cat("Plate meta data:\n", sep = "")
-  cat(x %>% plate_meta %>% str)
+  if (x %>% status < STATUS_INIT) {
+    cat0("Empty ddPCR plate")
+  } else {
+    cat0("Dataset name: ", x %>% name, "\n")
+    cat0("Analysis status: ", x %>% status, "\n")
+    if (x %>% status >= STATUS_INIT) {
+      cat0("Data summary: ", 
+           x %>% plate_meta %>% .[['used']] %>% sum, " wells, ",
+           x %>% plate_data %>% nrow, " drops\n")
+    }
+    cat0("---\nDrops data:\n")
+    cat0(x %>% plate_data %>% str)
+    cat0("---\nPlate meta data:\n")
+    cat0(x %>% plate_meta %>% str)
+  }
 }
 
-# dhorizon <- Plate$new("horizon")$analyze()
-# dhorizon2 <- Plate$new(p = dhorizon)
-# dhorizon3 <- Plate$new()$load("inst/sampledata/dhorizon")
-# dthy <- Plate$new()$load("inst/sampledata/thy")
-# mini <- loadPlate("inst/sampledata/mini141")
+# pmini <- new_plate("../../data/mini141")
+# p141 <- new_plate("../../data/2-26-2014-BRAFWTNEGASSAY-FFPEDNA-CRC-1-41")
 
 #tstart <- proc.time(); a <- Plate$new("2014-06-06_BRAFWTNEGASSAY_FFPEThyroidscrolls")$analyze(); tend <- proc.time(); print(round(tend-tstart)[1]) 
 #7-8 seconds

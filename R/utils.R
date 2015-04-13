@@ -6,6 +6,10 @@ warn_msg <- function(x) {
   warning(sprintf("ddpcr: %s", x), call. = FALSE)
 }
 
+cat0 <- function(...) {
+  cat(..., sep = "")
+}
+
 # overwrite a column in a data.frame based on a matching column in another df
 merge_dfs_overwrite_col <- function(olddf, newdf, colnames, bycol = "well") {
   result <- dplyr::left_join(olddf, newdf, by = bycol)
