@@ -55,6 +55,7 @@ get_outlier_cutoff <- function(plate) {
 #
 # Returns:
 #   Dataframe with outliers removed
+#' @export
 remove_outliers <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
@@ -66,6 +67,8 @@ remove_outliers <- function(plate) {
   meta <- plate_meta(plate)
   data <- plate_data(plate)
   
+  # ---
+  
   data %<>% dplyr::bind_rows(outliers(plate))
   
   outlier_cutoff <- plate %>% get_outlier_cutoff
@@ -75,18 +78,22 @@ remove_outliers <- function(plate) {
   outliers <-
     data %>%
     dplyr::select_("well", "HEX", "FAM") %>%
-    dplyr::filter_(lazyeval::interp(~ FAM > cutoff_fam | HEX > cutoff_hex,
-                                    FAM = quote(FAM), HEX = quote(HEX)))
+    dplyr::filter_(lazyeval::interp(
+      ~ FAM > cutoff_fam | HEX > cutoff_hex,
+      FAM = quote(FAM), HEX = quote(HEX)))
   
   data %<>%
-    dplyr::filter_(lazyeval::interp(~ !(FAM > cutoff_fam | HEX > cutoff_hex),
-                                    FAM = quote(FAM), HEX = quote(HEX)))
+    dplyr::filter_(lazyeval::interp(
+      ~ !(FAM > cutoff_fam | HEX > cutoff_hex),
+      FAM = quote(FAM), HEX = quote(HEX)))
   
   meta <-
     data %>%
     dplyr::group_by_("well") %>%
     dplyr::summarise_("drops" = ~ n()) %>%
     merge_dfs_overwrite_col(meta, ., "drops")
+  
+  # ---
   
   outliers(plate) <- outliers
   plate_data(plate) <- data

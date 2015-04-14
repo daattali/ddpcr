@@ -96,25 +96,32 @@ params <- function(x) {
 }
 
 #' @export
+wells_used <- function(x) {
+  stopifnot(x %>% inherits("ddpcr_plate"))
+  dplyr::filter_(x %>% plate_meta, ~ used) %>%
+    .[['well']]
+}
+
+#' @export
 wells_success <- function(x) {
   stopifnot(x %>% inherits("ddpcr_plate"))
-  dplyr::filter_(plateMeta(x), ~ success) %>%
+  dplyr::filter_(x %>% plate_meta, ~ success) %>%
     .[['well']]
 }
 
 #' @export
 wells_failed <- function(x) {
   stopifnot(x %>% inherits("ddpcr_plate"))
-  dplyr::filter_(plateMeta(x), ~ !success) %>%
+  dplyr::filter_(x %>% plate_meta, ~ !success) %>%
     .[['well']]
 }
 
 #' @export
-analyze = function(x) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
+analyze = function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
   
-  x %<>% remove_outliers   # step 1 - remove outlier droplets
-  #self$removeFailures()   # step 2 - remove failed wells
+  plate %<>% remove_outliers    # step 1 - remove outlier droplets
+  #plate %<>% remove_failures    # step 2 - remove failed wells
   #self$markEmpty()        # step 3 - remove empty droplets
   #self$classifyDroplets() # step 4 - classify droplets as mutant/wildtype/rain
   #self$reclassifyLowMt()  # step 5 - reanalyze low mutant frequency wells
