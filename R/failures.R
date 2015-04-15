@@ -51,7 +51,7 @@ is_well_success <- function(plate, well_id) {
   # First heuristic check: make sure there are enough droplets
   if (nrow(well_data) < params[['WELLSUCCESS']][['TOTAL_DROPS_T']]) {
     success <- FALSE
-    msg <- sprintf("Not enough drops generated (%s)", nrow(wellDataSingle))
+    msg <- sprintf("Not enough drops generated (%s)", nrow(well_data))
     return(list(result = success, comment = msg))
   }
   
@@ -105,10 +105,6 @@ remove_failures <- function(plate) {
   
   tstart <- proc.time()
   
-  params <- params(plate)
-  meta <- plate_meta(plate)
-  data <- plate_data(plate)
-  
   # ---
   
   well_success_map <-
@@ -121,16 +117,16 @@ remove_failures <- function(plate) {
     dplyr::rename_(.dots = setNames(     # rename result to success
       "result", "success")) %>%
     dplyr::mutate_(.dots = setNames(     # extract the variables from their named list
-      list(~ success %>% unlist %>% unname,
-           ~ comment %>% unlist %>% unname),
+      list(~ success %>% unlist(use.names = FALSE),
+           ~ comment %>% unlist(use.names = FALSE)),
       c("success", "comment")))
 
-  private$plateMeta %<>%
-    dplyr::left_join(wellSuccessMap, by = "well")
+  meta <-
+    merge_dfs_overwrite_col(plate_meta(plate), well_success_map,
+                            c("success", "comment"))
   
   # ---
   
-  plate_data(plate) <- data
   plate_meta(plate) <- meta
   status(plate) <- STATUS_FAILED_REMOVED
   

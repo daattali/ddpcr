@@ -12,11 +12,11 @@ Imports:
     dplyr (>= 0.4.0),
     magrittr (>= 1.5),
     mixtools (>= 1.0.2),
-    readr
+    readr (>= 0.1.0)
 Suggests:
     ggplot2 (>= 1.0.0),
     knitr (>= 1.7),
-    lazyeval,
+    lazyeval (>= 0.1.10),
     testthat (>= 0.9.1)
 License: MIT + file LICENSE
 LazyData: true

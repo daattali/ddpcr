@@ -1,4 +1,4 @@
 library(testthat)
-library(rsalad)
+library(ddpcrS3)
 
 test_check("ddpcrS3")
