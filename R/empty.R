@@ -67,6 +67,7 @@ remove_empty <- function(plate) {
   
   # set the cluster to EMPTY for every empty droplet in every well
   data <- plate_data(plate)
+  data_env <- environment()
   lapply(names(empty_cutoff_map),
          function(well_id){
            cutoff <- empty_cutoff_map[well_id] %>% as.numeric
@@ -78,7 +79,7 @@ remove_empty <- function(plate) {
            # data rather than create many small dataframes and then merging/
            # overwriting with the original data
            data[empty_idx, 'cluster'] <- CLUSTER_EMPTY
-           assign("data", data, envir = parent.env(environment()))
+           assign("data", data, envir = data_env)
            
            NULL
          }

@@ -109,19 +109,14 @@ remove_failures <- function(plate) {
     vapply(wells_used(plate),            # check every well if it failed
            function(x) is_well_success(plate, x),
            list(logical(1), character(1))) %>%
-    t %>% as.data.frame %>%              # convert the list to data frame
-    dplyr::mutate_(.dots = setNames(     # add the well id as a column
-      list(~ row.names(.)), "well")) %>%
+    lol_to_df %>%
     dplyr::rename_(.dots = setNames(     # rename result to success
-      "result", "success")) %>%
-    dplyr::mutate_(.dots = setNames(     # extract the variables from their named list
-      list(~ success %>% unlist(use.names = FALSE),
-           ~ comment %>% unlist(use.names = FALSE)),
-      c("success", "comment")))
+      "result", "success"))
 
   meta <-
     merge_dfs_overwrite_col(plate_meta(plate), well_success_map,
-                            c("success", "comment"))
+                            c("success", "comment")) %>%
+    dplyr::arrange_(~ desc(used), ~ desc(success), ~ row, ~ col)
   
   # ---
   

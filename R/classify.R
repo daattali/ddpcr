@@ -1,4 +1,4 @@
-analyze_well_clusters <- function(well_id, plot = FALSE) {
+analyze_well_clusters <- function(plate, well_id, plot = FALSE) {
   # Given a well with the empty drops marked as empty, analyze the rest of the
   # drops and assign each to a cluster (rain/mutant/wildtype)
   #
@@ -32,7 +32,8 @@ analyze_well_clusters <- function(well_id, plot = FALSE) {
       mixmdl_fam$mu[larger_comp_fam],
       mixmdl_fam$sigma[larger_comp_fam] *
         params[['ASSIGN_CLUSTERS']][['CLUSTERS_BORDERS_NUM_SD']]
-    )
+    ) %>%
+    as.integer
   
   top <-
     well_data %>%
@@ -56,13 +57,15 @@ analyze_well_clusters <- function(well_id, plot = FALSE) {
       mixmdl_hex$mu[smaller_comp_hex],
       mixmdl_hex$sigma[smaller_comp_hex] *
         params[['ASSIGN_CLUSTERS']][['CLUSTERS_BORDERS_NUM_SD']]
-    )
+    ) %>%
+    as.integer
   wt_borders <-
     plus_minus(
       mixmdl_hex$mu[larger_comp_hex],
       mixmdl_hex$sigma[larger_comp_hex] *
         params[['ASSIGN_CLUSTERS']][['CLUSTERS_BORDERS_NUM_SD']]
-    )
+    ) %>%
+    as.integer
   
   set.seed(SEED)
   if (has_mt_cluster) {
@@ -86,20 +89,22 @@ analyze_well_clusters <- function(well_id, plot = FALSE) {
           mixmdl_hex$mu[smaller_comp_hex],
           mixmdl_hex$sigma[smaller_comp_hex] *
             params[['ASSIGN_CLUSTERS']][['CLUSTERS_BORDERS_NUM_SD']]
-        )
+        ) %>% 
+        as.integer
       wt_borders <-
         plus_minus(
           mixmdl_hex$mu[larger_comp_hex],
           mixmdl_hex$sigma[larger_comp_hex] *
             params[['ASSIGN_CLUSTERS']][['CLUSTERS_BORDERS_NUM_SD']]
-        )
+        ) %>%
+        as.integer
     }
   } else {
     mt_cutoff <-
       mixmdl_hex$mu[larger_comp_hex] -
       mixmdl_hex$sigma[larger_comp_hex] * 
         params[['ASSIGN_CLUSTERS']][['NO_CLUSTER_MT_BORDER_NUM_SD']]
-    mt_borders <- c(0, mt_cutoff)
+    mt_borders <- c(0, mt_cutoff) %>% as.integer
   }
 
   if (plot) {
@@ -128,9 +133,19 @@ analyze_well_clusters <- function(well_id, plot = FALSE) {
   wt_idx <- well_data[['FAM']] %btwn% cl_borders & well_data[['HEX']] %btwn% wt_borders
   well_data[wt_idx, 'cluster'] <- CLUSTER_WT
   
-  return(list(result = well_data,
+  return(list(#result = well_data,
+              mt_borders = mt_borders %>% border_to_str,
+              wt_borders = wt_borders %>% border_to_str,
+              cl_borders = cl_borders %>% border_to_str,
               has_mt_cluster = has_mt_cluster,
               comment = msg))
+}
+
+border_to_str <- function(border) {
+  paste(border, collapse = ",")
+}
+str_to_border <- function(str) {
+  strsplit(str, ",") %>% unlist %>% as.integer
 }
 
 classify_droplets_single <- function(plate, well_id, analysis_method_idx = 2, plot = FALSE) {
@@ -146,22 +161,11 @@ classify_droplets_single <- function(plate, well_id, analysis_method_idx = 2, pl
   #     hasMTcluster: TRUE if a significant mutant cluster was found, FALSE otherwise.
   #       Note that TRUE can be very good proxy for saying the well has mutant BRAFV600,
   #       and FALSE is a proxy for saying the well has wild-type BRAFV600
-  #     comment: any comment raised by the algorithm, or NA if everything ran smoothly  
+  #     comment: any comment raised by the algorithm, or NA if everything ran smoothly 
   analysis_methods <- c(analyze_well_clusters, analyze_well_clusters_density)
   analysis_method <- analysis_methods[[analysis_method_idx]]
-  
-  clusters_data <- analysis_methods(well_id, plot)
-  clusters_well_data <- clusters_data[['result']]
-  
-  well_data <- 
-    get_single_well(plate, well_id, full = TRUE, clusters = FALSE) %>%
-    dplyr::mutate(cluster = CLUSTER_EMPTY) %>%
-    dplyr::left_join(clustersWellData, by = c("HEX","FAM")) %>%
-    dplyr::mutate(cluster = ifelse(is.na(cluster.y), cluster.x, cluster.y)) %>%
-    dplyr::select(-cluster.x, -cluster.y)
-  
-  clustersData[['result']] <- wellDataSingle
-  clustersData
+  clusters_data <- analysis_method(plate, well_id, plot)
+  clusters_data
 }
 
 analyze_well_clusters_density <- function(well_id, plot = FALSE) {
@@ -171,7 +175,7 @@ analyze_well_clusters_density <- function(well_id, plot = FALSE) {
 
 
 #' @export
-classify_droplets <- function(plate, analysisMethodIdx = 2) {
+classify_droplets <- function(plate, analysis_method_idx = 2) {
   # Mark all drops in a plate with their corresponding clusters, including
   # undefined clusters for failed wells
   #
@@ -190,49 +194,58 @@ classify_droplets <- function(plate, analysisMethodIdx = 2) {
   
   # ---
   
-  wellsInfo <-
-    lapply(private$wellsSuccess(), function(x) {
-      res <- self$classifyDropletsSingle(x, analysisMethodIdx)
-      res[['result']][['well']] <- x
-      res[['well']] <- x
-      res
-    })
-  
-  # combine all the dataframes into one big dataframe containing all the drops
-  # from successful wells with their associated clusters
-  result <- plyr::ldply(wellsInfo, function(x) x$result)
+  well_clusters_info <-
+    vapply(wells_success(plate),
+           function(x) classify_droplets_single(plate, x, analysis_method_idx),
+           list('mt_borders', 'wt_borders', 'cl_borders', 'has_mt_cluster', 'comment')) %>%
+    lol_to_df
+
+  data <- plate_data(plate)
+  data_env <- environment()
+  lapply(wells_success(plate),
+         function(well_id){
+           well_info <-
+             well_clusters_info %>%
+             dplyr::filter_(~ well == well_id)
+           cl_borders <- well_info[['cl_borders']] %>% str_to_border
+           mt_borders <- well_info[['mt_borders']] %>% str_to_border
+           wt_borders <- well_info[['wt_borders']] %>% str_to_border
+           
+           # I'm not doing this using dplyr (mutate) because it's much slower
+           # this code is a bit ugly but it's much faster to keep overwriting
+           # the data rather than create many small dataframes to merge
+           non_empty_idx <- data[['well']] == well_id &
+             (data[['cluster']] == CLUSTER_UNDEFINED | data[['cluster']] >= CLUSTER_WT)
+           cl_idx <- data[['well']] == well_id & data[['FAM']] %btwn% cl_borders
+           mt_idx <- cl_idx & data[['well']] == well_id & data[['HEX']] %btwn% mt_borders
+           wt_idx <- cl_idx & data[['well']] == well_id & data[['HEX']] %btwn% wt_borders
+           data[non_empty_idx, 'cluster'] <- CLUSTER_RAIN
+           data[mt_idx, 'cluster'] <- CLUSTER_MT
+           data[wt_idx, 'cluster'] <- CLUSTER_WT
+           assign("data", data, envir = data_env)
+           
+           NULL
+         }
+  ) %>% invisible  
+
   # add metadata (comment/hasMTclust) to each well
-  clustersMetadata <- plyr::ldply(wellsInfo, function(x) {
-    x$result <- NULL
-    data.frame(x, stringsAsFactors = F)
-  })
+  meta <-
+    plate_meta(plate) %>%
+    merge_dfs_overwrite_col(well_clusters_info,
+                            setdiff(names(well_clusters_info), "well"))
   
-  # add the data from unsuccessful wells
-  failedWells <- private$wellsFailed()
-  failedWellsData <-
-    self$getData() %>%
-    dplyr::filter(well %in% failedWells) %>%
-    dplyr::select(well, HEX, FAM) %>%
-    dplyr::mutate(cluster = CLUSTER_UNDEFINED)
-  result <- rbind(result, failedWellsData)
+  # ---
   
-  newMetadata <-
-    private$plateMeta %>%
-    dplyr::left_join(clustersMetadata, by = "well") %>%
-    dplyr::mutate(comment = ifelse(is.na(comment.y), comment.x, comment.y)) %>%
-    dplyr::select(-comment.x, -comment.y)
+  plate_data(plate) <- data
+  plate_meta(plate) <- meta
   
-  private$plateMeta <- newMetadata
-  private$plateData <- result
-  private$status <- STATUS_DROPLETS_CLASSIFIED
+  plate %<>% calculate_mt_freqs
   
-  private$calculateMtFreqs()
+  status(plate) <- STATUS_DROPLETS_CLASSIFIED
   
-  if (private$debug) {
-    tend <- proc.time()
-    message(sprintf("Time to analyze droplets to find mutant/wild-type drops (s): %s",
-                    round(tend-tstart)[1]))
-  }
+  tend <- proc.time()
+  message(sprintf("Time to classify droplet clusters: %s seconds",
+                  round(tend-tstart)[1]))
   
   plate
 }

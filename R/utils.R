@@ -15,6 +15,16 @@ cat0 <- function(...) {
   x >= min(rng) & x <= max(rng)
 }
 
+# convert a list of lists (lol) to dataframe
+#TODO add to rsalad
+lol_to_df <- function(lol, name = "well") {
+  lol %<>%
+    t %>% as.data.frame %>%
+    dplyr::mutate_(.dots = setNames(list(~ row.names(.)), name))
+  lol[] <- lapply(lol, unlist)
+  lol
+}
+
 quiet <- function(expr, all = TRUE) {
   if (Sys.info()['sysname'] == "Windows") {
     file <- "NUL"
@@ -36,6 +46,7 @@ plus_minus <- function(x, y) {
 }
 
 # overwrite a column in a data.frame based on a matching column in another df
+#TODO add to rsalad
 merge_dfs_overwrite_col <- function(olddf, newdf, colnames, bycol = "well") {
   result <- dplyr::left_join(olddf, newdf, by = bycol)
   
@@ -83,39 +94,4 @@ is_file <- function(path) {
     return(FALSE)
   }
   !(fileinfo$isdir)
-}
-
-# Retrieve droplet data for a single well.
-#
-# Args:
-#   .wellData: The dataframe containing all the droplets
-#   .well: The id of the well of interest
-#   .full: If true, get all droplets, including the empty ones
-#   .clusters: If true, return information about which cluster each drop belongs to
-#
-# Returns:
-#   Dataframe containing only droplet data for the given well
-get_single_well <- function(plate, well_id, full = FALSE, clusters = FALSE) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
-  result <-
-    plate_data(plate) %>%
-    dplyr::filter_(lazyeval::interp(
-      ~ well == well_id,
-      well = quote(well))) %>%
-    dplyr::select_(quote(-well))
-  
-  if (!full) {
-    result %<>%
-      dplyr::filter_(lazyeval::interp(
-        ~ cluster != CLUSTER_EMPTY,
-        cluster = quote(cluster)))
-  }
-  
-  if (!clusters) {
-    result %<>%
-      dplyr::select_(quote(-cluster))
-  }
-  
-  result
 }
