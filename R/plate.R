@@ -35,7 +35,6 @@ plate_meta <- function(x, only_used = FALSE) {
   }
 }
 `plate_meta<-` <- function(x, value) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
   x[['plate_meta']] <- value
   x
 }
@@ -46,7 +45,6 @@ plate_data <- function(x) {
   x[['plate_data']]
 }
 `plate_data<-` <- function(x, value) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
   x[['plate_data']] <- value
   x
 }
@@ -57,7 +55,6 @@ outliers <- function(x) {
   x[['outliers']]
 }
 `outliers<-` <- function(x, value) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
   x[['outliers']] <- value
   x
 }
@@ -68,7 +65,6 @@ status <- function(x) {
   x[['status']]
 }
 `status<-` <- function(x, value) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
   x[['status']] <- value
   x
 }
@@ -78,6 +74,7 @@ name <- function(x) {
   stopifnot(x %>% inherits("ddpcr_plate"))
   x[['name']]
 }
+#' @export
 `name<-` <- function(x, value) {
   stopifnot(x %>% inherits("ddpcr_plate"))
   x[['name']] <- value
@@ -89,6 +86,7 @@ params <- function(x) {
   stopifnot(x %>% inherits("ddpcr_plate"))
   x[['params']]
 }
+#' @export
 `params<-` <- function(x, value) {
   stopifnot(x %>% inherits("ddpcr_plate"))
   x[['params']] <- value

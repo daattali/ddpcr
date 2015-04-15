@@ -20,8 +20,6 @@
 #   values only within these drops. Mark the outlier cutoff as the 3rd quantile
 #   plus 5 (PARAMS$OUTLIERS$CUTOFF_IQR) IQR
 get_outlier_cutoff <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
   params <- params(plate)
   data <- plate_data(plate)
   

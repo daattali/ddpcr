@@ -37,8 +37,6 @@
 #       small, below 200 (PARAMS$WELLSUCCESS$NORMAL_SIGMA_T), to ensure that
 #       the empty cluster is indeed very dense as it should be
 is_well_success <- function(plate, well_id) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-
   params <- params(plate)
 
   well_data <- get_single_well(plate, well_id, full = TRUE, clusters = FALSE)
