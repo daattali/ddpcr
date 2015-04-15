@@ -49,6 +49,7 @@ get_empty_cutoff <- function(plate, well_id) {
 #     result: Dataframe containing all drops, with the empty drops marked with
 #       with their cluster
 #     cutoffs: The FAM cutoff of every well
+#' @export
 remove_empty <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   

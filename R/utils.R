@@ -10,6 +10,11 @@ cat0 <- function(...) {
   cat(..., sep = "")
 }
 
+"%btwn%" <- function(x, rng) {
+  stopifnot(is.numeric(x), is.numeric(rng), length(rng) == 2)
+  x >= min(rng) & x <= max(rng)
+}
+
 quiet <- function(expr, all = TRUE) {
   if (Sys.info()['sysname'] == "Windows") {
     file <- "NUL"
@@ -24,6 +29,10 @@ quiet <- function(expr, all = TRUE) {
   } else {
     capture.output(expr, file = file)
   }
+}
+
+plus_minus <- function(x, y) {
+  x + y * c(-1, 1)
 }
 
 # overwrite a column in a data.frame based on a matching column in another df
