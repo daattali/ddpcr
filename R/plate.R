@@ -120,7 +120,7 @@ analyze = function(plate) {
   
   plate %<>% remove_outliers    # step 1 - remove outlier droplets
   plate %<>% remove_failures    # step 2 - remove failed wells
-  #self$markEmpty()        # step 3 - remove empty droplets
+  plate %<>% remove_empty       # step 3 - remove empty droplets
   #self$classifyDroplets() # step 4 - classify droplets as mutant/wildtype/rain
   #self$reclassifyLowMt()  # step 5 - reanalyze low mutant frequency wells
 }
@@ -145,7 +145,7 @@ print.ddpcr_plate <- function(x, ...) {
 }
 
 # pmini <- new_plate("../../data/mini141")
-# p141 <- new_plate("../../data/2-26-2014-BRAFWTNEGASSAY-FFPEDNA-CRC-1-41")
+# p141 <- new_plate("../../data/2-26-2014-BRAFWTNEGASSAY-FFPEDNA-CRC-1-41") %>% analyze
 
 #tstart <- proc.time(); a <- Plate$new("2014-06-06_BRAFWTNEGASSAY_FFPEThyroidscrolls")$analyze(); tend <- proc.time(); print(round(tend-tstart)[1]) 
 #7-8 seconds

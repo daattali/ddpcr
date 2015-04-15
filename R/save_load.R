@@ -20,7 +20,7 @@ save_plate <- function(plate, file) {
   )
   saveRDS(object = object, file = file)
   
-  plate
+  invisible(plate)
 }
 
 load_plate <- function(file) {
