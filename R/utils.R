@@ -16,7 +16,6 @@ cat0 <- function(...) {
 }
 
 # convert a list of lists (lol) to dataframe
-#TODO add to rsalad
 lol_to_df <- function(lol, name = "well") {
   lol %<>%
     t %>% as.data.frame %>%
@@ -46,7 +45,6 @@ plus_minus <- function(x, y) {
 }
 
 # overwrite a column in a data.frame based on a matching column in another df
-#TODO add to rsalad
 merge_dfs_overwrite_col <- function(olddf, newdf, colnames, bycol = "well") {
   result <- dplyr::left_join(olddf, newdf, by = bycol)
   
@@ -70,6 +68,31 @@ merge_dfs_overwrite_col <- function(olddf, newdf, colnames, bycol = "well") {
   }
 
   result
+}
+
+local_maxima <- function(x) {
+  y <- (c(-.Machine$integer.max, x) %>% diff) > 0L
+  y <- rle(y)$lengths %>% cumsum
+  y <- y[seq.int(1L, length(y), 2L)]
+  if (x[[1]] == x[[2]]) {
+    y <- y[-1]
+  }
+  y
+}
+
+get_inflection_pts <- function(dat) {
+  inf_points_idx <-
+    dat %>%
+    {smooth.spline(x = .$x, y = .$y)} %>%
+    predict(deriv = 2) %>%
+    .$y %>%
+    sign %>%
+    rle %>%
+    .$lengths %>%
+    cumsum
+  bogus_idx <- c(1, length(dat$x) - 1, length(dat$x))
+  inf_points_idx <- inf_points_idx[!inf_points_idx %in% bogus_idx]
+  inf_points_idx
 }
 
 is_dir <- function(path) {

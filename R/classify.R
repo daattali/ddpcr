@@ -23,21 +23,10 @@ analyze_well_clusters <- function(plate, well_id, plot = FALSE) {
   msg <- NA
   well_data <- get_single_well(plate, well_id)
   
-  set.seed(SEED)
-  quiet(
-    mixmdl_fam <- mixtools::normalmixEM(well_data[['FAM']], k = 2))
-  larger_comp_fam <- mixmdl_fam$mu %>% which.max
-  cl_borders <-
-    plus_minus(
-      mixmdl_fam$mu[larger_comp_fam],
-      mixmdl_fam$sigma[larger_comp_fam] *
-        params[['ASSIGN_CLUSTERS']][['CLUSTERS_BORDERS_NUM_SD']]
-    ) %>%
-    as.integer
-  
+  cl_borders <- get_filled_borders(plate, well_id)
   top <-
     well_data %>%
-    dplyr::filter_(~ FAM %btwn% cl_borders) 
+    dplyr::filter_(~ FAM %btwn% cl_borders)
   
   set.seed(SEED)
   for (i in seq(params[['ASSIGN_CLUSTERS']][['NUM_ATTEMPTS_SEGREGATE']])) {
@@ -108,17 +97,13 @@ analyze_well_clusters <- function(plate, well_id, plot = FALSE) {
   }
 
   if (plot) {
-    mt_drops <- 
-      top %>%
-      dplyr::filter_(~ HEX %btwn% mt_borders)
-    wt_drops <-
-      top %>%
-      dplyr::filter_(~ HEX %btwn% wt_borders)
+    mt_drops <- top %>% dplyr::filter_(~ HEX %btwn% mt_borders)      
+    wt_drops <- top %>% dplyr::filter_(~ HEX %btwn% wt_borders)
     graphics::plot(well_data, "HEX", "FAM")
     points(top, col = "blue")
     points(mt_drops, col = "purple")
     points(wt_drops, col = "green")
-    abline(h = mixmdl_fam$mu, col = "grey")
+    abline(h = cl_borders %>% mean, col = "grey")
     abline(h = cl_borders, col = "black")
     abline(v = mixmdl_hex$mu, col = "grey")
     abline(v = mt_borders, col = "purple")
@@ -127,11 +112,11 @@ analyze_well_clusters <- function(plate, well_id, plot = FALSE) {
     title(sprintf("%s (%s%%)", well_id, mt_freq))
   }
 
-  well_data[['cluster']] <- CLUSTER_RAIN
-  mt_idx <- well_data[['FAM']] %btwn% cl_borders & well_data[['HEX']] %btwn% mt_borders
-  well_data[mt_idx, 'cluster'] <- CLUSTER_MT
-  wt_idx <- well_data[['FAM']] %btwn% cl_borders & well_data[['HEX']] %btwn% wt_borders
-  well_data[wt_idx, 'cluster'] <- CLUSTER_WT
+#   well_data[['cluster']] <- CLUSTER_RAIN
+#   mt_idx <- well_data[['FAM']] %btwn% cl_borders & well_data[['HEX']] %btwn% mt_borders
+#   well_data[mt_idx, 'cluster'] <- CLUSTER_MT
+#   wt_idx <- well_data[['FAM']] %btwn% cl_borders & well_data[['HEX']] %btwn% wt_borders
+#   well_data[wt_idx, 'cluster'] <- CLUSTER_WT
   
   return(list(#result = well_data,
               mt_borders = mt_borders %>% border_to_str,
@@ -167,12 +152,6 @@ classify_droplets_single <- function(plate, well_id, analysis_method_idx = 2, pl
   clusters_data <- analysis_method(plate, well_id, plot)
   clusters_data
 }
-
-analyze_well_clusters_density <- function(well_id, plot = FALSE) {
-  
-}
-
-
 
 #' @export
 classify_droplets <- function(plate, analysis_method_idx = 2) {

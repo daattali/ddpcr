@@ -121,7 +121,7 @@ analyze = function(plate) {
   plate %<>% remove_outliers    # step 1 - remove outlier droplets
   plate %<>% remove_failures    # step 2 - remove failed wells
   plate %<>% remove_empty       # step 3 - remove empty droplets
-  plate %<>% classify_droplets(1)  # step 4 - classify droplets as mutant/wildtype/rain
+  plate %<>% classify_droplets  # step 4 - classify droplets as mutant/wildtype/rain
   #self$reclassifyLowMt()  # step 5 - reanalyze low mutant frequency wells
 }
 
