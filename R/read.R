@@ -126,7 +126,7 @@ read_files <- function(plate, data_files, meta_file) {
   plate_meta <-
     plate_data %>%
     dplyr::group_by_("well") %>%
-    dplyr::summarise_("drops_initial" = ~ n()) %>%
+    dplyr::summarise_("drops" = ~ n()) %>%
     dplyr::left_join(plate_meta, ., by = "well") %>%
     dplyr::arrange_(~ desc(used), ~ row, ~ col)
   

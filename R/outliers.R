@@ -60,47 +60,39 @@ remove_outliers <- function(plate) {
   stopifnot(plate %>% status >= STATUS_INIT)
   
   tstart <- proc.time()
-
-  params <- params(plate)
-  meta <- plate_meta(plate)
+  
   data <- plate_data(plate)
   
   # ---
   
-  data %<>% dplyr::bind_rows(outliers(plate))
-  
   outlier_cutoff <- plate %>% get_outlier_cutoff
   cutoff_hex <- outlier_cutoff[['HEX']]
   cutoff_fam <- outlier_cutoff[['FAM']]
+
+  outlier_idx <- data[['FAM']] > cutoff_fam | data[['HEX']] > cutoff_hex
+  data[outlier_idx, 'cluster'] <- CLUSTER_OUTLIER  
   
-  outliers <-
-    data %>%
-    dplyr::select_("well", "HEX", "FAM") %>%
-    dplyr::filter_(lazyeval::interp(
-      ~ FAM > cutoff_fam | HEX > cutoff_hex,
-      FAM = quote(FAM), HEX = quote(HEX)))
-  
-  data %<>%
-    dplyr::filter_(lazyeval::interp(
-      ~ !(FAM > cutoff_fam | HEX > cutoff_hex),
-      FAM = quote(FAM), HEX = quote(HEX)))
+  drops_outlies_df <- dplyr::data_frame(
+    "well" = p141 %>% wells_used,
+    "drops_outlier" = 0)  
   
   meta <-
     data %>%
+    dplyr::filter_(~ cluster == CLUSTER_OUTLIER) %>%
     dplyr::group_by_("well") %>%
-    dplyr::summarise_("drops" = ~ n()) %>%
-    merge_dfs_overwrite_col(meta, ., "drops")
+    dplyr::summarise_("drops_outlier" = ~ n()) %>%
+    merge_dfs_overwrite_col(drops_outlies_df, ., "drops_outlier") %>%
+    merge_dfs_overwrite_col(plate_meta(plate), ., "drops_outlier")
   
   # ---
   
-  outliers(plate) <- outliers
   plate_data(plate) <- data
   plate_meta(plate) <- meta
   status(plate) <- STATUS_OUTLIERS_REMOVED
   
   tend <- proc.time()
-  message(sprintf("Time to remove outliers: %s seconds (%s drops identified as outliers)",
-                  round(tend-tstart)[1], nrow(outliers)))
+  message(sprintf("Time to remove outliers: %s seconds",
+                  round(tend-tstart)[1]))
 
   plate
 }

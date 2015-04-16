@@ -143,10 +143,10 @@ reclassify_droplets <- function(plate) {
            # the data rather than create many small dataframes to merge
            non_empty_idx <-
              data[['well']] == well_id &
-             data[['cluster']] >= CLUSTER_WT
-           cl_idx <- data[['well']] == well_id & data[['FAM']] %btwn% cl_borders
-           mt_idx <- cl_idx & data[['well']] == well_id & data[['HEX']] %btwn% mt_borders
-           wt_idx <- cl_idx & data[['well']] == well_id & data[['HEX']] %btwn% wt_borders
+             data[['cluster']] > CLUSTER_EMPTY
+           cl_idx <- non_empty_idx & data[['FAM']] %btwn% cl_borders
+           mt_idx <- cl_idx & data[['HEX']] %btwn% mt_borders
+           wt_idx <- cl_idx & data[['HEX']] %btwn% wt_borders
            data[non_empty_idx, 'cluster'] <- CLUSTER_RAIN
            data[mt_idx, 'cluster'] <- CLUSTER_MT
            data[wt_idx, 'cluster'] <- CLUSTER_WT

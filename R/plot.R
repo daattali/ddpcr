@@ -1,4 +1,3 @@
-# TODO show outliers (and dont actually remove outliers)
 #' @export
 plot.ddpcr_plate <- function(
   plate,
@@ -10,7 +9,7 @@ plot.ddpcr_plate <- function(
   col_failed = "black", col_empty = "black",
   col_wt = "green", col_mt = "purple", col_rain = "black", col_outlier = "orange",
   bg_failed = "#111111", bg_unused = "#FFFFFF", bg_wt = "green", bg_mt = "purple",
-  alpha_drops = 0.1, alpha_drops_low_mt = 0.5,
+  alpha_drops = 0.1, alpha_drops_low_mt = 0.5, alpha_drops_outlier = 1,
   alpha_bg_failed = 0.7, alpha_bg_mt_wt = 0.1,
   xlab = "HEX", ylab = "FAM", title,
   show_grid = FALSE, label_axes = FALSE)
@@ -37,7 +36,7 @@ plot.ddpcr_plate <- function(
     data %<>% dplyr::filter_(~ cluster != CLUSTER_EMPTY)
   }
   if (!show_outliers) {
-    #TODO
+    data %<>% dplyr::filter_(~ cluster != CLUSTER_OUTLIER)
   }
   if (!show_failed) {
     wells_failed <- wells_failed(plate)
@@ -73,7 +72,7 @@ plot.ddpcr_plate <- function(
   meta_used <- meta %>% dplyr::filter_(~ used)
   
   # define the colours of the clusters
-  cluster_cols <- c(col_failed, col_empty, col_wt, col_mt, col_rain)
+  cluster_cols <- c(col_failed, col_outlier, col_empty, col_wt, col_mt, col_rain)
   
   # need to remove colours corresponding to clusters that don't exist in the dataset
   # because otherwise the colour order will be messed up
@@ -160,6 +159,15 @@ plot.ddpcr_plate <- function(
           ggplot2::aes_string("HEX", "FAM"),
           alpha = alpha_drops_low_mt,
           col = col_mt)
+    }
+    
+    if (show_outliers) {
+      p <- p +
+        ggplot2::geom_point(
+          data = dplyr::filter_(data, ~ cluster == CLUSTER_OUTLIER),
+          ggplot2::aes_string("HEX", "FAM"),
+          alpha = alpha_drops_outlier,
+          col = col_outlier)
     }
   }
   

@@ -3,7 +3,6 @@ empty_plate <- function() {
     list(
       plate_data = NULL,
       plate_meta = NULL,
-      outliers = NULL,
       name = NULL,
       status = STATUS_UNDEFINED,
       params = DEFAULT_PARAMS
@@ -55,16 +54,6 @@ plate_data <- function(x) {
 }
 `plate_data<-` <- function(x, value) {
   x[['plate_data']] <- value
-  x
-}
-
-#' @export
-outliers <- function(x) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
-  x[['outliers']]
-}
-`outliers<-` <- function(x, value) {
-  x[['outliers']] <- value
   x
 }
 
@@ -141,11 +130,11 @@ wells_wildtype <- function(x) {
 analyze = function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
-  plate %<>% remove_outliers    # step 1 - remove outlier droplets
-  plate %<>% remove_failures    # step 2 - remove failed wells
-  plate %<>% remove_empty       # step 3 - remove empty droplets
-  plate %<>% classify_droplets  # step 4 - classify droplets as mutant/wildtype/rain
-  #self$reclassifyLowMt()  # step 5 - reanalyze low mutant frequency wells
+  plate %<>% remove_outliers     # step 1 - remove outlier droplets
+  plate %<>% remove_failures     # step 2 - remove failed wells
+  plate %<>% remove_empty        # step 3 - remove empty droplets
+  plate %<>% classify_droplets   # step 4 - classify droplets as mutant/wildtype/rain
+  plate %<>% reclassify_droplets # step 5 - reanalyze low mutant frequency wells
 }
 
 #' @export

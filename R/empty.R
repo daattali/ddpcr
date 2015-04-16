@@ -19,7 +19,7 @@
 get_empty_cutoff <- function(plate, well_id) {
   params <- params(plate)
   
-  well_data <- get_single_well(plate, well_id, full = TRUE, clusters = FALSE)
+  well_data <- get_single_well(plate, well_id, empty = TRUE)
   
   # fit two normal distributions in the data along the FAM dimension
   set.seed(SEED)
@@ -73,7 +73,11 @@ remove_empty <- function(plate) {
            cutoff <- empty_cutoff_map[well_id] %>% as.numeric
            
            # I'm not doing this using dplyr (mutate) because it's much slower
-           empty_idx <- data[['well']] == well_id & data[['FAM']] < cutoff
+           empty_idx <-
+             data[['well']] == well_id &
+             data[['FAM']] < cutoff &
+             (data[['cluster']] == CLUSTER_UNDEFINED |
+              data[['cluster']] >= CLUSTER_EMPTY)
            
            # this is a bit ugly but it's much faster to keep overwriting the
            # data rather than create many small dataframes and then merging/

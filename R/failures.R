@@ -39,7 +39,7 @@
 is_well_success <- function(plate, well_id) {
   params <- params(plate)
 
-  well_data <- get_single_well(plate, well_id, full = TRUE, clusters = FALSE)
+  well_data <- get_single_well(plate, well_id, empty = TRUE)
 
   # if this well doesn't actually have data (or is an invalid well) return NA
   if (nrow(well_data) == 0) {

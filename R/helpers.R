@@ -8,26 +8,26 @@
 #
 # Returns:
 #   Dataframe containing only droplet data for the given well
-get_single_well <- function(plate, well_id, full = FALSE, clusters = FALSE) {
+get_single_well <- function(plate, well_id,
+                            empty = FALSE, outliers = FALSE, clusters = FALSE) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
   result <-
     plate_data(plate) %>%
-    dplyr::filter_(lazyeval::interp(
-      ~ well == well_id,
-      well = quote(well))) %>%
+    dplyr::filter_(~ well == well_id) %>%
     dplyr::select_(quote(-well))
   
-  if (!full) {
+  if (!empty) {
     result %<>%
-      dplyr::filter_(lazyeval::interp(
-        ~ cluster != CLUSTER_EMPTY,
-        cluster = quote(cluster)))
+      dplyr::filter_(~ cluster != CLUSTER_EMPTY)
   }
-  
+  if (!outliers) {
+    result %<>%
+      dplyr::filter_(~ cluster != CLUSTER_OUTLIER)
+  }
   if (!clusters) {
     result %<>%
-      dplyr::select_(quote(-cluster))
+      dplyr::select_(~ -cluster)
   }
   
   result
