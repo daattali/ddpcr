@@ -26,6 +26,7 @@ reclassify_droplets_single <- function(plate, well_id, consensus_border_ratio) {
     wt_borders = wt_borders %>% border_to_str))
 }
 
+#' @export
 reclassify_droplets <- function(plate) {
   # Reclassify mutant drops in wells with low mutant frequency.  The initial
   # classification was done more naively, but after analyzing all the wells,
