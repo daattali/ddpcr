@@ -80,6 +80,10 @@ local_maxima <- function(x) {
   y
 }
 
+local_minima <- function(x) {
+  local_maxima(-x)
+}
+
 get_inflection_pts <- function(dat) {
   inf_points_idx <-
     dat %>%

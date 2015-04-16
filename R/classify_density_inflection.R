@@ -1,4 +1,4 @@
-analyze_well_clusters_density <- function(plate, well_id, plot = FALSE) {
+analyze_well_clusters_density_inflection <- function(plate, well_id, plot = FALSE) {
   
   params <- params(plate)
 
