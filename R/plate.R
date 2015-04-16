@@ -39,6 +39,15 @@ plate_meta <- function(x, only_used = FALSE) {
   x
 }
 
+well_info <- function(x, well_id, var) {
+  stopifnot(x %>% inherits("ddpcr_plate"))
+  result <- 
+    plate_meta(x) %>%
+    dplyr::filter_(~ well == well_id) %>%
+    .[[var]]
+  result
+}
+
 #' @export
 plate_data <- function(x) {
   stopifnot(x %>% inherits("ddpcr_plate"))
@@ -111,6 +120,20 @@ wells_success <- function(x) {
 wells_failed <- function(x) {
   stopifnot(x %>% inherits("ddpcr_plate"))
   dplyr::filter_(x %>% plate_meta, ~ !success) %>%
+    .[['well']]
+}
+
+#' @export
+wells_mutant <- function(x) {
+  stopifnot(x %>% inherits("ddpcr_plate"))
+  dplyr::filter_(x %>% plate_meta, ~ has_mt_cluster) %>%
+    .[['well']]
+}
+
+#' @export
+wells_wildtype <- function(x) {
+  stopifnot(x %>% inherits("ddpcr_plate"))
+  dplyr::filter_(x %>% plate_meta, ~ !has_mt_cluster) %>%
     .[['well']]
 }
 
