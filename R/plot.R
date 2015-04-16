@@ -1,6 +1,6 @@
 # TODO show outliers (and dont actually remove outliers)
 #' @export
-plot_plate <- function(
+plot.ddpcr_plate <- function(
   plate,
   wells, samples,
   superimpose = FALSE, show_full_plate = FALSE,
@@ -29,8 +29,8 @@ plot_plate <- function(
   rownames(meta) <- meta[['well']]
   meta[['row']] %<>% as.factor
   meta[['col']] %<>% as.factor
-  data[['row']] <- substring(data[['well']], 1, 1)
-  data[['col']] <- substring(data[['well']], 2, 3) %>% as.integer
+  data[['row']] <- substring(data[['well']], 1, 1) %>% as.factor
+  data[['col']] <- substring(data[['well']], 2, 3) %>% as.integer %>% as.factor
   data[['cluster']] %<>% as.factor
   
   if (!show_empty) {
