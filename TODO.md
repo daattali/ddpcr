@@ -5,4 +5,5 @@ make sure to reuse allthe columns/rows
 - add lol_to_df and merge_dfs_overwrite_col to rsalad
 - have a "verbose" param
 - should i remove failures before outliers?
+- add a proper license
 - make plot work throught the analysis stages
