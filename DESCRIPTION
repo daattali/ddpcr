@@ -18,6 +18,6 @@ Suggests:
     knitr (>= 1.7),
     lazyeval (>= 0.1.10),
     testthat (>= 0.9.1)
-License: MIT + file LICENSE
+License: file LICENSE
 LazyData: true
 VignetteBuilder: knitr
