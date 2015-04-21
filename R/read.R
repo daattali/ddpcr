@@ -100,9 +100,11 @@ read_files <- function(plate, data_files, meta_file) {
     }) %>%
     dplyr::bind_rows() %>%
     magrittr::set_colnames(c("FAM", "HEX", "well")) %>%
-    dplyr::select_(~ one_of(c("well", "HEX", "FAM")))   %>%
-    dplyr::mutate_(.dots = setNames(list(~ CLUSTER_UNDEFINED), "cluster")) %>%
-    dplyr::arrange_(~ well)
+    dplyr::select_("well", "HEX", "FAM") %>%  # reorder so that well is first
+    dplyr::mutate_(.dots = setNames(
+      list(~ CLUSTER_UNDEFINED, ~ as.integer(HEX), ~ as.integer(FAM)),
+      c("cluster", "HEX", "FAM"))) %>%
+    dplyr::arrange_(~ well)  # arrange by wells alphabetically
   
   # start with a default metadata
   plate_meta <- DEFAULT_PLATE_META

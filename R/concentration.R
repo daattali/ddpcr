@@ -26,7 +26,7 @@ calculate_concentration <- function(plate) {
   concentrations <-
     vapply(wells_success(plate),
            function(x) calculate_concentration_single(plate, x),
-           numeric(1)) %>%
+           1L) %>%
     as.data.frame %>%
     magrittr::set_colnames("concentration") %>%
     dplyr::mutate_("well" = ~ row.names(.))

@@ -12,7 +12,6 @@ save_plate <- function(plate, file) {
   object <- list(
     plate_data = plate_data(plate),
     plate_meta = plate_meta(plate),
-    outliers = outliers(plate),
     name = name(plate),
     status = status(plate),
     params = params(plate)
@@ -30,7 +29,6 @@ load_plate <- function(file) {
   plate <- empty_plate()
   plate_data(plate) <- object[['plate_data']]
   plate_meta(plate) <- object[['plate_meta']]
-  outliers(plate) <- object[['outliers']]
   name(plate) <- object[['name']]
   status(plate) <- object[['status']]
   params(plate) <- object[['params']]

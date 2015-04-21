@@ -1,5 +1,5 @@
 border_to_str <- function(border) {
-  paste(border, collapse = ",")
+  paste(border %>% as.integer, collapse = ",")
 }
 str_to_border <- function(str) {
   strsplit(str, ",") %>% unlist %>% as.integer

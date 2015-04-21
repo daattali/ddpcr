@@ -1,19 +1,19 @@
 # This file defines constants used in the package
 
-STATUS_UNDEFINED               <- 0
-STATUS_INIT                    <- 1
-STATUS_OUTLIERS_REMOVED        <- 2
-STATUS_FAILED_REMOVED          <- 3
-STATUS_EMPTY_REMOVED           <- 4
-STATUS_DROPLETS_CLASSIFIED     <- 5
-STATUS_DROPLETS_RECLASSIFIED   <- 6
+STATUS_UNDEFINED               <- 0L
+STATUS_INIT                    <- 1L
+STATUS_OUTLIERS_REMOVED        <- 2L
+STATUS_FAILED_REMOVED          <- 3L
+STATUS_EMPTY_REMOVED           <- 4L
+STATUS_DROPLETS_CLASSIFIED     <- 5L
+STATUS_DROPLETS_RECLASSIFIED   <- 6L
 
-CLUSTER_UNDEFINED  <- 0
-CLUSTER_OUTLIER    <- 1
-CLUSTER_EMPTY      <- 2
-CLUSTER_WT         <- 3
-CLUSTER_MT         <- 4
-CLUSTER_RAIN       <- 5
+CLUSTER_UNDEFINED  <- 0L
+CLUSTER_OUTLIER    <- 1L
+CLUSTER_EMPTY      <- 2L
+CLUSTER_WT         <- 3L
+CLUSTER_MT         <- 4L
+CLUSTER_RAIN       <- 5L
 
 SEED <- 8
 

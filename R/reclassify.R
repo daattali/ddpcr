@@ -90,7 +90,7 @@ reclassify_droplets <- function(plate) {
   # there are no wells with low MT freq to reclassify, do nothing
   if (plate %>% wells_mutant %>% length < params[['RECLASSIFY_LOW_MT']][['MIN_WELLS_MT_CLUSTER']]
       | plate %>% wells_wildtype %>% length == 0) {
-    message(paste0("Reclassifying droplets in low mutant frequency wells did not take place",
+    message(paste0("Reclassifying droplets in low mutant frequency wells did not take place ",
                    "because there are noth enough high mutant frequency wells."))
     return(plate)
   }

@@ -73,8 +73,8 @@ remove_outliers <- function(plate) {
   data[outlier_idx, 'cluster'] <- CLUSTER_OUTLIER  
   
   drops_outlies_df <- dplyr::data_frame(
-    "well" = p141 %>% wells_used,
-    "drops_outlier" = 0)  
+    "well" = plate %>% wells_used,
+    "drops_outlier" = 0L)  
   
   meta <-
     data %>%

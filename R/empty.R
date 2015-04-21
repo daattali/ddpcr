@@ -63,7 +63,7 @@ remove_empty <- function(plate) {
   empty_cutoff_map <-
     vapply(wells_success(plate),
            function(x) get_empty_cutoff(plate, x),
-           integer(1))
+           1L)
   
   # set the cluster to EMPTY for every empty droplet in every well
   data <- plate_data(plate)
