@@ -21,8 +21,8 @@ DEFAULT_PLATE_META <-
   expand.grid(LETTERS[1:8], 1:12, stringsAsFactors = FALSE) %>%
   magrittr::set_colnames(c("row", "col")) %>%
   dplyr::mutate_("well" = ~ sprintf("%s%02d", row, col),
-                 "sample" = NA) %>%
-  dplyr::select_("well", "sample", "row", "col")
+                 "sample" = NA, "used" = FALSE) %>%
+  dplyr::select_("well", "sample", "row", "col", "used")
 
 # Each parameter has a somewhat descriptive name of what it is used for, and
 # all parameters used by a single step in the pipeline are in a list together

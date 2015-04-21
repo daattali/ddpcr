@@ -45,12 +45,16 @@ plus_minus <- function(x, y) {
 }
 
 # overwrite a column in a data.frame based on a matching column in another df
-merge_dfs_overwrite_col <- function(olddf, newdf, colnames, bycol = "well") {
+merge_dfs_overwrite_col <- function(olddf, newdf, cols, bycol = "well") {
   result <- dplyr::left_join(olddf, newdf, by = bycol)
+  
+  if (missing(cols)) {
+    cols <- setdiff(colnames(olddf), bycol)
+  }
   
   # yes yes, looks are horrible in R, but I couldn't find a better solution
   # to make sure this works on multiple columns at a time
-  for (colname in colnames) {
+  for (colname in cols) {
     colname_x <- sprintf("%s.x", colname)
     colname_y <- sprintf("%s.y", colname)
     

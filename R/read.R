@@ -133,7 +133,7 @@ read_files <- function(plate, data_files, meta_file) {
     dplyr::group_by_("well") %>%
     dplyr::summarise_("drops" = ~ n()) %>%
     dplyr::left_join(plate_meta, ., by = "well") %>%
-    dplyr::arrange_(~ desc(used), ~ row, ~ col)
+    arrange_meta
   
   # set the plate's name based on the file paths
   name(plate) <- get_consensus_name_from_data_files(data_files)

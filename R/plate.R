@@ -47,6 +47,14 @@ well_info <- function(x, well_id, var) {
   result
 }
 
+arrange_meta <- function(x) {
+  if ("success" %in% colnames(x)) {
+    x %>% dplyr::arrange_(~ desc(used), ~ desc(success), ~ row, ~ col)  
+  } else {
+    x %>% dplyr::arrange_(~ desc(used), ~ row, ~ col)
+  }
+}
+
 #' @export
 plate_data <- function(x) {
   stopifnot(x %>% inherits("ddpcr_plate"))

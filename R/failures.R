@@ -115,7 +115,7 @@ remove_failures <- function(plate) {
   meta <-
     merge_dfs_overwrite_col(plate_meta(plate), well_success_map,
                             c("success", "comment")) %>%
-    dplyr::arrange_(~ desc(used), ~ desc(success), ~ row, ~ col)
+    arrange_meta
   
   # ---
   

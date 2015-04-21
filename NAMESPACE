@@ -2,6 +2,7 @@
 
 S3method(plot,ddpcr_plate)
 S3method(print,ddpcr_plate)
+S3method(subset,ddpcr_plate)
 export("name<-")
 export("params<-")
 export(analyze)
