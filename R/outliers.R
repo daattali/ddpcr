@@ -20,23 +20,22 @@
 #   values only within these drops. Mark the outlier cutoff as the 3rd quantile
 #   plus 5 (PARAMS$OUTLIERS$CUTOFF_IQR) IQR
 get_outlier_cutoff <- function(plate) {
-  params <- params(plate)
   data <- plate_data(plate)
   
   top_fam <- 
     sort(data[['FAM']], decreasing = TRUE) %>%
-    head(nrow(data) / 100 * params[['OUTLIERS']][['TOP_PERCENT']])
+    head(nrow(data) / 100 * params(plate, 'OUTLIERS', 'TOP_PERCENT'))
   q_fam <- quantile(top_fam, c(.25, .75))
   cutoff_fam <-
-    (diff(q_fam) * params[['OUTLIERS']][['CUTOFF_IQR']] + q_fam[2]) %>%
+    (diff(q_fam) * params(plate, 'OUTLIERS', 'CUTOFF_IQR') + q_fam[2]) %>%
     as.numeric
   
   top_hex <- 
     sort(data[['HEX']], decreasing = TRUE) %>%
-    head(nrow(data) / 100 * params[['OUTLIERS']][['TOP_PERCENT']])
+    head(nrow(data) / 100 * params(plate, 'OUTLIERS', 'TOP_PERCENT'))
   q_hex <- quantile(top_hex, c(.25, .75))
   cutoff_hex <-
-    (diff(q_hex) * params[['OUTLIERS']][['CUTOFF_IQR']] + q_hex[2]) %>%
+    (diff(q_hex) * params(plate, 'OUTLIERS', 'CUTOFF_IQR') + q_hex[2]) %>%
     as.numeric
   
   result <- list()

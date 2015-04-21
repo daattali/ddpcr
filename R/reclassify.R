@@ -1,5 +1,4 @@
 reclassify_droplets_single <- function(plate, well_id, consensus_border_ratio) {
-  params <- params(plate)
   
   well_data <- get_single_well(plate, well_id, clusters = TRUE)
   top <-
@@ -81,14 +80,13 @@ reclassify_droplets <- function(plate) {
   
   tstart <- proc.time()
   
-  params <- params(plate)
   data <- plate_data(plate)
   
   # ---
   
   # if there are not enough wells with high MT freq to use as prior info or if
   # there are no wells with low MT freq to reclassify, do nothing
-  if (plate %>% wells_mutant %>% length < params[['RECLASSIFY_LOW_MT']][['MIN_WELLS_MT_CLUSTER']]
+  if (plate %>% wells_mutant %>% length < params(plate, 'RECLASSIFY_LOW_MT', 'MIN_WELLS_MT_CLUSTER')
       | plate %>% wells_wildtype %>% length == 0) {
     message(paste0("Reclassifying droplets in low mutant frequency wells did not take place ",
                    "because there are noth enough high mutant frequency wells."))
@@ -117,7 +115,7 @@ reclassify_droplets <- function(plate) {
            numeric(1))
   consensus_border_ratio <-
     mt_border_ratios %>%
-    quantile(params[['RECLASSIFY_LOW_MT']][['BORDER_RATIO_QUANTILE']]) %>%
+    quantile(params(plate, 'RECLASSIFY_LOW_MT', 'BORDER_RATIO_QUANTILE')) %>%
     as.numeric
 
   well_clusters_info <-

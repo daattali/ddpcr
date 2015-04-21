@@ -37,8 +37,7 @@
 #       small, below 200 (PARAMS$WELLSUCCESS$NORMAL_SIGMA_T), to ensure that
 #       the empty cluster is indeed very dense as it should be
 is_well_success <- function(plate, well_id) {
-  params <- params(plate)
-
+  
   well_data <- get_single_well(plate, well_id, empty = TRUE)
 
   # if this well doesn't actually have data (or is an invalid well) return NA
@@ -47,7 +46,7 @@ is_well_success <- function(plate, well_id) {
   }
   
   # First heuristic check: make sure there are enough droplets
-  if (nrow(well_data) < params[['WELLSUCCESS']][['TOTAL_DROPS_T']]) {
+  if (nrow(well_data) < params(plate, 'WELLSUCCESS', 'TOTAL_DROPS_T')) {
     success <- FALSE
     msg <- sprintf("Not enough drops generated (%s)", nrow(well_data))
     return(list(result = success, comment = msg))
@@ -70,21 +69,21 @@ is_well_success <- function(plate, well_id) {
     return(list(result = success, comment = msg))
   }
   
-  if (mixmdl_fam$lambda[smaller_comp_fam] < params[['WELLSUCCESS']][['NORMAL_LAMBDA_LOW_T']]) {
+  if (mixmdl_fam$lambda[smaller_comp_fam] < params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_LOW_T')) {
     success <- FALSE
     msg <- paste0("Could not find significant empty cluster (lambda of FAM normal: ",
                   signif(mixmdl_fam$lambda[smaller_comp_fam], 4), ")")
     return(list(result = success, comment = msg))
   }
   
-  if (mixmdl_fam$lambda[smaller_comp_fam] > params[['WELLSUCCESS']][['NORMAL_LAMBDA_HIGH_T']]) {
+  if (mixmdl_fam$lambda[smaller_comp_fam] > params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_HIGH_T')) {
     success <- FALSE
     msg <- paste0("There are too many empty drops (lambda of FAM normal: ",
                   signif(mixmdl_fam$lambda[smaller_comp_fam], 4), ")")
     return(list(result = success, comment = msg))
   }
   
-  if (mixmdl_fam$sigma[smaller_comp_fam] > params[['WELLSUCCESS']][['NORMAL_SIGMA_T']]) {
+  if (mixmdl_fam$sigma[smaller_comp_fam] > params(plate, 'WELLSUCCESS', 'NORMAL_SIGMA_T')) {
     success <- FALSE
     msg <- paste0("Could not find a dense empty cluster (sigma of FAM normal: ",
                   round(mixmdl_fam$sigma[smaller_comp_fam]), ")")

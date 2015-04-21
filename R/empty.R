@@ -17,8 +17,7 @@
 #   More specifically, we set the threshold at 7 (PARAMS$EMPTY$CUTOFF_SD)
 #   standard deviations above the center of the distribution.
 get_empty_cutoff <- function(plate, well_id) {
-  params <- params(plate)
-  
+
   well_data <- get_single_well(plate, well_id, empty = TRUE)
   
   # fit two normal distributions in the data along the FAM dimension
@@ -30,7 +29,7 @@ get_empty_cutoff <- function(plate, well_id) {
   smaller_comp_fam <- mixmdl_fam$mu %>% which.min
   cutoff_fam <-
     (mixmdl_fam$mu[smaller_comp_fam] +
-    params[['EMPTY']][['CUTOFF_SD']] * mixmdl_fam$sigma[smaller_comp_fam]) %>%
+    params(plate, 'EMPTY', 'CUTOFF_SD') * mixmdl_fam$sigma[smaller_comp_fam]) %>%
     ceiling %>%
     as.integer
   

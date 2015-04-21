@@ -1,6 +1,4 @@
 analyze_well_clusters_density_inflection <- function(plate, well_id, plot = FALSE) {
-  
-  params <- params(plate)
 
   has_mt_cluster <- FALSE
   msg <- NA  
@@ -17,8 +15,8 @@ analyze_well_clusters_density_inflection <- function(plate, well_id, plot = FALS
   adj_prev <- NULL 
   # final "adjust" value
   adj_final <- NULL 
-  for (adj in seq(params[['ASSIGN_CLUSTERS']][['ADJUST_MIN']],
-                  params[['ASSIGN_CLUSTERS']][['ADJUST_MAX']],
+  for (adj in seq(params(plate, 'ASSIGN_CLUSTERS', 'ADJUST_MIN'),
+                  params(plate, 'ASSIGN_CLUSTERS', 'ADJUST_MAX'),
                   0.5)) {
     dens_smooth <- density(top[['HEX']], bw = "sj", adjust = adj)
     inflection_idx <- get_inflection_pts(dens_smooth)

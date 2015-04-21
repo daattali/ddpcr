@@ -17,8 +17,6 @@ analyze_well_clusters_normals <- function(plate, well_id, plot = FALSE) {
   # Algorithm:
   #   
   
-  params <- params(plate)
-  
   has_mt_cluster <- FALSE
   msg <- NA
   well_data <- get_single_well(plate, well_id)
@@ -29,10 +27,10 @@ analyze_well_clusters_normals <- function(plate, well_id, plot = FALSE) {
     dplyr::filter_(~ FAM %btwn% cl_borders)
   
   set.seed(SEED)
-  for (i in seq(params[['ASSIGN_CLUSTERS']][['NUM_ATTEMPTS_SEGREGATE']])) {
+  for (i in seq(params(plate, 'ASSIGN_CLUSTERS', 'NUM_ATTEMPTS_SEGREGATE'))) {
     quiet(
       mixmdl_hex <- mixtools::normalmixEM(top[['HEX']], k = 2))
-    segregate_ratio <- params[['ASSIGN_CLUSTERS']][['SEGREGATE_RATIO_THRESHOLD']]
+    segregate_ratio <- params(plate, 'ASSIGN_CLUSTERS', 'SEGREGATE_RATIO_THRESHOLD')
     if (min(mixmdl_hex$mu) < max(mixmdl_hex$mu) * segregate_ratio) {
       has_mt_cluster <- TRUE
       break
@@ -45,14 +43,14 @@ analyze_well_clusters_normals <- function(plate, well_id, plot = FALSE) {
     plus_minus(
       mixmdl_hex$mu[smaller_comp_hex],
       mixmdl_hex$sigma[smaller_comp_hex] *
-        params[['ASSIGN_CLUSTERS']][['CLUSTERS_BORDERS_NUM_SD']]
+        params(plate, 'ASSIGN_CLUSTERS', 'CLUSTERS_BORDERS_NUM_SD')
     ) %>%
     as.integer
   wt_borders <-
     plus_minus(
       mixmdl_hex$mu[larger_comp_hex],
       mixmdl_hex$sigma[larger_comp_hex] *
-        params[['ASSIGN_CLUSTERS']][['CLUSTERS_BORDERS_NUM_SD']]
+        params(plate, 'ASSIGN_CLUSTERS', 'CLUSTERS_BORDERS_NUM_SD')
     ) %>%
     as.integer
   
@@ -77,14 +75,14 @@ analyze_well_clusters_normals <- function(plate, well_id, plot = FALSE) {
         plus_minus(
           mixmdl_hex$mu[smaller_comp_hex],
           mixmdl_hex$sigma[smaller_comp_hex] *
-            params[['ASSIGN_CLUSTERS']][['CLUSTERS_BORDERS_NUM_SD']]
+            params(plate, 'ASSIGN_CLUSTERS', 'CLUSTERS_BORDERS_NUM_SD')
         ) %>% 
         as.integer
       wt_borders <-
         plus_minus(
           mixmdl_hex$mu[larger_comp_hex],
           mixmdl_hex$sigma[larger_comp_hex] *
-            params[['ASSIGN_CLUSTERS']][['CLUSTERS_BORDERS_NUM_SD']]
+            params(plate, 'ASSIGN_CLUSTERS', 'CLUSTERS_BORDERS_NUM_SD')
         ) %>%
         as.integer
     }
@@ -92,7 +90,7 @@ analyze_well_clusters_normals <- function(plate, well_id, plot = FALSE) {
     mt_cutoff <-
       mixmdl_hex$mu[larger_comp_hex] -
       mixmdl_hex$sigma[larger_comp_hex] * 
-      params[['ASSIGN_CLUSTERS']][['NO_CLUSTER_MT_BORDER_NUM_SD']]
+      params(plate, 'ASSIGN_CLUSTERS', 'NO_CLUSTER_MT_BORDER_NUM_SD')
     mt_borders <- c(0, mt_cutoff) %>% as.integer
   }
   

@@ -80,14 +80,33 @@ name <- function(x) {
 }
 
 #' @export
-params <- function(x) {
+params <- function(x, major, minor) {
   stopifnot(x %>% inherits("ddpcr_plate"))
-  x[['params']]
+  
+  res <- x[['params']]
+  if (!missing(major)) {
+    res <- res[[major]]
+    if (!missing(minor)) {
+      res <- res[[minor]]
+    }
+  }
+  
+  res
 }
+
 #' @export
-`params<-` <- function(x, value) {
+`params<-` <- function(x, major, minor, value) {
   stopifnot(x %>% inherits("ddpcr_plate"))
-  x[['params']] <- value
+  
+  replace <- 'params'
+  if (!missing(major)) {
+    replace <- c(replace, major)
+    if (!missing(minor)) {
+      replace <- c(replace, minor)
+    }
+  }
+
+  x[[replace]] <- value
   x
 }
 
