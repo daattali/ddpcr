@@ -89,6 +89,9 @@ read_files <- function(plate, data_files, meta_file) {
   tstart <- proc.time()
   
   # read the droplets data
+  # I purposely keep the wells as character rather than factor because
+  # the data.frame is large and it's much faster to search through it using
+  # dplyr::filter when using character
   plate_data <-
     lapply(data_files, function(x) {
       wellNum <- get_well_from_data_file(x)
