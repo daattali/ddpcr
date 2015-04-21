@@ -1,5 +1,5 @@
 - add lol_to_df and merge_dfs_overwrite_col to rsalad
 - have a "verbose" param
 - should i remove failures before outliers?
-- add a proper license
+- verify that AGPL-3 license is good
 - make plot work throught the analysis stages
