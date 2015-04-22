@@ -20,7 +20,9 @@
 #   values only within these drops. Mark the outlier cutoff as the 3rd quantile
 #   plus 5 (PARAMS$OUTLIERS$CUTOFF_IQR) IQR
 get_outlier_cutoff <- function(plate) {
-  data <- plate_data(plate)
+  data <-
+    plate_data(plate) %>%
+    dplyr::filter_(~ well %in% wells_success(plate))
   
   top_fam <- 
     sort(data[['FAM']], decreasing = TRUE) %>%
@@ -56,7 +58,7 @@ get_outlier_cutoff <- function(plate) {
 remove_outliers <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
-  stopifnot(plate %>% status >= STATUS_INIT)
+  stopifnot(plate %>% status >= STATUS_FAILED_REMOVED)
   
   tstart <- proc.time()
   
@@ -68,7 +70,8 @@ remove_outliers <- function(plate) {
   cutoff_hex <- outlier_cutoff[['HEX']]
   cutoff_fam <- outlier_cutoff[['FAM']]
 
-  outlier_idx <- data[['FAM']] > cutoff_fam | data[['HEX']] > cutoff_hex
+  outlier_idx <-
+    (data[['FAM']] > cutoff_fam | data[['HEX']] > cutoff_hex)
   data[outlier_idx, 'cluster'] <- CLUSTER_OUTLIER  
   
   drops_outlies_df <- dplyr::data_frame(

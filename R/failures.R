@@ -57,6 +57,39 @@ is_well_success <- function(plate, well_id) {
   # - bottom population needs to have lambda not too small and not too large
   # - sigma of bottom population should be fairly small
   set.seed(SEED)
+  
+  if (params(plate, 'WELLSUCCESS', 'FAST')) {
+    kmeans_fam <- kmeans(well_data[['FAM']], 2, nstart = 5)
+    centers_fam <- kmeans_fam$centers %>% as.integer
+    smaller_comp_fam <- centers_fam %>% which.min
+    larger_comp_fam <- centers_fam %>% which.max
+    
+    if ((centers_fam %>% diff %>% abs) < min(centers_fam)) {
+      success <- FALSE
+      msg <- sprintf("There seems to be mostly empty drops (centers of FAM clusters: %s)",
+                    paste0(centers_fam, collapse = ","))
+      return(list(result = success, comment = msg))
+    }
+    
+    smaller_lambda <- kmeans_fam$size[smaller_comp_fam]/sum(kmeans_fam$size)
+    
+    if (smaller_lambda < params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_LOW_T')) {
+      success <- FALSE
+      msg <- paste0("Could not find significant empty cluster (lambda of FAM normal: ",
+                    signif(smaller_lambda, 4), ")")
+      return(list(result = success, comment = msg))
+    }
+
+    if (smaller_lambda > params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_HIGH_T')) {
+      success <- FALSE
+      msg <- paste0("There are too many empty drops (lambda of FAM normal: ",
+                    signif(smaller_lambda, 4), ")")
+      return(list(result = success, comment = msg))
+    }
+    
+    return(list(result = TRUE, comment = NA)) 
+  }
+  
   quiet(
     mixmdl_fam <- mixtools::normalmixEM(well_data[['FAM']], k = 2))
   smaller_comp_fam <- mixmdl_fam$mu %>% which.min
@@ -98,7 +131,7 @@ is_well_success <- function(plate, well_id) {
 remove_failures <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
-  stopifnot(plate %>% status >= STATUS_OUTLIERS_REMOVED)
+  stopifnot(plate %>% status >= STATUS_INIT)
   
   tstart <- proc.time()
   

@@ -157,8 +157,8 @@ wells_wildtype <- function(x) {
 analyze = function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
-  plate %<>% remove_outliers     # step 1 - remove outlier droplets
-  plate %<>% remove_failures     # step 2 - remove failed wells
+  plate %<>% remove_failures     # step 1 - remove failed wells
+  plate %<>% remove_outliers     # step 2 - remove outlier droplets
   plate %<>% remove_empty        # step 3 - remove empty droplets
   plate %<>% classify_droplets   # step 4 - classify droplets as mutant/wildtype/rain
   plate %<>% reclassify_droplets # step 5 - reanalyze low mutant frequency wells
