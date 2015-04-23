@@ -1,19 +1,20 @@
 empty_plate <- function() {
-  structure(
-    list(
-      plate_data = NULL,
-      plate_meta = NULL,
-      name = NULL,
-      status = STATUS_UNDEFINED,
-      params = DEFAULT_PARAMS
-    ),
-    class = "ddpcr_plate"
+  list(
+    plate_data = NULL,
+    plate_meta = NULL,
+    name = NULL,
+    status = STATUS_UNDEFINED,
+    params = NULL
   )
 }
 
 #' @export
-new_plate <- function(dir, data_files, meta_file, name) {
+new_plate <- function(dir, type = "wtnegbraf", data_files, meta_file, name) {
   plate <- empty_plate()
+  
+  plate <- set_type(plate, type)
+  params(plate) <- default_params(plate)
+  
   plate <- read_plate(plate, dir, data_files, meta_file)
   
   if (!missing(name)) {
@@ -21,6 +22,54 @@ new_plate <- function(dir, data_files, meta_file, name) {
   }
   
   plate
+}
+
+set_type <- function(plate, type) {
+  if (!missing(type) && is.null(type)) {
+    return(plate)
+  }
+  
+  if (missing(type)) {
+    type <- NULL
+  }  
+  
+  new_class <- type
+  if (class(plate)[1] != "list") {
+    new_class <- c(class(plate), new_class)
+  }
+  class(plate) <- new_class
+  
+  set_type(plate, parent_assay(structure(plate, class = type)))
+}
+
+parent_assay <- function(plate) {
+  UseMethod("parent_assay")
+}
+
+parent_assay.ddpcr_plate <- function(plate) {
+  NULL
+}
+
+parent_assay.default <- function(plate) {
+  "ddpcr_plate"
+}
+
+parent_assay.wtnegbraf <- function(plate) {
+  "ppnp_assay"
+}
+
+default_params <- function(plate) {
+  UseMethod("default_params")
+}
+
+default_params.ddpcr_plate <- function(plate) {
+  DEFAULT_PARAMS
+}
+
+default_params.wtnegbraf <- function(plate) {
+  params <- NextMethod("default_params")
+  params[['general']][['type']] <- "sdfsd"
+  params
 }
 
 #' @export
