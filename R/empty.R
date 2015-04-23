@@ -48,10 +48,26 @@ get_empty_cutoff <- function(plate, well_id) {
 #     result: Dataframe containing all drops, with the empty drops marked with
 #       with their cluster
 #     cutoffs: The FAM cutoff of every well
+# Removes outlier drops from a plate
+#
+# Args:
+#   .wellData: The dataframe containing all the droplets
+#
+# Returns:
+#   Dataframe with outliers removed
+#' Remove empty droplets
 #' @export
 remove_empty <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
+  UseMethod("remove_empty")
+}
+
+#' Remove empty droplets
+#' 
+#' The algorithm for removing empty droplets from a plate
+#' 
+#' @export
+#' @keywords internal
+remove_empty.ddpcr_plate <- function(plate) {
   stopifnot(plate %>% status >= STATUS_FAILED_REMOVED)
   
   tstart <- proc.time()

@@ -1,7 +1,7 @@
 #' @export
-#' subset(plate, c("A02", "B05"))
-#' subset(plate, "A01, B05")
-#' subset(plate, "A01, B05:D07, F10")
+# subset(plate, c("A02", "B05"))
+# subset(plate, "A01, B05")
+# subset(plate, "A01, B05:D07, F10")
 subset.ddpcr_plate <- function(plate, wells, samples) {
   if (!missing(wells) && !missing(samples)) {
     err_msg("Can only subset by either `wells` or `samples`, not both")

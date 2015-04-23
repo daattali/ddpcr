@@ -17,7 +17,7 @@ plot.ddpcr_plate <- function(
   plate <- subset(plate, wells, samples)
   
   if (!show_failed_wells && status(plate) >= STATUS_FAILED_REMOVED) {
-    plate %<>% subset(wells_success)
+    plate %<>% subset(wells_success(.))
   }
   
   X_var <- params(plate, 'GENERAL', 'X_VAR')

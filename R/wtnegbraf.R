@@ -1,3 +1,36 @@
+STATUS_DROPLETS_CLASSIFIED     <- (STATUS_EMPTY_REMOVED + 1) %>% as.integer
+STATUS_DROPLETS_RECLASSIFIED   <- (STATUS_EMPTY_REMOVED + 2) %>% as.integer
+
+CLUSTER_WT         <- (CLUSTER_EMPTY + 1) %>% as.integer
+CLUSTER_MT         <- (CLUSTER_EMPTY + 2) %>% as.integer
+CLUSTER_RAIN       <- (CLUSTER_EMPTY + 3) %>% as.integer
+
+parent_plate_type.wtnegbraf <- function(plate) {
+  "ppnp_assay"
+}
+
+default_params.wtnegbraf <- function(plate) {
+  params <- NextMethod("default_params")
+  
+  params[['GENERAL']][['X_VAR']] <- "HEXXX"
+  params[['GENERAL']][['Y_VAR']] <- "FAMMM"
+  
+  PARAMS_ASSIGN_CLUSTERS <- list()
+  PARAMS_ASSIGN_CLUSTERS['NUM_ATTEMPTS_SEGREGATE'] <- 1
+  PARAMS_ASSIGN_CLUSTERS['SEGREGATE_RATIO_THRESHOLD'] <- 0.75
+  PARAMS_ASSIGN_CLUSTERS['CLUSTERS_BORDERS_NUM_SD'] <- 3
+  PARAMS_ASSIGN_CLUSTERS['NO_CLUSTER_MT_BORDER_NUM_SD'] <- 10
+  PARAMS_ASSIGN_CLUSTERS['ADJUST_MIN'] <- 4
+  PARAMS_ASSIGN_CLUSTERS['ADJUST_MAX'] <- 20
+  PARAMS_RECLASSIFY_LOW_MT <- list()
+  PARAMS_RECLASSIFY_LOW_MT['MIN_WELLS_MT_CLUSTER'] <- 4
+  PARAMS_RECLASSIFY_LOW_MT['BORDER_RATIO_QUANTILE'] <- 0.75
+  params[['ASSIGN_CLUSTERS']] <- PARAMS_ASSIGN_CLUSTERS
+  params[['RECLASSIFY_LOW_MT']] <- PARAMS_RECLASSIFY_LOW_MT 
+  
+  params
+}
+
 #' @export
 wells_mutant <- function(x) {
   stopifnot(x %>% inherits("wtnegbraf"))
@@ -10,6 +43,15 @@ wells_wildtype <- function(x) {
   stopifnot(x %>% inherits("wtnegbraf"))
   dplyr::filter_(x %>% plate_meta, ~ !has_mt_cluster) %>%
     .[['well']]
+}
+
+#' @export
+analyze.wtnegbraf = function(plate) {
+  plate <- NextMethod("analyze")
+  plate %<>% classify_droplets   # step 4 - classify droplets as mutant/wildtype/rain
+  plate %<>% reclassify_droplets # step 5 - reanalyze low mutant frequency wells
+  
+  plate
 }
 
 

@@ -9,7 +9,7 @@ empty_plate <- function() {
 }
 
 #' @export
-new_plate <- function(dir, type = "wtnegbraf", data_files, meta_file, name) {
+new_plate <- function(dir, type, data_files, meta_file, name) {
   # Unfortunately this pipeline can't be piped with %>% because magrittr
   # doesn't seem to play nicely with missing arguments
   plate <- empty_plate()  # Start with a new empty plate
@@ -62,10 +62,8 @@ parent_plate_type.ddpcr_plate <- function(plate) {
 parent_plate_type.default <- function(plate) {
   "ddpcr_plate"
 }
-parent_plate_type.wtnegbraf <- function(plate) {
-  "ppnp_assay"
-}
 
+#' @export
 set_default_params <- function(plate) {
   params(plate) <- default_params(plate)
   plate
@@ -78,12 +76,7 @@ default_params <- function(plate) {
 default_params.ddpcr_plate <- function(plate) {
   DEFAULT_PARAMS
 }
-default_params.wtnegbraf <- function(plate) {
-  params <- NextMethod("default_params")
-  params[['GENERAL']][['X_VAR']] <- "HEXXX"
-  params[['GENERAL']][['Y_VAR']] <- "FAMMM"
-  params
-}
+
 
 #' @export
 plate_meta <- function(x, only_used = FALSE) {
@@ -210,15 +203,15 @@ wells_failed <- function(x) {
 }
 
 #' @export
-analyze = function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
+analyze <- function(plate) {
+  UseMethod("analyze")
+}
+
+#' @export
+analyze.ddpcr_plate = function(plate) {
   plate %<>% remove_failures     # step 1 - remove failed wells
   plate %<>% remove_outliers     # step 2 - remove outlier droplets
   plate %<>% remove_empty        # step 3 - remove empty droplets
-  plate %<>% classify_droplets   # step 4 - classify droplets as mutant/wildtype/rain
-  plate %<>% reclassify_droplets # step 5 - reanalyze low mutant frequency wells
-  
   plate
 }
 

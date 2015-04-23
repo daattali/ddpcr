@@ -19,30 +19,44 @@
 #   drops that have the highest value in that dimension.  Calculate the IQR of the
 #   values only within these drops. Mark the outlier cutoff as the 3rd quantile
 #   plus 5 (PARAMS$OUTLIERS$CUTOFF_IQR) IQR
+#' Get the cutoff for outliers
+#' 
+#' @export
+#' @keywords internal
 get_outlier_cutoff <- function(plate) {
+  UseMethod("get_outlier_cutoff")
+}
+
+#' Algorithm for determining the cutoff for outliers
+#' 
+#' @export
+#' @keywords internal
+get_outlier_cutoff.ddpcr_plate <- function(plate) {
   data <-
     plate_data(plate) %>%
     dplyr::filter_(~ well %in% wells_success(plate))
   
-  top_fam <- 
-    sort(data[['FAM']], decreasing = TRUE) %>%
+  X_var <- params(plate, 'GENERAL', 'X_VAR')
+  Y_var <- params(plate, 'GENERAL', 'Y_VAR')  
+  top_y <- 
+    sort(data[[Y_var]], decreasing = TRUE) %>%
     head(nrow(data) / 100 * params(plate, 'OUTLIERS', 'TOP_PERCENT'))
-  q_fam <- quantile(top_fam, c(.25, .75))
-  cutoff_fam <-
-    (diff(q_fam) * params(plate, 'OUTLIERS', 'CUTOFF_IQR') + q_fam[2]) %>%
+  q_y <- quantile(top_y, c(.25, .75))
+  cutoff_y <-
+    (diff(q_y) * params(plate, 'OUTLIERS', 'CUTOFF_IQR') + q_y[2]) %>%
     as.numeric
   
-  top_hex <- 
-    sort(data[['HEX']], decreasing = TRUE) %>%
+  top_x <- 
+    sort(data[[X_var]], decreasing = TRUE) %>%
     head(nrow(data) / 100 * params(plate, 'OUTLIERS', 'TOP_PERCENT'))
-  q_hex <- quantile(top_hex, c(.25, .75))
-  cutoff_hex <-
-    (diff(q_hex) * params(plate, 'OUTLIERS', 'CUTOFF_IQR') + q_hex[2]) %>%
+  q_x <- quantile(top_x, c(.25, .75))
+  cutoff_x <-
+    (diff(q_x) * params(plate, 'OUTLIERS', 'CUTOFF_IQR') + q_x[2]) %>%
     as.numeric
   
   result <- list()
-  result[['HEX']] <- cutoff_hex
-  result[['FAM']] <- cutoff_fam
+  result[[X_var]] <- cutoff_x
+  result[[Y_var]] <- cutoff_y
   
   result
 }
@@ -54,10 +68,19 @@ get_outlier_cutoff <- function(plate) {
 #
 # Returns:
 #   Dataframe with outliers removed
+#' Remove outlier droplets
 #' @export
 remove_outliers <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
+  UseMethod("remove_outliers")
+}
+
+#' Remove outlier droplets
+#' 
+#' The algorithm for removing outlier droplets from a plate
+#' 
+#' @export
+#' @keywords internal
+remove_outliers.ddpcr_plate <- function(plate) {
   stopifnot(plate %>% status >= STATUS_FAILED_REMOVED)
   
   tstart <- proc.time()
@@ -65,13 +88,15 @@ remove_outliers <- function(plate) {
   data <- plate_data(plate)
   
   # ---
-  
+
+  X_var <- params(plate, 'GENERAL', 'X_VAR')
+  Y_var <- params(plate, 'GENERAL', 'Y_VAR')    
   outlier_cutoff <- plate %>% get_outlier_cutoff
-  cutoff_hex <- outlier_cutoff[['HEX']]
-  cutoff_fam <- outlier_cutoff[['FAM']]
+  cutoff_x <- outlier_cutoff[[X_var]]
+  cutoff_y <- outlier_cutoff[[Y_var]]
 
   outlier_idx <-
-    (data[['FAM']] > cutoff_fam | data[['HEX']] > cutoff_hex)
+    (data[[Y_var]] > cutoff_y | data[[X_var]] > cutoff_x)
   data[outlier_idx, 'cluster'] <- CLUSTER_OUTLIER  
   
   drops_outlies_df <- dplyr::data_frame(
