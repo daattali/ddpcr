@@ -14,7 +14,8 @@ save_plate <- function(plate, file) {
     plate_meta = plate_meta(plate),
     name = name(plate),
     status = status(plate),
-    params = params(plate)
+    params = params(plate),
+    class = class(plate)
   )
   saveRDS(object = object, file = file)
   
@@ -27,6 +28,7 @@ load_plate <- function(file) {
   object <- readRDS(file = file)
   
   plate <- empty_plate()
+  class(plate) <- object[['class']]
   plate_data(plate) <- object[['plate_data']]
   plate_meta(plate) <- object[['plate_meta']]
   name(plate) <- object[['name']]

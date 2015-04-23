@@ -10,11 +10,12 @@ empty_plate <- function() {
 
 #' @export
 new_plate <- function(dir, type = "wtnegbraf", data_files, meta_file, name) {
-  plate <-
-    empty_plate()        %>%  # Start with a new empty plate
-    set_plate_type(type) %>%  # Set the type (class) of this assay
-    set_default_params   %>%  # Set the right parameters based on the plate type
-    read_plate(dir, data_files, meta_file)  # Read the data files into the plate
+  # Unfortunately this pipeline can't be piped with %>% because magrittr
+  # doesn't seem to play nicely with missing arguments
+  plate <- empty_plate()  # Start with a new empty plate
+  plate <- set_plate_type(plate, type)  # Set the type (class) of this assay
+  plate <- set_default_params(plate)   # Set the right parameters based on the plate type
+  plate <- read_plate(plate, dir, data_files, meta_file)  # Read the data files into the plate
 
   # If a name was given, use it instead of the automatically extracted
   if (!missing(name)) {
@@ -223,21 +224,18 @@ analyze = function(plate) {
 
 #' @export
 print.ddpcr_plate <- function(x, ...) {
-  if (x %>% status < STATUS_INIT) {
-    cat0("Empty ddPCR plate")
-  } else {
-    cat0("Dataset name: ", x %>% name, "\n")
-    cat0("Analysis status: ", x %>% status, "\n")
-    if (x %>% status >= STATUS_INIT) {
-      cat0("Data summary: ", 
-           x %>% plate_meta %>% .[['used']] %>% sum, " wells, ",
-           x %>% plate_data %>% nrow, " drops\n")
-    }
-    cat0("---\nDrops data:\n")
-    cat0(x %>% plate_data %>% str)
-    cat0("---\nPlate meta data:\n")
-    cat0(x %>% plate_meta %>% str)
+  cat0("Dataset name: ", x %>% name, "\n")
+  cat0("Plate type: ", x %>% class %>% paste(collapse = ", "), "\n")
+  cat0("Analysis status: ", x %>% status, "\n")
+  if (x %>% status >= STATUS_INIT) {
+    cat0("Data summary: ", 
+         x %>% plate_meta %>% .[['used']] %>% sum, " wells, ",
+         x %>% plate_data %>% nrow, " drops\n")
   }
+  cat0("---\nDrops data:\n")
+  cat0(x %>% plate_data %>% str)
+  cat0("---\nPlate meta data:\n")
+  cat0(x %>% plate_meta %>% str)
 }
 
 # pmini <- new_plate("../../data/mini141")
