@@ -6,4 +6,4 @@
 - cleanup code inside failures.R and decide on a method (fast vs slow)
 - check what's so slow in empty step - is it finding the empties, or building the df?
 - rain cluster should go before mutant/wildtype because its more generic
-- params() to change the channel1/2 (x/yvar)
+- when xvar/yvar are changed with `params()`, need to actually change the column names

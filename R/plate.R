@@ -10,13 +10,13 @@ empty_plate <- function() {
 
 #' @export
 new_plate <- function(dir, type = "wtnegbraf", data_files, meta_file, name) {
-  plate <- empty_plate()
-  
-  plate <- set_type(plate, type)
-  params(plate) <- default_params(plate)
-  
-  plate <- read_plate(plate, dir, data_files, meta_file)
-  
+  plate <-
+    empty_plate()        %>%  # Start with a new empty plate
+    set_plate_type(type) %>%  # Set the type (class) of this assay
+    set_default_params   %>%  # Set the right parameters based on the plate type
+    read_plate(dir, data_files, meta_file)  # Read the data files into the plate
+
+  # If a name was given, use it instead of the automatically extracted
   if (!missing(name)) {
     name(plate) <- name
   }
@@ -24,7 +24,11 @@ new_plate <- function(dir, type = "wtnegbraf", data_files, meta_file, name) {
   plate
 }
 
-set_type <- function(plate, type) {
+# Set the type of plate. Supports multi-level inheritance
+# All types are by default ddpcr_plate, but users can define new assay types
+# that inherit from another one (which means they will use the same params/
+# methods)
+set_plate_type <- function(plate, type) {
   if (!missing(type) && is.null(type)) {
     return(plate)
   }
@@ -33,42 +37,50 @@ set_type <- function(plate, type) {
     type <- NULL
   }  
   
+  # Add the given type to the classlist (initially the class will be "list"
+  # because that's the mode of a plate - we want to exclude that one)
   new_class <- type
   if (class(plate)[1] != "list") {
     new_class <- c(class(plate), new_class)
   }
   class(plate) <- new_class
   
-  set_type(plate, parent_assay(structure(plate, class = type)))
+  # Recursively add the plate type of the parent
+  set_plate_type(plate,
+                 structure(plate, class = type) %>% parent_plate_type)
 }
 
-parent_assay <- function(plate) {
-  UseMethod("parent_assay")
+# Each plate type can define a "parent" plate type
+# ddpcr_plate is the last parent of any plate type and has no parent itself
+parent_plate_type <- function(plate) {
+  UseMethod("parent_plate_type")
 }
-
-parent_assay.ddpcr_plate <- function(plate) {
+parent_plate_type.ddpcr_plate <- function(plate) {
   NULL
 }
-
-parent_assay.default <- function(plate) {
+parent_plate_type.default <- function(plate) {
   "ddpcr_plate"
 }
-
-parent_assay.wtnegbraf <- function(plate) {
+parent_plate_type.wtnegbraf <- function(plate) {
   "ppnp_assay"
 }
 
+set_default_params <- function(plate) {
+  params(plate) <- default_params(plate)
+  plate
+}
+
+# Each plate type can define its own parameters
 default_params <- function(plate) {
   UseMethod("default_params")
 }
-
 default_params.ddpcr_plate <- function(plate) {
   DEFAULT_PARAMS
 }
-
 default_params.wtnegbraf <- function(plate) {
   params <- NextMethod("default_params")
-  params[['general']][['type']] <- "sdfsd"
+  params[['GENERAL']][['X_VAR']] <- "HEXXX"
+  params[['GENERAL']][['Y_VAR']] <- "FAMMM"
   params
 }
 
@@ -177,6 +189,10 @@ wells_used <- function(x) {
 #' @export
 wells_success <- function(x) {
   stopifnot(x %>% inherits("ddpcr_plate"))
+  
+  if (x %>% status < STATUS_FAILED_REMOVED) {
+    return(NULL)
+  }
   dplyr::filter_(x %>% plate_meta, ~ success) %>%
     .[['well']]
 }
@@ -184,21 +200,11 @@ wells_success <- function(x) {
 #' @export
 wells_failed <- function(x) {
   stopifnot(x %>% inherits("ddpcr_plate"))
+  
+  if (x %>% status < STATUS_FAILED_REMOVED) {
+    return(NULL)
+  }  
   dplyr::filter_(x %>% plate_meta, ~ !success) %>%
-    .[['well']]
-}
-
-#' @export
-wells_mutant <- function(x) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
-  dplyr::filter_(x %>% plate_meta, ~ has_mt_cluster) %>%
-    .[['well']]
-}
-
-#' @export
-wells_wildtype <- function(x) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
-  dplyr::filter_(x %>% plate_meta, ~ !has_mt_cluster) %>%
     .[['well']]
 }
 
