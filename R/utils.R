@@ -126,3 +126,29 @@ is_file <- function(path) {
   }
   !(fileinfo$isdir)
 }
+
+# Representation of a 2D point
+point2d <- function(v) {
+  stopifnot(v %>% length == 2)
+  structure(
+    v %>% as.integer
+    , class = "point2d"
+  )
+}
+
+# Euclidean distance between two points (if not second point given,
+# calculate distance to the origin)
+diff.point2d <- function(v, w) {
+  if (missing(w)) {
+    w <- point2d(c(0, 0))
+  }
+  sqrt((v[1] - w[1]) ^ 2 + (v[2] - w[2]) ^ 2)
+}
+
+str.point2d <- function(v) {
+  sprintf("(%s, %s)", v[1], v[2])
+}
+
+print.point2d <- function(v) {
+   v %>% str %>% print
+}

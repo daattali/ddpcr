@@ -15,7 +15,7 @@ calculate_concentration_single <- function(plate, well_id) {
     plate_meta(plate) %>%
     dplyr::filter_(~ well == well_id) %>%
     .[['drops_empty_fraction']]
-  total_volume <- params(plate, 'PCR', 'DROPLET_VOLUME') * total_drops
+  total_volume <- params(plate, 'GENERAL', 'DROPLET_VOLUME') * total_drops
   cpd <- -log(empty_fraction) # copies per droplet
   total_templates <- cpd * total_drops
   concentration <- total_templates / total_volume

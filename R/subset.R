@@ -1,11 +1,24 @@
 #' @export
-#' subset(plate, c("A02", "B05"))
-#' subset(plate, "A01, B05")
-#' subset(plate, "A01, B05:D07, F10")
-subset.ddpcr_plate <- function(plate, wells) {
+# subset(plate, c("A02", "B05"))
+# subset(plate, "A01, B05")
+# subset(plate, "A01, B05:D07, F10")
+subset.ddpcr_plate <- function(plate, wells, samples) {
+  if (!missing(wells) && !missing(samples)) {
+    err_msg("Can only subset by either `wells` or `samples`, not both")
+  }
   
-  if (length(wells) == 1) {
-    wells %<>% range_list_to_vec
+  if (!missing(wells)) {
+    wells %<>% toupper
+    if (is_range(wells)) {
+      wells %<>% range_list_to_vec
+    }
+  } else if (!missing(samples)) {
+    wells <-
+      plate_meta(plate) %>%
+      dplyr::filter_(~ sample %in% samples) %>%
+      .[['well']]
+  } else {
+    return(plate)  # if no arguments, just return the same plate
   }
   
   plate_data(plate) %<>%
@@ -17,6 +30,10 @@ subset.ddpcr_plate <- function(plate, wells) {
     arrange_meta
   
   plate
+}
+
+is_range <- function(x) {
+  length(x) == 1 && grepl("[,:]", x)
 }
 
 # convert a range 
@@ -35,7 +52,7 @@ range_list_to_vec <- function(rangel) {
   wells
 }
 
-# convert a range such as "B05:G09" to vector of c("B05", "G09")
+# "B05:G09" -> c("B05", "G09"), "B05" -> c("B05", "B05")
 range_to_endpoints <- function(range) {
   endpoints <- strsplit(range, ":") %>% unlist
   if (endpoints %>% length == 1) {
@@ -53,28 +70,55 @@ range_to_endpoints <- function(range) {
 
 WELL_ID_REGEX <- "^[A-H][0-1][0-9]$"
 
+# "D" -> 4 
+row_to_num <- function(row) {
+  magrittr::is_in(LETTERS, row) %>% which
+}
+
+# 4 -> "D"
+num_to_row <- function(num) {
+  LETTERS[num]
+}
+
+# "05" -> 5
+col_to_num <- function(col) {
+  col %>% as.integer
+}
+
+# 5 -> "05"
+num_to_col <- function(num) {
+  sprintf("%02d", num)
+}
+
+# c(8, 5) -> 5:8
+range_to_seq <- function(rng) {
+  seq(min(rng), max(rng))
+}
+
+# "C04", "D06" -> c("C04", "C05", "C06", "D04", "D05", "D06")
 get_wells_btwn <- function(well1, well2) {
   rows <-
     get_row(c(well1, well2)) %>%
-    magrittr::is_in(LETTERS, .) %>%
-    which %>%
-    {seq(min(.), max(.))} %>%
-    LETTERS[.]
+    row_to_num %>%
+    range_to_seq %>%
+    num_to_row
   
   cols <-
     get_col(c(well1, well2)) %>%
-    as.integer %>%
-    {seq(min(.), max(.))} %>%
-    sprintf("%02d", .)
+    col_to_num %>%
+    range_to_seq %>%
+    num_to_col
   
   wells <- lapply(rows, function(x) paste(x, cols, sep = "")) %>% unlist
   wells
 }
 
+# "C05" -> "C"
 get_row <- function(well) {
   substring(well, 1, 1)
 }
 
+# "C05" -> "05"
 get_col <- function(well) {
   substring(well, 2, 3)
 }

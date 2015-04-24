@@ -12,6 +12,8 @@ get_single_well <- function(plate, well_id,
                             empty = FALSE, outliers = FALSE, clusters = FALSE) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
+  well_id %<>% toupper
+  
   result <-
     plate_data(plate) %>%
     dplyr::filter_(~ well == well_id) %>%
