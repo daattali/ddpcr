@@ -63,85 +63,41 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
     return(list(success = success, comment = msg))
   }
   
-  # fit two normal distributions in the data along the Y dimension, check:
-  # - the mu's of the two populations needs to be far enough
-  # - bottom population needs to have lambda not too small and not too large
-  # - sigma of bottom population should be fairly small
   set.seed(SEED)
   
-  X_var <- params(plate, 'GENERAL', 'X_VAR')
-  Y_var <- params(plate, 'GENERAL', 'Y_VAR')
+  # Use kmeans to fit two clusters into the 2D data
+  kmeans <- kmeans(well_data, 2)
+  centers <- kmeans$centers %>% t %>% as.data.frame %>% lapply(point2d)
+  distances <- lapply(centers, diff) %>% unlist
+  smaller_center_idx <- distances %>% which.min
   
-  kmeans <- kmeans(well_data, 2, nstart = 5)
-  centers <- kmeans$centers
-  
-  if (params(plate, 'WELLSUCCESS', 'FAST')) {
-    kmeans_y <- kmeans(well_data[[Y_var]], 2, nstart = 5)
-    centers_y <- kmeans_y$centers %>% as.integer
-    smaller_comp_y <- centers_y %>% which.min
-    larger_comp_y <- centers_y %>% which.max
-    
-    if ((centers_y %>% diff %>% abs) < min(centers_y)) {
-      success <- FALSE
-      msg <- sprintf("There seems to be mostly empty drops (centers of %s clusters: %s)",
-                     Y_var, paste0(centers_y, collapse = ","))
-      return(list(success = success, comment = msg))
-    }
-    
-    smaller_lambda <- kmeans_y$size[smaller_comp_y]/sum(kmeans_y$size)
-    
-    if (smaller_lambda < params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_LOW_T')) {
-      success <- FALSE
-      msg <- paste0("Could not find significant empty cluster (lambda of ", Y_var, " normal: ",
-                    signif(smaller_lambda, 4), ")")
-      return(list(success = success, comment = msg))
-    }
-
-    if (smaller_lambda > params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_HIGH_T')) {
-      success <- FALSE
-      msg <- paste0("There are too many empty drops (lambda of ", Y_var, " normal: ",
-                    signif(smaller_lambda, 4), ")")
-      return(list(success = success, comment = msg))
-    }
-    
-    return(list(success = TRUE, comment = NA)) 
-  }
-  
-  quiet(
-    mixmdl_y <- mixtools::normalmixEM(well_data[[Y_var]], k = 2))
-  smaller_comp_y <- mixmdl_y$mu %>% which.min
-  larger_comp_y <- mixmdl_y$mu %>% which.max
-  
-  if ((mixmdl_y$mu %>% diff %>% abs) < min(mixmdl_y$mu)) {
+  # Check if the two cluster centers are very close to each other
+  if (diff(centers[[1]], centers[[2]]) < diff(centers[[smaller_center_idx]])) {
     success <- FALSE
-    msg <- paste0("There seems to be mostly empty drops (mu's of ", Y_var, " normals: ",
-                  paste0(round(mixmdl_y$mu), collapse = " "), ")")
+    msg <- sprintf("There seems to be mostly empty drops (centers of clusters: %s)",
+                   paste(lapply(centers, str), collapse=", "))
     return(list(success = success, comment = msg))
   }
   
-  if (mixmdl_y$lambda[smaller_comp_y] < params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_LOW_T')) {
+  smaller_lambda <- kmeans$size[[smaller_center_idx]] / sum(kmeans$size)
+  
+  # Make sure we found a significant empty cluster
+  if (smaller_lambda < params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_LOW_T')) {
     success <- FALSE
-    msg <- paste0("Could not find significant empty cluster (lambda of ", Y_var, " normal: ",
-                  signif(mixmdl_y$lambda[smaller_comp_y], 4), ")")
+    msg <- paste0("Could not find significant empty cluster (lambda of lower cluster: ",
+                  signif(smaller_lambda, 4), ")")
+    return(list(success = success, comment = msg))
+  }  
+  
+  # Make sure not too many drops are empty
+  if (smaller_lambda > params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_HIGH_T')) {
+    success <- FALSE
+    msg <- paste0("There are too many empty drops (lambda of lower cluster: ",
+                  signif(smaller_lambda, 4), ")")
     return(list(success = success, comment = msg))
   }
   
-  if (mixmdl_y$lambda[smaller_comp_y] > params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_HIGH_T')) {
-    success <- FALSE
-    msg <- paste0("There are too many empty drops (lambda of ", Y_var, " normal: ",
-                  signif(mixmdl_y$lambda[smaller_comp_y], 4), ")")
-    return(list(success = success, comment = msg))
-  }
-  
-  if (mixmdl_y$sigma[smaller_comp_y] > params(plate, 'WELLSUCCESS', 'NORMAL_SIGMA_T')) {
-    success <- FALSE
-    msg <- paste0("Could not find a dense empty cluster (sigma of ", Y_var, " normal: ",
-                  round(mixmdl_y$sigma[smaller_comp_y]), ")")
-    return(list(success = success, comment = msg))
-  }    
-  
-  # if all the sanity checks passed, the run was successful
-  return(list(success = TRUE, comment = NA))  
+  return(list(success = TRUE, comment = NA))
 }
 
 #' Remove failed wells

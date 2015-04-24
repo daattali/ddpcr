@@ -28,7 +28,7 @@ get_empty_cutoff <- function(plate, well_id) {
 #' 
 #' @export
 #' @keywords internal
-get_empty_cutoff <- function(plate, well_id){
+get_empty_cutoff.ddpcr_plate <- function(plate, well_id){
   well_data <- get_single_well(plate, well_id, empty = TRUE)
   
   X_var <- params(plate, 'GENERAL', 'X_VAR')
@@ -115,25 +115,27 @@ remove_empty.ddpcr_plate <- function(plate) {
   lapply(empty_cutoff_map[['well']],
          function(well_id){
 
-           cutoff_y <-
-             empty_cutoff_map %>%
-             dplyr::filter_(~ well == well_id) %>%
-             .[['cutoff_y']] %>%
-             as.integer
-
            cutoff_x <-
              empty_cutoff_map %>%
              dplyr::filter_(~ well == well_id) %>%
-             .[['cutoff_x']] %>%
-             as.integer           
-                      
+             .[['cutoff_x']]         
+           
+           cutoff_y <-
+             empty_cutoff_map %>%
+             dplyr::filter_(~ well == well_id) %>%
+             .[['cutoff_y']]
+           
            # I'm not doing this using dplyr (mutate) because it's much slower
            empty_idx <-
              data[['well']] == well_id &
-             data[[Y_var]] < cutoff_y &
-             data[[X_var]] < cutoff_x &
              (data[['cluster']] == CLUSTER_UNDEFINED |
-              data[['cluster']] >= CLUSTER_EMPTY)
+                data[['cluster']] >= CLUSTER_EMPTY)
+           if (!is.null(cutoff_x)) {
+             empty_idx <- empty_idx & data[[X_var]] < cutoff_x
+           }
+           if (!is.null(cutoff_y)) {
+             empty_idx <- empty_idx & data[[Y_var]] < cutoff_y
+           }
            
            # this is a bit ugly but it's much faster to keep overwriting the
            # data rather than create many small dataframes and then merging/
@@ -151,16 +153,16 @@ remove_empty.ddpcr_plate <- function(plate) {
     dplyr::group_by_("well") %>%
     dplyr::summarise_("drops_empty" = ~ n()) %>%
     merge_dfs_overwrite_col(plate_meta(plate), ., "drops_empty") %>%
-    dplyr::mutate_(
-      "drops_non_empty" =
-        ifelse(is.na("drops_empty"),
-               NA,
-               "drops - drops_empty"),   # TODO unhack this and make into proper SE
-      "drops_empty_fraction" =
-        ifelse(is.na("drops_empty"),
-               NA,
-               "signif(drops_empty / drops, 3)"))   
-  
+    dplyr::mutate_(.dots = setNames(
+      list(
+        lazyeval::interp(~ ifelse(is.na(empty), NA, drops - empty),
+                         empty = quote(drops_empty), drops = quote(drops)),
+        lazyeval::interp(~ ifelse(is.na(empty), NA, signif(empty / drops, 3)),
+                         empty = quote(drops_empty), drops = quote(drops))
+      ),
+      c("drops_non_empty", "drops_empty_fraction")
+    )
+    
   # ---
   
   plate_data(plate) <- data

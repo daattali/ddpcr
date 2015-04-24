@@ -131,7 +131,7 @@ is_file <- function(path) {
 point2d <- function(v) {
   stopifnot(v %>% length == 2)
   structure(
-    v %>% as.numeric
+    v %>% as.integer
     , class = "point2d"
   )
 }
@@ -143,4 +143,12 @@ diff.point2d <- function(v, w) {
     w <- point2d(c(0, 0))
   }
   sqrt((v[1] - w[1]) ^ 2 + (v[2] - w[2]) ^ 2)
+}
+
+str.point2d <- function(v) {
+  sprintf("(%s, %s)", v[1], v[2])
+}
+
+print.point2d <- function(v) {
+   v %>% str %>% print
 }
