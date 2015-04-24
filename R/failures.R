@@ -70,7 +70,11 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
   set.seed(SEED)
   
   X_var <- params(plate, 'GENERAL', 'X_VAR')
-  Y_var <- params(plate, 'GENERAL', 'Y_VAR')  
+  Y_var <- params(plate, 'GENERAL', 'Y_VAR')
+  
+  kmeans <- kmeans(well_data, 2, nstart = 5)
+  centers <- kmeans$centers
+  
   if (params(plate, 'WELLSUCCESS', 'FAST')) {
     kmeans_y <- kmeans(well_data[[Y_var]], 2, nstart = 5)
     centers_y <- kmeans_y$centers %>% as.integer
@@ -157,6 +161,8 @@ remove_failures.ddpcr_plate <- function(plate) {
   
   tstart <- proc.time()
   
+  data <- plate_data(plate)
+  
   # ---
   
   well_success_map <-
@@ -169,10 +175,19 @@ remove_failures.ddpcr_plate <- function(plate) {
     merge_dfs_overwrite_col(plate_meta(plate), well_success_map,
                             c("success", "comment")) %>%
     arrange_meta
-  
+
+  failed_wells <-
+    well_success_map %>%
+    dplyr::filter_(~ !success) %>%
+    .[['well']]
+  failed_idx <- 
+    (data[['well']] %in% failed_wells) & (data[['cluster']] <= CLUSTER_FAILED)
+  data[failed_idx, 'cluster'] <- CLUSTER_FAILED   
+    
   # ---
   
   plate_meta(plate) <- meta
+  plate_data(plate) <- data
   status(plate) <- STATUS_FAILED_REMOVED
   
   tend <- proc.time()
