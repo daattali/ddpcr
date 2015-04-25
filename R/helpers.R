@@ -35,6 +35,8 @@ get_single_well <- function(plate, well_id,
   result
 }
 
+
+
 calculate_mt_freq_single <- function(plate, well_id) {
   well_data <- get_single_well(plate, well_id, clusters = TRUE)
   mt_num <- (well_data[['cluster']] == CLUSTER_MT) %>% sum
@@ -59,19 +61,3 @@ calculate_mt_freqs <- function(plate) {
   plate
 }
 
-get_filled_borders <- function(plate, well_id) {
-  well_data <- get_single_well(plate, well_id)
-  set.seed(SEED)
-  quiet(
-    mixmdl_fam <- mixtools::normalmixEM(well_data[['FAM']], k = 2))
-  larger_comp_fam <- mixmdl_fam$mu %>% which.max
-  cl_borders <-
-    plus_minus(
-      mixmdl_fam$mu[larger_comp_fam],
-      mixmdl_fam$sigma[larger_comp_fam] *
-        params(plate, 'ASSIGN_CLUSTERS', 'CLUSTERS_BORDERS_NUM_SD')
-    ) %>%
-    as.integer
-  
-  cl_borders
-}

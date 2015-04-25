@@ -5,7 +5,13 @@ str_to_border <- function(str) {
   strsplit(str, ",") %>% unlist %>% as.integer
 }
 
-classify_droplets_single <- function(plate, well_id, analysis_method_idx = 2, plot = FALSE) {
+#' @export
+classify_droplets_single <- function(plate, well_id, plot = FALSE) {
+  UseMethod("classify_droplets_single")
+}
+
+#' @export
+classify_droplets_single.ppnp_assay <- function(plate, well_id, ...) {
   # For a given well, merge the empty drops with the rain/mutant/wildtype drops
   # to result in a data frame containing all drops in a well marked with a cluster.
   #
@@ -19,11 +25,14 @@ classify_droplets_single <- function(plate, well_id, analysis_method_idx = 2, pl
   #       Note that TRUE can be very good proxy for saying the well has mutant BRAFV600,
   #       and FALSE is a proxy for saying the well has wild-type BRAFV600
   #     comment: any comment raised by the algorithm, or NA if everything ran smoothly 
-  analysis_methods <- c(analyze_well_clusters_normals,
-                        analyze_well_clusters_density_inflection,
-                        analyze_well_clusters_density_minima)
-  analysis_method <- analysis_methods[[analysis_method_idx]]
-  clusters_data <- analysis_method(plate, well_id, plot)
+  analysis_methods <- list(
+    'normal'                    = classify_droplets_normal,
+    'density_inflection_points' = classify_droplets_density_inflection,
+    'density_minima'            = classify_droplets_density_minima
+  )
+  
+  analysis_method <- analysis_methods[[params(plate, 'ASSIGN_CLUSTERS', 'METHOD')]]
+  clusters_data <- analysis_method(plate, well_id, ...)
   clusters_data
 }
 
@@ -33,7 +42,12 @@ classify_droplets <- function(plate) {
 }
 
 #' @export
-classify_droplets.ppnp_assay <- function(plate, analysis_method_idx = 2) {
+classify_droplets <- function(plate) {
+  UseMethod("classify_droplets")
+}
+
+#' @export
+classify_droplets.ppnp_assay <- function(plate) {
   # Mark all drops in a plate with their corresponding clusters, including
   # undefined clusters for failed wells
   #
@@ -51,7 +65,7 @@ classify_droplets.ppnp_assay <- function(plate, analysis_method_idx = 2) {
   
   well_clusters_info <-
     vapply(wells_success(plate),
-           function(x) classify_droplets_single(plate, x, analysis_method_idx),
+           function(x) classify_droplets_single(plate, x),
            list('mt_borders', 'wt_borders', 'cl_borders', 'has_mt_cluster', 'comment')) %>%
     lol_to_df
 

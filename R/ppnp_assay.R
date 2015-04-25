@@ -9,57 +9,77 @@ default_params.ppnp_assay <- function(plate) {
   params <- NextMethod("default_params")
   
   PARAMS_ASSIGN_CLUSTERS <- list()
-  PARAMS_ASSIGN_CLUSTERS['NUM_ATTEMPTS_SEGREGATE'] <- 1
-  PARAMS_ASSIGN_CLUSTERS['SEGREGATE_RATIO_THRESHOLD'] <- 0.75
-  PARAMS_ASSIGN_CLUSTERS['CLUSTERS_BORDERS_NUM_SD'] <- 3
-  PARAMS_ASSIGN_CLUSTERS['NO_CLUSTER_MT_BORDER_NUM_SD'] <- 10
-  PARAMS_ASSIGN_CLUSTERS['ADJUST_MIN'] <- 4
-  PARAMS_ASSIGN_CLUSTERS['ADJUST_MAX'] <- 20
-  PARAMS_RECLASSIFY_LOW_MT <- list()
-  PARAMS_RECLASSIFY_LOW_MT['MIN_WELLS_MT_CLUSTER'] <- 4
-  PARAMS_RECLASSIFY_LOW_MT['BORDER_RATIO_QUANTILE'] <- 0.75  
+  PARAMS_ASSIGN_CLUSTERS['NUM_ATTEMPTS_SEGREGATE']       <- 1
+  PARAMS_ASSIGN_CLUSTERS['SEGREGATE_RATIO_THRESHOLD']    <- 0.75
+  PARAMS_ASSIGN_CLUSTERS['CLUSTERS_BORDERS_NUM_SD']      <- 3
+  PARAMS_ASSIGN_CLUSTERS['NO_NEG_CLUSTER_BORDER_NUM_SD'] <- 10
+  PARAMS_ASSIGN_CLUSTERS['ADJUST_MIN']                   <- 4
+  PARAMS_ASSIGN_CLUSTERS['ADJUST_MAX']                   <- 20
+  PARAMS_ASSIGN_CLUSTERS['METHOD']                       <- 'density_inflection_points'
+  PARAMS_RECLASSIFY_LOW_MT                               <- list()
+  PARAMS_RECLASSIFY_LOW_MT['MIN_WELLS_MT_CLUSTER']       <- 4
+  PARAMS_RECLASSIFY_LOW_MT['BORDER_RATIO_QUANTILE']      <- 0.75  
   
-  params[['GENERAL']][['POSITIVE_NAME']] <- 'positive'
-  params[['GENERAL']][['NEGATIVE_NAME']] <- 'negative'
+  params[['GENERAL']][['POSITIVE_NAME']]      <- 'positive'
+  params[['GENERAL']][['NEGATIVE_NAME']]      <- 'negative'
   params[['GENERAL']][['POSITIVE_DIMENSION']] <- NA  # Must be set by the child
-  params[['WELLSUCCESS']][['FAST']] <- TRUE
-  params[['ASSIGN_CLUSTERS']] <- PARAMS_ASSIGN_CLUSTERS
-  params[['RECLASSIFY_LOW_MT']] <- PARAMS_RECLASSIFY_LOW_MT 
+  params[['WELLSUCCESS']][['FAST']]           <- TRUE
+  params[['ASSIGN_CLUSTERS']]                 <- PARAMS_ASSIGN_CLUSTERS
+  params[['RECLASSIFY_LOW_MT']]               <- PARAMS_RECLASSIFY_LOW_MT 
   
   params
 }
 
 positive_dim <- function(plate) {
-  stopifnot(plate %>% inherits("ppnp_assay"))
   params(plate, 'GENERAL', 'POSITIVE_DIMENSION') 
 }
 
 variable_dim <- function(plate) {
-  stopifnot(plate %>% inherits("ppnp_assay"))
   params(plate, 'GENERAL', 'POSITIVE_DIMENSION') %>% other_dim
 }
 
 # get the name of the variable that is along the dimension where all filled 
 # filled should be positive
 positive_dim_var <- function(plate) {
-  stopifnot(plate %>% inherits("ppnp_assay"))
-  
-  positive_dim <- plate %>% positive_dim %>% toupper
-  params(plate, 'GENERAL', sprintf('%s_VAR', positive_dim))
+  plate %>%
+    positive_dim %>%
+    toupper %>%
+    {params(plate, 'GENERAL', sprintf('%s_VAR', .))}
 }
 
 # get the name of the variable that is along the dimension where the droplets
 # will cluster into two groups
 variable_dim_var <- function(plate) {
-  stopifnot(plate %>% inherits("ppnp_assay"))
-  
-  variable_dim <- plate %>% variable_dim %>% toupper
-  params(plate, 'GENERAL', sprintf('%s_VAR', variable_dim))
+  plate %>%
+    variable_dim %>%
+    toupper %>%
+    {params(plate, 'GENERAL', sprintf('%s_VAR', .))}  
 }
 
 # given an axis (X or Y), return the other
 other_dim <- function(dim) {
   ifelse(dim == "X", "Y", "X")
+}
+
+negative_borders_name <- function(plate) {
+  params(plate, 'GENERAL', 'NEGATIVE_NAME') %>%
+    sprintf("%s_borders", .)
+}
+
+positive_borders_name <- function(plate) {
+  params(plate, 'GENERAL', 'POSITIVE_NAME') %>%
+    sprintf("%s_borders", .)
+}
+
+signif_negative_name <- function(plate) {
+  params(plate, 'GENERAL', 'NEGATIVE_NAME') %>%
+    sprintf("significant_%s_well", .)
+}
+
+calc_negative_freq_simple <- function(negative_drops, positive_drops) {
+  (nrow(negative_drops) / (nrow(negative_drops) + nrow(positive_drops))) %>%
+    magrittr::multiply_by(100) %>%
+    round(3)
 }
 
 #' @export
@@ -70,6 +90,30 @@ analyze.ppnp_assay = function(plate) {
   
   plate
 }
+
+get_filled_borders <- function(plate, well_id) {
+  stopifnot(plate %>% inherits("ppnp_assay"))
+  
+  well_data <- get_single_well(plate, well_id)
+  
+  set.seed(SEED)
+  
+  positive_var <- positive_dim_var(plate)
+  quiet(
+    mixmdl_pos <- mixtools::normalmixEM(well_data[[positive_var]], k = 2))
+  larger_comp_pos <- mixmdl_pos$mu %>% which.max
+  filled_borders <-
+    plus_minus(
+      mixmdl_pos$mu[larger_comp_pos],
+      mixmdl_pos$sigma[larger_comp_pos] *
+        params(plate, 'ASSIGN_CLUSTERS', 'CLUSTERS_BORDERS_NUM_SD')
+    ) %>%
+    as.integer
+  
+  filled_borders
+}
+
+
 
 
 
