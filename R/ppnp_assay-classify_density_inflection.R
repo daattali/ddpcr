@@ -1,4 +1,4 @@
-classify_droplets_density_inflection <- function(plate, well_id, plot = FALSE) {
+classify_droplets_density_inflection_points <- function(plate, well_id, plot = FALSE) {
   stopifnot(plate %>% inherits("ppnp_assay"))
   
   signif_negative_cluster <- FALSE

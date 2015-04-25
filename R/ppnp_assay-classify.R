@@ -6,12 +6,12 @@ str_to_border <- function(str) {
 }
 
 #' @export
-classify_droplets_single <- function(plate, well_id, plot = FALSE) {
+classify_droplets_single <- function(plate, well_id) {
   UseMethod("classify_droplets_single")
 }
 
 #' @export
-classify_droplets_single.ppnp_assay <- function(plate, well_id, ...) {
+classify_droplets_single.ppnp_assay <- function(plate, well_id) {
   # For a given well, merge the empty drops with the rain/mutant/wildtype drops
   # to result in a data frame containing all drops in a well marked with a cluster.
   #
@@ -25,14 +25,12 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id, ...) {
   #       Note that TRUE can be very good proxy for saying the well has mutant BRAFV600,
   #       and FALSE is a proxy for saying the well has wild-type BRAFV600
   #     comment: any comment raised by the algorithm, or NA if everything ran smoothly 
-  analysis_methods <- list(
-    'normal'                    = classify_droplets_normal,
-    'density_inflection_points' = classify_droplets_density_inflection,
-    'density_minima'            = classify_droplets_density_minima
-  )
+  analysis_method <- 
+    params(plate, 'ASSIGN_CLUSTERS', 'METHOD') %>%
+    sprintf("classify_droplets_%s", .) %>%
+    get
   
-  analysis_method <- analysis_methods[[params(plate, 'ASSIGN_CLUSTERS', 'METHOD')]]
-  clusters_data <- analysis_method(plate, well_id, ...)
+  clusters_data <- analysis_method(plate, well_id)
   clusters_data
 }
 
