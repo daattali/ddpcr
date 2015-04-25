@@ -28,7 +28,12 @@ classify_droplets_single <- function(plate, well_id, analysis_method_idx = 2, pl
 }
 
 #' @export
-classify_droplets <- function(plate, analysis_method_idx = 2) {
+classify_droplets <- function(plate) {
+  UseMethod("classify_droplets")
+}
+
+#' @export
+classify_droplets.ppnp_assay <- function(plate, analysis_method_idx = 2) {
   # Mark all drops in a plate with their corresponding clusters, including
   # undefined clusters for failed wells
   #
@@ -38,9 +43,6 @@ classify_droplets <- function(plate, analysis_method_idx = 2) {
   # - a dataframe with all the drops with their clusters
   # - whether or not there is a mutant drops cluster
   # - any comment by the algorithm
-  
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
   stopifnot(plate %>% status >= STATUS_EMPTY_REMOVED)
   
   tstart <- proc.time()

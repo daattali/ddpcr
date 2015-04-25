@@ -59,7 +59,7 @@ get_empty_cutoff.ddpcr_plate <- function(plate, well_id){
     ceiling %>%
     as.integer  
   
-  return(list("cutoff_y" = cutoff_y, "cutoff_x" = cutoff_x)) 
+  return(list("x" = cutoff_x, "y" = cutoff_y)) 
 }
 
 
@@ -104,7 +104,7 @@ remove_empty.ddpcr_plate <- function(plate) {
   empty_cutoff_map <-
     vapply(wells_success(plate),
            function(x) get_empty_cutoff(plate, x),
-           list("cutoff_y", "cutoff_x")) %>%
+           list("x", "y")) %>%
     lol_to_df
   
   # set the cluster to EMPTY for every empty droplet in every well
@@ -118,22 +118,22 @@ remove_empty.ddpcr_plate <- function(plate) {
            cutoff_x <-
              empty_cutoff_map %>%
              dplyr::filter_(~ well == well_id) %>%
-             .[['cutoff_x']]         
+             .[['x']]         
            
            cutoff_y <-
              empty_cutoff_map %>%
              dplyr::filter_(~ well == well_id) %>%
-             .[['cutoff_y']]
+             .[['y']]
            
            # I'm not doing this using dplyr (mutate) because it's much slower
            empty_idx <-
              data[['well']] == well_id &
              (data[['cluster']] == CLUSTER_UNDEFINED |
                 data[['cluster']] >= CLUSTER_EMPTY)
-           if (!is.null(cutoff_x)) {
+           if (!is.na(cutoff_x)) {
              empty_idx <- empty_idx & data[[X_var]] < cutoff_x
            }
-           if (!is.null(cutoff_y)) {
+           if (!is.na(cutoff_y)) {
              empty_idx <- empty_idx & data[[Y_var]] < cutoff_y
            }
            
@@ -161,7 +161,7 @@ remove_empty.ddpcr_plate <- function(plate) {
                          empty = quote(drops_empty), drops = quote(drops))
       ),
       c("drops_non_empty", "drops_empty_fraction")
-    )
+    ))
     
   # ---
   
