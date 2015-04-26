@@ -17,16 +17,16 @@ default_params.ppnp_assay <- function(plate) {
   PARAMS_ASSIGN_CLUSTERS['ADJUST_MIN']                   <- 4
   PARAMS_ASSIGN_CLUSTERS['ADJUST_MAX']                   <- 20
   PARAMS_ASSIGN_CLUSTERS['METHOD']                       <- 'density_inflection_points'
-  PARAMS_RECLASSIFY_LOW_MT                               <- list()
-  PARAMS_RECLASSIFY_LOW_MT['MIN_WELLS_MT_CLUSTER']       <- 4
-  PARAMS_RECLASSIFY_LOW_MT['BORDER_RATIO_QUANTILE']      <- 0.75  
+  PARAMS_RECLASSIFY_WELLS                                <- list()
+  PARAMS_RECLASSIFY_WELLS['MIN_WELLS_NEGATIVE_CLUSTER']  <- 4
+  PARAMS_RECLASSIFY_WELLS['BORDER_RATIO_QUANTILE']       <- 0.75  
   
   params[['GENERAL']][['POSITIVE_NAME']]      <- 'positive'
   params[['GENERAL']][['NEGATIVE_NAME']]      <- 'negative'
   params[['GENERAL']][['POSITIVE_DIMENSION']] <- NA  # Must be set by the child
   params[['WELLSUCCESS']][['FAST']]           <- TRUE
   params[['ASSIGN_CLUSTERS']]                 <- PARAMS_ASSIGN_CLUSTERS
-  params[['RECLASSIFY_LOW_MT']]               <- PARAMS_RECLASSIFY_LOW_MT 
+  params[['RECLASSIFY_WELLS']]                <- PARAMS_RECLASSIFY_WELLS 
   
   params
 }
@@ -131,7 +131,28 @@ get_filled_borders <- function(plate, well_id) {
   filled_borders
 }
 
+#' @export
+wells_positive <- function(x) {
+  stopifnot(x %>% inherits("ppnp_assay"))
+  
+  x %>%
+    plate_meta %>%
+    dplyr::filter_(lazyeval::interp(
+      ~ !var,
+      var = as.name(meta_var_name(x, "significant_negative_cluster"))
+    )) %>%
+    .[['well']]
+}
 
+#' @export
+wells_negative <- function(x) {
+  stopifnot(x %>% inherits("ppnp_assay"))
+  
+  x %>%
+    plate_meta %>%
+    dplyr::filter_(as.name(meta_var_name(x, "significant_negative_cluster"))) %>%
+    .[['well']]
+}
 
 
 

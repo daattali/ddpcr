@@ -1,32 +1,48 @@
-reclassify_droplets_single <- function(plate, well_id, consensus_border_ratio) {
+#' @export
+reclassify_droplets_single <- function(plate, well_id, ...) {
+  UseMethod("reclassify_droplets_single")
+}
+
+#' @export
+reclassify_droplets_single.ppnp_assay <- function(plate, well_id, consensus_border_ratio) {
   
   well_data <- get_single_well(plate, well_id, clusters = TRUE)
-  top <-
+  positive_var <- positive_dim_var(plate)
+  variable_var <- variable_dim_var(plate)
+  
+  filled <-
     plate %>%
-    well_info(well_id, 'cl_borders') %>%
+    well_info(well_id, 'filled_borders') %>%
     str_to_border %>%
-    {dplyr::filter_(well_data, ~ FAM %btwn% .)}
-
-  wt_median <- 
+    {dplyr::filter_(well_data,
+                    lazyeval::interp(~ var %btwn% .,
+                                     var = as.name(positive_var)))}
+  
+  positive_median <- 
     well_data %>%
-    dplyr::filter_(~ cluster == CLUSTER_WT) %>%
-    .[['HEX']] %>%
+    dplyr::filter_(~ cluster == CLUSTER_POSITIVE) %>%
+    .[[variable_var]] %>%
     median    
   
-  mt_cutoff <- (consensus_border_ratio * wt_median) %>% as.integer
-  mt_borders <- c(0, mt_cutoff)
-  wt_borders <- c(mt_borders[2] + 1, max(top[['HEX']]))
+  negative_cutoff <- (consensus_border_ratio * positive_median) %>% as.integer
+  negative_borders <- c(0, negative_cutoff)
+  positive_borders <- c(negative_borders[2] + 1, filled[[variable_var]] %>% max)
   
   # TODO recalculate whehter or not has_mt_cluster is true
-  # TODO rename has_mt_clustr to ~is_wildtype
   
   return(list(
-    mt_borders = mt_borders %>% border_to_str,
-    wt_borders = wt_borders %>% border_to_str))
+    negative_borders = negative_borders %>% border_to_str,
+    positive_borders = positive_borders %>% border_to_str
+  ))
 }
 
 #' @export
 reclassify_droplets <- function(plate) {
+  UseMethod("reclassify_droplets")
+}
+  
+#' @export
+reclassify_droplets.ppnp_assay <- function(plate) {
   # Reclassify mutant drops in wells with low mutant frequency.  The initial
   # classification was done more naively, but after analyzing all the wells,
   # we can now use the high mutant frequency wells as a reference and try to
@@ -86,68 +102,74 @@ reclassify_droplets <- function(plate) {
   
   # if there are not enough wells with high MT freq to use as prior info or if
   # there are no wells with low MT freq to reclassify, do nothing
-  if (plate %>% wells_mutant %>% length < params(plate, 'RECLASSIFY_LOW_MT', 'MIN_WELLS_MT_CLUSTER')
-      | plate %>% wells_wildtype %>% length == 0) {
-    message(paste0("Reclassifying droplets in low mutant frequency wells did not take place ",
-                   "because there are noth enough high mutant frequency wells."))
+  min_wells <- params(plate, 'RECLASSIFY_WELLS', 'MIN_WELLS_NEGATIVE_CLUSTER')
+  if (plate %>% wells_negative %>% length < min_wells ||
+      plate %>% wells_positive %>% length == 0) {
+    message(paste0("Not reclassifying droplets because there are not enough",
+                   " wells with significant ",
+                   params(plate, 'GENERAL', 'NEGATIVE_NAME'),
+                   " clusters"))
     return(plate)
   }
   
   # calculate the ratio of the MT border over highest WT drop (in HEX)
-  mt_border_ratios <-
-    vapply(plate %>% wells_mutant,
-           function(x) {
-             mt_max <- 
-               data %>%
-               dplyr::filter_(~ well == x,
-                              ~ cluster == CLUSTER_MT) %>%
-               .[['HEX']] %>%
-               max
-             wt_median <- 
-               data %>%
-               dplyr::filter_(~ well == x,
-                              ~ cluster == CLUSTER_WT) %>%
-               .[['HEX']] %>%
-               median               
-             ratio <- mt_max / wt_median
-             ratio
-           },
-           numeric(1))
+  variable_var <- variable_dim_var(plate)
   consensus_border_ratio <-
-    mt_border_ratios %>%
-    quantile(params(plate, 'RECLASSIFY_LOW_MT', 'BORDER_RATIO_QUANTILE')) %>%
+    vapply(plate %>% wells_negative,
+      function(x) {
+        negative_max <- 
+          data %>%
+          dplyr::filter_(~ well == x,
+                         ~ cluster == CLUSTER_NEGATIVE) %>%
+          .[[variable_var]] %>%
+          max
+        positive_median <- 
+          data %>%
+          dplyr::filter_(~ well == x,
+                         ~ cluster == CLUSTER_POSITIVE) %>%
+          .[[variable_var]] %>%
+          median               
+        ratio <- negative_max / positive_median
+        ratio
+      },
+      numeric(1)
+    ) %>%
+    quantile(params(plate, 'RECLASSIFY_WELLS', 'BORDER_RATIO_QUANTILE')) %>%
     as.numeric
 
   well_clusters_info <-
-    vapply(wells_wildtype(plate),
+    vapply(plate %>% wells_positive,
            function(x) reclassify_droplets_single(plate, x, consensus_border_ratio),
-           list('mt_borders', 'wt_borders')) %>%
+           vector("list", 2)) %>%
     lol_to_df  
   
   # reclassify mutant drops for every well without a mutant drops cluster
   data <- plate_data(plate)
   data_env <- environment()
-  lapply(wells_wildtype(plate),
+  lapply(wells_positive(plate),
          function(well_id){
            well_info <-
              well_clusters_info %>%
              dplyr::filter_(~ well == well_id)
-           cl_borders <- well_info(plate, well_id, 'cl_borders') %>% str_to_border
-           mt_borders <- well_info[['mt_borders']] %>% str_to_border
-           wt_borders <- well_info[['wt_borders']] %>% str_to_border
+           
+           filled_borders <- well_info(well_id, 'filled_borders') %>% str_to_border
+           negative_borders <- well_info[['negative_borders']] %>% str_to_border
+           positive_borders <- well_info[['positive_borders']] %>% str_to_border
            
            # I'm not doing this using dplyr (mutate) because it's much slower
            # this code is a bit ugly but it's much faster to keep overwriting
            # the data rather than create many small dataframes to merge
-           non_empty_idx <-
+           classifiable_idx <-
              data[['well']] == well_id &
-             data[['cluster']] > CLUSTER_EMPTY
-           cl_idx <- non_empty_idx & data[['FAM']] %btwn% cl_borders
-           mt_idx <- cl_idx & data[['HEX']] %btwn% mt_borders
-           wt_idx <- cl_idx & data[['HEX']] %btwn% wt_borders
-           data[non_empty_idx, 'cluster'] <- CLUSTER_RAIN
-           data[mt_idx, 'cluster'] <- CLUSTER_MT
-           data[wt_idx, 'cluster'] <- CLUSTER_WT
+             (data[['cluster']] == CLUSTER_UNDEFINED |
+                data[['cluster']] >= CLUSTER_RAIN)
+           filled_idx <- classifiable_idx & data[[positive_var]] %btwn% filled_borders
+           negative_idx <- filled_idx & data[[variable_var]] %btwn% negative_borders
+           positive_idx <- filled_idx & data[[variable_var]] %btwn% positive_borders
+           
+           data[classifiable_idx, 'cluster'] <- CLUSTER_RAIN
+           data[negative_idx, 'cluster'] <- CLUSTER_NEGATIVE
+           data[positive_idx, 'cluster'] <- CLUSTER_POSITIVE
            assign("data", data, envir = data_env)
            
            NULL
@@ -157,8 +179,7 @@ reclassify_droplets <- function(plate) {
   # add metadata (comment/hasMTclust) to each well
   meta <-
     plate_meta(plate) %>%
-    merge_dfs_overwrite_col(well_clusters_info,
-                            setdiff(names(well_clusters_info), "well"))
+    merge_dfs_overwrite_col(well_clusters_info)
   
   # ---
   
@@ -170,8 +191,8 @@ reclassify_droplets <- function(plate) {
   status(plate) <- STATUS_DROPLETS_RECLASSIFIED
   
   tend <- proc.time()
-  message(paste("Time to recalculate mutant droplets in low MT freq wells based",
-                 "on high MT freq wells:", round(tend-tstart)[1], "seconds"))
+  message(paste("Time to reclassify droplets based on info in all wells ",
+                round(tend-tstart)[1], "seconds"))
 
   plate
 }

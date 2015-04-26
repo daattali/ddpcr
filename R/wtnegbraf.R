@@ -107,15 +107,12 @@ is_well_success.ppnp_assay <- function(plate, well_id) {
 }
 
 #' @export
-wells_mutant <- function(x) {
-  stopifnot(x %>% inherits("wtnegbraf"))
-  dplyr::filter_(x %>% plate_meta, ~ has_mt_cluster) %>%
-    .[['well']]
+wells_wildtype <- function(x) {
+  wells_positive(x)
 }
 
 #' @export
-wells_wildtype <- function(x) {
-  stopifnot(x %>% inherits("wtnegbraf"))
-  dplyr::filter_(x %>% plate_meta, ~ !has_mt_cluster) %>%
-    .[['well']]
+wells_mutant <- function(x) {
+  wells_negative(x)
 }
+
