@@ -61,10 +61,13 @@ classify_droplets.ppnp_assay <- function(plate) {
   
   # ---
   
+  positive_var <- positive_dim_var(plate)
+  variable_var <- variable_dim_var(plate)
+  
   well_clusters_info <-
     vapply(wells_success(plate),
            function(x) classify_droplets_single(plate, x),
-           list('mt_borders', 'wt_borders', 'cl_borders', 'has_mt_cluster', 'comment')) %>%
+           vector(mode = "list", length = 5)) %>%
     lol_to_df
 
   data <- plate_data(plate)
@@ -74,23 +77,25 @@ classify_droplets.ppnp_assay <- function(plate) {
            well_info <-
              well_clusters_info %>%
              dplyr::filter_(~ well == well_id)
-           cl_borders <- well_info[['cl_borders']] %>% str_to_border
-           mt_borders <- well_info[['mt_borders']] %>% str_to_border
-           wt_borders <- well_info[['wt_borders']] %>% str_to_border
+           
+           filled_borders <- well_info[['filled_borders']] %>% str_to_border
+           negative_borders <- well_info[['negative_borders']] %>% str_to_border
+           positive_borders <- well_info[['positive_borders']] %>% str_to_border
            
            # I'm not doing this using dplyr (mutate) because it's much slower
            # this code is a bit ugly but it's much faster to keep overwriting
            # the data rather than create many small dataframes to merge
-           non_empty_idx <-
+           classifiable_idx <-
              data[['well']] == well_id &
              (data[['cluster']] == CLUSTER_UNDEFINED |
-              data[['cluster']] > CLUSTER_EMPTY)
-           cl_idx <- non_empty_idx & data[['FAM']] %btwn% cl_borders
-           mt_idx <- cl_idx & data[['HEX']] %btwn% mt_borders
-           wt_idx <- cl_idx & data[['HEX']] %btwn% wt_borders
-           data[non_empty_idx, 'cluster'] <- CLUSTER_RAIN
-           data[mt_idx, 'cluster'] <- CLUSTER_MT
-           data[wt_idx, 'cluster'] <- CLUSTER_WT
+              data[['cluster']] >= CLUSTER_RAIN)
+           filled_idx <- classifiable_idx & data[[positive_var]] %btwn% filled_borders
+           negative_idx <- filled_idx & data[[variable_var]] %btwn% negative_borders
+           positive_idx <- filled_idx & data[[variable_var]] %btwn% positive_borders
+           
+           data[classifiable_idx, 'cluster'] <- CLUSTER_RAIN
+           data[negative_idx, 'cluster'] <- CLUSTER_NEGATIVE
+           data[positive_idx, 'cluster'] <- CLUSTER_POSITIVE
            assign("data", data, envir = data_env)
            
            NULL
@@ -100,8 +105,8 @@ classify_droplets.ppnp_assay <- function(plate) {
   # add metadata (comment/hasMTclust) to each well
   meta <-
     plate_meta(plate) %>%
-    merge_dfs_overwrite_col(well_clusters_info,
-                            setdiff(names(well_clusters_info), "well"))
+    merge_dfs_overwrite_col(well_clusters_info)  %>%
+    magrittr::set_names(lapply(names(.), function(x) meta_var_name(plate, x)))
   
   # ---
   
@@ -113,7 +118,7 @@ classify_droplets.ppnp_assay <- function(plate) {
   status(plate) <- STATUS_DROPLETS_CLASSIFIED
   
   tend <- proc.time()
-  message(sprintf("Time to classify droplet clusters: %s seconds",
+  message(sprintf("Time to classify droplets: %s seconds",
                   round(tend-tstart)[1]))
   
   plate

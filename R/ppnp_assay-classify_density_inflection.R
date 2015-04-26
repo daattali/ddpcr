@@ -1,6 +1,6 @@
 classify_droplets_density_inflection_points <- function(plate, well_id, plot = FALSE) {
   stopifnot(plate %>% inherits("ppnp_assay"))
-  
+
   signif_negative_cluster <- FALSE
   msg <- NA  
   well_data <- get_single_well(plate, well_id)
@@ -94,7 +94,7 @@ classify_droplets_density_inflection_points <- function(plate, well_id, plot = F
   # TODO this is fairly hack-y: if the mutant frequency is high enough,
   # we manually move the border a bit to make sure we aren't too stringent
   # and losing mutant drops
-  negative_freq <- calc_negative_freq_simple(negative_drops, positive_drops)
+  negative_freq <- calc_negative_freq_simple(nrow(negative_drops), nrow(positive_drops))
 
   if (negative_freq > 1) {
     negative_borders[2] <- negative_borders[2] +
@@ -110,7 +110,7 @@ classify_droplets_density_inflection_points <- function(plate, well_id, plot = F
   positive_drops <- filled %>%
     dplyr::filter_(lazyeval::interp(~ var %btwn% positive_borders,
                                     var = as.name(variable_var)))        
-  negative_freq <- calc_negative_freq_simple(negative_drops, positive_drops)
+  negative_freq <- calc_negative_freq_simple(nrow(negative_drops), nrow(positive_drops))
   
   if (plot) {
     graphics::plot(
@@ -133,11 +133,11 @@ classify_droplets_density_inflection_points <- function(plate, well_id, plot = F
   # TODO better way to decide if there is a significant mutant cluster
   signif_negative_cluster <- (negative_freq > 5 | nrow(negative_drops) > 30)
   
-  res <- list()
-  res[[negative_borders_name(plate)]] <- negative_borders %>% border_to_str
-  res[[positive_borders_name(plate)]] <- positive_borders %>% border_to_str
-  res[['filled_borders']]             <- filled_borders %>% border_to_str
-  res[[signif_negative_name(plate)]]  <- signif_negative_cluster
-  res[['comment']]                    <- msg
-  return(res)
+  return(list(
+    'negative_borders' = negative_borders %>% border_to_str,
+    'positive_borders' = positive_borders %>% border_to_str,
+    'filled_borders'   = filled_borders %>% border_to_str,
+    'significant_negative_cluster' = signif_negative_cluster,
+    'comment'          = msg
+  ))
 }

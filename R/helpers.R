@@ -37,27 +37,5 @@ get_single_well <- function(plate, well_id,
 
 
 
-calculate_mt_freq_single <- function(plate, well_id) {
-  well_data <- get_single_well(plate, well_id, clusters = TRUE)
-  mt_num <- (well_data[['cluster']] == CLUSTER_MT) %>% sum
-  wt_num <- (well_data[['cluster']] == CLUSTER_WT) %>% sum
-  mt_freq <- (mt_num / (mt_num + wt_num) * 100) %>% signif(3)
-  
-  list(mt_num = mt_num,
-       wt_num = wt_num,
-       mt_freq = mt_freq)
-}
 
-calculate_mt_freqs <- function(plate) {
-  mt_freqs <-
-    vapply(wells_success(plate),
-           function(x) calculate_mt_freq_single(plate, x),
-           list('mt_num', 'wt_num', 'mt_freq')) %>%
-    lol_to_df
-  
-  plate_meta(plate) %<>%
-    merge_dfs_overwrite_col(mt_freqs, setdiff(names(mt_freqs), "well"))
-  
-  plate
-}
 

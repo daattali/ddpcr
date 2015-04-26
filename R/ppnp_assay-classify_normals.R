@@ -122,15 +122,15 @@ classify_droplets_normal <- function(plate, well_id, plot = FALSE) {
     abline(v = mixmdl$mu, col = "grey")
     abline(v = negative_borders, col = "purple")
     abline(v = positive_borders, col = "green")
-    negative_freq <- calc_negative_freq_simple(negative_drops, positive_drops)
+    negative_freq <- calc_negative_freq_simple(nrow(negative_drops), nrow(positive_drops))
     title(sprintf("%s (%s%%)", well_id, negative_freq))
   }
   
-  res <- list()
-  res[[negative_borders_name(plate)]] <- negative_borders %>% border_to_str
-  res[[positive_borders_name(plate)]] <- positive_borders %>% border_to_str
-  res[['filled_borders']]             <- filled_borders %>% border_to_str
-  res[[signif_negative_name(plate)]]  <- signif_negative_cluster
-  res[['comment']]                    <- msg
-  return(res)
+  return(list(
+    'negative_borders' = negative_borders %>% border_to_str,
+    'positive_borders' = positive_borders %>% border_to_str,
+    'filled_borders'   = filled_borders %>% border_to_str,
+    'significant_negative_cluster' = signif_negative_cluster,
+    'comment'          = msg
+  ))
 }

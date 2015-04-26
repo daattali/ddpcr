@@ -1,9 +1,10 @@
 STATUS_DROPLETS_CLASSIFIED     <- (STATUS_EMPTY_REMOVED + 1) %>% as.integer
 STATUS_DROPLETS_RECLASSIFIED   <- (STATUS_EMPTY_REMOVED + 2) %>% as.integer
 
-CLUSTER_POSITIVE         <- (CLUSTER_EMPTY + 1) %>% as.integer
-CLUSTER_NEGATIVE         <- (CLUSTER_EMPTY + 2) %>% as.integer
-CLUSTER_RAIN             <- (CLUSTER_EMPTY + 3) %>% as.integer
+CLUSTER_RAIN             <- (CLUSTER_EMPTY + 1) %>% as.integer
+CLUSTER_POSITIVE         <- (CLUSTER_EMPTY + 2) %>% as.integer
+CLUSTER_NEGATIVE         <- (CLUSTER_EMPTY + 3) %>% as.integer
+
 
 default_params.ppnp_assay <- function(plate) {
   params <- NextMethod("default_params")
@@ -61,25 +62,42 @@ other_dim <- function(dim) {
   ifelse(dim == "X", "Y", "X")
 }
 
-negative_borders_name <- function(plate) {
-  params(plate, 'GENERAL', 'NEGATIVE_NAME') %>%
-    sprintf("%s_borders", .)
-}
-
-positive_borders_name <- function(plate) {
-  params(plate, 'GENERAL', 'POSITIVE_NAME') %>%
-    sprintf("%s_borders", .)
-}
-
-signif_negative_name <- function(plate) {
-  params(plate, 'GENERAL', 'NEGATIVE_NAME') %>%
-    sprintf("significant_%s_well", .)
+meta_var_name <- function(plate, var) {
+  var %>%
+    gsub("negative", params(plate, 'GENERAL', 'NEGATIVE_NAME'), .) %>%
+    gsub("positive", params(plate, 'GENERAL', 'POSITIVE_NAME'), .)
 }
 
 calc_negative_freq_simple <- function(negative_drops, positive_drops) {
-  (nrow(negative_drops) / (nrow(negative_drops) + nrow(positive_drops))) %>%
+  (negative_drops / (negative_drops + positive_drops)) %>%
     magrittr::multiply_by(100) %>%
-    round(3)
+    signif(3)
+}
+
+calculate_neg_freq_single <- function(plate, well_id) {
+  well_data <- get_single_well(plate, well_id, clusters = TRUE)
+  
+  negative_num <- (well_data[['cluster']] == CLUSTER_NEGATIVE) %>% sum
+  positive_num <- (well_data[['cluster']] == CLUSTER_POSITIVE) %>% sum
+  negative_freq <- calc_negative_freq_simple(negative_num, positive_num)
+  
+  list(negative_num = negative_num,
+       positive_num = positive_num,
+       negative_freq = negative_freq)
+}
+
+calculate_mt_freqs <- function(plate) {
+  negative_freqs <-
+    vapply(wells_success(plate),
+           function(x) calculate_neg_freq_single(plate, x),
+           vector(mode = "list", length = 3)) %>%
+    lol_to_df %>%
+    magrittr::set_names(lapply(names(.), function(x) meta_var_name(plate, x)))
+  
+  plate_meta(plate) %<>%
+    merge_dfs_overwrite_col(negative_freqs)
+  
+  plate
 }
 
 #' @export

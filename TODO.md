@@ -4,5 +4,4 @@
 - make plot work throught the analysis stages
 
 - cleanup code inside failures.R and decide on a method (fast vs slow) and make it work with generic inheritance
-- rain cluster should go before mutant/wildtype because its more generic
 - when xvar/yvar are changed with `params()`, need to actually change the column names
