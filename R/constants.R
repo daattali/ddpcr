@@ -1,43 +1,64 @@
 # This file defines constants used in the package
 
-STATUS_UNDEFINED               <- 0L
-STATUS_INIT                    <- 1L
-STATUS_FAILED_REMOVED          <- 2L
-STATUS_OUTLIERS_REMOVED        <- 3L
-STATUS_EMPTY_REMOVED           <- 4L
-
-CLUSTER_UNDEFINED  <- 0L
-CLUSTER_FAILED     <- 1L
-CLUSTER_OUTLIER    <- 2L
-CLUSTER_EMPTY      <- 3L
-
 SEED <- 8
 
+default_enums <- function(plate) {
+  UseMethod("default_enums")
+}
+
+add_clusters <- function(enums, clusters) {
+  add_enums(enums, 'CLUSTER', clusters)
+}
+
+add_steps <- function(enums, steps) {
+  add_enums(enums, 'STEP', steps)
+}
+
+add_enums <- function(enums, type, values) {
+  last_value <- enums[[type]] %>% length
+  enums[[type]] %<>%
+    c(setNames(seq(last_value + 1, last_value + length(values)), values))
+  enums
+}
+
+step <- function(plate, step) {
+  enums(plate)[['STEP']][[step]]
+}
+step_name <- function(plate, step) {
+  enums(plate)[['STEP']][step] %>% names
+}
+
+cluster <- function(plate, cluster) {
+  enums(plate)[['CLUSTER']][[cluster]]
+}
+cluster_name <- function(plate, cluster) {
+  enums(plate)[['CLUSTER']][cluster] %>% names
+}
+
+
 enums <- function(plate) {
-  UseMethod("enums")
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  plate[['enums']]
 }
 
-add_clusters <- function(plate, clusters) {
-  last_cluster <- plate[['enums']][['CLUSTER']] %>% length
-  plate[['enums']][['CLUSTER']] %<>%
-    c(setNames(seq(last_cluster + 1, last_cluster + length(clusters)), clusters))
+`enums<-` <- function(plate, value) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  plate[['enums']] <- value
   plate
 }
 
-add_steps <- function(plate, steps) {
-  last_step <- plate[['enums']][['STEP']] %>% length
-  plate[['enums']][['STEP']] %<>%
-    c(setNames(seq(last_step + 1, last_step + length(steps)), steps))
+set_default_enums <- function(plate) {
+  enums(plate) <- default_enums(plate)
   plate
 }
 
-
-enums.ddpcr_assay <- function(plate) {
-  plate %>%
-    add_clusters(c('UNDEFINED',
-                   'FAILED',
-                   'OUTLIER',
-                   'EMPTY'
+default_enums.ddpcr_plate <- function(plate) {
+  list() %>%
+    add_clusters(c(
+      'UNDEFINED',
+      'FAILED',
+      'OUTLIER',
+      'EMPTY'
     )) %>%
     add_steps(c(
       'UNDEFINED',

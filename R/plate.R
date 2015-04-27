@@ -3,8 +3,9 @@ empty_plate <- function() {
     plate_data = NULL,
     plate_meta = NULL,
     name = NULL,
-    status = STATUS_UNDEFINED,
-    params = NULL
+    status = NULL,
+    params = NULL,
+    enums = NULL
   )
 }
 
@@ -14,6 +15,7 @@ new_plate <- function(dir, type, data_files, meta_file, name) {
   # doesn't seem to play nicely with missing arguments
   plate <- empty_plate()  # Start with a new empty plate
   plate <- set_plate_type(plate, type)  # Set the type (class) of this assay
+  plate <- set_default_enums(plate)
   plate <- set_default_params(plate)   # Set the right parameters based on the plate type
   plate <- read_plate(plate, dir, data_files, meta_file)  # Read the data files into the plate
 

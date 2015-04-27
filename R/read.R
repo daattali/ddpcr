@@ -107,7 +107,7 @@ read_files <- function(plate, data_files, meta_file) {
     magrittr::set_colnames(c(y_var, x_var, "well")) %>%
     dplyr::select_("well", x_var, y_var) %>%  # reorder so that well is first
     dplyr::mutate_(.dots = setNames(
-      list(~ CLUSTER_UNDEFINED,
+      list(~ cluster(plate, 'UNDEFINED'),
            lazyeval::interp(~ as.integer(var), var = as.name(x_var)),
            lazyeval::interp(~ as.integer(var), var = as.name(y_var))
       ),
@@ -146,7 +146,7 @@ read_files <- function(plate, data_files, meta_file) {
   # save the data and metadata and update the plate status
   plate_data(plate) <- plate_data
   plate_meta(plate) <- plate_meta
-  status(plate) <- STATUS_INIT
+  status(plate) <- step(plate, 'INIT')
   
   step_end()
   

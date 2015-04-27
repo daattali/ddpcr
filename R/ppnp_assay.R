@@ -1,21 +1,16 @@
-STATUS_DROPLETS_CLASSIFIED     <- (STATUS_EMPTY_REMOVED + 1) %>% as.integer
-STATUS_DROPLETS_RECLASSIFIED   <- (STATUS_EMPTY_REMOVED + 2) %>% as.integer
-
-CLUSTER_RAIN             <- (CLUSTER_EMPTY + 1) %>% as.integer
-CLUSTER_POSITIVE         <- (CLUSTER_EMPTY + 2) %>% as.integer
-CLUSTER_NEGATIVE         <- (CLUSTER_EMPTY + 3) %>% as.integer
-
-CLUSTER <- list()
-CLUSTER[['RAIN']]        <- 4L
-CLUSTER[['POSITIVE']]    <- 5L
-CLUSTER[['NEGATIVE']]    <- 6L
-
-
-
-enums.ppnp_assay <- function(plate) {
-  enums <- NextMethod("enums")
-  add_clusters('RAIN', 'POSITIVE', 'NEGATIVE')
-  add_steps('CLASSIFY', 'RECLASSIFY')
+default_enums.ppnp_assay <- function(plate) {
+  enums <- NextMethod("default_enums")
+  
+  enums %>%
+    add_clusters(c(
+      'RAIN',
+      'POSITIVE',
+      'NEGATIVE'
+    )) %>%
+    add_steps(c(
+      'CLASSIFY',
+      'RECLASSIFY'
+    ))
 }
 
 default_params.ppnp_assay <- function(plate) {

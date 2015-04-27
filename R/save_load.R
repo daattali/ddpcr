@@ -10,12 +10,13 @@ save_plate <- function(plate, file) {
   file %<>% normalize_to_rds
   
   object <- list(
+    class = class(plate),
     plate_data = plate_data(plate),
     plate_meta = plate_meta(plate),
     name = name(plate),
     status = status(plate),
     params = params(plate),
-    class = class(plate)
+    enums = enums(plate)
   )
   saveRDS(object = object, file = file)
   
@@ -34,6 +35,7 @@ load_plate <- function(file) {
   name(plate) <- object[['name']]
   status(plate) <- object[['status']]
   params(plate) <- object[['params']]
+  enums(plate) <- object[['enums']]
   
   plate
 }
