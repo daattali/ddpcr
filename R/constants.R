@@ -13,6 +13,41 @@ CLUSTER_EMPTY      <- 3L
 
 SEED <- 8
 
+enums <- function(plate) {
+  UseMethod("enums")
+}
+
+add_clusters <- function(plate, clusters) {
+  last_cluster <- plate[['enums']][['CLUSTER']] %>% length
+  plate[['enums']][['CLUSTER']] %<>%
+    c(setNames(seq(last_cluster + 1, last_cluster + length(clusters)), clusters))
+  plate
+}
+
+add_steps <- function(plate, steps) {
+  last_step <- plate[['enums']][['STEP']] %>% length
+  plate[['enums']][['STEP']] %<>%
+    c(setNames(seq(last_step + 1, last_step + length(steps)), steps))
+  plate
+}
+
+
+enums.ddpcr_assay <- function(plate) {
+  plate %>%
+    add_clusters(c('UNDEFINED',
+                   'FAILED',
+                   'OUTLIER',
+                   'EMPTY'
+    )) %>%
+    add_steps(c(
+      'UNDEFINED',
+      'INIT',
+      'FAILED_REMOVED',
+      'OUTLIERS_REMOVED',
+      'EMPTY_REMOVED'
+    ))
+}
+
 DEFAULT_PLATE_META <-
   expand.grid(LETTERS[1:8], 1:12, stringsAsFactors = FALSE) %>%
   magrittr::set_colnames(c("row", "col")) %>%

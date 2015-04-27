@@ -12,7 +12,8 @@ plot.ddpcr_plate <- function(
   alpha_bg_failed = 0.7,
   xlab = x_var(plate), ylab = y_var(plate), title = NULL,
   show_grid = FALSE, show_axes_labels = FALSE,
-  text_size_title = 14, text_size_axes_labels = 12, text_size_row_col = 12)
+  text_size_title = 14, text_size_axes_labels = 12, text_size_row_col = 12,
+  ...)
 {
   
   plate <- subset(plate, wells, samples)

@@ -5,6 +5,18 @@ CLUSTER_RAIN             <- (CLUSTER_EMPTY + 1) %>% as.integer
 CLUSTER_POSITIVE         <- (CLUSTER_EMPTY + 2) %>% as.integer
 CLUSTER_NEGATIVE         <- (CLUSTER_EMPTY + 3) %>% as.integer
 
+CLUSTER <- list()
+CLUSTER[['RAIN']]        <- 4L
+CLUSTER[['POSITIVE']]    <- 5L
+CLUSTER[['NEGATIVE']]    <- 6L
+
+
+
+enums.ppnp_assay <- function(plate) {
+  enums <- NextMethod("enums")
+  add_clusters('RAIN', 'POSITIVE', 'NEGATIVE')
+  add_steps('CLASSIFY', 'RECLASSIFY')
+}
 
 default_params.ppnp_assay <- function(plate) {
   params <- NextMethod("default_params")
@@ -29,6 +41,15 @@ default_params.ppnp_assay <- function(plate) {
   params[['RECLASSIFY_WELLS']]                <- PARAMS_RECLASSIFY_WELLS 
   
   params
+}
+
+#' @export
+analyze.ppnp_assay = function(plate) {
+  plate <- NextMethod("analyze")
+  plate %<>% classify_droplets   # step 4 - classify droplets as mutant/wildtype/rain
+  plate %<>% reclassify_droplets # step 5 - reanalyze low mutant frequency wells
+  
+  plate
 }
 
 positive_dim <- function(plate) {
@@ -96,15 +117,6 @@ calculate_negative_freqs <- function(plate) {
   
   plate_meta(plate) %<>%
     merge_dfs_overwrite_col(negative_freqs)
-  
-  plate
-}
-
-#' @export
-analyze.ppnp_assay = function(plate) {
-  plate <- NextMethod("analyze")
-  plate %<>% classify_droplets   # step 4 - classify droplets as mutant/wildtype/rain
-  plate %<>% reclassify_droplets # step 5 - reanalyze low mutant frequency wells
   
   plate
 }
