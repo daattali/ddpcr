@@ -57,7 +57,7 @@ classify_droplets.ppnp_assay <- function(plate) {
   # - any comment by the algorithm
   stopifnot(plate %>% status >= STATUS_EMPTY_REMOVED)
   
-  tstart <- proc.time()
+  step_begin("Classifying droplets")
   
   # ---
 
@@ -80,9 +80,7 @@ classify_droplets.ppnp_assay <- function(plate) {
   
   status(plate) <- STATUS_DROPLETS_CLASSIFIED
   
-  tend <- proc.time()
-  message(sprintf("Time to classify droplets: %s seconds",
-                  round(tend-tstart)[1]))
+  step_end()
   
   plate
 }

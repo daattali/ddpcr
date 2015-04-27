@@ -1,5 +1,4 @@
 - add lol_to_df and merge_dfs_overwrite_col to rsalad
-- have a "verbose" param
 - verify that AGPL-3 license is good
 
 

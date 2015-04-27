@@ -243,11 +243,20 @@ analyze <- function(plate) {
 }
 
 #' @export
-analyze.ddpcr_plate = function(plate) {
+analyze.ddpcr_plate <- function(plate) {
   plate %<>% remove_failures     # step 1 - remove failed wells
   plate %<>% remove_outliers     # step 2 - remove outlier droplets
   plate %<>% remove_empty        # step 3 - remove empty droplets
   plate
+}
+
+step_begin <- function(text) {
+  .globals$set("step_tstart", proc.time())
+  message(text, "... ", appendLF = FALSE)
+}
+step_end <- function(time) {
+  message(sprintf("DONE (%s seconds)",
+                  round(proc.time() - .globals$get("step_tstart"))[1]))
 }
 
 #' @export

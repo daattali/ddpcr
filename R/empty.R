@@ -93,7 +93,7 @@ remove_empty <- function(plate) {
 remove_empty.ddpcr_plate <- function(plate) {
   stopifnot(plate %>% status >= STATUS_FAILED_REMOVED)
   
-  tstart <- proc.time()
+  step_begin("Finding empty droplets")
   
   # ---
   
@@ -168,10 +168,8 @@ remove_empty.ddpcr_plate <- function(plate) {
   plate %<>% calculate_concentration
   
   status(plate) <- STATUS_EMPTY_REMOVED
-  
-  tend <- proc.time()
-  message(sprintf("Time to find empty droplets: %s seconds",
-                  round(tend-tstart)[1]))
+
+  step_end()
   
   plate
 }

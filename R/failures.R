@@ -115,7 +115,7 @@ remove_failures <- function(plate) {
 remove_failures.ddpcr_plate <- function(plate) {
   stopifnot(plate %>% status >= STATUS_INIT)
   
-  tstart <- proc.time()
+  step_begin("Finding failed wells")
   
   data <- plate_data(plate)
   
@@ -146,9 +146,7 @@ remove_failures.ddpcr_plate <- function(plate) {
   plate_data(plate) <- data
   status(plate) <- STATUS_FAILED_REMOVED
   
-  tend <- proc.time()
-  message(sprintf("Time to find unsuccessful wells: %s seconds",
-                  round(tend-tstart)[1]))
-  
+  step_end()
+
   plate
 }

@@ -86,7 +86,7 @@ read_files <- function(plate, data_files, meta_file) {
     err_msg("could not find metadata file")
   }
   
-  tstart <- proc.time()
+  step_begin("Reading data files into plate")
   
   # read the droplets data
   # I purposely keep the wells as character rather than factor because
@@ -148,9 +148,8 @@ read_files <- function(plate, data_files, meta_file) {
   plate_meta(plate) <- plate_meta
   status(plate) <- STATUS_INIT
   
-  tend <- proc.time()
-  message(sprintf("Time to read data: %s seconds", round(tend-tstart)[1]))
-    
+  step_end()
+  
   plate
 }
 

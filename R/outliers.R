@@ -83,7 +83,7 @@ remove_outliers <- function(plate) {
 remove_outliers.ddpcr_plate <- function(plate) {
   stopifnot(plate %>% status >= STATUS_FAILED_REMOVED)
   
-  tstart <- proc.time()
+  step_begin("Finding outlier droplets")
   
   data <- plate_data(plate)
   
@@ -115,9 +115,7 @@ remove_outliers.ddpcr_plate <- function(plate) {
   plate_meta(plate) <- meta
   status(plate) <- STATUS_OUTLIERS_REMOVED
   
-  tend <- proc.time()
-  message(sprintf("Time to remove outliers: %s seconds",
-                  round(tend-tstart)[1]))
+  step_end()
 
   plate
 }

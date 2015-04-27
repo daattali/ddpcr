@@ -94,12 +94,6 @@ reclassify_droplets.ppnp_assay <- function(plate) {
   
   stopifnot(plate %>% status >= STATUS_DROPLETS_CLASSIFIED)
   
-  tstart <- proc.time()
-  
-  data <- plate_data(plate)
-  
-  # ---
-  
   # if there are not enough wells with high MT freq to use as prior info or if
   # there are no wells with low MT freq to reclassify, do nothing
   min_wells <- params(plate, 'RECLASSIFY_WELLS', 'MIN_WELLS_NEGATIVE_CLUSTER')
@@ -111,6 +105,10 @@ reclassify_droplets.ppnp_assay <- function(plate) {
                    " clusters"))
     return(plate)
   }
+  
+  step_begin("Reclassify droplets based on info in all wells")
+  
+  data <- plate_data(plate)
   
   # calculate the ratio of the MT border over highest WT drop (in HEX)
   variable_var <- variable_dim_var(plate)
@@ -158,9 +156,7 @@ reclassify_droplets.ppnp_assay <- function(plate) {
   
   status(plate) <- STATUS_DROPLETS_RECLASSIFIED
   
-  tend <- proc.time()
-  message(paste("Time to reclassify droplets based on info in all wells ",
-                round(tend-tstart)[1], "seconds"))
+  step_end()
 
   plate
 }
