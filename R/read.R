@@ -92,8 +92,8 @@ read_files <- function(plate, data_files, meta_file) {
   # I purposely keep the wells as character rather than factor because
   # the data.frame is large and it's much faster to search through it using
   # dplyr::filter when using character
-  X_var <- params(plate, 'GENERAL', 'X_VAR')
-  Y_var <- params(plate, 'GENERAL', 'Y_VAR')
+  x_var <- x_var(plate)
+  y_var <- y_var(plate)
   plate_data <-
     lapply(data_files, function(x) {
       wellNum <- get_well_from_data_file(x)
@@ -104,14 +104,14 @@ read_files <- function(plate, data_files, meta_file) {
       wdat
     }) %>%
     dplyr::bind_rows() %>%
-    magrittr::set_colnames(c(Y_var, X_var, "well")) %>%
-    dplyr::select_("well", X_var, Y_var) %>%  # reorder so that well is first
+    magrittr::set_colnames(c(y_var, x_var, "well")) %>%
+    dplyr::select_("well", x_var, y_var) %>%  # reorder so that well is first
     dplyr::mutate_(.dots = setNames(
       list(~ CLUSTER_UNDEFINED,
-           lazyeval::interp(~ as.integer(var), var = as.name(X_var)),
-           lazyeval::interp(~ as.integer(var), var = as.name(Y_var))
+           lazyeval::interp(~ as.integer(var), var = as.name(x_var)),
+           lazyeval::interp(~ as.integer(var), var = as.name(y_var))
       ),
-      c("cluster", X_var, Y_var))) %>%
+      c("cluster", x_var, y_var))) %>%
     dplyr::arrange_(~ well)  # arrange by wells alphabetically
   
   # start with a default metadata

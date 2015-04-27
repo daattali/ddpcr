@@ -79,74 +79,73 @@ default_params.ddpcr_plate <- function(plate) {
 
 
 #' @export
-plate_meta <- function(x, only_used = FALSE) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
+plate_meta <- function(plate, only_used = FALSE) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
   
   if (only_used) {
-    x[['plate_meta']] %>% dplyr::filter_(quote(used))
+    plate[['plate_meta']] %>% dplyr::filter_(quote(used))
   } else {  
-    x[['plate_meta']]
+    plate[['plate_meta']]
   }
 }
-`plate_meta<-` <- function(x, value) {
-  x[['plate_meta']] <- value
-  x
+`plate_meta<-` <- function(plate, value) {
+  plate[['plate_meta']] <- value
+  plate
 }
 
-well_info <- function(x, well_id, var) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
-  result <- 
-    plate_meta(x) %>%
+well_info <- function(plate, well_id, var) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  
+  plate_meta(plate) %>%
     dplyr::filter_(~ well == well_id) %>%
     .[[var]]
-  result
 }
 
-arrange_meta <- function(x) {
-  if ("success" %in% colnames(x)) {
-    x %>% dplyr::arrange_(~ desc(used), ~ desc(success), ~ row, ~ col)  
+arrange_meta <- function(plate) {
+  if ("success" %in% colnames(plate)) {
+    plate %>% dplyr::arrange_(~ desc(used), ~ desc(success), ~ row, ~ col)  
   } else {
-    x %>% dplyr::arrange_(~ desc(used), ~ row, ~ col)
+    plate %>% dplyr::arrange_(~ desc(used), ~ row, ~ col)
   }
 }
 
 #' @export
-plate_data <- function(x) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
-  x[['plate_data']]
+plate_data <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  plate[['plate_data']]
 }
-`plate_data<-` <- function(x, value) {
-  x[['plate_data']] <- value
-  x
-}
-
-#' @export
-status <- function(x) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
-  x[['status']]
-}
-`status<-` <- function(x, value) {
-  x[['status']] <- value
-  x
+`plate_data<-` <- function(plate, value) {
+  plate[['plate_data']] <- value
+  plate
 }
 
 #' @export
-name <- function(x) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
-  x[['name']]
+status <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  plate[['status']]
 }
-#' @export
-`name<-` <- function(x, value) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
-  x[['name']] <- value
-  x
+`status<-` <- function(plate, value) {
+  plate[['status']] <- value
+  plate
 }
 
 #' @export
-params <- function(x, major, minor) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
+name <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  plate[['name']]
+}
+#' @export
+`name<-` <- function(plate, value) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  plate[['name']] <- value
+  plate
+}
+
+#' @export
+params <- function(plate, major, minor) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
   
-  res <- x[['params']]
+  res <- plate[['params']]
   if (!missing(major)) {
     res <- res[[major]]
     if (!missing(minor)) {
@@ -158,8 +157,8 @@ params <- function(x, major, minor) {
 }
 
 #' @export
-`params<-` <- function(x, major, minor, value) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
+`params<-` <- function(plate, major, minor, value) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
   
   replace <- 'params'
   if (!missing(major)) {
@@ -169,37 +168,73 @@ params <- function(x, major, minor) {
     }
   }
 
-  x[[replace]] <- value
-  x
+  plate[[replace]] <- value
+  plate
 }
 
 #' @export
-wells_used <- function(x) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
-  dplyr::filter_(x %>% plate_meta, ~ used) %>%
+wells_used <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  
+  plate %>%
+    plate_meta %>%
+    dplyr::filter_(~ used) %>%
     .[['well']]
 }
 
 #' @export
-wells_success <- function(x) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
+wells_success <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
   
-  if (x %>% status < STATUS_FAILED_REMOVED) {
+  if (plate %>% status < STATUS_FAILED_REMOVED) {
     return(NULL)
   }
-  dplyr::filter_(x %>% plate_meta, ~ success) %>%
+  plate %>%
+    plate_meta %>%
+    dplyr::filter_(~ success) %>%
     .[['well']]
 }
 
 #' @export
-wells_failed <- function(x) {
-  stopifnot(x %>% inherits("ddpcr_plate"))
+wells_failed <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
   
-  if (x %>% status < STATUS_FAILED_REMOVED) {
+  if (plate %>% status < STATUS_FAILED_REMOVED) {
     return(NULL)
   }  
-  dplyr::filter_(x %>% plate_meta, ~ !success) %>%
+  plate %>%
+    plate_meta %>%
+    dplyr::filter_(~ !success) %>%
     .[['well']]
+}
+
+#' @export
+x_var <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  params(plate, 'GENERAL', 'X_VAR')
+}
+#' @export
+y_var <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  params(plate, 'GENERAL', 'Y_VAR')
+}
+#' @export
+`x_var<-` <- function(plate, value) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  
+  plate_data(plate) %<>%
+    dplyr::rename_(.dots = setNames(x_var(plate), value))
+  params(plate, 'GENERAL', 'X_VAR') <- value
+  plate
+}
+#' @export
+`y_var<-` <- function(plate, value) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  
+  plate_data(plate) %<>%
+    dplyr::rename_(.dots = setNames(y_var(plate), value))
+  params(plate, 'GENERAL', 'Y_VAR') <- value
+  plate
 }
 
 #' @export

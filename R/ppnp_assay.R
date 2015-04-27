@@ -86,7 +86,7 @@ calculate_neg_freq_single <- function(plate, well_id) {
        negative_freq = negative_freq)
 }
 
-calculate_mt_freqs <- function(plate) {
+calculate_negative_freqs <- function(plate) {
   negative_freqs <-
     vapply(wells_success(plate),
            function(x) calculate_neg_freq_single(plate, x),

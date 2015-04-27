@@ -137,56 +137,24 @@ reclassify_droplets.ppnp_assay <- function(plate) {
     quantile(params(plate, 'RECLASSIFY_WELLS', 'BORDER_RATIO_QUANTILE')) %>%
     as.numeric
 
+  wells_to_reclassify <- plate %>% wells_positive
+  
   well_clusters_info <-
-    vapply(plate %>% wells_positive,
+    vapply(wells_to_reclassify,
            function(x) reclassify_droplets_single(plate, x, consensus_border_ratio),
            vector("list", 2)) %>%
-    lol_to_df  
-  
-  # reclassify mutant drops for every well without a mutant drops cluster
-  data <- plate_data(plate)
-  data_env <- environment()
-  lapply(wells_positive(plate),
-         function(well_id){
-           well_info <-
-             well_clusters_info %>%
-             dplyr::filter_(~ well == well_id)
-           
-           filled_borders <- well_info(well_id, 'filled_borders') %>% str_to_border
-           negative_borders <- well_info[['negative_borders']] %>% str_to_border
-           positive_borders <- well_info[['positive_borders']] %>% str_to_border
-           
-           # I'm not doing this using dplyr (mutate) because it's much slower
-           # this code is a bit ugly but it's much faster to keep overwriting
-           # the data rather than create many small dataframes to merge
-           classifiable_idx <-
-             data[['well']] == well_id &
-             (data[['cluster']] == CLUSTER_UNDEFINED |
-                data[['cluster']] >= CLUSTER_RAIN)
-           filled_idx <- classifiable_idx & data[[positive_var]] %btwn% filled_borders
-           negative_idx <- filled_idx & data[[variable_var]] %btwn% negative_borders
-           positive_idx <- filled_idx & data[[variable_var]] %btwn% positive_borders
-           
-           data[classifiable_idx, 'cluster'] <- CLUSTER_RAIN
-           data[negative_idx, 'cluster'] <- CLUSTER_NEGATIVE
-           data[positive_idx, 'cluster'] <- CLUSTER_POSITIVE
-           assign("data", data, envir = data_env)
-           
-           NULL
-         }
-  ) %>% invisible  
+    lol_to_df %>%
+    magrittr::set_names(lapply(names(.), function(x) meta_var_name(plate, x)))
   
   # add metadata (comment/hasMTclust) to each well
-  meta <-
-    plate_meta(plate) %>%
-    merge_dfs_overwrite_col(well_clusters_info)
+  plate_meta(plate) %<>%
+    merge_dfs_overwrite_col(well_clusters_info)  
   
+  plate %<>%
+    mark_clusters(wells_to_reclassify) %>%
+    calculate_negative_freqs
+
   # ---
-  
-  plate_data(plate) <- data
-  plate_meta(plate) <- meta
-  
-  plate %<>% calculate_mt_freqs
   
   status(plate) <- STATUS_DROPLETS_RECLASSIFIED
   

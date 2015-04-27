@@ -31,8 +31,8 @@ is_well_success.ppnp_assay <- function(plate, well_id) {
   
   set.seed(SEED)
   
-  X_var <- params(plate, 'GENERAL', 'X_VAR')
-  Y_var <- params(plate, 'GENERAL', 'Y_VAR')
+  x_var <- x_var(plate)
+  y_var <- y_var(plate)
   
   if (params(plate, 'WELLSUCCESS', 'FAST')) {
     kmeans_y <- kmeans(well_data[[Y_var]], 2, nstart = 5)

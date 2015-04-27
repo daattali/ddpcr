@@ -36,10 +36,10 @@ get_outlier_cutoff.ddpcr_plate <- function(plate) {
     plate_data(plate) %>%
     dplyr::filter_(~ well %in% wells_success(plate))
   
-  X_var <- params(plate, 'GENERAL', 'X_VAR')
-  Y_var <- params(plate, 'GENERAL', 'Y_VAR')  
+  x_var <- x_var(plate)
+  y_var <- y_var(plate)
   top_y <- 
-    sort(data[[Y_var]], decreasing = TRUE) %>%
+    sort(data[[y_var]], decreasing = TRUE) %>%
     head(nrow(data) / 100 * params(plate, 'OUTLIERS', 'TOP_PERCENT'))
   q_y <- quantile(top_y, c(.25, .75))
   cutoff_y <-
@@ -47,7 +47,7 @@ get_outlier_cutoff.ddpcr_plate <- function(plate) {
     as.numeric
   
   top_x <- 
-    sort(data[[X_var]], decreasing = TRUE) %>%
+    sort(data[[x_var]], decreasing = TRUE) %>%
     head(nrow(data) / 100 * params(plate, 'OUTLIERS', 'TOP_PERCENT'))
   q_x <- quantile(top_x, c(.25, .75))
   cutoff_x <-
@@ -55,8 +55,8 @@ get_outlier_cutoff.ddpcr_plate <- function(plate) {
     as.numeric
   
   result <- list()
-  result[[X_var]] <- cutoff_x
-  result[[Y_var]] <- cutoff_y
+  result[[x_var]] <- cutoff_x
+  result[[y_var]] <- cutoff_y
   
   result
 }
@@ -89,14 +89,12 @@ remove_outliers.ddpcr_plate <- function(plate) {
   
   # ---
 
-  X_var <- params(plate, 'GENERAL', 'X_VAR')
-  Y_var <- params(plate, 'GENERAL', 'Y_VAR')    
   outlier_cutoff <- plate %>% get_outlier_cutoff
-  cutoff_x <- outlier_cutoff[[X_var]]
-  cutoff_y <- outlier_cutoff[[Y_var]]
+  cutoff_x <- outlier_cutoff[[x_var(plate)]]
+  cutoff_y <- outlier_cutoff[[y_var(plate)]]
 
   outlier_idx <-
-    (data[[Y_var]] > cutoff_y | data[[X_var]] > cutoff_x)
+    (data[[y_var(plate)]] > cutoff_y | data[[x_var(plate)]] > cutoff_x)
   data[outlier_idx, 'cluster'] <- CLUSTER_OUTLIER  
   
   drops_outlies_df <- dplyr::data_frame(

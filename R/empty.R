@@ -31,13 +31,10 @@ get_empty_cutoff <- function(plate, well_id) {
 get_empty_cutoff.ddpcr_plate <- function(plate, well_id){
   well_data <- get_single_well(plate, well_id, empty = TRUE)
   
-  X_var <- params(plate, 'GENERAL', 'X_VAR')
-  Y_var <- params(plate, 'GENERAL', 'Y_VAR') 
-  
   # fit two normal distributions in the data along the Y dimension
   set.seed(SEED)
   quiet(
-    mixmdl_y <- mixtools::normalmixEM(well_data[[Y_var]], k = 2))
+    mixmdl_y <- mixtools::normalmixEM(well_data[[y_var(plate)]], k = 2))
   
   # set the Y cutoff as the mean (mu) of the 1st component + k standard deviations
   smaller_comp_y <- mixmdl_y$mu %>% which.min
@@ -50,7 +47,7 @@ get_empty_cutoff.ddpcr_plate <- function(plate, well_id){
   # fit two normal distributions in the data along the x dimension
   set.seed(SEED)
   quiet(
-    mixmdl_x <- mixtools::normalmixEM(well_data[[X_var]], k = 2))
+    mixmdl_x <- mixtools::normalmixEM(well_data[[x_var(plate)]], k = 2))
   # set the X cutoff as the mean (mu) of the 1st component + k standard deviations
   smaller_comp_x <- mixmdl_x$mu %>% which.min
   cutoff_x <-
@@ -110,8 +107,8 @@ remove_empty.ddpcr_plate <- function(plate) {
   # set the cluster to EMPTY for every empty droplet in every well
   data <- plate_data(plate)
   data_env <- environment()
-  X_var <- params(plate, 'GENERAL', 'X_VAR')
-  Y_var <- params(plate, 'GENERAL', 'Y_VAR') 
+  x_var <- x_var(plate)
+  y_var <- y_var(plate)
   lapply(empty_cutoff_map[['well']],
          function(well_id){
 
@@ -131,10 +128,10 @@ remove_empty.ddpcr_plate <- function(plate) {
              (data[['cluster']] == CLUSTER_UNDEFINED |
                 data[['cluster']] >= CLUSTER_EMPTY)
            if (!is.na(cutoff_x)) {
-             empty_idx <- empty_idx & data[[X_var]] < cutoff_x
+             empty_idx <- empty_idx & data[[x_var]] < cutoff_x
            }
            if (!is.na(cutoff_y)) {
-             empty_idx <- empty_idx & data[[Y_var]] < cutoff_y
+             empty_idx <- empty_idx & data[[y_var]] < cutoff_y
            }
            
            # this is a bit ugly but it's much faster to keep overwriting the

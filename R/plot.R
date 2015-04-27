@@ -10,8 +10,9 @@ plot.ddpcr_plate <- function(
   bg_failed = "#111111", bg_unused = "#FFFFFF",
   alpha_drops = 0.1, alpha_drops_outlier = 1,
   alpha_bg_failed = 0.7,
-  xlab, ylab, title,
-  show_grid = FALSE, label_axes = FALSE)
+  xlab = x_var(plate), ylab = y_var(plate), title = NULL,
+  show_grid = FALSE, show_axes_labels = FALSE,
+  text_size_title = 14, text_size_axes_labels = 12, text_size_row_col = 12)
 {
   
   plate <- subset(plate, wells, samples)
@@ -20,14 +21,8 @@ plot.ddpcr_plate <- function(
     plate %<>% subset(wells_success(.))
   }
   
-  X_var <- params(plate, 'GENERAL', 'X_VAR')
-  Y_var <- params(plate, 'GENERAL', 'Y_VAR')
-  if (missing(xlab)) {
-    xlab <- X_var
-  }
-  if (missing(ylab)) {
-    ylab <- Y_var
-  }
+  x_var <- x_var(plate)
+  y_var <- y_var(plate)
   
   meta <- plate_meta(plate)
   data <- plate_data(plate)
@@ -82,15 +77,15 @@ plot.ddpcr_plate <- function(
     ggplot2::ggplot() +
     ggplot2::xlab(xlab) +
     ggplot2::ylab(ylab) +
+    ggplot2::ggtitle(title) +
     ggplot2::theme_bw() +
     ggplot2::theme(
       panel.grid.minor = ggplot2::element_blank(),
-      axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5))
-  
-  if (!missing(title)) {
-    p <- p +
-      ggplot2::ggtitle(title)
-  }  
+      axis.text.x      = ggplot2::element_text(angle = 90, vjust = 0.5),
+      title            = ggplot2::element_text(size = text_size_title),
+      axis.title       = ggplot2::element_text(size = text_size_axes_labels),
+      strip.text       = ggplot2::element_text(size = text_size_row_col)
+    )
   
   # superimpose all the data from all the wells onto one plot instead of a grid
   if (superimpose) {
@@ -115,7 +110,7 @@ plot.ddpcr_plate <- function(
     p <- p +
       ggplot2::geom_point(
         data = data,
-        ggplot2::aes_string(x = X_var, y = Y_var, color = "cluster"),
+        ggplot2::aes_string(x = x_var, y = y_var, color = "cluster"),
         alpha = alpha_drops,
         show_guide = FALSE) +
       ggplot2::scale_color_manual(values = cluster_cols)
@@ -124,7 +119,7 @@ plot.ddpcr_plate <- function(
       p <- p +
         ggplot2::geom_point(
           data = data %>% dplyr::filter_(~ cluster == CLUSTER_OUTLIER),
-          ggplot2::aes_string(X_var, Y_var),
+          ggplot2::aes_string(x_var, y_var),
           alpha = alpha_drops_outlier,
           col = col_outlier)
     }
@@ -147,7 +142,7 @@ plot.ddpcr_plate <- function(
     p <- p +
       ggplot2::theme(panel.grid.major = ggplot2::element_blank())
   }
-  if (!label_axes) {
+  if (!show_axes_labels) {
     p <- p +
       ggplot2::theme(axis.text = ggplot2::element_blank(),
                      axis.ticks = ggplot2::element_blank())
