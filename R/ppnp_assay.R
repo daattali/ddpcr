@@ -1,20 +1,26 @@
-default_enums.ppnp_assay <- function(plate) {
-  enums <- NextMethod("default_enums")
+define_clusters.ppnp_assay <- function(plate) {
+  clusters <- NextMethod("define_clusters")
   
-  enums %>%
+  clusters %>%
     add_clusters(c(
       'RAIN',
       'POSITIVE',
       'NEGATIVE'
-    )) %>%
-    add_steps(c(
-      'CLASSIFY',
-      'RECLASSIFY'
     ))
 }
 
-default_params.ppnp_assay <- function(plate) {
-  params <- NextMethod("default_params")
+define_steps.ppnp_assay <- function(plate) {
+  steps <- NextMethod("define_steps")
+  
+  steps %>%
+    add_steps(list(
+      'CLASSIFY' = 'classify_droplets',
+      'RECLASSIFY' = 'reclassify_droplets'
+    ))
+}
+
+define_params.ppnp_assay <- function(plate) {
+  params <- NextMethod("define_params")
   
   PARAMS_ASSIGN_CLUSTERS <- list()
   PARAMS_ASSIGN_CLUSTERS['NUM_ATTEMPTS_SEGREGATE']       <- 1
@@ -36,15 +42,6 @@ default_params.ppnp_assay <- function(plate) {
   params[['RECLASSIFY_WELLS']]                <- PARAMS_RECLASSIFY_WELLS 
   
   params
-}
-
-#' @export
-analyze.ppnp_assay = function(plate) {
-  plate <- NextMethod("analyze")
-  plate %<>% classify_droplets   # step 4 - classify droplets as mutant/wildtype/rain
-  plate %<>% reclassify_droplets # step 5 - reanalyze low mutant frequency wells
-  
-  plate
 }
 
 positive_dim <- function(plate) {
@@ -93,8 +90,8 @@ calc_negative_freq_simple <- function(negative_drops, positive_drops) {
 calculate_neg_freq_single <- function(plate, well_id) {
   well_data <- get_single_well(plate, well_id, clusters = TRUE)
   
-  negative_num <- (well_data[['cluster']] == CLUSTER_NEGATIVE) %>% sum
-  positive_num <- (well_data[['cluster']] == CLUSTER_POSITIVE) %>% sum
+  negative_num <- (well_data[['cluster']] == plate %>% cluster('NEGATIVE')) %>% sum
+  positive_num <- (well_data[['cluster']] == plate %>% cluster('POSITIVE')) %>% sum
   negative_freq <- calc_negative_freq_simple(negative_num, positive_num)
   
   list(negative_num = negative_num,
@@ -188,7 +185,7 @@ plot.ppnp_assay <- function(
   meta <- plate_meta(plate)
   data <- plate_data(plate)
   
-  if (status(plate) < STATUS_DROPLETS_CLASSIFIED) {
+  if (status(plate) < step(plate, 'CLASSIFY')) {
     show_mt_freq = FALSE
   }
   

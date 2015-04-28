@@ -2,8 +2,8 @@ parent_plate_type.wtnegbraf <- function(plate) {
   "ppnp_assay"
 }
 
-default_params.wtnegbraf <- function(plate) {
-  params <- NextMethod("default_params")
+define_params.wtnegbraf <- function(plate) {
+  params <- NextMethod("define_params")
   
   params[['GENERAL']][['X_VAR']] <- "HEXXX"
   params[['GENERAL']][['Y_VAR']] <- "FAMMM"

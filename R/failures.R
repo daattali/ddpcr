@@ -113,8 +113,8 @@ remove_failures <- function(plate) {
 #' @export
 #' @keywords internal
 remove_failures.ddpcr_plate <- function(plate) {
-  stopifnot(plate %>% status >= STATUS_INIT)
-  
+  CURRENT_STEP <- plate %>% step('REMOVE_FAILURES')
+  plate %>% check_step(CURRENT_STEP)
   step_begin("Finding failed wells")
   
   data <- plate_data(plate)
@@ -132,20 +132,20 @@ remove_failures.ddpcr_plate <- function(plate) {
                             c("success", "comment")) %>%
     arrange_meta
 
+  CLUSTER_FAILED <- plate %>% cluster('FAILED')
   failed_wells <-
     well_success_map %>%
     dplyr::filter_(~ !success) %>%
     .[['well']]
   failed_idx <- 
     (data[['well']] %in% failed_wells) & (data[['cluster']] <= CLUSTER_FAILED)
-  data[failed_idx, 'cluster'] <- CLUSTER_FAILED   
+  data[failed_idx, 'cluster'] <- CLUSTER_FAILED  
     
   # ---
   
   plate_meta(plate) <- meta
   plate_data(plate) <- data
-  status(plate) <- STATUS_FAILED_REMOVED
-  
+  status(plate) <- CURRENT_STEP
   step_end()
 
   plate

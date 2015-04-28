@@ -90,9 +90,8 @@ reclassify_droplets.ppnp_assay <- function(plate) {
   #   the previously assigned mutant drops as rain, and then assign the mutant
   #   label to any drop that falls inside the new borders.
   
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
-  stopifnot(plate %>% status >= STATUS_DROPLETS_CLASSIFIED)
+  CURRENT_STEP <- plate %>% step('RECLASSIFY')
+  plate %>% check_step(CURRENT_STEP)
   
   # if there are not enough wells with high MT freq to use as prior info or if
   # there are no wells with low MT freq to reclassify, do nothing
@@ -103,12 +102,15 @@ reclassify_droplets.ppnp_assay <- function(plate) {
                    " wells with significant ",
                    params(plate, 'GENERAL', 'NEGATIVE_NAME'),
                    " clusters"))
+    status(plate) <- CURRENT_STEP
     return(plate)
   }
   
   step_begin("Reclassify droplets based on info in all wells")
   
   data <- plate_data(plate)
+  CLUSTER_NEGATIVE <- plate %>% cluster('NEGATIVE')
+  CLUSTER_POSITIVE <- plate %>% cluster('POSITIVE')
   
   # calculate the ratio of the MT border over highest WT drop (in HEX)
   variable_var <- variable_dim_var(plate)
@@ -154,8 +156,7 @@ reclassify_droplets.ppnp_assay <- function(plate) {
 
   # ---
   
-  status(plate) <- STATUS_DROPLETS_RECLASSIFIED
-  
+  status(plate) <- CURRENT_STEP
   step_end()
 
   plate

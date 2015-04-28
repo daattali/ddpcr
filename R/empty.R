@@ -91,8 +91,8 @@ remove_empty <- function(plate) {
 #' @export
 #' @keywords internal
 remove_empty.ddpcr_plate <- function(plate) {
-  stopifnot(plate %>% status >= STATUS_FAILED_REMOVED)
-  
+  CURRENT_STEP <- plate %>% step('REMOVE_EMPTY')
+  plate %>% check_step(CURRENT_STEP)
   step_begin("Finding empty droplets")
   
   # ---
@@ -109,6 +109,7 @@ remove_empty.ddpcr_plate <- function(plate) {
   data_env <- environment()
   x_var <- x_var(plate)
   y_var <- y_var(plate)
+  CLUSTERS_UNANALYZED <- unanalyzed_clusters(plate, 'EMPTY')
   lapply(empty_cutoff_map[['well']],
          function(well_id){
 
@@ -125,8 +126,7 @@ remove_empty.ddpcr_plate <- function(plate) {
            # I'm not doing this using dplyr (mutate) because it's much slower
            empty_idx <-
              data[['well']] == well_id &
-             (data[['cluster']] == CLUSTER_UNDEFINED |
-                data[['cluster']] >= CLUSTER_EMPTY)
+             (data[['cluster']] %in% CLUSTERS_UNANALYZED)
            if (!is.na(cutoff_x)) {
              empty_idx <- empty_idx & data[[x_var]] < cutoff_x
            }
@@ -137,7 +137,7 @@ remove_empty.ddpcr_plate <- function(plate) {
            # this is a bit ugly but it's much faster to keep overwriting the
            # data rather than create many small dataframes and then merging/
            # overwriting with the original data
-           data[empty_idx, 'cluster'] <- CLUSTER_EMPTY
+           data[empty_idx, 'cluster'] <- plate %>% cluster('EMPTY')
            assign("data", data, envir = data_env)
            
            NULL
@@ -146,7 +146,7 @@ remove_empty.ddpcr_plate <- function(plate) {
   
   meta <-
     data %>%
-    dplyr::filter_(~ cluster == CLUSTER_EMPTY) %>%
+    dplyr::filter_(~ cluster == plate %>% cluster('EMPTY')) %>%
     dplyr::group_by_("well") %>%
     dplyr::summarise_("drops_empty" = ~ n()) %>%
     merge_dfs_overwrite_col(plate_meta(plate), ., "drops_empty") %>%
@@ -167,8 +167,7 @@ remove_empty.ddpcr_plate <- function(plate) {
   
   plate %<>% calculate_concentration
   
-  status(plate) <- STATUS_EMPTY_REMOVED
-
+  status(plate) <- CURRENT_STEP
   step_end()
   
   plate

@@ -146,7 +146,7 @@ read_files <- function(plate, data_files, meta_file) {
   # save the data and metadata and update the plate status
   plate_data(plate) <- plate_data
   plate_meta(plate) <- plate_meta
-  status(plate) <- step(plate, 'INIT')
+  status(plate) <- step(plate, 'LOAD_DATA')
   
   step_end()
   

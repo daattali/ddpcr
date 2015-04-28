@@ -55,8 +55,8 @@ classify_droplets.ppnp_assay <- function(plate) {
   # - a dataframe with all the drops with their clusters
   # - whether or not there is a mutant drops cluster
   # - any comment by the algorithm
-  stopifnot(plate %>% status >= STATUS_EMPTY_REMOVED)
-  
+  CURRENT_STEP <- plate %>% step('CLASSIFY')
+  plate %>% check_step(CURRENT_STEP)  
   step_begin("Classifying droplets")
   
   # ---
@@ -78,8 +78,7 @@ classify_droplets.ppnp_assay <- function(plate) {
   
   # ---
   
-  status(plate) <- STATUS_DROPLETS_CLASSIFIED
-  
+  status(plate) <- CURRENT_STEP
   step_end()
   
   plate
@@ -88,6 +87,11 @@ classify_droplets.ppnp_assay <- function(plate) {
 mark_clusters <- function(plate, wells) {
   positive_var <- positive_dim_var(plate)
   variable_var <- variable_dim_var(plate)
+  
+  CLUSTER_RAIN <- plate %>% cluster('RAIN')
+  CLUSTER_POSITIVE <- plate %>% cluster('POSITIVE')
+  CLUSTER_NEGATIVE <- plate %>% cluster('NEGATIVE')
+  CLUSTERS_UNANALYZED <- unanalyzed_clusters(plate, 'RAIN')
   
   data <- plate_data(plate)
   data_env <- environment()
@@ -105,8 +109,7 @@ mark_clusters <- function(plate, wells) {
       # the data rather than create many small dataframes to merge
       classifiable_idx <-
         data[['well']] == well_id &
-        (data[['cluster']] == CLUSTER_UNDEFINED |
-           data[['cluster']] >= CLUSTER_RAIN)
+        (data[['cluster']] %in% CLUSTERS_UNANALYZED)
       filled_idx <- classifiable_idx & data[[positive_var]] %btwn% filled_borders
       negative_idx <- filled_idx & data[[variable_var]] %btwn% negative_borders
       positive_idx <- filled_idx & data[[variable_var]] %btwn% positive_borders

@@ -10,13 +10,14 @@ save_plate <- function(plate, file) {
   file %<>% normalize_to_rds
   
   object <- list(
-    class = class(plate),
+    class      = class(plate),
     plate_data = plate_data(plate),
     plate_meta = plate_meta(plate),
-    name = name(plate),
-    status = status(plate),
-    params = params(plate),
-    enums = enums(plate)
+    name       = name(plate),
+    status     = status(plate),
+    params     = params(plate),
+    clusters   = clusters(plate),
+    steps      = steps(plate)
   )
   saveRDS(object = object, file = file)
   
@@ -28,14 +29,15 @@ load_plate <- function(file) {
   
   object <- readRDS(file = file)
   
-  plate <- empty_plate()
-  class(plate) <- object[['class']]
+  plate             <- empty_plate()
+  class(plate)      <- object[['class']]
   plate_data(plate) <- object[['plate_data']]
   plate_meta(plate) <- object[['plate_meta']]
-  name(plate) <- object[['name']]
-  status(plate) <- object[['status']]
-  params(plate) <- object[['params']]
-  enums(plate) <- object[['enums']]
+  name(plate)       <- object[['name']]
+  status(plate)     <- object[['status']]
+  params(plate)     <- object[['params']]
+  clusters(plate)   <- object[['clusters']]
+  steps(plate)      <- object[['steps']]
   
   plate
 }

@@ -21,11 +21,11 @@ get_single_well <- function(plate, well_id,
   
   if (!empty) {
     result %<>%
-      dplyr::filter_(~ cluster != CLUSTER_EMPTY)
+      dplyr::filter_(~ cluster != plate %>% cluster('EMPTY'))
   }
   if (!outliers) {
     result %<>%
-      dplyr::filter_(~ cluster != CLUSTER_OUTLIER)
+      dplyr::filter_(~ cluster != plate %>% cluster('OUTLIER'))
   }
   if (!clusters) {
     result %<>%

@@ -81,8 +81,8 @@ remove_outliers <- function(plate) {
 #' @export
 #' @keywords internal
 remove_outliers.ddpcr_plate <- function(plate) {
-  stopifnot(plate %>% status >= STATUS_FAILED_REMOVED)
-  
+  CURRENT_STEP <- plate %>% step('REMOVE_OUTLIERS')
+  plate %>% check_step(CURRENT_STEP)
   step_begin("Finding outlier droplets")
   
   data <- plate_data(plate)
@@ -93,6 +93,7 @@ remove_outliers.ddpcr_plate <- function(plate) {
   cutoff_x <- outlier_cutoff[[x_var(plate)]]
   cutoff_y <- outlier_cutoff[[y_var(plate)]]
 
+  CLUSTER_OUTLIER <- plate %>% cluster('OUTLIER')
   outlier_idx <-
     (data[[y_var(plate)]] > cutoff_y | data[[x_var(plate)]] > cutoff_x)
   data[outlier_idx, 'cluster'] <- CLUSTER_OUTLIER  
@@ -113,8 +114,7 @@ remove_outliers.ddpcr_plate <- function(plate) {
   
   plate_data(plate) <- data
   plate_meta(plate) <- meta
-  status(plate) <- STATUS_OUTLIERS_REMOVED
-  
+  status(plate) <- CURRENT_STEP
   step_end()
 
   plate

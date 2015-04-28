@@ -18,7 +18,7 @@ plot.ddpcr_plate <- function(
   
   plate <- subset(plate, wells, samples)
   
-  if (!show_failed_wells && status(plate) >= STATUS_FAILED_REMOVED) {
+  if (!show_failed_wells && status(plate) >= step(plate, 'REMOVE_FAILURES')) {
     plate %<>% subset(wells_success(.))
   }
   
@@ -37,10 +37,10 @@ plot.ddpcr_plate <- function(
   data[['cluster']] %<>% as.factor
   
   if (!show_empty_drops) {
-    data %<>% dplyr::filter_(~ cluster != CLUSTER_EMPTY)
+    data %<>% dplyr::filter_(~ cluster != plate %>% cluster('EMPTY'))
   }
   if (!show_outlier_drops) {
-    data %<>% dplyr::filter_(~ cluster != CLUSTER_OUTLIER)
+    data %<>% dplyr::filter_(~ cluster != plate %>% cluster('OUTLIER'))
   }
   
   if (plate %>% wells_used %>% length == 0) {
@@ -119,7 +119,7 @@ plot.ddpcr_plate <- function(
     if (show_outlier_drops) {
       p <- p +
         ggplot2::geom_point(
-          data = data %>% dplyr::filter_(~ cluster == CLUSTER_OUTLIER),
+          data = data %>% dplyr::filter_(~ cluster == plate %>% cluster('OUTLIER')),
           ggplot2::aes_string(x_var, y_var),
           alpha = alpha_drops_outlier,
           col = col_outlier)
@@ -127,7 +127,7 @@ plot.ddpcr_plate <- function(
   }
 
   # show the failed ddPCR runs
-  if (show_failed_wells && !superimpose && status(plate) >= STATUS_FAILED_REMOVED) {
+  if (show_failed_wells && !superimpose && status(plate) >= step(plate, 'REMOVE_FAILURES')) {
     if (sum(!meta_used[['success']], na.rm = TRUE) > 0) {
       p <- p +
         ggplot2::geom_rect(

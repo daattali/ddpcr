@@ -5,18 +5,26 @@ empty_plate <- function() {
     name = NULL,
     status = NULL,
     params = NULL,
-    enums = NULL
+    clusters = NULL,
+    steps = NULL
   )
+}
+
+init_plate <- function(type) {
+  # Unfortunately this pipeline can't be piped with %>% because magrittr
+  # doesn't seem to play nicely with missing arguments  
+  plate <- empty_plate()  # Start with a new empty plate
+  plate <- set_plate_type(plate, type)  # Set the type (class) of this assay
+  plate <- set_default_clusters(plate)
+  plate <- set_default_steps(plate)
+  plate <- set_default_params(plate)   # Set the right parameters based on the plate type
+  status(plate) <- plate %>% step('INIT')
+  plate
 }
 
 #' @export
 new_plate <- function(dir, type, data_files, meta_file, name) {
-  # Unfortunately this pipeline can't be piped with %>% because magrittr
-  # doesn't seem to play nicely with missing arguments
-  plate <- empty_plate()  # Start with a new empty plate
-  plate <- set_plate_type(plate, type)  # Set the type (class) of this assay
-  plate <- set_default_enums(plate)
-  plate <- set_default_params(plate)   # Set the right parameters based on the plate type
+  plate <- init_plate(type)
   plate <- read_plate(plate, dir, data_files, meta_file)  # Read the data files into the plate
 
   # If a name was given, use it instead of the automatically extracted
@@ -67,16 +75,55 @@ parent_plate_type.default <- function(plate) {
 
 #' @export
 set_default_params <- function(plate) {
-  params(plate) <- default_params(plate)
+  params(plate) <- define_params(plate)
   plate
 }
 
 # Each plate type can define its own parameters
-default_params <- function(plate) {
-  UseMethod("default_params")
+define_params <- function(plate) {
+  UseMethod("define_params")
 }
-default_params.ddpcr_plate <- function(plate) {
+define_params.ddpcr_plate <- function(plate) {
   DEFAULT_PARAMS
+}
+
+set_default_clusters <- function(plate) {
+  clusters(plate) <- define_clusters(plate)
+  plate
+}
+
+define_clusters <- function(plate) {
+  UseMethod("define_clusters")
+}
+clusters <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  plate[['clusters']]
+}
+
+`clusters<-` <- function(plate, value) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  plate[['clusters']] <- value
+  plate
+}
+
+
+set_default_steps <- function(plate) {
+  steps(plate) <- define_steps(plate)
+  plate
+}
+
+define_steps <- function(plate) {
+  UseMethod("define_steps")
+}
+steps <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  plate[['steps']]
+}
+
+`steps<-` <- function(plate, value) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  plate[['steps']] <- value
+  plate
 }
 
 
@@ -188,7 +235,7 @@ wells_used <- function(plate) {
 wells_success <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
-  if (plate %>% status < STATUS_FAILED_REMOVED) {
+  if (plate %>% status < step(plate, 'REMOVE_FAILURES')) {
     return(NULL)
   }
   plate %>%
@@ -201,7 +248,7 @@ wells_success <- function(plate) {
 wells_failed <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
-  if (plate %>% status < STATUS_FAILED_REMOVED) {
+  if (plate %>% status < step(plate, 'REMOVE_FAILURES')) {
     return(NULL)
   }  
   plate %>%
@@ -240,16 +287,44 @@ y_var <- function(plate) {
 }
 
 #' @export
-analyze <- function(plate) {
-  UseMethod("analyze")
+analyze <- function(plate, restart = FALSE) {
+  if (restart) {
+    message("Restarting analysis")
+    status(plate) <- 0
+  }
+  steps_left <- length(steps(plate)) - status(plate)
+  next_step(plate, n = steps_left)
+  message("Analysis complete")
+}
+
+analysis_complete <- function(plate) {
+  status(plate) == length(steps(plate))
 }
 
 #' @export
-analyze.ddpcr_plate <- function(plate) {
-  plate %<>% remove_failures     # step 1 - remove failed wells
-  plate %<>% remove_outliers     # step 2 - remove outlier droplets
-  plate %<>% remove_empty        # step 3 - remove empty droplets
-  plate
+next_step <- function(plate, n = 1) {
+  if (n == 0) {
+    return(plate)
+  }
+  
+  if (analysis_complete(plate)) {
+    message("Analysis complete")
+    return(plate)
+  }
+  
+  next_step_name <-
+    plate %>%
+    status %>% 
+    magrittr::add(1) %>%
+    step_name(plate, .)
+  next_step_fxn <-
+    plate %>%
+    steps %>%
+    .[[next_step_name]]
+  
+  plate <- do.call(next_step_fxn, list(plate))
+  
+  next_step(plate, n - 1)
 }
 
 step_begin <- function(text) {
@@ -265,12 +340,21 @@ step_end <- function(time) {
 print.ddpcr_plate <- function(x, ...) {
   cat0("Dataset name: ", x %>% name, "\n")
   cat0("Plate type: ", x %>% class %>% paste(collapse = ", "), "\n")
-  cat0("Analysis status: ", x %>% status, "\n")
-  if (x %>% status >= STATUS_INIT) {
-    cat0("Data summary: ", 
-         x %>% plate_meta %>% .[['used']] %>% sum, " wells, ",
-         x %>% plate_data %>% nrow, " drops\n")
+  if (analysis_complete(plate)) {
+    cat0("Analysis completed")
+  } else {
+    cat0("Completed analysis steps: ",
+         step_name(plate, seq(1, status(plate))) %>% paste(collapse = ", "),
+         "\n"
+    )
+    cat0("Remaining analysis steps: ",
+         step_name(plate, seq(status(plate) + 1, length(steps(plate)))) %>% paste(collapse = ", "),
+         "\n"
+    )
   }
+  cat0("Data summary: ", 
+       x %>% plate_meta %>% .[['used']] %>% sum, " wells, ",
+       x %>% plate_data %>% nrow, " drops\n")
   cat0("---\nDrops data:\n")
   cat0(x %>% plate_data %>% str)
   cat0("---\nPlate meta data:\n")

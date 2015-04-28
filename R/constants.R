@@ -2,71 +2,81 @@
 
 SEED <- 8
 
-default_enums <- function(plate) {
-  UseMethod("default_enums")
-}
-
-add_clusters <- function(enums, clusters) {
-  add_enums(enums, 'CLUSTER', clusters)
-}
-
-add_steps <- function(enums, steps) {
-  add_enums(enums, 'STEP', steps)
-}
-
-add_enums <- function(enums, type, values) {
-  last_value <- enums[[type]] %>% length
-  enums[[type]] %<>%
-    c(setNames(seq(last_value + 1, last_value + length(values)), values))
-  enums
-}
-
-step <- function(plate, step) {
-  enums(plate)[['STEP']][[step]]
-}
-step_name <- function(plate, step) {
-  enums(plate)[['STEP']][step] %>% names
-}
-
-cluster <- function(plate, cluster) {
-  enums(plate)[['CLUSTER']][[cluster]]
-}
-cluster_name <- function(plate, cluster) {
-  enums(plate)[['CLUSTER']][cluster] %>% names
-}
-
-
-enums <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  plate[['enums']]
-}
-
-`enums<-` <- function(plate, value) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  plate[['enums']] <- value
-  plate
-}
-
-set_default_enums <- function(plate) {
-  enums(plate) <- default_enums(plate)
-  plate
-}
-
-default_enums.ddpcr_plate <- function(plate) {
-  list() %>%
+define_clusters.ddpcr_plate <- function(plate) {
+  c() %>%
     add_clusters(c(
       'UNDEFINED',
       'FAILED',
       'OUTLIER',
       'EMPTY'
-    )) %>%
-    add_steps(c(
-      'UNDEFINED',
-      'INIT',
-      'FAILED_REMOVED',
-      'OUTLIERS_REMOVED',
-      'EMPTY_REMOVED'
     ))
+}
+
+add_clusters <- function(existing, new) {
+  c(existing, new)
+}
+
+cluster <- function(plate, cluster) {
+  res <- plate %>% clusters %>% {which(. == cluster)}
+  if (res %>% length != 1) {
+    err_msg(sprintf("could not find cluster `%s`", cluster))
+  }
+  res
+}
+cluster_name <- function(plate, cluster) {
+  cluster %<% as.integer
+  if (cluster < 1 || cluster > plate %>% clusters %>% length) {
+    err_msg(sprintf("invalid cluster number: %s", cluster))
+  }
+  plate %>% clusters %>% .[cluster]
+}
+
+unanalyzed_clusters <- function(plate, current) {
+  res <- plate %>% cluster('UNDEFINED')
+  if (!missing(current)) {
+    if (!current %>% is.numeric) {
+      current <- cluster(plate, current)
+    }
+    res %<>%
+      c(seq(current, plate %>% clusters %>% length))
+  }
+  res
+}
+
+increment_step <- function(plate) {
+  status(plate) <- status(plate) + 1
+  plate
+}
+
+define_steps.ddpcr_plate <- function(plate) {
+  c() %>%
+    add_steps(list(
+      'INIT' = 'increment_step',
+      'LOAD_DATA' = 'increment_step',
+      'REMOVE_FAILURES' = 'remove_failures',
+      'REMOVE_OUTLIERS' = 'remove_outliers',
+      'REMOVE_EMPTY' = 'remove_empty'
+    ))
+}
+add_steps <- function(existing, new) {
+  c(existing, new)
+}
+step <- function(plate, step) {
+  res <- plate %>% steps %>% names %>% {which(. == step)}
+  if (res %>% length != 1) {
+    err_msg(sprintf("could not find step `%s`", step))
+  }
+  res
+}
+step_name <- function(plate, step) {
+  step %<>% as.integer
+  if (step < 1 || step > plate %>% steps %>% length) {
+    err_msg(sprintf("invalid step number: %s", step))
+  }
+  plate %>% steps %>% names %>% .[step]
+}
+check_step <- function(plate, step) {
+  stopifnot(plate %>% status >= step - 1)
 }
 
 DEFAULT_PLATE_META <-
