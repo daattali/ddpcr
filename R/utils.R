@@ -152,3 +152,35 @@ str.point2d <- function(v) {
 print.point2d <- function(v) {
    v %>% str %>% print
 }
+
+move_front <- function(df, cols) {
+  bind_df_ends(df, cols, 1)
+}
+
+move_back <- function(df, cols) {
+  bind_df_ends(df, cols, -1)
+}
+
+
+bind_df_ends <- function(df, cols, dir = 1) {
+  stopifnot(
+    is.data.frame(df),
+    cols %in% colnames(df)
+  )
+  
+  is_tbl <- dplyr::is.tbl(df)
+  
+  # Bind together the two parts of the data.frame
+  df <-
+    cbind(
+      df %>% dplyr::select_(~(dir * one_of(cols))),
+      df %>% dplyr::select_(~(-dir * one_of(cols)))
+    )
+  
+  # If the input was a tbl_df, make sure to return that object too
+  if (is_tbl) {
+    df <- dplyr::tbl_df(df)
+  }
+  
+  df
+}

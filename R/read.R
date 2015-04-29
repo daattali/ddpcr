@@ -66,7 +66,7 @@ read_dir <- function(plate, dir) {
 # read a plate data from a given list of files
 read_files <- function(plate, data_files, meta_file) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
-  
+
   # make sure all given data files are valid paths
   if (missing(data_files) || length(data_files) == 0) {
     err_msg("no data files provided")
@@ -92,61 +92,30 @@ read_files <- function(plate, data_files, meta_file) {
   # I purposely keep the wells as character rather than factor because
   # the data.frame is large and it's much faster to search through it using
   # dplyr::filter when using character
-  x_var <- x_var(plate)
-  y_var <- y_var(plate)
   plate_data <-
     lapply(data_files, function(x) {
       wellNum <- get_well_from_data_file(x)
       wdat <-
         readr::read_csv(x) %>%
-        dplyr::select_(~ 1:2) %>%
+        dplyr::select_(~ 2:1) %>%
         dplyr::mutate_(.dots = setNames(list(~ wellNum), "well"))
       wdat
     }) %>%
     dplyr::bind_rows() %>%
-    magrittr::set_colnames(c(y_var, x_var, "well")) %>%
-    dplyr::select_("well", x_var, y_var) %>%  # reorder so that well is first
-    dplyr::mutate_(.dots = setNames(
-      list(~ cluster(plate, 'UNDEFINED'),
-           lazyeval::interp(~ as.integer(var), var = as.name(x_var)),
-           lazyeval::interp(~ as.integer(var), var = as.name(y_var))
-      ),
-      c("cluster", x_var, y_var))) %>%
-    dplyr::arrange_(~ well)  # arrange by wells alphabetically
+    move_front("well")
   
-  # start with a default metadata
-  plate_meta <- DEFAULT_PLATE_META
+  plate_data(plate) <- plate_data
   
-   # read the meta data file (we only care about the well -> sample mapping)
+  # Read the metadata file if one was given
   if (!is.null(meta_file)) {
-    meta_cols_keep <- c("well", "sample")
-    plate_meta_samples <-
-      read.csv(meta_file, stringsAsFactors = FALSE)  %>%
-      magrittr::set_colnames(colnames(.) %>% tolower) %>%
-      dplyr::select_(~ one_of(meta_cols_keep)) %>%
-      unique
-    
     plate_meta <-
-      merge_dfs_overwrite_col(plate_meta, plate_meta_samples, "sample", "well")
-  } 
+      read.csv(meta_file, stringsAsFactors = FALSE) %>%
+      magrittr::set_colnames(colnames(.) %>% tolower)
+    plate_meta(plate) <- plate_meta
+  }
 
-  # populate the metadata with some initial variables
-  wells_used <- plate_data[['well']] %>% unique
-  plate_meta[['used']] <- plate_meta[['well']] %in% wells_used
-  plate_meta <-
-    plate_data %>%
-    dplyr::group_by_("well") %>%
-    dplyr::summarise_("drops" = ~ n()) %>%
-    dplyr::left_join(plate_meta, ., by = "well") %>%
-    arrange_meta
-  
   # set the plate's name based on the file paths
   name(plate) <- get_consensus_name_from_data_files(data_files)
-  
-  # save the data and metadata and update the plate status
-  plate_data(plate) <- plate_data
-  plate_meta(plate) <- plate_meta
-  status(plate) <- step(plate, 'LOAD_DATA')
   
   step_end()
   

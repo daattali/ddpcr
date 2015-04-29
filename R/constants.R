@@ -43,16 +43,10 @@ unanalyzed_clusters <- function(plate, current) {
   res
 }
 
-increment_step <- function(plate) {
-  status(plate) <- status(plate) + 1
-  plate
-}
-
 define_steps.ddpcr_plate <- function(plate) {
   c() %>%
     add_steps(list(
-      'INIT' = 'increment_step',
-      'LOAD_DATA' = 'increment_step',
+      'INITIALIZE' = 'init_plate',
       'REMOVE_FAILURES' = 'remove_failures',
       'REMOVE_OUTLIERS' = 'remove_outliers',
       'REMOVE_EMPTY' = 'remove_empty'

@@ -10,27 +10,88 @@ empty_plate <- function() {
   )
 }
 
-init_plate <- function(type) {
+setup_plate <- function(type) {
   # Unfortunately this pipeline can't be piped with %>% because magrittr
   # doesn't seem to play nicely with missing arguments  
   plate <- empty_plate()  # Start with a new empty plate
   plate <- set_plate_type(plate, type)  # Set the type (class) of this assay
-  plate <- set_default_clusters(plate)
-  plate <- set_default_steps(plate)
-  plate <- set_default_params(plate)   # Set the right parameters based on the plate type
-  status(plate) <- plate %>% step('INIT')
+  plate
+}
+
+init_plate <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  step_begin("Initializing plate")
+  
+  plate %<>%
+    set_default_clusters %>%
+    set_default_steps %>%
+    set_default_params %>%
+    init_data %>%
+    init_meta
+  
+  status(plate) <- step(plate, 'INITIALIZE')
+  step_end()
+  
+  plate
+}
+
+init_data <- function(plate) {
+  x_var <- x_var(plate)
+  y_var <- y_var(plate)
+  
+  plate_data(plate) %<>%
+    magrittr::set_colnames(c("well", x_var, y_var)) %>%
+      dplyr::select_("well", x_var, y_var) %>%
+      dplyr::mutate_(.dots = setNames(
+        list(~ cluster(plate, 'UNDEFINED'),
+             lazyeval::interp(~ as.integer(var), var = as.name(x_var)),
+             lazyeval::interp(~ as.integer(var), var = as.name(y_var))
+        ),
+        c("cluster", x_var, y_var))) %>%
+      dplyr::arrange_(~ well)  # arrange by wells alphabetically 
+  plate
+}
+
+init_meta <- function(plate) {
+  plate_data <- plate_data(plate)
+  plate_meta <- plate_meta(plate)
+  
+  # read the meta data file (we only care about the well -> sample mapping)
+  if (is.null(plate_meta)) {
+    plate_meta <- DEFAULT_PLATE_META
+  } else {
+    meta_cols_keep <- c("well", "sample")
+    plate_meta %<>%
+      dplyr::select_(~ one_of(meta_cols_keep)) %>%
+      unique %>%
+      merge_dfs_overwrite_col(DEFAULT_PLATE_META, ., "sample", "well")
+  }
+  
+  # populate the metadata with some initial variables
+  wells_used <- plate_data[['well']] %>% unique
+  plate_meta[['used']] <- plate_meta[['well']] %in% wells_used
+  plate_meta <-
+    plate_data %>%
+    dplyr::group_by_("well") %>%
+    dplyr::summarise_("drops" = ~ n()) %>%
+    dplyr::left_join(plate_meta, ., by = "well") %>%
+    arrange_meta
+  
+  plate_meta(plate) <- plate_meta
   plate
 }
 
 #' @export
 new_plate <- function(dir, type, data_files, meta_file, name) {
-  plate <- init_plate(type)
+  plate <- setup_plate(type)
   plate <- read_plate(plate, dir, data_files, meta_file)  # Read the data files into the plate
 
   # If a name was given, use it instead of the automatically extracted
   if (!missing(name)) {
     name(plate) <- name
   }
+  
+  plate <- init_plate(plate)
   
   plate
 }
@@ -44,10 +105,10 @@ set_plate_type <- function(plate, type) {
     return(plate)
   }
   
-  if (missing(type)) {
+  if (missing(type) || !nzchar(type)) {
     type <- NULL
   }  
-  
+
   # Add the given type to the classlist (initially the class will be "list"
   # because that's the mode of a plate - we want to exclude that one)
   new_class <- type
@@ -293,8 +354,9 @@ analyze <- function(plate, restart = FALSE) {
     status(plate) <- 0
   }
   steps_left <- length(steps(plate)) - status(plate)
-  next_step(plate, n = steps_left)
+  plate %<>% next_step(n = steps_left)
   message("Analysis complete")
+  plate
 }
 
 analysis_complete <- function(plate) {
@@ -337,9 +399,9 @@ step_end <- function(time) {
 }
 
 #' @export
-print.ddpcr_plate <- function(x, ...) {
-  cat0("Dataset name: ", x %>% name, "\n")
-  cat0("Plate type: ", x %>% class %>% paste(collapse = ", "), "\n")
+print.ddpcr_plate <- function(plate, ...) {
+  cat0("Dataset name: ", plate %>% name, "\n")
+  cat0("Plate type: ", plate %>% class %>% paste(collapse = ", "), "\n")
   if (analysis_complete(plate)) {
     cat0("Analysis completed")
   } else {
@@ -353,12 +415,12 @@ print.ddpcr_plate <- function(x, ...) {
     )
   }
   cat0("Data summary: ", 
-       x %>% plate_meta %>% .[['used']] %>% sum, " wells, ",
-       x %>% plate_data %>% nrow, " drops\n")
+       plate %>% plate_meta %>% .[['used']] %>% sum, " wells, ",
+       plate %>% plate_data %>% nrow, " drops\n")
   cat0("---\nDrops data:\n")
-  cat0(x %>% plate_data %>% str)
+  cat0(plate %>% plate_data %>% str)
   cat0("---\nPlate meta data:\n")
-  cat0(x %>% plate_meta %>% str)
+  cat0(plate %>% plate_meta %>% str)
 }
 
 # pmini <- new_plate("../../data/mini141")
