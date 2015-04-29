@@ -115,8 +115,8 @@ plot.ddpcr_plate <- function(
         data = data,
         ggplot2::aes_string(x = x_var, y = y_var, color = "cluster"),
         alpha = alpha_drops,
-        show_guide = FALSE) +
-      ggplot2::scale_color_manual(values = cluster_cols)
+        show_guide = FALSE) #+
+      #ggplot2::scale_color_manual(values = cluster_cols)
 
     if (show_outlier_drops) {
       p <- p +

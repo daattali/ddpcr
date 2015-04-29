@@ -10,18 +10,36 @@ empty_plate <- function() {
   )
 }
 
-setup_plate <- function(type) {
-  # Unfortunately this pipeline can't be piped with %>% because magrittr
-  # doesn't seem to play nicely with missing arguments  
+setup_new_plate <- function(type) {
   plate <- empty_plate()  # Start with a new empty plate
+  setup_plate(plate, type)
+}
+
+setup_plate <- function(plate, type) {
   plate <- set_plate_type(plate, type)  # Set the type (class) of this assay
   plate <- set_default_params(plate)
   plate
 }
 
+type <- function(plate, all = FALSE) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  if (all) {
+    class(plate)
+  } else {
+    class(plate)[1]
+  }
+}
+
+`type<-` <- function(plate, value) {
+  class(plate) <- NULL
+  plate <- setup_plate(plate, value)
+  plate <- init_plate(plate)
+  plate
+}
+
 init_plate <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
-  step_begin("Initializing plate")
+  step_begin(sprintf("Initializing plate of type ", type(plate)))
   
   plate %<>%
     set_default_clusters %>%
@@ -83,7 +101,7 @@ init_meta <- function(plate) {
 
 #' @export
 new_plate <- function(dir, type, data_files, meta_file, name) {
-  plate <- setup_plate(type)
+  plate <- setup_new_plate(type)
   plate <- read_plate(plate, dir, data_files, meta_file)  # Read the data files into the plate
 
   # If a name was given, use it instead of the automatically extracted
@@ -101,11 +119,11 @@ new_plate <- function(dir, type, data_files, meta_file, name) {
 # that inherit from another one (which means they will use the same params/
 # methods)
 set_plate_type <- function(plate, type) {
-  if (!missing(type) && is.null(type)) {
+  if (!missing(type) && is.null(type) && class(plate) != "list") {
     return(plate)
   }
   
-  if (missing(type) || !nzchar(type)) {
+  if (missing(type) || is.null(type) || !nzchar(type)) {
     type <- NULL
   }  
 
@@ -409,7 +427,7 @@ step_end <- function(time) {
 #' @export
 print.ddpcr_plate <- function(plate, ...) {
   cat0("Dataset name: ", plate %>% name, "\n")
-  cat0("Plate type: ", plate %>% class %>% paste(collapse = ", "), "\n")
+  cat0("Plate type: ", plate %>% type(TRUE) %>% paste(collapse = ", "), "\n")
   if (analysis_complete(plate)) {
     cat0("Analysis completed")
   } else {
