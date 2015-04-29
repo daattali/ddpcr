@@ -56,7 +56,7 @@ classify_droplets.ppnp_assay <- function(plate) {
   # - whether or not there is a mutant drops cluster
   # - any comment by the algorithm
   CURRENT_STEP <- plate %>% step('CLASSIFY')
-  plate %>% check_step(CURRENT_STEP)  
+  plate %>% check_step(CURRENT_STEP, TRUE)  
   step_begin("Classifying droplets")
   
   # ---

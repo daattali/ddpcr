@@ -91,7 +91,7 @@ reclassify_droplets.ppnp_assay <- function(plate) {
   #   label to any drop that falls inside the new borders.
   
   CURRENT_STEP <- plate %>% step('RECLASSIFY')
-  plate %>% check_step(CURRENT_STEP)
+  plate %>% check_step(CURRENT_STEP, TRUE)
   
   # if there are not enough wells with high MT freq to use as prior info or if
   # there are no wells with low MT freq to reclassify, do nothing

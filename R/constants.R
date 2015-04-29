@@ -69,8 +69,12 @@ step_name <- function(plate, step) {
   }
   plate %>% steps %>% names %>% .[step]
 }
-check_step <- function(plate, step) {
-  stopifnot(plate %>% status >= step - 1)
+check_step <- function(plate, step, must_exist = FALSE) {
+  exists <- plate %>% status >= step - 1
+  if (must_exist && !exists) {
+    err_msg("analysis is not at the required step")
+  }
+  exists
 }
 
 DEFAULT_PLATE_META <-

@@ -18,7 +18,9 @@ plot.ddpcr_plate <- function(
   
   plate <- subset(plate, wells, samples)
   
-  if (!show_failed_wells && status(plate) >= step(plate, 'REMOVE_FAILURES')) {
+  if (!show_failed_wells &&
+      plate %>% has_step('REMOVE_FAILURES') &&
+      plate %>% status(plate) >= step(plate, 'REMOVE_FAILURES')) {
     plate %<>% subset(wells_success(.))
   }
   
@@ -127,7 +129,9 @@ plot.ddpcr_plate <- function(
   }
 
   # show the failed ddPCR runs
-  if (show_failed_wells && !superimpose && status(plate) >= step(plate, 'REMOVE_FAILURES')) {
+  if (show_failed_wells && !superimpose && 
+      plate %>% has_step('REMOVE_FAILURES') &&
+      status(plate) >= step(plate, 'REMOVE_FAILURES')) {
     if (sum(!meta_used[['success']], na.rm = TRUE) > 0) {
       p <- p +
         ggplot2::geom_rect(

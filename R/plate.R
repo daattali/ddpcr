@@ -15,6 +15,7 @@ setup_plate <- function(type) {
   # doesn't seem to play nicely with missing arguments  
   plate <- empty_plate()  # Start with a new empty plate
   plate <- set_plate_type(plate, type)  # Set the type (class) of this assay
+  plate <- set_default_params(plate)
   plate
 }
 
@@ -25,7 +26,6 @@ init_plate <- function(plate) {
   plate %<>%
     set_default_clusters %>%
     set_default_steps %>%
-    set_default_params %>%
     init_data %>%
     init_meta
   
@@ -180,13 +180,19 @@ steps <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   plate[['steps']]
 }
-
 `steps<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   plate[['steps']] <- value
   plate
 }
-
+has_step <- function(plate, step) {
+  plate %>%
+    steps %>%
+    names %>%
+    {which(. == step)} %>%
+    length %>%
+    magrittr::equals(1)
+}
 
 #' @export
 plate_meta <- function(plate, only_used = FALSE) {
@@ -296,8 +302,9 @@ wells_used <- function(plate) {
 wells_success <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
-  if (plate %>% status < step(plate, 'REMOVE_FAILURES')) {
-    return(NULL)
+  if (!(plate %>% has_step('REMOVE_FAILURES')) ||
+      plate %>% status < step(plate, 'REMOVE_FAILURES')) {
+    return(plate %>% plate_meta %>% .[['well']])
   }
   plate %>%
     plate_meta %>%
@@ -309,8 +316,9 @@ wells_success <- function(plate) {
 wells_failed <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
-  if (plate %>% status < step(plate, 'REMOVE_FAILURES')) {
-    return(NULL)
+  if (!(plate %>% has_step('REMOVE_FAILURES')) ||
+      plate %>% status < step(plate, 'REMOVE_FAILURES')) {
+    return(c())
   }  
   plate %>%
     plate_meta %>%

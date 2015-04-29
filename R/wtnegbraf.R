@@ -1,3 +1,5 @@
+WTNEGBRAF <- "wtnegbraf"
+
 parent_plate_type.wtnegbraf <- function(plate) {
   "ppnp_assay"
 }

@@ -1,3 +1,5 @@
+PPNP_ASSAY <- "ppnp_assay"
+
 define_clusters.ppnp_assay <- function(plate) {
   clusters <- NextMethod("define_clusters")
   
