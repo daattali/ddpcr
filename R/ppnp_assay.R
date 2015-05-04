@@ -22,24 +22,30 @@ define_steps.ppnp_assay <- function(plate) {
 define_params.ppnp_assay <- function(plate) {
   params <- NextMethod("define_params")
   
-  PARAMS_ASSIGN_CLUSTERS <- list()
-  PARAMS_ASSIGN_CLUSTERS['NUM_ATTEMPTS_SEGREGATE']       <- 1
-  PARAMS_ASSIGN_CLUSTERS['SEGREGATE_RATIO_THRESHOLD']    <- 0.75
-  PARAMS_ASSIGN_CLUSTERS['CLUSTERS_BORDERS_NUM_SD']      <- 3
-  PARAMS_ASSIGN_CLUSTERS['NO_NEG_CLUSTER_BORDER_NUM_SD'] <- 10
-  PARAMS_ASSIGN_CLUSTERS['ADJUST_MIN']                   <- 4
-  PARAMS_ASSIGN_CLUSTERS['ADJUST_MAX']                   <- 20
-  PARAMS_ASSIGN_CLUSTERS['METHOD']                       <- 'density_inflection_points'
-  PARAMS_RECLASSIFY_WELLS                                <- list()
-  PARAMS_RECLASSIFY_WELLS['MIN_WELLS_NEGATIVE_CLUSTER']  <- 4
-  PARAMS_RECLASSIFY_WELLS['BORDER_RATIO_QUANTILE']       <- 0.75  
-  
-  params[['GENERAL']][['POSITIVE_NAME']]      <- 'positive'
-  params[['GENERAL']][['NEGATIVE_NAME']]      <- 'negative'
-  params[['GENERAL']][['POSITIVE_DIMENSION']] <- NA  # Must be set by the child
-  params[['WELLSUCCESS']][['FAST']]           <- TRUE
-  params[['ASSIGN_CLUSTERS']]                 <- PARAMS_ASSIGN_CLUSTERS
-  params[['RECLASSIFY_WELLS']]                <- PARAMS_RECLASSIFY_WELLS 
+  new_params <- list(
+    'GENERAL' = list(
+      'POSITIVE_NAME'      = 'positive',
+      'NEGATIVE_NAME'      = 'negative',
+      'POSITIVE_DIMENSION' = NA   # Must be set by the child
+    ),
+    'WELLSUCCESS' = list(
+      'FAST'   = TRUE
+    ),
+    'ASSIGN_CLUSTERS' = list(
+      'NUM_ATTEMPTS_SEGREGATE'       = 1,
+      'SEGREGATE_RATIO_THRESHOLD'    = 0.75,
+      'CLUSTERS_BORDERS_NUM_SD'      = 3,
+      'NO_NEG_CLUSTER_BORDER_NUM_SD' = 10,
+      'ADJUST_MIN'                   = 4,
+      'ADJUST_MAX'                   = 20,
+      'METHOD'                       = 'density_inflection_points'
+    ),
+    'RECLASSIFY_WELLS' = list(
+      'MIN_WELLS_NEGATIVE_CLUSTER'   = 4,
+      'BORDER_RATIO_QUANTILE'        = 0.75
+    )
+  )
+  params %<>% modifyList(new_params)
   
   params
 }

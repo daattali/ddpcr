@@ -7,11 +7,16 @@ parent_plate_type.wtnegbraf <- function(plate) {
 define_params.wtnegbraf <- function(plate) {
   params <- NextMethod("define_params")
   
-  params[['GENERAL']][['X_VAR']] <- "HEXXX"
-  params[['GENERAL']][['Y_VAR']] <- "FAMMM"
-  params[['GENERAL']][['POSITIVE_NAME']] <- 'wildtype'
-  params[['GENERAL']][['NEGATIVE_NAME']] <- 'mutant'
-  params[['GENERAL']][['POSITIVE_DIMENSION']] <- 'Y'
+  new_params <- list(
+    'GENERAL' = list(
+      'X_VAR'              = 'HEX',
+      'Y_VAR'              = 'FAM',
+      'POSITIVE_NAME'      = 'wildtype',
+      'NEGATIVE_NAME'      = 'mutant',
+      'POSITIVE_DIMENSION' = 'Y'
+    )
+  )
+  params %<>% modifyList(new_params)
     
   params
 }

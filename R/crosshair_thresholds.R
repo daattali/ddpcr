@@ -24,8 +24,13 @@ define_steps.crosshair_thresholds <- function(plate) {
 define_params.crosshair_thresholds <- function(plate) {
   params <- NextMethod("define_params")
   
-  params[['CLASSIFY']][['X_THRESHOLD']] <- 5000  # very arbitrary value
-  params[['CLASSIFY']][['Y_THRESHOLD']] <- 5000
+  new_params <- list(
+    'CLASSIFY' = list(
+      'X_THRESHOLD' = 5000,   # very arbitrary value
+      'Y_THRESHOLD' = 5000
+    )
+  )
+  params %<>% modifyList(new_params)
   
   params
 }

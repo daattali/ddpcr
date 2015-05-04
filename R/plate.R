@@ -30,10 +30,22 @@ type <- function(plate, all = FALSE) {
   }
 }
 
-reset <- function(plate, type) {
+reset <- function(plate, type, params,
+                  keep_type = FALSE, keep_params = FALSE) {
+  if (keep_type) {
+    type <- NULL
+    type <- type(plate)
+  }
+  if (keep_params) {
+    params <- NULL
+    params <- params(plate)
+  }
   class(plate) <- NULL
   plate <- setup_plate(plate, type)
   plate <- init_plate(plate)
+  if (!missing(params)) {
+    params(plate) %<>% modifyList(params)
+  }
   plate
 }
 
@@ -100,13 +112,17 @@ init_meta <- function(plate) {
 }
 
 #' @export
-new_plate <- function(dir, type, data_files, meta_file, name) {
+new_plate <- function(dir, type, data_files, meta_file, name, params) {
   plate <- setup_new_plate(type)
   plate <- read_plate(plate, dir, data_files, meta_file)  # Read the data files into the plate
 
   # If a name was given, use it instead of the automatically extracted
   if (!missing(name)) {
     name(plate) <- name
+  }
+  
+  if (!missing(params)) {
+    params(plate) %<>% modifyList(params)
   }
   
   plate <- init_plate(plate)
@@ -163,6 +179,28 @@ define_params <- function(plate) {
   UseMethod("define_params")
 }
 define_params.ddpcr_plate <- function(plate) {
+  # Each parameter has a somewhat descriptive name of what it is used for, and
+  # all parameters used by a single step in the pipeline are in a list together
+  PARAMS_GENERAL <- list()
+  PARAMS_GENERAL['X_VAR'] <- "Channel_2"
+  PARAMS_GENERAL['Y_VAR'] <- "Channel_1"
+  PARAMS_GENERAL['DROPLET_VOLUME'] <- 0.91e-3
+  PARAMS_OUTLIERS <- list()
+  PARAMS_OUTLIERS['TOP_PERCENT'] <- 1
+  PARAMS_OUTLIERS['CUTOFF_IQR'] <- 5
+  PARAMS_WELLSUCCESS <- list()
+  PARAMS_WELLSUCCESS['TOTAL_DROPS_T'] <- 5000
+  PARAMS_WELLSUCCESS['NORMAL_LAMBDA_LOW_T'] <- 0.3
+  PARAMS_WELLSUCCESS['NORMAL_LAMBDA_HIGH_T'] <- 0.99
+  PARAMS_WELLSUCCESS['NORMAL_SIGMA_T'] <- 200
+  PARAMS_EMPTY <- list()
+  PARAMS_EMPTY['CUTOFF_SD'] <- 7
+  DEFAULT_PARAMS <- list(
+    'GENERAL'           = PARAMS_GENERAL,
+    'WELLSUCCESS'       = PARAMS_WELLSUCCESS,
+    'OUTLIERS'          = PARAMS_OUTLIERS,
+    'EMPTY'             = PARAMS_EMPTY
+  )
   DEFAULT_PARAMS
 }
 
