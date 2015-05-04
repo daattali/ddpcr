@@ -1,3 +1,5 @@
+KRAS <- "kras"
+
 parent_plate_type.kras <- function(plate) {
   "ppnp_assay"
 }

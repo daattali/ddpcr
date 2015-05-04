@@ -30,16 +30,16 @@ type <- function(plate, all = FALSE) {
   }
 }
 
-`type<-` <- function(plate, value) {
+reset <- function(plate, type) {
   class(plate) <- NULL
-  plate <- setup_plate(plate, value)
+  plate <- setup_plate(plate, type)
   plate <- init_plate(plate)
   plate
 }
 
 init_plate <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
-  step_begin(sprintf("Initializing plate of type ", type(plate)))
+  step_begin(sprintf("Initializing plate of type `%s`", type(plate)))
   
   plate %<>%
     set_default_clusters %>%
@@ -429,7 +429,7 @@ print.ddpcr_plate <- function(plate, ...) {
   cat0("Dataset name: ", plate %>% name, "\n")
   cat0("Plate type: ", plate %>% type(TRUE) %>% paste(collapse = ", "), "\n")
   if (analysis_complete(plate)) {
-    cat0("Analysis completed")
+    cat0("Analysis completed\n")
   } else {
     cat0("Completed analysis steps: ",
          step_name(plate, seq(1, status(plate))) %>% paste(collapse = ", "),
