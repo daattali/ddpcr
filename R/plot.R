@@ -41,13 +41,31 @@ plot.ddpcr_plate <- function(
   data[['col']] <- data[['well']] %>% get_col %>% as.integer %>% as.factor
   data[['cluster']] %<>% as.factor
   
-  if (!show_drops_empty) {
-    data %<>% dplyr::filter_(~ cluster != plate %>% cluster('EMPTY'))
-  }
-  if (!show_drops_outlier) {
-    data %<>% dplyr::filter_(~ cluster != plate %>% cluster('OUTLIER'))
-  }
+  # Remove drops that we don't want to show
+  visible_clusters <-
+    data[['cluster']] %>%
+    unique %>%
+    as.character %>%
+    as.numeric %>%
+    sort %>%
+    cluster_name(plate, .)
+  show_clusters <- 
+    vapply(visible_clusters,
+           function(cluster) {
+             param_name <- paste0("show_drops_", cluster) %>% tolower
+             param_idx <- which(param_name == all_params %>% names %>% tolower)
+             if (length(param_idx) == 1) {
+               show_cluster <- as.logical(all_params[[param_idx]])
+             } else {
+               show_cluster <- TRUE
+             }
+             show_cluster
+           },
+           logical(1)
+    )  
   
+  data %<>% dplyr::filter_(~ show_clusters[cluster]) %>% droplevels
+    
   if (plate %>% wells_used %>% length == 0) {
     err_msg("There are no wells to show.")
   }
@@ -99,8 +117,9 @@ plot.ddpcr_plate <- function(
   if (show_drops) {
     
     # define the colours of the clusters
+    visible_clusters <- data[['cluster']] %>% unique %>% as.character %>% as.numeric %>% sort
     cluster_cols <- 
-      vapply(data[['cluster']] %>% unique %>% as.numeric,
+      vapply(visible_clusters,
              function(cluster) {
                cluster_name <- cluster_name(plate, cluster) %>% tolower
                param_name <- paste0("col_drops_", cluster_name)
@@ -115,35 +134,32 @@ plot.ddpcr_plate <- function(
             character(1)
       )
     
-    # need to remove colours corresponding to clusters that don't exist in the dataset
-    # because otherwise the colour order will be messed up
-    if (data[['cluster']] %>% unique %>% length < cluster_cols %>% length) {
-      clusters_exclude <- c()
-      for (i in seq_along(cluster_cols)) {
-        if (dplyr::filter_(data, ~ cluster == (i - 1)) %>% nrow == 0) {
-          clusters_exclude %<>% c(i)
-        }
-      }
-      cluster_cols <- cluster_cols[-clusters_exclude]
-    }
-        
+    # Find out what alpha (transparency) value to give each cluster
+    cluster_alphas <- 
+      vapply(visible_clusters,
+             function(cluster) {
+               cluster_name <- cluster_name(plate, cluster) %>% tolower
+               param_name <- paste0("alpha_drops_", cluster_name)
+               param_idx <- which(param_name == all_params %>% names %>% tolower)
+               if (length(param_idx) == 1) {
+                 cluster_alpha <- all_params[[param_idx]]
+               } else {
+                 cluster_alpha <- alpha_drops
+               }
+               cluster_alpha
+             },
+             numeric(1)
+      )
+
     p <- p +
       ggplot2::geom_point(
         data = data,
-        ggplot2::aes_string(x = x_var, y = y_var, color = "cluster"),
-        alpha = alpha_drops,
+        ggplot2::aes_string(x = x_var, y = y_var,
+                            color = "cluster", alpha = "cluster"),
         show_guide = FALSE) +
-      ggplot2::scale_color_manual(values = cluster_cols)
-
-    if (show_drops_outlier) {
-      p <- p +
-        ggplot2::geom_point(
-          data = data %>% dplyr::filter_(~ cluster == plate %>% cluster('OUTLIER')),
-          ggplot2::aes_string(x_var, y_var),
-          alpha = alpha_drops_outlier,
-          col = col_drops_outlier)
+      ggplot2::scale_color_manual(values = cluster_cols) +
+      ggplot2::scale_alpha_manual(values = cluster_alphas)
     }
-  }
 
   # show the failed ddPCR runs
   if (show_failed_wells && !superimpose && 
