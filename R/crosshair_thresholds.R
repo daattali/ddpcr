@@ -101,4 +101,29 @@ classify_thresholds <- function(plate) {
 }
 
 
-# 
+#' @export
+plot.crosshair_thresholds <- function(
+  x,
+  wells, samples, show_drops_empty = TRUE,
+  show_thresholds = TRUE,
+  col_thresholds = "black",
+  ...)
+{
+  # Plot a regular ddpcr plate
+  p <- NextMethod("plot", x, show_drops_empty = show_drops_empty)
+  
+  # Show the crosshair thresholds
+  if (show_thresholds) {
+    x <- subset(x, wells, samples)
+    meta <- plate_meta(x)
+    p <- p +
+      geom_hline(data = dplyr::filter_(meta, ~ used),
+                 aes(yintercept = y_threshold(x)),
+                 color = col_thresholds) +
+      geom_vline(data = dplyr::filter_(meta, ~ used),
+                 aes(xintercept = x_threshold(x)),
+                 color = col_thresholds)
+  }
+  
+  p
+}

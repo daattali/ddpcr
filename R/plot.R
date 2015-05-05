@@ -11,8 +11,9 @@ plot.ddpcr_plate <- function(
   alpha_drops = 0.1, alpha_drops_outlier = 1,
   alpha_bg_failed = 0.7,
   xlab = x_var(plate), ylab = y_var(plate), title = NULL,
-  show_grid = FALSE, show_axes_labels = FALSE,
-  text_size_title = 14, text_size_axes_labels = 12, text_size_row_col = 12,
+  show_grid = FALSE, show_grid_labels = FALSE,
+  text_size_title = 14, text_size_row_col = 12, text_size_axes_labels = 12, 
+  text_size_grid_labels = 12,
   ...)
 {
   
@@ -92,6 +93,7 @@ plot.ddpcr_plate <- function(
       axis.text.x      = ggplot2::element_text(angle = 90, vjust = 0.5),
       title            = ggplot2::element_text(size = text_size_title),
       axis.title       = ggplot2::element_text(size = text_size_axes_labels),
+      axis.text        = ggplot2::element_text(size = text_size_grid_labels),
       strip.text       = ggplot2::element_text(size = text_size_row_col)
     )
   
@@ -180,7 +182,7 @@ plot.ddpcr_plate <- function(
     p <- p +
       ggplot2::theme(panel.grid.major = ggplot2::element_blank())
   }
-  if (!show_axes_labels) {
+  if (!show_grid_labels) {
     p <- p +
       ggplot2::theme(axis.text = ggplot2::element_blank(),
                      axis.ticks = ggplot2::element_blank())
