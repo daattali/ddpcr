@@ -33,12 +33,12 @@ wells_mutant <- function(x) {
 plot.mutant_wildtype_assay <- function(
   x,
   wells, samples,
-  col_drops_mutant = "purple", col_drops_wildtype = "darkgreen",
+  col_drops_mutant = "purple3", col_drops_wildtype = "green3",
   col_drops_rain = "black",
   show_mutant_freq = TRUE, text_size_mutant_freq = 4,
   alpha_drops_low_mutant_freq = 0.5,
   show_low_high_mut_freq = TRUE,
-  bg_mutant = "purple", bg_wildtype = "darkgreen",
+  bg_mutant = "purple3", bg_wildtype = "green3",
   alpha_bg_low_high_mut_freq = 0.1,
   ...
   )

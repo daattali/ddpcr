@@ -120,14 +120,14 @@ classify_droplets_density_inflection_points <- function(plate, well_id, plot = F
       xlab = paste0("max: ", paste(round(dens_smooth$x[maxima_idx]), collapse = ", "),
                     "\ninf: ", paste(round(dens_smooth$x[inflection_idx]), collapse = ", ")))
     points(filled, col = "blue")
-    points(negative_drops, col = "purple")
-    points(positive_drops, col = "green")
+    points(negative_drops, col = "purple3")
+    points(positive_drops, col = "green3")
     abline(h = filled_borders %>% mean, col = "grey")
     abline(h = filled_borders, col = "black")
     abline(v = dens_smooth$x[inflection_idx])
     abline(v = dens_smooth$x[maxima_idx], col = "grey")
-    #abline(v = negative_borders, col = "purple")
-    #abline(v = positive_borders, col = "green")
+    #abline(v = negative_borders, col = "purple3")
+    #abline(v = positive_borders, col = "green3")
   }
   
   # TODO better way to decide if there is a significant mutant cluster

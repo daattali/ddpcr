@@ -271,12 +271,12 @@ is_well_success.ppnp_assay <- function(plate, well_id) {
 plot.ppnp_assay <- function(
   x,
   wells, samples,
-  col_drops_negative = "purple", col_drops_positive = "darkgreen",
+  col_drops_negative = "purple3", col_drops_positive = "green3",
   col_drops_rain = "black",
   show_negative_freq = TRUE, text_size_negative_freq = 4,
   alpha_drops_low_negative_freq = 0.5,
   show_low_high_neg_freq = TRUE,
-  bg_negative = "purple", bg_positive = "darkgreen",
+  bg_negative = "purple3", bg_positive = "green3",
   alpha_bg_low_high_neg_freq = 0.1,
   superimpose = FALSE, show_drops = TRUE,
   ...)
