@@ -3,10 +3,10 @@ plot.ddpcr_plate <- function(
   x,
   wells, samples,
   superimpose = FALSE, show_full_plate = FALSE,
-  show_drops = TRUE, show_empty_drops = FALSE, show_outlier_drops = FALSE,
+  show_drops = TRUE, show_drops_empty = FALSE, show_drops_outlier = FALSE,
   show_failed_wells = TRUE,
-  col_undefined = "black", col_failed = "black", col_empty = "black",
-  col_outlier = "orange",
+  col_drops = "black", col_drops_undefined = "black", col_drops_failed = "black",
+  col_drops_empty = "black", col_drops_outlier = "orange",
   bg_failed = "#111111", bg_unused = "#FFFFFF",
   alpha_drops = 0.1, alpha_drops_outlier = 1,
   alpha_bg_failed = 0.7,
@@ -17,12 +17,15 @@ plot.ddpcr_plate <- function(
 {
   
   plate <- subset(x, wells, samples)
+  rm(x)
   
   if (!show_failed_wells &&
       plate %>% has_step('REMOVE_FAILURES') &&
       plate %>% status(plate) >= step(plate, 'REMOVE_FAILURES')) {
     plate %<>% subset(wells_success(.))
   }
+  
+  all_params <- c(as.list(environment()), list(...))
   
   x_var <- x_var(plate)
   y_var <- y_var(plate)
@@ -38,10 +41,10 @@ plot.ddpcr_plate <- function(
   data[['col']] <- data[['well']] %>% get_col %>% as.integer %>% as.factor
   data[['cluster']] %<>% as.factor
   
-  if (!show_empty_drops) {
+  if (!show_drops_empty) {
     data %<>% dplyr::filter_(~ cluster != plate %>% cluster('EMPTY'))
   }
-  if (!show_outlier_drops) {
+  if (!show_drops_outlier) {
     data %<>% dplyr::filter_(~ cluster != plate %>% cluster('OUTLIER'))
   }
   
@@ -50,22 +53,6 @@ plot.ddpcr_plate <- function(
   }
 
   meta_used <- meta %>% dplyr::filter_(~ used)
-  
-  # define the colours of the clusters
-  # Make sure the order matches the order of the CLUSTER_ constants
-  cluster_cols <- c(col_undefined, col_failed, col_outlier, col_empty)
-  
-  # need to remove colours corresponding to clusters that don't exist in the dataset
-  # because otherwise the colour order will be messed up
-  if (data[['cluster']] %>% unique %>% length < cluster_cols %>% length) {
-    clusters_exclude <- c()
-    for (i in seq_along(cluster_cols)) {
-      if (dplyr::filter_(data, ~ cluster == (i - 1)) %>% nrow == 0) {
-        clusters_exclude %<>% c(i)
-      }
-    }
-    cluster_cols <- cluster_cols[-clusters_exclude]
-  }
   
   # remove unused rows/columns from the plate
   if (!show_full_plate) {
@@ -110,21 +97,51 @@ plot.ddpcr_plate <- function(
   
   # show the drops
   if (show_drops) {
+    
+    # define the colours of the clusters
+    cluster_cols <- 
+      vapply(data[['cluster']] %>% unique %>% as.numeric,
+             function(cluster) {
+               cluster_name <- cluster_name(plate, cluster) %>% tolower
+               param_name <- paste0("col_drops_", cluster_name)
+               param_idx <- which(param_name == all_params %>% names %>% tolower)
+               if (length(param_idx) == 1) {
+                 cluster_col <- all_params[[param_idx]]
+               } else {
+                 cluster_col <- col_drops
+               }
+               cluster_col
+            },
+            character(1)
+      )
+    
+    # need to remove colours corresponding to clusters that don't exist in the dataset
+    # because otherwise the colour order will be messed up
+    if (data[['cluster']] %>% unique %>% length < cluster_cols %>% length) {
+      clusters_exclude <- c()
+      for (i in seq_along(cluster_cols)) {
+        if (dplyr::filter_(data, ~ cluster == (i - 1)) %>% nrow == 0) {
+          clusters_exclude %<>% c(i)
+        }
+      }
+      cluster_cols <- cluster_cols[-clusters_exclude]
+    }
+        
     p <- p +
       ggplot2::geom_point(
         data = data,
         ggplot2::aes_string(x = x_var, y = y_var, color = "cluster"),
         alpha = alpha_drops,
-        show_guide = FALSE) #+
-      #ggplot2::scale_color_manual(values = cluster_cols)
+        show_guide = FALSE) +
+      ggplot2::scale_color_manual(values = cluster_cols)
 
-    if (show_outlier_drops) {
+    if (show_drops_outlier) {
       p <- p +
         ggplot2::geom_point(
           data = data %>% dplyr::filter_(~ cluster == plate %>% cluster('OUTLIER')),
           ggplot2::aes_string(x_var, y_var),
           alpha = alpha_drops_outlier,
-          col = col_outlier)
+          col = col_drops_outlier)
     }
   }
 

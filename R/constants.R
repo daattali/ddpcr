@@ -24,7 +24,7 @@ cluster <- function(plate, cluster) {
   res
 }
 cluster_name <- function(plate, cluster) {
-  cluster %<% as.integer
+  cluster %>% as.integer
   if (cluster < 1 || cluster > plate %>% clusters %>% length) {
     err_msg(sprintf("invalid cluster number: %s", cluster))
   }
