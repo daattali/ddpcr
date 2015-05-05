@@ -35,7 +35,6 @@ plot.ddpcr_plate <- function(
   data <- plate_data(plate)
   
   # prepare the data to be plotted
-  rownames(meta) <- meta[['well']]
   meta[['row']] %<>% as.factor
   meta[['col']] %<>% as.factor
   data[['row']] <- data[['well']] %>% get_row %>% as.factor

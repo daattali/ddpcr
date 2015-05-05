@@ -36,24 +36,30 @@ define_params.crosshair_thresholds <- function(plate) {
 }
 
 x_threshold <- function(plate) {
+  stopifnot(plate %>% inherits("crosshair_thresholds"))
   params(plate, 'CLASSIFY', 'X_THRESHOLD')
 }
 `x_threshold<-` <- function(plate, value) {
+  stopifnot(plate %>% inherits("crosshair_thresholds"))
   params(plate, 'CLASSIFY', 'X_THRESHOLD') <- value
   plate
 }
 
 y_threshold <- function(plate) {
+  stopifnot(plate %>% inherits("crosshair_thresholds"))
   params(plate, 'CLASSIFY', 'Y_THRESHOLD')
 }
 `y_threshold<-` <- function(plate, value) {
+  stopifnot(plate %>% inherits("crosshair_thresholds"))
   params(plate, 'CLASSIFY', 'Y_THRESHOLD') <- value
   plate
 }
 thresholds <- function(plate) {
+  stopifnot(plate %>% inherits("crosshair_thresholds"))
   point2d(c(plate %>% x_threshold, plate %>% y_threshold))
 }
 `thresholds<-` <- function(plate, value) {
+  stopifnot(plate %>% inherits("crosshair_thresholds"))
   value <- point2d(value)
   params(plate, 'CLASSIFY', 'X_THRESHOLD') <- value[1]
   params(plate, 'CLASSIFY', 'Y_THRESHOLD') <- value[2]
@@ -61,6 +67,8 @@ thresholds <- function(plate) {
 }
 
 classify_thresholds <- function(plate) {
+  stopifnot(plate %>% inherits("crosshair_thresholds"))
+  
   CURRENT_STEP <- plate %>% step('CLASSIFY')
   plate %>% check_step(CURRENT_STEP, TRUE)  
   step_begin("Classifying droplets")
@@ -104,9 +112,10 @@ classify_thresholds <- function(plate) {
 #' @export
 plot.crosshair_thresholds <- function(
   x,
-  wells, samples, show_drops_empty = TRUE,
+  wells, samples,
   show_thresholds = TRUE,
   col_thresholds = "black",
+  show_drops_empty = TRUE,
   ...)
 {
   # Plot a regular ddpcr plate
@@ -116,13 +125,19 @@ plot.crosshair_thresholds <- function(
   if (show_thresholds) {
     x <- subset(x, wells, samples)
     meta <- plate_meta(x)
+    meta[['x_threshold']] <- x_threshold(x)
+    meta[['y_threshold']] <- y_threshold(x)
     p <- p +
-      geom_hline(data = dplyr::filter_(meta, ~ used),
-                 aes(yintercept = y_threshold(x)),
-                 color = col_thresholds) +
-      geom_vline(data = dplyr::filter_(meta, ~ used),
-                 aes(xintercept = x_threshold(x)),
-                 color = col_thresholds)
+      ggplot2::geom_hline(
+        data = dplyr::filter_(meta, ~ used),
+        ggplot2::aes_string(yintercept = "y_threshold"),
+        color = col_thresholds
+      ) +
+      ggplot2::geom_vline(
+        data = dplyr::filter_(meta, ~ used),
+        ggplot2::aes_string(xintercept = "x_threshold"),
+        color = col_thresholds
+      )
   }
   
   p
