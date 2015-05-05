@@ -7,9 +7,6 @@
 
 - cleanup code inside failures.R and decide on a method (fast vs slow) and make it work with generic inheritance
 
-- params for each step should have the name of the step in the param name
-
-
 CURRENT
 - make plot work with ppnp_assay
 - make plot colours more general?

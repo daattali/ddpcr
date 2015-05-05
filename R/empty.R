@@ -40,7 +40,7 @@ get_empty_cutoff.ddpcr_plate <- function(plate, well_id){
   smaller_comp_y <- mixmdl_y$mu %>% which.min
   cutoff_y <-
     (mixmdl_y$mu[smaller_comp_y] +
-    params(plate, 'EMPTY', 'CUTOFF_SD') * mixmdl_y$sigma[smaller_comp_y]) %>%
+    params(plate, 'REMOVE_EMPTY', 'CUTOFF_SD') * mixmdl_y$sigma[smaller_comp_y]) %>%
     ceiling %>%
     as.integer
 
@@ -52,7 +52,7 @@ get_empty_cutoff.ddpcr_plate <- function(plate, well_id){
   smaller_comp_x <- mixmdl_x$mu %>% which.min
   cutoff_x <-
     (mixmdl_x$mu[smaller_comp_x] +
-       params(plate, 'EMPTY', 'CUTOFF_SD') * mixmdl_x$sigma[smaller_comp_x]) %>%
+       params(plate, 'REMOVE_EMPTY', 'CUTOFF_SD') * mixmdl_x$sigma[smaller_comp_x]) %>%
     ceiling %>%
     as.integer  
   

@@ -30,7 +30,7 @@ is_well_success.ppnp_assay <- function(plate, well_id) {
   }
   
   # First heuristic check: make sure there are enough droplets
-  if (nrow(well_data) < params(plate, 'WELLSUCCESS', 'TOTAL_DROPS_T')) {
+  if (nrow(well_data) < params(plate, 'REMOVE_FAILURES', 'TOTAL_DROPS_T')) {
     success <- FALSE
     msg <- sprintf("Not enough drops generated (%s)", nrow(well_data))
     return(list(success = success, comment = msg))
@@ -41,7 +41,7 @@ is_well_success.ppnp_assay <- function(plate, well_id) {
   x_var <- x_var(plate)
   y_var <- y_var(plate)
   
-  if (params(plate, 'WELLSUCCESS', 'FAST')) {
+  if (params(plate, 'REMOVE_FAILURES', 'FAST')) {
     kmeans_y <- kmeans(well_data[[y_var]], 2, nstart = 5)
     centers_y <- kmeans_y$centers %>% as.integer
     smaller_comp_y <- centers_y %>% which.min
@@ -55,14 +55,14 @@ is_well_success.ppnp_assay <- function(plate, well_id) {
     
     smaller_lambda <- kmeans_y$size[smaller_comp_y]/sum(kmeans_y$size)
     
-    if (smaller_lambda < params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_LOW_T')) {
+    if (smaller_lambda < params(plate, 'REMOVE_FAILURES', 'NORMAL_LAMBDA_LOW_T')) {
       success <- FALSE
       msg <- paste0("Could not find significant empty cluster (lambda of ", y_var, " normal: ",
                     signif(smaller_lambda, 4), ")")
       return(list(success = success, comment = msg))
     }
     
-    if (smaller_lambda > params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_HIGH_T')) {
+    if (smaller_lambda > params(plate, 'REMOVE_FAILURES', 'NORMAL_LAMBDA_HIGH_T')) {
       success <- FALSE
       msg <- paste0("There are too many empty drops (lambda of ", y_var, " normal: ",
                     signif(smaller_lambda, 4), ")")
@@ -88,21 +88,21 @@ is_well_success.ppnp_assay <- function(plate, well_id) {
     return(list(success = success, comment = msg))
   }
   
-  if (mixmdl_y$lambda[smaller_comp_y] < params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_LOW_T')) {
+  if (mixmdl_y$lambda[smaller_comp_y] < params(plate, 'REMOVE_FAILURES', 'NORMAL_LAMBDA_LOW_T')) {
     success <- FALSE
     msg <- paste0("Could not find significant empty cluster (lambda of ", y_var, " normal: ",
                   signif(mixmdl_y$lambda[smaller_comp_y], 4), ")")
     return(list(success = success, comment = msg))
   }
   
-  if (mixmdl_y$lambda[smaller_comp_y] > params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_HIGH_T')) {
+  if (mixmdl_y$lambda[smaller_comp_y] > params(plate, 'REMOVE_FAILURES', 'NORMAL_LAMBDA_HIGH_T')) {
     success <- FALSE
     msg <- paste0("There are too many empty drops (lambda of ", y_var, " normal: ",
                   signif(mixmdl_y$lambda[smaller_comp_y], 4), ")")
     return(list(success = success, comment = msg))
   }
   
-  if (mixmdl_y$sigma[smaller_comp_y] > params(plate, 'WELLSUCCESS', 'NORMAL_SIGMA_T')) {
+  if (mixmdl_y$sigma[smaller_comp_y] > params(plate, 'REMOVE_FAILURES', 'NORMAL_SIGMA_T')) {
     success <- FALSE
     msg <- paste0("Could not find a dense empty cluster (sigma of ", y_var, " normal: ",
                   round(mixmdl_y$sigma[smaller_comp_y]), ")")

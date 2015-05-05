@@ -15,7 +15,7 @@ get_empty_cutoff.ppnp_assay <- function(plate, well_id){
   smaller_comp_pos <- mixmdl_pos$mu %>% which.min
   cutoff_pos <-
     (mixmdl_pos$mu[smaller_comp_pos] +
-       params(plate, 'EMPTY', 'CUTOFF_SD') * mixmdl_pos$sigma[smaller_comp_pos]) %>%
+       params(plate, 'REMOVE_EMPTY', 'CUTOFF_SD') * mixmdl_pos$sigma[smaller_comp_pos]) %>%
     ceiling %>%
     as.integer
   

@@ -40,18 +40,18 @@ get_outlier_cutoff.ddpcr_plate <- function(plate) {
   y_var <- y_var(plate)
   top_y <- 
     sort(data[[y_var]], decreasing = TRUE) %>%
-    head(nrow(data) / 100 * params(plate, 'OUTLIERS', 'TOP_PERCENT'))
+    head(nrow(data) / 100 * params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT'))
   q_y <- quantile(top_y, c(.25, .75))
   cutoff_y <-
-    (diff(q_y) * params(plate, 'OUTLIERS', 'CUTOFF_IQR') + q_y[2]) %>%
+    (diff(q_y) * params(plate, 'REMOVE_OUTLIERS', 'CUTOFF_IQR') + q_y[2]) %>%
     as.numeric
   
   top_x <- 
     sort(data[[x_var]], decreasing = TRUE) %>%
-    head(nrow(data) / 100 * params(plate, 'OUTLIERS', 'TOP_PERCENT'))
+    head(nrow(data) / 100 * params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT'))
   q_x <- quantile(top_x, c(.25, .75))
   cutoff_x <-
-    (diff(q_x) * params(plate, 'OUTLIERS', 'CUTOFF_IQR') + q_x[2]) %>%
+    (diff(q_x) * params(plate, 'REMOVE_OUTLIERS', 'CUTOFF_IQR') + q_x[2]) %>%
     as.numeric
   
   result <- list()

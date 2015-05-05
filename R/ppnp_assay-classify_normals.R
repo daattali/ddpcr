@@ -32,10 +32,10 @@ classify_droplets_normal <- function(plate, well_id, plot = FALSE) {
     dplyr::filter_(lazyeval::interp(~ var %btwn% filled_borders,
                                     var = as.name(positive_var)))
   
-  for (i in seq(params(plate, 'ASSIGN_CLUSTERS', 'NUM_ATTEMPTS_SEGREGATE'))) {
+  for (i in seq(params(plate, 'CLASSIFY', 'NUM_ATTEMPTS_SEGREGATE'))) {
     quiet(
       mixmdl <- mixtools::normalmixEM(filled[[variable_var]], k = 2))
-    segregate_ratio <- params(plate, 'ASSIGN_CLUSTERS', 'SEGREGATE_RATIO_THRESHOLD')
+    segregate_ratio <- params(plate, 'CLASSIFY', 'SEGREGATE_RATIO_THRESHOLD')
     if (min(mixmdl$mu) < max(mixmdl$mu) * segregate_ratio) {
       signif_negative_cluster <- TRUE
       break
@@ -48,14 +48,14 @@ classify_droplets_normal <- function(plate, well_id, plot = FALSE) {
     plus_minus(
       mixmdl$mu[smaller_comp],
       mixmdl$sigma[smaller_comp] *
-        params(plate, 'ASSIGN_CLUSTERS', 'CLUSTERS_BORDERS_NUM_SD')
+        params(plate, 'CLASSIFY', 'CLUSTERS_BORDERS_NUM_SD')
     ) %>%
     as.integer
   positive_borders <-
     plus_minus(
       mixmdl$mu[larger_comp],
       mixmdl$sigma[larger_comp] *
-        params(plate, 'ASSIGN_CLUSTERS', 'CLUSTERS_BORDERS_NUM_SD')
+        params(plate, 'CLASSIFY', 'CLUSTERS_BORDERS_NUM_SD')
     ) %>%
     as.integer
   
@@ -87,14 +87,14 @@ classify_droplets_normal <- function(plate, well_id, plot = FALSE) {
         plus_minus(
           mixmdl$mu[smaller_comp],
           mixmdl$sigma[smaller_comp] *
-            params(plate, 'ASSIGN_CLUSTERS', 'CLUSTERS_BORDERS_NUM_SD')
+            params(plate, 'CLASSIFY', 'CLUSTERS_BORDERS_NUM_SD')
         ) %>% 
         as.integer
       positive_borders <-
         plus_minus(
           mixmdl$mu[larger_comp],
           mixmdl$sigma[larger_comp] *
-            params(plate, 'ASSIGN_CLUSTERS', 'CLUSTERS_BORDERS_NUM_SD')
+            params(plate, 'CLASSIFY', 'CLUSTERS_BORDERS_NUM_SD')
         ) %>%
         as.integer
     }
@@ -102,7 +102,7 @@ classify_droplets_normal <- function(plate, well_id, plot = FALSE) {
     negative_cutoff <-
       mixmdl$mu[larger_comp] -
       mixmdl$sigma[larger_comp] * 
-      params(plate, 'ASSIGN_CLUSTERS', 'NO_NEG_CLUSTER_BORDER_NUM_SD')
+      params(plate, 'CLASSIFY', 'NO_NEG_CLUSTER_BORDER_NUM_SD')
     negative_borders <- c(0, negative_cutoff) %>% as.integer
   }
   

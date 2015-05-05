@@ -26,7 +26,7 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id) {
   #       and FALSE is a proxy for saying the well has wild-type BRAFV600
   #     comment: any comment raised by the algorithm, or NA if everything ran smoothly 
   analysis_method <- 
-    params(plate, 'ASSIGN_CLUSTERS', 'METHOD') %>%
+    params(plate, 'CLASSIFY', 'METHOD') %>%
     sprintf("classify_droplets_%s", .) %>%
     get
   

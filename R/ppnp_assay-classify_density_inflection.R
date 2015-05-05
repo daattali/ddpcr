@@ -20,8 +20,8 @@ classify_droplets_density_inflection_points <- function(plate, well_id, plot = F
   adj_prev <- NULL 
   # final "adjust" value
   adj_final <- NULL 
-  for (adj in seq(params(plate, 'ASSIGN_CLUSTERS', 'ADJUST_MIN'),
-                  params(plate, 'ASSIGN_CLUSTERS', 'ADJUST_MAX'),
+  for (adj in seq(params(plate, 'CLASSIFY', 'ADJUST_MIN'),
+                  params(plate, 'CLASSIFY', 'ADJUST_MAX'),
                   0.5)) {
     dens_smooth <- density(filled[[variable_var]], bw = "sj", adjust = adj)
     inflection_idx <- get_inflection_pts(dens_smooth)

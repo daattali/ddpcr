@@ -4,7 +4,7 @@ reclassify_droplets_single <- function(plate, well_id, ...) {
 }
 
 #' @export
-reclassify_droplets_single.ppnp_assay <- function(plate, well_id, consensus_border_ratio) {
+reclassify_droplets_single.ppnp_assay <- function(plate, well_id, consensus_border_ratio, ...) {
   
   well_data <- get_single_well(plate, well_id, clusters = TRUE)
   positive_var <- positive_dim_var(plate)
@@ -18,6 +18,7 @@ reclassify_droplets_single.ppnp_assay <- function(plate, well_id, consensus_bord
                     lazyeval::interp(~ var %btwn% .,
                                      var = as.name(positive_var)))}
   
+  CLUSTER_POSITIVE <- plate %>% cluster('POSITIVE')
   positive_median <- 
     well_data %>%
     dplyr::filter_(~ cluster == CLUSTER_POSITIVE) %>%
@@ -95,7 +96,7 @@ reclassify_droplets.ppnp_assay <- function(plate) {
   
   # if there are not enough wells with high MT freq to use as prior info or if
   # there are no wells with low MT freq to reclassify, do nothing
-  min_wells <- params(plate, 'RECLASSIFY_WELLS', 'MIN_WELLS_NEGATIVE_CLUSTER')
+  min_wells <- params(plate, 'RECLASSIFY', 'MIN_WELLS_NEGATIVE_CLUSTER')
   if (plate %>% wells_negative %>% length < min_wells ||
       plate %>% wells_positive %>% length == 0) {
     message(paste0("Not reclassifying droplets because there are not enough",
@@ -134,7 +135,7 @@ reclassify_droplets.ppnp_assay <- function(plate) {
       },
       numeric(1)
     ) %>%
-    quantile(params(plate, 'RECLASSIFY_WELLS', 'BORDER_RATIO_QUANTILE')) %>%
+    quantile(params(plate, 'RECLASSIFY', 'BORDER_RATIO_QUANTILE')) %>%
     as.numeric
 
   wells_to_reclassify <- plate %>% wells_positive

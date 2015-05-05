@@ -2,7 +2,7 @@
 # subset(plate, c("A02", "B05"))
 # subset(plate, "A01, B05")
 # subset(plate, "A01, B05:D07, F10")
-subset.ddpcr_plate <- function(plate, wells, samples) {
+subset.ddpcr_plate <- function(x, wells, samples, ...) {
   if (!missing(wells) && !missing(samples)) {
     err_msg("Can only subset by either `wells` or `samples`, not both")
   }
@@ -14,22 +14,22 @@ subset.ddpcr_plate <- function(plate, wells, samples) {
     }
   } else if (!missing(samples)) {
     wells <-
-      plate_meta(plate) %>%
+      plate_meta(x) %>%
       dplyr::filter_(~ sample %in% samples) %>%
       .[['well']]
   } else {
-    return(plate)  # if no arguments, just return the same plate
+    return(x)  # if no arguments, just return the same plate
   }
   
-  plate_data(plate) %<>%
+  plate_data(x) %<>%
     dplyr::filter_(~ well %in% wells)
   
-  plate_meta(plate) %<>%
+  plate_meta(x) %<>%
     dplyr::filter_(~ well %in% wells) %>%
     merge_dfs_overwrite_col(DEFAULT_PLATE_META, .) %>%
     arrange_meta
   
-  plate
+  x
 }
 
 is_range <- function(x) {

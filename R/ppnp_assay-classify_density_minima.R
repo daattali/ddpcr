@@ -21,8 +21,8 @@ classify_droplets_density_minima <- function(plate, well_id, plot = FALSE) {
   adj_prev <- NULL 
   # final "adjust" value
   adj_final <- NULL 
-  for (adj in seq(params(plate, 'ASSIGN_CLUSTERS', 'ADJUST_MIN'),
-                  params(plate, 'ASSIGN_CLUSTERS', 'ADJUST_MAX'),
+  for (adj in seq(params(plate, 'CLASSIFY', 'ADJUST_MIN'),
+                  params(plate, 'CLASSIFY', 'ADJUST_MAX'),
                   0.5)) {
     dens_smooth <- density(filled[[variable_var]], bw = "sj", adjust = adj)
     maxima_idx <- local_maxima(dens_smooth$y)

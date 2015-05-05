@@ -28,10 +28,10 @@ define_params.ppnp_assay <- function(plate) {
       'NEGATIVE_NAME'      = 'negative',
       'POSITIVE_DIMENSION' = NA   # Must be set by the child
     ),
-    'WELLSUCCESS' = list(
+    'REMOVE_FAILURES' = list(
       'FAST'   = TRUE
     ),
-    'ASSIGN_CLUSTERS' = list(
+    'CLASSIFY' = list(
       'NUM_ATTEMPTS_SEGREGATE'       = 1,
       'SEGREGATE_RATIO_THRESHOLD'    = 0.75,
       'CLUSTERS_BORDERS_NUM_SD'      = 3,
@@ -40,7 +40,7 @@ define_params.ppnp_assay <- function(plate) {
       'ADJUST_MAX'                   = 20,
       'METHOD'                       = 'density_inflection_points'
     ),
-    'RECLASSIFY_WELLS' = list(
+    'RECLASSIFY' = list(
       'MIN_WELLS_NEGATIVE_CLUSTER'   = 4,
       'BORDER_RATIO_QUANTILE'        = 0.75
     )
@@ -134,7 +134,7 @@ get_filled_borders <- function(plate, well_id) {
     plus_minus(
       mixmdl_pos$mu[larger_comp_pos],
       mixmdl_pos$sigma[larger_comp_pos] *
-        params(plate, 'ASSIGN_CLUSTERS', 'CLUSTERS_BORDERS_NUM_SD')
+        params(plate, 'CLASSIFY', 'CLUSTERS_BORDERS_NUM_SD')
     ) %>%
     as.integer
   
@@ -171,7 +171,7 @@ wells_negative <- function(x) {
 
 #' @export
 plot.ppnp_assay <- function(
-  plate,
+  x,
   wells, samples,
   superimpose = FALSE, show_full_plate = FALSE,
   show_drops = TRUE, show_empty = FALSE, show_outliers = FALSE,
@@ -183,11 +183,12 @@ plot.ppnp_assay <- function(
   alpha_drops = 0.1, alpha_drops_low_mt = 0.5, alpha_drops_outlier = 1,
   alpha_bg_failed = 0.7, alpha_bg_mt_wt = 0.1,
   xlab = "HEX", ylab = "FAM", title,
-  show_grid = FALSE, label_axes = FALSE)
+  show_grid = FALSE, label_axes = FALSE,
+  ...)
 {
   return(NextMethod("plot"))
   
-  
+  plate <- x
   meta <- plate_meta(plate)
   data <- plate_data(plate)
   

@@ -185,21 +185,21 @@ define_params.ddpcr_plate <- function(plate) {
   PARAMS_GENERAL['X_VAR'] <- "Channel_2"
   PARAMS_GENERAL['Y_VAR'] <- "Channel_1"
   PARAMS_GENERAL['DROPLET_VOLUME'] <- 0.91e-3
-  PARAMS_OUTLIERS <- list()
-  PARAMS_OUTLIERS['TOP_PERCENT'] <- 1
-  PARAMS_OUTLIERS['CUTOFF_IQR'] <- 5
-  PARAMS_WELLSUCCESS <- list()
-  PARAMS_WELLSUCCESS['TOTAL_DROPS_T'] <- 5000
-  PARAMS_WELLSUCCESS['NORMAL_LAMBDA_LOW_T'] <- 0.3
-  PARAMS_WELLSUCCESS['NORMAL_LAMBDA_HIGH_T'] <- 0.99
-  PARAMS_WELLSUCCESS['NORMAL_SIGMA_T'] <- 200
-  PARAMS_EMPTY <- list()
-  PARAMS_EMPTY['CUTOFF_SD'] <- 7
+  PARAMS_REMOVE_OUTLIERS <- list()
+  PARAMS_REMOVE_OUTLIERS['TOP_PERCENT'] <- 1
+  PARAMS_REMOVE_OUTLIERS['CUTOFF_IQR'] <- 5
+  PARAMS_REMOVE_FAILURES <- list()
+  PARAMS_REMOVE_FAILURES['TOTAL_DROPS_T'] <- 5000
+  PARAMS_REMOVE_FAILURES['NORMAL_LAMBDA_LOW_T'] <- 0.3
+  PARAMS_REMOVE_FAILURES['NORMAL_LAMBDA_HIGH_T'] <- 0.99
+  PARAMS_REMOVE_FAILURES['NORMAL_SIGMA_T'] <- 200
+  PARAMS_REMOVE_EMPTY <- list()
+  PARAMS_REMOVE_EMPTY['CUTOFF_SD'] <- 7
   DEFAULT_PARAMS <- list(
     'GENERAL'           = PARAMS_GENERAL,
-    'WELLSUCCESS'       = PARAMS_WELLSUCCESS,
-    'OUTLIERS'          = PARAMS_OUTLIERS,
-    'EMPTY'             = PARAMS_EMPTY
+    'REMOVE_FAILURES'   = PARAMS_REMOVE_FAILURES,
+    'REMOVE_OUTLIERS'   = PARAMS_REMOVE_OUTLIERS,
+    'REMOVE_EMPTY'      = PARAMS_REMOVE_EMPTY
   )
   DEFAULT_PARAMS
 }
@@ -463,28 +463,28 @@ step_end <- function(time) {
 }
 
 #' @export
-print.ddpcr_plate <- function(plate, ...) {
-  cat0("Dataset name: ", plate %>% name, "\n")
-  cat0("Plate type: ", plate %>% type(TRUE) %>% paste(collapse = ", "), "\n")
-  if (analysis_complete(plate)) {
+print.ddpcr_plate <- function(x, ...) {
+  cat0("Dataset name: ", x %>% name, "\n")
+  cat0("Plate type: ", x %>% type(TRUE) %>% paste(collapse = ", "), "\n")
+  if (analysis_complete(x)) {
     cat0("Analysis completed\n")
   } else {
     cat0("Completed analysis steps: ",
-         step_name(plate, seq(1, status(plate))) %>% paste(collapse = ", "),
+         step_name(x, seq(1, status(x))) %>% paste(collapse = ", "),
          "\n"
     )
     cat0("Remaining analysis steps: ",
-         step_name(plate, seq(status(plate) + 1, length(steps(plate)))) %>% paste(collapse = ", "),
+         step_name(x, seq(status(x) + 1, length(steps(x)))) %>% paste(collapse = ", "),
          "\n"
     )
   }
   cat0("Data summary: ", 
-       plate %>% plate_meta %>% .[['used']] %>% sum, " wells, ",
-       plate %>% plate_data %>% nrow, " drops\n")
+       x %>% plate_meta %>% .[['used']] %>% sum, " wells, ",
+       x %>% plate_data %>% nrow, " drops\n")
   cat0("---\nDrops data:\n")
-  cat0(plate %>% plate_data %>% str)
+  cat0(x %>% plate_data %>% str)
   cat0("---\nPlate meta data:\n")
-  cat0(plate %>% plate_meta %>% str)
+  cat0(x %>% plate_meta %>% str)
 }
 
 # pmini <- new_plate("../../data/mini141")

@@ -15,7 +15,7 @@
 # Algorithm:
 #   The goal here is to see if there is anything that is clearly wrong with the
 #   data in the well.  First, I ensure enough drops were loaded (BioRad claims 
-#   20k, we see 12k-17k usually) - less than 5000 (PARAMS$WELLSUCCESS$TOTAL_DROPS_T)
+#   20k, we see 12k-17k usually) - less than 5000 (PARAMS$REMOVE_FAILURES$TOTAL_DROPS_T)
 #   is considered a failed run. Next I make a few basic sanity checks about the 
 #   general look of the data in clusters.
 #   If we were to normalize all HEX and FAM values to be between 0-1, we'd expect to
@@ -29,12 +29,12 @@
 #       lower center.  If it is not, that usually indicates that both normal populations
 #       are really the same cluster)
 #     - The lower population cannot have too few drops (lambda < 0.3)
-#       (PARAMS$WELLSUCCESS$NORMAL_LAMBDA_LOW_T), as that means there is no
+#       (PARAMS$REMOVE_FAILURES$NORMAL_LAMBDA_LOW_T), as that means there is no
 #       empty cluster.  Likewise, there shouldn't be too many drops (lambda > 0.99)
-#       (PARAMS$WELLSUCCESS$NORMAL_LAMBDA_HIGH_T), as that means there are not
+#       (PARAMS$REMOVE_FAILURES$NORMAL_LAMBDA_HIGH_T), as that means there are not
 #       enough drops with data
 #     - The standard deviation (sigma) of the lower population should be fairly
-#       small, below 200 (PARAMS$WELLSUCCESS$NORMAL_SIGMA_T), to ensure that
+#       small, below 200 (PARAMS$REMOVE_FAILURES$NORMAL_SIGMA_T), to ensure that
 #       the empty cluster is indeed very dense as it should be
 #' Determine is a well was a success or failure
 #' @export
@@ -57,7 +57,7 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
   }
   
   # First heuristic check: make sure there are enough droplets
-  if (nrow(well_data) < params(plate, 'WELLSUCCESS', 'TOTAL_DROPS_T')) {
+  if (nrow(well_data) < params(plate, 'REMOVE_FAILURES', 'TOTAL_DROPS_T')) {
     success <- FALSE
     msg <- sprintf("Not enough drops generated (%s)", nrow(well_data))
     return(list(success = success, comment = msg))
@@ -82,7 +82,7 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
   smaller_lambda <- kmeans$size[[smaller_center_idx]] / sum(kmeans$size)
   
   # Make sure we found a significant empty cluster
-  if (smaller_lambda < params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_LOW_T')) {
+  if (smaller_lambda < params(plate, 'REMOVE_FAILURES', 'NORMAL_LAMBDA_LOW_T')) {
     success <- FALSE
     msg <- paste0("Could not find significant empty cluster (lambda of lower cluster: ",
                   signif(smaller_lambda, 4), ")")
@@ -90,7 +90,7 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
   }  
   
   # Make sure not too many drops are empty
-  if (smaller_lambda > params(plate, 'WELLSUCCESS', 'NORMAL_LAMBDA_HIGH_T')) {
+  if (smaller_lambda > params(plate, 'REMOVE_FAILURES', 'NORMAL_LAMBDA_HIGH_T')) {
     success <- FALSE
     msg <- paste0("There are too many empty drops (lambda of lower cluster: ",
                   signif(smaller_lambda, 4), ")")

@@ -1,6 +1,6 @@
 #' @export
 plot.ddpcr_plate <- function(
-  plate,
+  x,
   wells, samples,
   superimpose = FALSE, show_full_plate = FALSE,
   show_drops = TRUE, show_empty_drops = FALSE, show_outlier_drops = FALSE,
@@ -16,7 +16,7 @@ plot.ddpcr_plate <- function(
   ...)
 {
   
-  plate <- subset(plate, wells, samples)
+  plate <- subset(x, wells, samples)
   
   if (!show_failed_wells &&
       plate %>% has_step('REMOVE_FAILURES') &&
