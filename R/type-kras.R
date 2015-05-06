@@ -2,12 +2,28 @@
 ## Copyright (C) 2015 Dean Attali
 ## This software is distributed under the AGPL-3 license
 
+#' KRAS assay
+#' 
+#' "KRAS" assay type. Use this when initializing a ddPCR
+#' plate that uses the KRAS assay.
+#' 
+#' TODO what this assay looks like
+#' 
+#' @examples 
+#' \dontrun{
+#' new_plate(dir = "dir", type = KRAS)
+#' }
+#' @export
 KRAS <- "kras"
 
+#' @export
+#' @keywords internal
 parent_plate_type.kras <- function(plate) {
   "mutant_wildtype_assay"
 }
 
+#' @export
+#' @keywords internal
 define_params.kras <- function(plate) {
   params <- NextMethod("define_params")
   

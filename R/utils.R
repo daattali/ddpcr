@@ -19,7 +19,8 @@ cat0 <- function(...) {
   x >= min(rng) & x <= max(rng)
 }
 
-# convert a list of lists (lol) to dataframe
+#' Convert a list of lists outputted from vapply to dataframe
+#' @keywords internal
 lol_to_df <- function(lol, name = "well") {
   lol %<>%
     t %>% as.data.frame %>%
@@ -28,6 +29,8 @@ lol_to_df <- function(lol, name = "well") {
   lol
 }
 
+#' Suppresses all output from an expression. Works cross-platform.
+#' @keywords internal
 quiet <- function(expr, all = TRUE) {
   if (Sys.info()['sysname'] == "Windows") {
     file <- "NUL"
@@ -44,20 +47,22 @@ quiet <- function(expr, all = TRUE) {
   }
 }
 
+#' Get the two values that are equidistant from a specific number
+#' @keywords internal
 plus_minus <- function(x, y) {
   x + y * c(-1, 1)
 }
 
-# overwrite a column in a data.frame based on a matching column in another df
+#' Overwrite a column in a data.frame based on a matching column in another df
+#' @keywords internal
 merge_dfs_overwrite_col <- function(olddf, newdf, cols, bycol = "well") {
   result <- dplyr::left_join(olddf, newdf, by = bycol)
   
+  # If user didn't specify which columns to keep, keep all original columns
   if (missing(cols)) {
     cols <- setdiff(colnames(olddf), bycol)
   }
   
-  # yes yes, looks are horrible in R, but I couldn't find a better solution
-  # to make sure this works on multiple columns at a time
   for (colname in cols) {
     colname_x <- sprintf("%s.x", colname)
     colname_y <- sprintf("%s.y", colname)
@@ -78,6 +83,8 @@ merge_dfs_overwrite_col <- function(olddf, newdf, cols, bycol = "well") {
   result
 }
 
+#' Get the indices of the local maxima in a list of numbers
+#' @keywords internal
 local_maxima <- function(x) {
   y <- (c(-.Machine$integer.max, x) %>% diff) > 0L
   y <- rle(y)$lengths %>% cumsum
@@ -88,10 +95,14 @@ local_maxima <- function(x) {
   y
 }
 
+#' Get the indices of the local minima in a list of numbers
+#' @keywords internal
 local_minima <- function(x) {
   local_maxima(-x)
 }
 
+#' Get the indices of the inflection points in a curve
+#' @keywords internal
 get_inflection_pts <- function(dat) {
   inf_points_idx <-
     dat %>%
@@ -107,6 +118,8 @@ get_inflection_pts <- function(dat) {
   inf_points_idx
 }
 
+#' Determine if a given path is a valid directory
+#' @keywords internal
 is_dir <- function(path) {
   if (missing(path) | is.null(path)) {
     return(FALSE)
@@ -119,6 +132,8 @@ is_dir <- function(path) {
   fileinfo$isdir
 }
 
+#' Determine if a given path is a valid file
+#' @keywords internal
 is_file <- function(path) {
   if (missing(path) | is.null(path)) {
     return(FALSE)
@@ -131,17 +146,19 @@ is_file <- function(path) {
   !(fileinfo$isdir)
 }
 
-# Representation of a 2D point
-point2d <- function(v) {
-  stopifnot(v %>% length == 2)
+#' Representation of a 2D point
+#' @keywords internal
+point2d <- function(x) {
+  stopifnot(x %>% length == 2)
   structure(
     v %>% as.integer
     , class = "point2d"
   )
 }
 
-# Euclidean distance between two points (if not second point given,
-# calculate distance to the origin)
+#' Euclidean distance between two points (if second point is not given,
+#' calculate distance to the origin)
+#' @keywords internal
 diff.point2d <- function(v, w) {
   if (missing(w)) {
     w <- point2d(c(0, 0))
@@ -149,24 +166,32 @@ diff.point2d <- function(v, w) {
   sqrt((v[1] - w[1]) ^ 2 + (v[2] - w[2]) ^ 2)
 }
 
+#' Format a point2d for pretty printing
+#' @keywords internal
 format.point2d <- function(x, ...) {
   sprintf("(%s, %s)", x[1], x[2])
 }
 
 #' @export
-print.point2d <- function(v) {
-   print(v %>% format)
+#' @keywords internal
+print.point2d <- function(x, ...) {
+   print(x %>% format)
 }
 
+#' Move columns to the front of a data.frame (taken from daattali/rsalad)
+#' @keywords internal
 move_front <- function(df, cols) {
   bind_df_ends(df, cols, 1)
 }
 
+#' Move columns to the back of a data.frame (taken from daattali/rsalad)
+#' @keywords internal
 move_back <- function(df, cols) {
   bind_df_ends(df, cols, -1)
 }
 
-
+#' Helper function for move_front and move_back
+#' @keywords internal
 bind_df_ends <- function(df, cols, dir = 1) {
   stopifnot(
     is.data.frame(df),

@@ -11,5 +11,5 @@
 }
 .globals <- .pkg_globals_store()
 
-## quiets concerns of R CMD check re: the .'s that appear in pipelines
+# R CMD check complains about . in magrittr pipelines
 if(getRversion() >= "2.15.1")  utils::globalVariables(c("."))

@@ -10,8 +10,6 @@
 
 ### code
 
-- replicate analyzeData/analyzeResults from haynes with this package
-
 - if(num_peaks > 1) {message(dens_smooth$x[maxima_idx][1]/dens_smooth$x[maxima_idx][2])}
 
 - cleanup code inside failures.R and decide on a method (fast vs slow) and make it work with generic inheritance
@@ -58,3 +56,6 @@ small p value (suggesting that even one mutant drop is significant)
 - look into progress bar (http://shiny.rstudio.com/articles/progress.html)
 
 - use navbarPage to have navigation on top (dataset/summary/visualize) 
+
+- explore data: boxplot/density plot of # empty drops, boxplot/density plot of
+total # drops, box+violin plot of FAM/HEX
