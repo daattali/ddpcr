@@ -2,6 +2,13 @@
 ## Copyright (C) 2015 Dean Attali
 ## This software is distributed under the AGPL-3 license
 
+# Advantage of density over normal: faster, better at finding mutant drops in
+# wells with low mutant frequency, works with the case where there are tons of
+# "HEX rain" naturally (in normal approach, I first tried fitting two normals,
+# if they're too close then fit three and assume that the middle one was capturing
+# the rain).
+# Disadvantage: we're not directly modeling just 2 peaks, we allow for any number.
+# This method does not naturally make a wildtype/mutant call (maybe that's a good thing?)
 classify_droplets_density_minima <- function(plate, well_id, plot = FALSE) {
 
   stopifnot(plate %>% inherits("ppnp_assay"))
