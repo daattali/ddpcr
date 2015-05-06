@@ -100,7 +100,7 @@ read_files <- function(plate, data_files, meta_file) {
     lapply(data_files, function(x) {
       wellNum <- get_well_from_data_file(x)
       wdat <-
-        readr::read_csv(x) %>%
+        readr::read_csv(x, progress = FALSE) %>%
         dplyr::select_(~ 2:1) %>%
         dplyr::mutate_(.dots = setNames(list(~ wellNum), "well"))
       wdat

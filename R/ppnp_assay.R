@@ -282,11 +282,12 @@ plot.ppnp_assay <- function(
   show_low_high_neg_freq = TRUE,
   bg_negative = "purple3", bg_positive = "green3",
   alpha_bg_low_high_neg_freq = 0.1,
-  superimpose = FALSE, show_drops = TRUE,
+  superimpose = FALSE, show_drops = TRUE, drops_size = 2,
   ...)
 {
   p <- NextMethod("plot",
-                  show_drops = show_drops, superimpose = superimpose)
+                  show_drops = show_drops, superimpose = superimpose,
+                  drops_size = drops_size)
   
   plate <- subset(x, wells, samples)
   rm(x)
@@ -333,7 +334,9 @@ plot.ppnp_assay <- function(
           data = neg_drops_low_freq,
           ggplot2::aes_string(x_var(plate), y_var(plate)),
           alpha = alpha_drops_low_negative_freq,
-          col = col_drops_negative)
+          color = col_drops_negative,
+          size = drops_size
+        )
     }
   }
   

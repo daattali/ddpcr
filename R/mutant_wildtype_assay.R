@@ -34,6 +34,7 @@ wells_mutant <- function(x) {
   wells_negative(x)
 }
 
+#' @export
 plot.mutant_wildtype_assay <- function(
   x,
   wells, samples,

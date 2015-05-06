@@ -149,12 +149,13 @@ diff.point2d <- function(v, w) {
   sqrt((v[1] - w[1]) ^ 2 + (v[2] - w[2]) ^ 2)
 }
 
-str.point2d <- function(v) {
-  sprintf("(%s, %s)", v[1], v[2])
+format.point2d <- function(x, ...) {
+  sprintf("(%s, %s)", x[1], x[2])
 }
 
+#' @export
 print.point2d <- function(v) {
-   v %>% str %>% print
+   print(v %>% format)
 }
 
 move_front <- function(df, cols) {

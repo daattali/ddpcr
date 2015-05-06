@@ -7,7 +7,6 @@
 #' Analyze ddPCR data
 #' 
 #' @docType package
-#' @name ddpcrS3
-#' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
+#' @name ddpcrS3
 NULL

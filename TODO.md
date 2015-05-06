@@ -12,8 +12,6 @@
 
 - replicate analyzeData/analyzeResults from haynes with this package
 
-- allow some data exploration plots
-
 - if(num_peaks > 1) {message(dens_smooth$x[maxima_idx][1]/dens_smooth$x[maxima_idx][2])}
 
 - cleanup code inside failures.R and decide on a method (fast vs slow) and make it work with generic inheritance
@@ -42,7 +40,7 @@ drops and 8 mutants, then we want P(x>=8) = 1-P(x<=8)+P(x=8) =
 therefore wildtype.  But if same ratio but with 80 mutants out of 5000, we get
 p=5e-05 which is very significant so well is mutant.
 
--  bootstrap to determine if wildtype well or not (assume well is truly wildtype,
+- bootstrap to determine if wildtype well or not (assume well is truly wildtype,
 sample from the wt drops distribution and see how likely it is to get the few mutant
 drops that we got)
 

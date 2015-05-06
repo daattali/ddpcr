@@ -16,6 +16,7 @@ plot.ddpcr_plate <- function(
   alpha_bg_failed = 0.7,
   xlab = x_var(plate), ylab = y_var(plate), title = NULL,
   show_grid = FALSE, show_grid_labels = FALSE,
+  drops_size = 2,
   text_size_title = 14, text_size_row_col = 12, text_size_axes_labels = 12, 
   text_size_grid_labels = 12,
   ...)
@@ -161,6 +162,7 @@ plot.ddpcr_plate <- function(
         data = data,
         ggplot2::aes_string(x = x_var, y = y_var,
                             color = "cluster", alpha = "cluster"),
+        size = drops_size,
         show_guide = FALSE) +
       ggplot2::scale_color_manual(values = cluster_cols) +
       ggplot2::scale_alpha_manual(values = cluster_alphas)

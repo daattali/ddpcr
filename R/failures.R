@@ -77,7 +77,7 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
   if (diff(centers[[1]], centers[[2]]) < diff(centers[[smaller_center_idx]])) {
     success <- FALSE
     msg <- sprintf("There seems to be mostly empty drops (centers of clusters: %s)",
-                   paste(lapply(centers, str), collapse=", "))
+                   paste0(centers[[1]] %>% format, ", ", centers[[2]] %>% format))
     return(list(success = success, comment = msg))
   }
   
@@ -122,7 +122,7 @@ remove_failures.ddpcr_plate <- function(plate) {
   data <- plate_data(plate)
   
   # ---
-  
+
   well_success_map <-
     vapply(wells_used(plate),            # check every well if it failed
            function(x) is_well_success(plate, x),
