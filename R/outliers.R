@@ -1,3 +1,7 @@
+## ddpcr - R package for analysis of droplet digital PCR data
+## Copyright (C) 2015 Dean Attali
+## This software is distributed under the AGPL-3 license
+
 # Determines the cutoffs for outliers on the plate.
 # Note this function is currently only being used on the whole plate and
 # thus determines outliers on a plate-level, but it can also be used to find

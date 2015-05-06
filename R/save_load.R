@@ -1,3 +1,7 @@
+## ddpcr - R package for analysis of droplet digital PCR data
+## Copyright (C) 2015 Dean Attali
+## This software is distributed under the AGPL-3 license
+
 normalize_to_rds <- function(file) {
   ifelse(substring(file, nchar(file) - 3) == ".rds",
          file,

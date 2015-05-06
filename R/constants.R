@@ -1,3 +1,7 @@
+## ddpcr - R package for analysis of droplet digital PCR data
+## Copyright (C) 2015 Dean Attali
+## This software is distributed under the AGPL-3 license
+
 # This file defines constants used in the package
 
 SEED <- 8

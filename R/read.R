@@ -1,3 +1,7 @@
+## ddpcr - R package for analysis of droplet digital PCR data
+## Copyright (C) 2015 Dean Attali
+## This software is distributed under the AGPL-3 license
+
 DATA_FILE_REGEX <- "^(.*)_([A-H][0-1][0-9])_Amplitude.csv$"
 DATA_FILE_REGEX_NAME <- "\\1"
 DATA_FILE_REGEX_WELL <- "\\2"

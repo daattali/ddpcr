@@ -1,3 +1,7 @@
+## ddpcr - R package for analysis of droplet digital PCR data
+## Copyright (C) 2015 Dean Attali
+## This software is distributed under the AGPL-3 license
+
 classify_droplets_normal <- function(plate, well_id, plot = FALSE) {
   # Given a well with the empty drops marked as empty, analyze the rest of the
   # drops and assign each to a cluster (rain/mutant/wildtype)

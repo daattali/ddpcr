@@ -1,3 +1,7 @@
+## ddpcr - R package for analysis of droplet digital PCR data
+## Copyright (C) 2015 Dean Attali
+## This software is distributed under the AGPL-3 license
+
 calculate_concentration_single <- function(plate, well_id) {
   # Calculate concentration in a well, using the formula that QuantaSoft uses
   #

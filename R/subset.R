@@ -1,3 +1,7 @@
+## ddpcr - R package for analysis of droplet digital PCR data
+## Copyright (C) 2015 Dean Attali
+## This software is distributed under the AGPL-3 license
+
 #' @export
 # subset(plate, c("A02", "B05"))
 # subset(plate, "A01, B05")
