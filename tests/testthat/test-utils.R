@@ -1,4 +1,4 @@
-context("simple_utils")
+context("utils")
 
 test_that("is_dir is TRUE when passed a directory", {
   expect_true(is_dir("."))
@@ -33,6 +33,30 @@ test_that(".globals store works", {
   expect_null(.globals$get("x"))
   .globals$set("x", 50)
   expect_equal(.globals$get("x"), 50)
+})
+
+test_that("err_msg works", {
+  expect_error(err_msg("can't do this"))
+  expect_error(err_msg("can't do this"), "can't do this")
+})
+
+test_that("warn_msg works", {
+  expect_warning(warn_msg("can't do this"))
+  expect_warning(warn_msg("can't do this"), "can't do this")
+})
+
+test_that("cat0 works", {
+  expect_output(cat0("a", "b\n", " c ", "d"),
+                "^ab\n c d$")
+})
+
+test_that("quiet works", {
+  expect_output(quiet(print("hello world")), "^$")
+  expect_output(quiet(cat("hello world")), "^$")
+  expect_that(quiet(message("hello world"), FALSE), shows_message())
+  expect_that(quiet(message("hello world")), not(shows_message()))
+  expect_that(quiet(warning("hello world"), all = FALSE), gives_warning())
+  expect_that(quiet(warning("hello world")), not(gives_warning()))
 })
 
 test_that("%btwn% works", {

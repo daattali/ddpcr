@@ -2,25 +2,50 @@
 ## Copyright (C) 2015 Dean Attali
 ## This software is distributed under the AGPL-3 license
 
+#' Show an error message
+#' @param x The error message text
+#' @keywords internal
+#' @export
 err_msg <- function(x) {
   stop(sprintf("ddpcr: %s", x), call. = FALSE)
 }
 
+#' Show a warning message
+#' @param x The warning message text
+#' @keywords internal
+#' @export
 warn_msg <- function(x) {
   warning(sprintf("ddpcr: %s", x), call. = FALSE)
 }
 
+#' Concatenate strings with no space between them
+#' @param ... strings to concatenate
+#' @keywords internal
+#' @export
 cat0 <- function(...) {
   cat(..., sep = "")
 }
 
+#' Determine if a numeric value is within a range
+#' @param x Numeric vector to check whether the values are within \code{rng}
+#' @param rng The range to check if numbers in \code{x} are within it.
+#' @keywords internal
+#' @export
 "%btwn%" <- function(x, rng) {
   stopifnot(is.numeric(x), is.numeric(rng), length(rng) == 2)
   x >= min(rng) & x <= max(rng)
 }
 
 #' Convert a list of lists outputted from vapply to dataframe
+#' @param lol List of lists that is a result of a vapply
+#' @param name Column name to use for the name of each list
+#' @examples 
+#' vapply(c("a", "b", "c"),
+#'        function(x) list(low = x, up = toupper(x)),
+#'        list(character(1), character(1))) %>%
+#'   lol_to_df("key")
 #' @keywords internal
+#' @export
 lol_to_df <- function(lol, name = "well") {
   lol %<>%
     t %>% as.data.frame %>%
@@ -30,8 +55,13 @@ lol_to_df <- function(lol, name = "well") {
   lol
 }
 
-#' Suppresses all output from an expression. Works cross-platform.
+#' Suppress all output from an expression. Works cross-platform.
+#' @param expr Expression to run.
+#' @param all If \code{TRUE} then suppress warnings and messages as well;
+#' otherwise, only suppress printed output (such as from \code{print} or
+#' \code{cat}).
 #' @keywords internal
+#' @export
 quiet <- function(expr, all = TRUE) {
   if (Sys.info()['sysname'] == "Windows") {
     file <- "NUL"
@@ -49,13 +79,56 @@ quiet <- function(expr, all = TRUE) {
 }
 
 #' Get the two values that are equidistant from a specific number
+#' @param x The middle number.
+#' @param y The amount to deviate from the middle.
 #' @keywords internal
+#' @export
 plus_minus <- function(x, y) {
   x + y * c(-1, 1)
 }
 
 #' Overwrite a column in a data.frame based on a matching column in another df
+#' 
+#' Sometimes you want to merge two dataframes and specify that column X in
+#' one dataframe should overwrite the same column in the other dataframe.
+#' If there is a missing value in the column in the new dataframe, then the value
+#' from the old dataframe is kept.
+#' 
+#' @param olddf The dataframe whose column will be overwritten.
+#' @param newdf The dataframe that will use its columns to overwrite.
+#' @param cols The names of the columns that exist in both dataframes that
+#' should be overwritten. If not provided, then all columns that are common
+#' to both dataframes are used.
+#' @param bycol The names of the columns to use as the key for the merge.
+#' @examples 
+#' df <- function(...) data.frame(..., stringsAsFactors = FALSE)
+#' 
+#' df1 <- df(a = 1:4, b = c("one", NA, "three", "four"))
+#' df2 <- df(a = 1:4, b = c("ONE", "TWO", NA, "FOUR"))
+#' merge_dfs_overwrite_col(df1, df2, "b", "a")
+#' merge_dfs_overwrite_col(df2, df1, "b", "a")
+#' 
+#' df3 <- df(a = 1:3, b = c("one", NA, "three"))
+#' df4 <- df(a = 2:4, b = c("TWO", NA, "FOUR"))
+#' merge_dfs_overwrite_col(df3, df4, "b", "a")
+#' merge_dfs_overwrite_col(df4, df3, "b", "a")
+#' 
+#' df5 <- df(a = 1:3, b = c("one", "two", "three"), c = letters[1:3])
+#' df6 <- df(b = c("ONE", "TWO", "THREE"), c = LETTERS[1:3], a = 1:3)
+#' merge_dfs_overwrite_col(df5, df6, "b", "a")
+#' merge_dfs_overwrite_col(df6, df5, "b", "a")
+#' 
+#' df7 <- df(a = 1:3, b = c("one", "two", "three"))
+#' df8 <- df(a = 1:4)
+#' merge_dfs_overwrite_col(df7, df8, "b", "a")
+#' merge_dfs_overwrite_col(df8, df7, "b", "a")
+#' 
+#' df9 <- df(a = 1:3, b = c("one", "two", "three"), c = 1:3)
+#' df10 <- df(a = 1:3, b = c("ONE", NA, "THREE"), c = 4:6)
+#' merge_dfs_overwrite_col(df9, df10, c("b", "c"), "a")
+#' merge_dfs_overwrite_col(df10, df9, c("b", "c"), "a")
 #' @keywords internal
+#' @export
 merge_dfs_overwrite_col <- function(olddf, newdf, cols, bycol = "well") {
   result <- dplyr::left_join(olddf, newdf, by = bycol)
   
@@ -85,7 +158,11 @@ merge_dfs_overwrite_col <- function(olddf, newdf, cols, bycol = "well") {
 }
 
 #' Get the indices of the local maxima in a list of numbers
+#' @param x Vector of numbers.
+#' @examples 
+#' local_maxima(c(1, 5, 3, 2, 4, 3))
 #' @keywords internal
+#' @export
 local_maxima <- function(x) {
   x <- as.numeric(x)
   y <- (c(-.Machine$integer.max, x) %>% diff) > 0L
@@ -98,13 +175,22 @@ local_maxima <- function(x) {
 }
 
 #' Get the indices of the local minima in a list of numbers
+#' @param x Vector of numbers.
+#' @examples 
+#' local_minima(c(1, 5, 3, 2, 4, 3))
 #' @keywords internal
+#' @export
 local_minima <- function(x) {
   local_maxima(-x)
 }
 
 #' Get the indices of the inflection points in a curve
+#' @param dat Dataframe containing an \code{x} and \code{y} variable.
+#' @examples 
+#' curve1 <- dplyr::data_frame(x = -10:3, y = (x + 5) ^ 3 - 10)
+#' curve1[get_inflection_pts(curve1), ]$x
 #' @keywords internal
+#' @export
 get_inflection_pts <- function(dat) {
   inf_points_idx <-
     dat %>%
@@ -122,6 +208,7 @@ get_inflection_pts <- function(dat) {
 
 #' Determine if a given path is a valid directory
 #' @keywords internal
+#' @export
 is_dir <- function(path) {
   if (missing(path) | is.null(path)) {
     return(FALSE)
@@ -136,6 +223,7 @@ is_dir <- function(path) {
 
 #' Determine if a given path is a valid file
 #' @keywords internal
+#' @export
 is_file <- function(path) {
   if (missing(path) | is.null(path)) {
     return(FALSE)
@@ -149,7 +237,11 @@ is_file <- function(path) {
 }
 
 #' Representation of a 2D point
+#' @param x 2-element numeric vector.
+#' @examples 
+#' point2d(c(10, 20))
 #' @keywords internal
+#' @export
 point2d <- function(x) {
   stopifnot(x %>% length == 2)
   structure(
@@ -158,42 +250,66 @@ point2d <- function(x) {
   )
 }
 
-#' Euclidean distance between two points (if second point is not given,
-#' calculate distance to the origin)
+#' Euclidean distance between two points
+#' 
+#' Calculate the distance between two points in 2D space. If only one points is
+#' given, then the distance to the origin is calculated.
+#' @param x,y Points generated with \code{point2d}
+#' @seealso \code{\link[ddpcrS3]{point2d}}
 #' @keywords internal
-diff.point2d <- function(v, w) {
-  if (missing(w)) {
-    w <- point2d(c(0, 0))
+#' @export
+diff.point2d <- function(x, y, ...) {
+  if (missing(y)) {
+    y <- point2d(c(0, 0))
   }
-  sqrt((v[1] - w[1]) ^ 2 + (v[2] - w[2]) ^ 2)
+  sqrt((x[1] - y[1]) ^ 2 + (x[2] - y[2]) ^ 2)
 }
 
-#' Format a point2d for pretty printing
-#' @keywords internal
+#' @export
 format.point2d <- function(x, ...) {
   sprintf("(%s, %s)", x[1], x[2])
 }
 
 #' @export
-#' @keywords internal
 print.point2d <- function(x, ...) {
    print(x %>% format)
 }
 
-#' Move columns to the front of a data.frame (taken from daattali/rsalad)
+#' Move columns to the front of a data.frame
+#' 
+#' This function is taken from daattali/rsalad R package.
+#' 
+#' @param df A data.frame.
+#' @param cols A vector of column names to move to the front.
+#' @examples 
+#' df <- data.frame(a = character(0), b = character(0), c = character(0))
+#' move_front(df, "b")
+#' move_front(df, c("c", "b"))
 #' @keywords internal
+#' @export
 move_front <- function(df, cols) {
   bind_df_ends(df, cols, 1)
 }
 
-#' Move columns to the back of a data.frame (taken from daattali/rsalad)
+#' Move columns to the back of a data.frame
+#' 
+#' This function is taken from daattali/rsalad R package.
+#' 
+#' @param df A data.frame.
+#' @param cols A vector of column names to move to the back
+#' @examples 
+#' df <- data.frame(a = character(0), b = character(0), c = character(0))
+#' move_back(df, "b")
+#' move_back(df, c("b", "a"))
 #' @keywords internal
+#' @export
 move_back <- function(df, cols) {
   bind_df_ends(df, cols, -1)
 }
 
 #' Helper function for move_front and move_back
 #' @keywords internal
+#' @export
 bind_df_ends <- function(df, cols, dir = 1) {
   stopifnot(
     is.data.frame(df),

@@ -17,22 +17,12 @@
 #' @export
 KRAS <- "kras"
 
-#' Define parent plate type of KRAS assay
-#' @seealso
-#' \code{\link[ddpcrS3]{parent_plate_type}},
-#' \code{\link[ddpcrS3]{KRAS}}
 #' @export
-#' @keywords internal
 parent_plate_type.kras <- function(plate) {
   "mutant_wildtype_assay"
 }
 
-#' Define default parameters of KRAS assay
-#' @seealso
-#' \code{\link[ddpcrS3]{define_params}},
-#' \code{\link[ddpcrS3]{KRAS}}
 #' @export
-#' @keywords internal
 define_params.kras <- function(plate) {
   params <- NextMethod("define_params")
   

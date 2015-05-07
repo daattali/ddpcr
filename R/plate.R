@@ -468,6 +468,11 @@ step_end <- function(time) {
 
 #' @export
 print.ddpcr_plate <- function(x, ...) {
+  if (is.null(status(x))) {
+    cat0("Empty ddPCR plate")
+    return()
+  }
+  
   cat0("Dataset name: ", x %>% name, "\n")
   cat0("Plate type: ", x %>% type(TRUE) %>% paste(collapse = ", "), "\n")
   if (analysis_complete(x)) {

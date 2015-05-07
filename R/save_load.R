@@ -82,6 +82,7 @@ load_plate <- function(file) {
 #' normalize_to_rds("somefile.rds")   # somefile.rds
 #' normalize_to_rds("somefile.r")     # somefile.r.rds
 #' @keywords internal
+#' @export
 normalize_to_rds <- function(file) {
   ifelse(substring(file, nchar(file) - 3) == ".rds",
          file,

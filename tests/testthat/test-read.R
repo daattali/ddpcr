@@ -52,14 +52,14 @@ testdir <- function(dirname) {
 }
 
 test_that("find_data_files basic functionality works", {
-  data_files <- find_data_files(testdir("find_files_simple"))
+  data_files <- find_data_files(testdir("read_simple"))
   expect_true(length(data_files) == 2)
   expect_true(grepl("test_A01_Amplitude.csv", data_files) %>% sum == 1)
   expect_true(grepl("test_B02_Amplitude.csv", data_files) %>% sum == 1)
 })
 
 test_that("find_data_files works when there are multiple data file names", {
-  data_files <- find_data_files(testdir("find_files_complex"))
+  data_files <- find_data_files(testdir("read_complex"))
   expect_true(length(data_files) == 3)
   expect_true(grepl("diffname_C03_Amplitude.csv", data_files) %>% sum == 1)
   expect_true(grepl("test_A01_Amplitude.csv", data_files) %>% sum == 1)
@@ -68,19 +68,19 @@ test_that("find_data_files works when there are multiple data file names", {
 
 test_that("find_meta_file basic functionality works", {
   # metadata file is found
-  meta_file <- find_meta_file(testdir("find_files_simple"), "test")
+  meta_file <- find_meta_file(testdir("read_simple"), "test")
   expect_true(grepl("test.csv", meta_file))
   
   # metadata file is not found
   expect_warning(
-    meta_file <- find_meta_file(testdir("find_files_simple"), "wrong"),
+    meta_file <- find_meta_file(testdir("read_simple"), "wrong"),
     "could not find metadata file"
   )
   expect_null(meta_file)
   
   # metadata file is not found
   expect_warning(
-    meta_file <- find_meta_file(testdir("find_files_simple"), ""),
+    meta_file <- find_meta_file(testdir("read_simple"), ""),
     "could not find metadata file"
   )
   expect_null(meta_file)
@@ -88,153 +88,120 @@ test_that("find_meta_file basic functionality works", {
 
 # -------- Reading the data ---------
 
-# NOTE I've gotten a little lazy and didn't break up reading the files into
-# little unit-testable chunks... instead I'm testing the whole function.
+.empty_plate <-
+  system.file("test_data", "empty_plate.rds", package = "ddpcrS3") %>%
+  load_plate
+get_empty_plate <- function() {
+  .empty_plate
+}
 
 test_that("read_dir basic functionality works", {
-  plate <- empty_plate() %>% read_dir(testdir("find_files_simple"))
-  expect_is(plate, "ddpcr_plate")
-  expect_equal(status(plate), STATUS_INIT)
+  plate <- get_empty_plate() %>% read_dir(testdir("read_simple"))
   expect_equal(name(plate), "test")
-  expect_equal(plate_data(plate) %>% as.data.frame,
-               read.csv(file.path(testdir("find_files_simple"), "expected_data.csv"),
-                        stringsAsFactors = FALSE))
-  expect_equal(plate_meta(plate) %>% as.data.frame,
-               read.csv(file.path(testdir("find_files_simple"), "expected_meta.csv"),
-                        stringsAsFactors = FALSE))
+  expect_equal(plate_data(plate),
+               readr::read_csv(file.path(testdir("read_simple"),
+                                         "expected_data.csv"))
+  )
+  expect_that(plate_meta(plate), not(is_null()))
 })
 
 test_that("read_dir errors and warnings", {
   # given directory does not exist
   expect_error(
-    empty_plate() %>% read_dir(testdir("notadir")),
+    get_empty_plate() %>% read_dir(testdir("notadir")),
     "could not find directory"
   )
   # given directory has no properly-named metadata file
   expect_warning(
-    empty_plate() %>% read_dir(testdir("find_files_complex")),
+    get_empty_plate() %>% read_dir(testdir("read_complex")),
     "could not find metadata file"
   )
   # given directory has data files with inconsistent names
   expect_warning(
-    empty_plate() %>% read_dir(testdir("find_files_complex")),
+    get_empty_plate() %>% read_dir(testdir("read_complex")),
     "same name"
   )
 })
 
 test_that("read_dir works in more complex cases", {
-  # correct data is loaded when given a complex directory
+  # multiple data file names, no auto-detected metadata file
   suppressWarnings(
-    plate <- empty_plate() %>% read_dir(testdir("find_files_complex"))
+    plate <- get_empty_plate() %>% read_dir(testdir("read_complex"))
   )
-  expect_is(plate, "ddpcr_plate")
-  expect_equal(status(plate), STATUS_INIT)
   expect_equal(name(plate), "test")
-  expected_data <- read.csv(file.path(testdir("find_files_complex"), "expected_data.csv"),
-                            stringsAsFactors = FALSE)
-  expected_meta <- read.csv(file.path(testdir("find_files_complex"), "expected_meta_without.csv"),
-                            stringsAsFactors = FALSE)
-  mode(expected_meta$sample) <- "logical"
-  expect_equal(plate_data(plate) %>% as.data.frame,
+  expected_data <- readr::read_csv(file.path(testdir("read_complex"),
+                                             "expected_data.csv"))
+  expect_equal(plate_data(plate),
                expected_data)
-  expect_equal(plate_meta(plate) %>% as.data.frame,
-               expected_meta)
+  expect_that(plate_meta(plate), is_null())
 })
 
 test_that("read_files errors and warnings", {
-  data_files_simple <- find_data_files(testdir("find_files_simple"))
-  meta_file_simple <- find_meta_file(testdir("find_files_simple"), "test")
+  data_files_simple <- find_data_files(testdir("read_simple"))
+  meta_file_simple <- find_meta_file(testdir("read_simple"), "test")
   
   # no data files are given
   expect_error(
-    empty_plate() %>% read_files(),
+    get_empty_plate() %>% read_files(),
     "no data files"
   )
   # wrong data files are given
   expect_error(
-    empty_plate() %>% read_files(data_files = c(data_files_simple, "nofile")),
+    get_empty_plate() %>% read_files(data_files = c(data_files_simple, "nofile")),
     "could not find all data files"
   )
   # no metadata file is given
   expect_warning(
-    empty_plate() %>% read_files(data_files_simple),
+    get_empty_plate() %>% read_files(data_files_simple),
     "no metadata file"
   )
   # wrong metadata file is given
   expect_error(
-    empty_plate() %>% read_files(data_files_simple, "nometa"),
+    get_empty_plate() %>% read_files(data_files_simple, "nometa"),
     "could not find metadata"
   )
 })
 
 test_that("read_files basic functionality works", {
-  data_files <- find_data_files(testdir("find_files_simple"))
-  meta_file <- find_meta_file(testdir("find_files_simple"), "test")
-  plate <- empty_plate() %>% read_files(data_files, meta_file)
-  expect_is(plate, "ddpcr_plate")
-  expect_equal(status(plate), STATUS_INIT)
+  data_files <- find_data_files(testdir("read_simple"))
+  meta_file <- find_meta_file(testdir("read_simple"), "test")
+  plate <- get_empty_plate() %>% read_files(data_files, meta_file)
   expect_equal(name(plate), "test")
-  expect_equal(plate_data(plate) %>% as.data.frame,
-               read.csv(file.path(testdir("find_files_simple"), "expected_data.csv"),
-                        stringsAsFactors = FALSE))
-  expect_equal(plate_meta(plate) %>% as.data.frame,
-               read.csv(file.path(testdir("find_files_simple"), "expected_meta.csv"),
-                        stringsAsFactors = FALSE))
+  expect_equal(plate_data(plate),
+               readr::read_csv(file.path(testdir("read_simple"),
+                                         "expected_data.csv"))
+  )
+  expect_that(plate_meta(plate), not(is_null()))
 })
 
 test_that("read_files inconsistent data files, no metadata file", {
-  data_files <- find_data_files(testdir("find_files_complex"))
-  expected_data <- read.csv(file.path(testdir("find_files_complex"), "expected_data.csv"),
-                            stringsAsFactors = FALSE)
-  expected_meta <- read.csv(file.path(testdir("find_files_complex"), "expected_meta_without.csv"),
-                            stringsAsFactors = FALSE)
+  data_files <- find_data_files(testdir("read_complex"))
+  expected_data <- readr::read_csv(file.path(testdir("read_complex"),
+                                             "expected_data.csv"))
   mode(expected_meta$sample) <- "logical"
   
   suppressWarnings({
-    plate <- empty_plate() %>% read_files(data_files)
-    plate2 <- empty_plate() %>% read_files(data_files, NULL)
+    plate <- get_empty_plate() %>% read_files(data_files)
+    plate2 <- get_empty_plate() %>% read_files(data_files, NULL)
   })
   expect_identical(plate, plate2)
-  expect_is(plate, "ddpcr_plate")
-  expect_equal(status(plate), STATUS_INIT)
   expect_equal(name(plate), "test")
-  expect_equal(plate_data(plate) %>% as.data.frame,
+  expect_equal(plate_data(plate),
                expected_data)
-  expect_equal(plate_meta(plate) %>% as.data.frame,
-               expected_meta)
+  expect_that(plate_meta(plate), is_null())
 })
 
 test_that("read_files inconsistent data files, correct metadata file", {
-  data_files <- find_data_files(testdir("find_files_complex"))
-  meta_file <- find_meta_file(testdir("find_files_complex"), "metadata")
-  expected_data <- read.csv(file.path(testdir("find_files_complex"), "expected_data.csv"),
-                            stringsAsFactors = FALSE)
-  expected_meta <- read.csv(file.path(testdir("find_files_complex"), "expected_meta_with.csv"),
-                            stringsAsFactors = FALSE)
+  data_files <- find_data_files(testdir("read_complex"))
+  meta_file <- find_meta_file(testdir("read_complex"), "metadata")
+  expected_data <- readr::read_csv(file.path(testdir("read_complex"),
+                                             "expected_data.csv"))
   
   suppressWarnings(
-    plate <- empty_plate() %>% read_files(data_files, meta_file)
+    plate <- get_empty_plate() %>% read_files(data_files, meta_file)
   )
-  expect_is(plate, "ddpcr_plate")
-  expect_equal(status(plate), STATUS_INIT)
   expect_equal(name(plate), "test")
   expect_equal(plate_data(plate) %>% as.data.frame,
                expected_data)
-  expect_equal(plate_meta(plate) %>% as.data.frame,
-               expected_meta)
-})
-
-test_that("new_plate works", {
-  expect_error(
-    new_plate(),
-    "must be specified"
-  )
-  plate <- new_plate(testdir("find_files_simple"))
-  expect_identical(
-    plate,
-    empty_plate() %>% read_dir(testdir("find_files_simple"))
-  )
-  expect_identical(name(plate), "test")
-  plate <- new_plate(testdir("find_files_simple"), name = "myname") 
-  expect_identical(name(plate), "myname")
+  expect_that(plate_meta(plate), not(is_null()))
 })

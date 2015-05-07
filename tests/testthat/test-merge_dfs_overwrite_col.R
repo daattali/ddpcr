@@ -135,7 +135,7 @@ test_that("if a non-existent column is given, the original df is returned", {
   )  
 })
 
-test_That("if `cols` is not supplied then all columns from old df are retained", {
+test_that("if `cols` is not supplied then all columns from old df are retained", {
   df1 <- df(a = 1:3, b = c("one", "two", "three"), c = 1:3)
   df2 <- df(a = 1:3, b = c("ONE", "TWO", "THREE"), c = 3:1)
   df3 <- df(a = 1:3, b = c("ONE", "TWO", "THREE"), d = 3:1)
