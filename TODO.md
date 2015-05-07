@@ -20,7 +20,7 @@
 
 - separate functions into proper files
 
-- add tests
+- add tests (kras, wtnegbraf)
 
 - add documentation
 

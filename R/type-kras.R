@@ -10,18 +10,27 @@
 #' TODO what this assay looks like
 #' 
 #' @examples 
-#' \dontrun{
-#' new_plate(dir = "dir", type = KRAS)
-#' }
+#' dir <- system.file("sample_data", "small", package = "ddpcrS3")
+#' new_plate(dir = dir, type = KRAS)
+#' new_plate(dir = dir, type = "kras")
+#' @seealso \code{\link[ddpcrS3]{new_plate}}
 #' @export
 KRAS <- "kras"
 
+#' Define parent plate type of KRAS assay
+#' @seealso
+#' \code{\link[ddpcrS3]{parent_plate_type}},
+#' \code{\link[ddpcrS3]{KRAS}}
 #' @export
 #' @keywords internal
 parent_plate_type.kras <- function(plate) {
   "mutant_wildtype_assay"
 }
 
+#' Define default parameters of KRAS assay
+#' @seealso
+#' \code{\link[ddpcrS3]{define_params}},
+#' \code{\link[ddpcrS3]{KRAS}}
 #' @export
 #' @keywords internal
 define_params.kras <- function(plate) {

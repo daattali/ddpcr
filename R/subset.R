@@ -2,15 +2,52 @@
 ## Copyright (C) 2015 Dean Attali
 ## This software is distributed under the AGPL-3 license
 
+#' Subsetting a ddPCR plate
+#' 
+#' Select specific wells or samples from a ddPCR plate.
+#' 
+#' Keeps only data from the selected wells. If sample names are provided instead
+#' of well IDs, then any well corresponding to any of the sample names will be
+#' kept. Either well IDs or sample names must be provided, but not both.
+#' 
+#' The most basic way to select wells is to provide a vector of wells such as
+#' \code{c("B03", "C12")}. When selecting wells, a special range notation is
+#' supported to make it easier to select many wells: use a colon (\code{:}) to specify a
+#' range of wells, and use a comma (\code{,}) to add another well or range. When
+#' specifying a range, all wells in the rectangular area between the two wells
+#' are selected. For example, \code{B04:D06} is equivalent to
+#' \code{B04, B05, B06, C04, C05, C06, D04, D05, D06}. You can combine multiple
+#' ranges in one selection; see the Examples section below. Note that this
+#' notation is only supported for the \code{wells} parameter, but not for the
+#' \code{samples} parameter.
+#' 
+#' @param wells Vector or range notation of wells to select (see Details section
+#' for more information on range notation).
+#' @param samples Vector of sample names to select.
+#' @return Plate with data only from the specified wells/samples.
+#' @examples
+#' dir <- system.file("sample_data", "small", package = "ddpcrS3")
+#' plate <- new_plate(dir)
+#' plate %>% wells_used
+#' plate %>% subset("C01") %>% wells_used
+#' plate %>% subset(c("C01", "C09")) %>% wells_used
+#' plate %>% subset("C01, C09") %>% wells_used
+#' plate %>% subset("C01:C09") %>% wells_used
+#' plate %>% subset("C01:C09, B01") %>% wells_used
+#' plate %>% subset("B01:C03") %>% wells_used
+#' plate %>% subset("B01:C06") %>% wells_used
+#' plate %>% subset("B01, B06:C09") %>% wells_used
+#' plate %>% subset("B01, B06:C06, C09") %>% wells_used
+#' plate %>% subset("B01:B06, C01:C06, C09") %>% wells_used
+#' plate %>% subset(samples = "#1") %>% wells_used
+#' plate %>% subset(samples = c("#1", "#3")) %>% wells_used
 #' @export
-# subset(plate, c("A02", "B05"))
-# subset(plate, "A01, B05")
-# subset(plate, "A01, B05:D07, F10")
 subset.ddpcr_plate <- function(x, wells, samples, ...) {
   if (!missing(wells) && !missing(samples)) {
     err_msg("Can only subset by either `wells` or `samples`, not both")
   }
   
+  # figure out what wells to keep
   if (!missing(wells)) {
     wells %<>% toupper
     if (is_range(wells)) {
@@ -25,9 +62,11 @@ subset.ddpcr_plate <- function(x, wells, samples, ...) {
     return(x)  # if no arguments, just return the same plate
   }
   
+  # keep only the droplet data for these wells
   plate_data(x) %<>%
     dplyr::filter_(~ well %in% wells)
   
+  # mark any other well as unused
   plate_meta(x) %<>%
     dplyr::filter_(~ well %in% wells) %>%
     merge_dfs_overwrite_col(DEFAULT_PLATE_META, .) %>%
@@ -36,11 +75,26 @@ subset.ddpcr_plate <- function(x, wells, samples, ...) {
   x
 }
 
+#' Is the given parameter a range?
+#' @examples
+#' is_range("C05")            # FALSE
+#' is_range(c("C05", "C08"))  # FALSE
+#' is_range("C05")            # FALSE
+#' is_range("C05, C08")       # TRUE
+#' is_range("C05:C08")        # TRUE
+#' is_range("C05.C08")        # FALSE
+#' @keywords internal
 is_range <- function(x) {
   length(x) == 1 && grepl("[,:]", x)
 }
 
-# convert a range 
+#' Convert a list of ranges to a vector of its individual componenets
+#' @examples
+#' range_list_to_vec("A01")
+#' range_list_to_vec("A01:A04")
+#' range_list_to_vec("A01, B03")
+#' range_list_to_vec("A01, B02:C04, C07")
+#' @keywords internal
 range_list_to_vec <- function(rangel) {
   rangel <- gsub("[[:space:]]", "", rangel)
   ranges <- strsplit(rangel, ",") %>% unlist
@@ -56,7 +110,15 @@ range_list_to_vec <- function(rangel) {
   wells
 }
 
-# "B05:G09" -> c("B05", "G09"), "B05" -> c("B05", "B05")
+#' regex for a well ID
+#' @keywords internal
+WELL_ID_REGEX <- "^[A-H][0-1][0-9]$"
+
+#' Extract the two endpoints of a range
+#' @examples
+#' range_to_endpoints("B05:G09")   # c("B05", "G09")
+#' range_to_endpoints("B05")       # c("B05", "B05")
+#' @keywords internal
 range_to_endpoints <- function(range) {
   endpoints <- strsplit(range, ":") %>% unlist
   if (endpoints %>% length == 1) {
@@ -72,34 +134,19 @@ range_to_endpoints <- function(range) {
   endpoints
 }
 
-WELL_ID_REGEX <- "^[A-H][0-1][0-9]$"
-
-# "D" -> 4 
-row_to_num <- function(row) {
-  magrittr::is_in(LETTERS, row) %>% which
-}
-
-# 4 -> "D"
-num_to_row <- function(num) {
-  LETTERS[num]
-}
-
-# "05" -> 5
-col_to_num <- function(col) {
-  col %>% as.integer
-}
-
-# 5 -> "05"
-num_to_col <- function(num) {
-  sprintf("%02d", num)
-}
-
-# c(8, 5) -> 5:8
+#' Convert a range to a vector of all elements between the endpoints
+#' @examples
+#' range_to_seq(c(5, 8))   # 5:8
+#' range_to_seq(c(8, 5))   # 5:8
+#' @keywords internal
 range_to_seq <- function(rng) {
   seq(min(rng), max(rng))
 }
 
-# "C04", "D06" -> c("C04", "C05", "C06", "D04", "D05", "D06")
+#' Get all wells between two wells (assume a rectangle layout)
+#' @examples
+#' get_wells_btwn("C04", "D06")
+#' @keywords internal 
 get_wells_btwn <- function(well1, well2) {
   rows <-
     get_row(c(well1, well2)) %>%
@@ -117,12 +164,50 @@ get_wells_btwn <- function(well1, well2) {
   wells
 }
 
-# "C05" -> "C"
+#' Convert a plate row to a number
+#' @examples
+#' row_to_num("D")  # 4L
+#' @keywords internal
+row_to_num <- function(row) {
+  magrittr::is_in(LETTERS, row) %>% which
+}
+
+#' Convert a number to plate row
+#' @examples
+#' num_to_row(4)  # "D"
+#' @keywords internal
+num_to_row <- function(num) {
+  LETTERS[num]
+}
+
+#' Get row from well ID
+#' @examples
+#' get_row("C05" )  # "C"
+#' @keywords internal
 get_row <- function(well) {
   substring(well, 1, 1)
 }
 
-# "C05" -> "05"
+#' Convert a plate column to a number
+#' @examples
+#' col_to_num("05")  # 5L
+#' @keywords internal
+col_to_num <- function(col) {
+  col %>% as.integer
+}
+
+#' Convert a number to plate column
+#' @examples
+#' num_to_col(5)  # "05"
+#' @keywords internal
+num_to_col <- function(num) {
+  sprintf("%02d", num)
+}
+
+#' Get column from well ID
+#' @examples
+#' get_col("C05" )  # "05"
+#' @keywords internal
 get_col <- function(well) {
   substring(well, 2, 3)
 }

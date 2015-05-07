@@ -10,18 +10,27 @@
 #' TODO what this assay looks like
 #' 
 #' @examples 
-#' \dontrun{
-#' new_plate(dir = "dir", type = WTNEGBRAF)
-#' }
+#' dir <- system.file("sample_data", "small", package = "ddpcrS3")
+#' new_plate(dir = dir, type = WTNEGBRAF)
+#' new_plate(dir = dir, type = "wtnegbraf")
+#' @seealso \code{\link[ddpcrS3]{new_plate}}
 #' @export
 WTNEGBRAF <- "wtnegbraf"
 
+#' Define parent plate type of WT-NEG-BRAF assay
+#' @seealso
+#' \code{\link[ddpcrS3]{parent_plate_type}},
+#' \code{\link[ddpcrS3]{WTNEGBRAF}}
 #' @export
 #' @keywords internal
 parent_plate_type.wtnegbraf <- function(plate) {
   "mutant_wildtype_assay"
 }
 
+#' Define default parameters of WT-NEG-BRAF assay
+#' @seealso
+#' \code{\link[ddpcrS3]{define_params}},
+#' \code{\link[ddpcrS3]{WTNEGBRAF}}
 #' @export
 #' @keywords internal
 define_params.wtnegbraf <- function(plate) {

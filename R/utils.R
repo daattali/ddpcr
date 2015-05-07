@@ -24,7 +24,8 @@ cat0 <- function(...) {
 lol_to_df <- function(lol, name = "well") {
   lol %<>%
     t %>% as.data.frame %>%
-    dplyr::mutate_(.dots = setNames(list(~ row.names(.)), name))
+    dplyr::mutate_(.dots = setNames(list(~ row.names(.)), name)) %>%
+    move_front(name)
   lol[] <- lapply(lol, unlist)
   lol
 }
@@ -86,6 +87,7 @@ merge_dfs_overwrite_col <- function(olddf, newdf, cols, bycol = "well") {
 #' Get the indices of the local maxima in a list of numbers
 #' @keywords internal
 local_maxima <- function(x) {
+  x <- as.numeric(x)
   y <- (c(-.Machine$integer.max, x) %>% diff) > 0L
   y <- rle(y)$lengths %>% cumsum
   y <- y[seq.int(1L, length(y), 2L)]
@@ -151,7 +153,7 @@ is_file <- function(path) {
 point2d <- function(x) {
   stopifnot(x %>% length == 2)
   structure(
-    v %>% as.integer
+    x %>% as.integer
     , class = "point2d"
   )
 }

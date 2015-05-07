@@ -48,7 +48,7 @@ test_that("get_consensus_name_from_data_files works", {
 # -------- Finding the correct data/metadata files ---------
 
 testdir <- function(dirname) {
-  system.file("testdata", dirname, package = "ddpcrS3")
+  system.file("test_data", dirname, package = "ddpcrS3")
 }
 
 test_that("find_data_files basic functionality works", {

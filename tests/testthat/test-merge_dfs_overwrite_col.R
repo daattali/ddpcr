@@ -134,3 +134,26 @@ test_that("if a non-existent column is given, the original df is returned", {
     df2
   )  
 })
+
+test_That("if `cols` is not supplied then all columns from old df are retained", {
+  df1 <- df(a = 1:3, b = c("one", "two", "three"), c = 1:3)
+  df2 <- df(a = 1:3, b = c("ONE", "TWO", "THREE"), c = 3:1)
+  df3 <- df(a = 1:3, b = c("ONE", "TWO", "THREE"), d = 3:1)
+  
+  expect_equal(
+    merge_dfs_overwrite_col(df1, df2, bycol = "a"),
+    df2
+  )
+  expect_equal(
+    merge_dfs_overwrite_col(df2, df1, bycol = "a"),
+    df1
+  )
+  expect_equal(
+    merge_dfs_overwrite_col(df1, df2, "b", bycol = "a"),
+    df(a = 1:3, b = c("ONE", "TWO", "THREE"), c.x = 1:3, c.y = 3:1)
+  )
+  expect_equal(
+    merge_dfs_overwrite_col(df1, df3, bycol = "a"),
+    df(a = 1:3, b = c("ONE", "TWO", "THREE"), c = 1:3, d = 3:1)
+  )
+})
