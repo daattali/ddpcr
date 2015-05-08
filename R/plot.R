@@ -2,6 +2,109 @@
 ## Copyright (C) 2015 Dean Attali
 ## This software is distributed under the AGPL-3 license
 
+#' Plot a ddPCR plate
+#' 
+#' Plot the data of a ddPCR plate. A plate can be plotted throughout any stage
+#' of the analysis, and the most up-to-date data will be shown. For example,
+#' a plot performed after initializing a plat will show all the raw data, but
+#' a plot performed after analyzing a plate will show information such as
+#' empty drops and failed wells.
+#' 
+#' @param x A ddPCR plate.
+#' @param wells Only plot selected wells. Supports range notation, see
+#' \code{\link[ddpcrS3]{subset}}.
+#' @param samples Only plot selected samples.
+#' @param superimpose If \code{TRUE}, show all wells superimposed in one plot;
+#' otherwise, show wells in a grid.
+#' @param show_full_plate If \code{TRUE}, show full 96-well plate; otherwise,
+#' show only plate rows and columns that are used.
+#' @param show_drops Whether or not to show the droplets. Setting to \code{FALSE}
+#' is not useful if the droplets are the only thing shown in the plot, but it
+#' can be useful if there is other information depicated in the plot, such as
+#' any background colours or text that may appear in each well.
+#' @param show_drops_empty Whether or not to show the droplets defined as empty.
+#' See 'Droplet visibility options' below.
+#' @param show_drops_outlier Whether or not to show the droplets defined as
+#' outliers. See 'Droplet visibility options' below.
+#' @param show_failed_wells Whether or not to include wells that are deemed
+#' as failed ddPCR runs.
+#' @param col_drops The default colour to use for any droplet.
+#' @param col_drops_undefined The colour to use for droplets that have not been
+#' analyzed yet. See 'Droplet visibility options' below.
+#' @param col_drops_failed The colour to use for droplets in failed wells.
+#' See 'Droplet visibility options' below.
+#' @param col_drops_empty The colour to use for empty droplets.
+#' See 'Droplet visibility options' below.
+#' @param col_drops_outlier The colour to use for outlier droplets.
+#' See 'Droplet visibility options' below.
+#' @param bg_failed The background colour to use for failed wells.
+#' @param bg_unused The background colour to use for unused wells.
+#' @param alpha_drops The transparency of droplets.
+#' @param alpha_drops_outlier The transparency of outlier droplets.
+#' See 'Droplet visibility options' below.
+#' @param alpha_bg_failed The transparency of the background of failed wells.
+#' @param xlab The label on the X axis.
+#' @param ylab The label on the Y axis.
+#' @param title The title for the plot.
+#' @param show_grid Whether or not to show grid lines.
+#' @param show_grid_labels Whether or not to show numeric labels for the grid
+#' lines along the axes.
+#' @param drops_size Size of droplets.
+#' @param text_size_title Text size of the title.
+#' @param text_size_row_col Text size of the row and column labels.
+#' @param text_size_axes_labels Text size of the X/Y axis labels.
+#' @param text_size_grid_labels Text size of the numeric grid line labels.
+#' @return A ggplot2 plot object.
+#' 
+#' @section Droplet visibility options:
+#' To make it easier to support any plate type with any types of droplet
+#' clusters, there are three categories of special parameters that can always
+#' be used:
+#' 
+#' \itemize{
+#'   \item{\code{show_drops_*}}{ Whether or not to show a specific group of
+#'   droplets.}
+#'   \item{\code{col_drops_*}}{ What colour to use for a specific group of
+#'   droplets.}
+#'   \item{\code{alpha_drops_*}}{ What transparency to use for a specific group
+#'   of droplets.}
+#' }
+#' 
+#' The \code{*} in the parameter name can be replaced by the name of any
+#' droplet cluster. Use the \code{\link[ddpcrS3]{clusters}} function to 
+#' find out what clusters the droplets in a plate can be assigned to.
+#' 
+#' For example, the default clusters that exist in a plain \code{ddpcr_plate}
+#' are "UNDEFINED", "FAILED", "OUTLIER", and "EMPTY".  This means that if you
+#' want to hide the empty drops and make the transparency of drops in failed
+#' wells 0.5, you could add the two parameters \code{show_drops_empty = FALSE}
+#' and \code{alpha_drops_failed = 0.5}. Note that letter case is not important.
+#' If another plate type defines a new clsuter of type "MUTANT" and you want to
+#' show these drops in red, you can add the parameter
+#' \code{col_drops_mutant = "red"}.
+#' 
+#' Note that some of the more common combinations of these parameters are
+#' defined by default (for example, \code{col_drops_failed} is defined in the
+#' list of parameters), but these three parameter categories will work for
+#' any cluster type.
+#' 
+#' @section Extending ddpcr_plate:
+#' If you create your own plate type, this default plot function might be
+#' enough if there is no extra information you want to display in a plot.
+#' If you do need to provide a more customized plot function, it can be
+#' a good idea to use the output from this plot function as a basis and only
+#' add the code that is necessary to append to the plot.  See
+#' \code{\link[ddpcrS3]{plot.crosshair_thresholds}} as an example of how to
+#' extend this plot function.B
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcrS3")
+#' plate <- new_plate(dir)
+#' plot(plate)
+#' plate <- plate %>% analyze
+#' plot(plate)
+#' plot(plate, "B01:C06", show_drops_empty = TRUE, col_drops_empty = "red")
+#' }
 #' @export
 plot.ddpcr_plate <- function(
   x,
@@ -22,22 +125,25 @@ plot.ddpcr_plate <- function(
   ...)
 {
   
+  # only keep the requested wells/samples
   plate <- subset(x, wells, samples)
   rm(x)
   
+  # don't show failed wells
   if (!show_failed_wells &&
       plate %>% has_step('REMOVE_FAILURES') &&
       plate %>% status(plate) >= step(plate, 'REMOVE_FAILURES')) {
     plate %<>% subset(wells_success(.))
   }
   
-  all_params <- c(as.list(environment()), list(...))
-  
   x_var <- x_var(plate)
   y_var <- y_var(plate)
   
   meta <- plate_meta(plate)
   data <- plate_data(plate)
+  
+  # make a list of all parameters available, including default and ... params
+  all_params <- c(as.list(environment()), list(...))  
   
   # prepare the data to be plotted
   meta[['row']] %<>% as.factor
@@ -59,8 +165,8 @@ plot.ddpcr_plate <- function(
            function(cluster) {
              param_name <- paste0("show_drops_", cluster) %>% tolower
              param_idx <- which(param_name == all_params %>% names %>% tolower)
-             if (length(param_idx) == 1) {
-               show_cluster <- as.logical(all_params[[param_idx]])
+             if (length(param_idx) > 0) {
+               show_cluster <- as.logical(all_params[[param_idx %>% tail(1)]])
              } else {
                show_cluster <- TRUE
              }
@@ -68,9 +174,9 @@ plot.ddpcr_plate <- function(
            },
            logical(1)
     )  
-  
   data %<>% dplyr::filter_(~ show_clusters[cluster]) %>% droplevels
     
+  # make sure after removing unwanted drops/wells, we still have something to show
   if (plate %>% wells_used %>% length == 0) {
     err_msg("There are no wells to show.")
   }
@@ -122,7 +228,7 @@ plot.ddpcr_plate <- function(
   # show the drops
   if (show_drops) {
     
-    # define the colours of the clusters
+    # define the colour of each droplet
     visible_clusters <- data[['cluster']] %>% unique %>% as.character %>% as.numeric %>% sort
     cluster_cols <- 
       vapply(visible_clusters,
@@ -130,8 +236,8 @@ plot.ddpcr_plate <- function(
                cluster_name <- cluster_name(plate, cluster) %>% tolower
                param_name <- paste0("col_drops_", cluster_name)
                param_idx <- which(param_name == all_params %>% names %>% tolower)
-               if (length(param_idx) == 1) {
-                 cluster_col <- all_params[[param_idx]]
+               if (length(param_idx) > 0) {
+                 cluster_col <- all_params[[param_idx %>% tail(1)]]
                } else {
                  cluster_col <- col_drops
                }
@@ -147,8 +253,8 @@ plot.ddpcr_plate <- function(
                cluster_name <- cluster_name(plate, cluster) %>% tolower
                param_name <- paste0("alpha_drops_", cluster_name)
                param_idx <- which(param_name == all_params %>% names %>% tolower)
-               if (length(param_idx) == 1) {
-                 cluster_alpha <- all_params[[param_idx]]
+               if (length(param_idx) > 0) {
+                 cluster_alpha <- all_params[[param_idx %>% tail(1)]]
                } else {
                  cluster_alpha <- alpha_drops
                }
@@ -157,6 +263,7 @@ plot.ddpcr_plate <- function(
              numeric(1)
       )
 
+    # plot the droplets
     p <- p +
       ggplot2::geom_point(
         data = data,

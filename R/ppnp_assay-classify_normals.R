@@ -31,10 +31,7 @@ classify_droplets_normal <- function(plate, well_id, plot = FALSE) {
   variable_var <- variable_dim_var(plate)  
   
   filled_borders <- get_filled_borders(plate, well_id)
-  filled <-
-    well_data %>%
-    dplyr::filter_(lazyeval::interp(~ var %btwn% filled_borders,
-                                    var = as.name(positive_var)))
+  filled <- get_filled_drops(plate, well_id, filled_borders)
   
   for (i in seq(params(plate, 'CLASSIFY', 'NUM_ATTEMPTS_SEGREGATE'))) {
     quiet(

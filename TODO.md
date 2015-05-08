@@ -20,9 +20,10 @@
 
 - separate functions into proper files
 
-- add tests (kras, wtnegbraf)
+- add tests
 
-- add documentation
+- add documentation (type-kras, type-wtnegbraf, type-ppnp_assay, ppnp_assay-reclassify/empty/classify*,
+                     plate, outlieres, ...)
 
 
 

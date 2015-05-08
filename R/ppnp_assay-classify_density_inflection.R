@@ -13,10 +13,7 @@ classify_droplets_density_inflection_points <- function(plate, well_id, plot = F
   variable_var <- variable_dim_var(plate)
 
   filled_borders <- get_filled_borders(plate, well_id)
-  filled <-
-    well_data %>%
-    dplyr::filter_(lazyeval::interp(~ var %btwn% filled_borders,
-                                    var = as.name(positive_var)))
+  filled <- get_filled_drops(plate, well_id, filled_borders)
   
   # whether or not the result is found using the first attempted bandwidth
   bw_orig <- TRUE

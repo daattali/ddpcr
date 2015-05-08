@@ -10,6 +10,7 @@
 #' of well IDs, then any well corresponding to any of the sample names will be
 #' kept. Either well IDs or sample names must be provided, but not both.
 #' 
+#' @section Range notation:
 #' The most basic way to select wells is to provide a vector of wells such as
 #' \code{c("B03", "C12")}. When selecting wells, a special range notation is
 #' supported to make it easier to select many wells: use a colon (\code{:}) to specify a
@@ -22,8 +23,8 @@
 #' \code{samples} parameter.
 #' 
 #' @param x The ddPCR plate to subset from
-#' @param wells Vector or range notation of wells to select (see Details section
-#' for more information on range notation).
+#' @param wells Vector or range notation of wells to select (see Range Notation
+#' section for more information).
 #' @param samples Vector of sample names to select.
 #' @param ... Ignored
 #' @return Plate with data only from the specified wells/samples.

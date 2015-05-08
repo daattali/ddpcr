@@ -9,8 +9,8 @@
 \arguments{
 \item{x}{The ddPCR plate to subset from}
 
-\item{wells}{Vector or range notation of wells to select (see Details section
-for more information on range notation).}
+\item{wells}{Vector or range notation of wells to select (see Range Notation
+section for more information).}
 
 \item{samples}{Vector of sample names to select.}
 
@@ -26,6 +26,8 @@ Select specific wells or samples from a ddPCR plate.
 Keeps only data from the selected wells. If sample names are provided instead
 of well IDs, then any well corresponding to any of the sample names will be
 kept. Either well IDs or sample names must be provided, but not both.
+}
+\section{Range notation}{
 
 The most basic way to select wells is to provide a vector of wells such as
 \code{c("B03", "C12")}. When selecting wells, a special range notation is

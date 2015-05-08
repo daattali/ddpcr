@@ -22,7 +22,8 @@ new_plate(dir = dir, type = WTNEGBRAF)
 new_plate(dir = dir, type = "wtnegbraf")
 }
 \seealso{
-\code{\link[ddpcrS3]{new_plate}}
+\code{\link[ddpcrS3]{new_plate}},
+\code{\link[ddpcrS3]{PPNP_ASSAy}}
 }
 \keyword{datasets}
 

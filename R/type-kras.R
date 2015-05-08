@@ -13,7 +13,9 @@
 #' dir <- system.file("sample_data", "small", package = "ddpcrS3")
 #' new_plate(dir = dir, type = KRAS)
 #' new_plate(dir = dir, type = "kras")
-#' @seealso \code{\link[ddpcrS3]{new_plate}}
+#' @seealso
+#' \code{\link[ddpcrS3]{new_plate}},
+#' \code{\link[ddpcrS3]{PPNP_ASSAy}}
 #' @export
 KRAS <- "kras"
 

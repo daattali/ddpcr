@@ -10,14 +10,14 @@ test_that("is_dir is TRUE when passed a directory", {
 test_that("is_dir is FALSE when passed a file or non-existent dir", {
   expect_false(is_dir("nosuchdir"))
   expect_false(is_dir("nosuchdir/"))
-  expect_false(is_dir("test-rutilsMock.R"))
-  expect_false(is_dir("./test-rutilsMock.R"))
+  expect_false(is_dir("test-none.R"))
+  expect_false(is_dir("./test-none.R"))
   expect_false(is_dir("../testthat.R"))
 })
 
 test_that("is_file is TRUE when passed a file", {
-  expect_true(is_file("test-is_dir_file.R"))
-  expect_true(is_file("./test-is_dir_file.R"))
+  expect_true(is_file("test-utils.R"))
+  expect_true(is_file("./test-utils.R"))
   expect_true(is_file("../testthat.R"))
 })
 

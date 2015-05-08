@@ -48,7 +48,7 @@ test_that("get_consensus_name_from_data_files works", {
 # -------- Finding the correct data/metadata files ---------
 
 testdir <- function(dirname) {
-  system.file("test_data", dirname, package = "ddpcrS3")
+  system.file("sample_data", dirname, package = "ddpcrS3")
 }
 
 test_that("find_data_files basic functionality works", {
@@ -89,7 +89,7 @@ test_that("find_meta_file basic functionality works", {
 # -------- Reading the data ---------
 
 .empty_plate <-
-  system.file("test_data", "empty_plate.rds", package = "ddpcrS3") %>%
+  system.file("sample_data", "empty_plate.rds", package = "ddpcrS3") %>%
   load_plate
 get_empty_plate <- function() {
   .empty_plate
@@ -178,7 +178,6 @@ test_that("read_files inconsistent data files, no metadata file", {
   data_files <- find_data_files(testdir("read_complex"))
   expected_data <- readr::read_csv(file.path(testdir("read_complex"),
                                              "expected_data.csv"))
-  mode(expected_meta$sample) <- "logical"
   
   suppressWarnings({
     plate <- get_empty_plate() %>% read_files(data_files)

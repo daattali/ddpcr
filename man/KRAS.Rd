@@ -22,7 +22,8 @@ new_plate(dir = dir, type = KRAS)
 new_plate(dir = dir, type = "kras")
 }
 \seealso{
-\code{\link[ddpcrS3]{new_plate}}
+\code{\link[ddpcrS3]{new_plate}},
+\code{\link[ddpcrS3]{PPNP_ASSAy}}
 }
 \keyword{datasets}
 
