@@ -54,6 +54,7 @@
 #' @param text_size_row_col Text size of the row and column labels.
 #' @param text_size_axes_labels Text size of the X/Y axis labels.
 #' @param text_size_grid_labels Text size of the numeric grid line labels.
+#' @param ... Ignored.
 #' @return A ggplot2 plot object.
 #' 
 #' @section Droplet visibility options:

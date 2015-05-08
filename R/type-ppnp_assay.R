@@ -92,11 +92,17 @@ define_params.ppnp_assay <- function(plate) {
 #' dir <- system.file("sample_data", "small", package = "ddpcrS3")
 #' plate <- new_plate(dir = dir, type = PPNP_ASSAY)
 #' positive_dim(plate) <- "Y"
+#' @name positive_dim
+NULL
+
+#' @rdname positive_dim
 #' @export
 positive_dim <- function(plate) {
   stopifnot(plate %>% inherits("ppnp_assay"))
   params(plate, 'GENERAL', 'POSITIVE_DIMENSION') %>% toupper
 }
+#' @rdname positive_dim
+#' @export
 `positive_dim<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("ppnp_assay"))
   value %<>% toupper
@@ -118,11 +124,19 @@ positive_dim <- function(plate) {
 #' variable_dim(plate)
 #' positive_dim(plate)
 #' @keywords internal
+#' @name variable_dim
+NULL
+
+#' @rdname variable_dim
+#' @keywords internal
 #' @export
 variable_dim <- function(plate) {
   stopifnot(plate %>% inherits("ppnp_assay"))
   params(plate, 'GENERAL', 'POSITIVE_DIMENSION') %>% toupper %>% other_dim
 }
+#' @rdname variable_dim
+#' @keywords internal
+#' @export
 `variable_dim<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("ppnp_assay"))
   value %<>% toupper
@@ -169,7 +183,6 @@ variable_dim_var <- function(plate) {
 #' @keywords internal
 #' @export
 other_dim <- function(dim) {
-  stopifnot(plate %>% inherits("ppnp_assay"))
   ifelse(dim %>% toupper == "X", "Y", "X")
 }
 

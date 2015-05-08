@@ -2,9 +2,12 @@
 % Please edit documentation in R/type-ppnp_assay.R
 \name{variable_dim}
 \alias{variable_dim}
+\alias{variable_dim<-}
 \title{Variable dimension in a PPNP assay}
 \usage{
 variable_dim(plate)
+
+variable_dim(plate) <- value
 }
 \description{
 Get or set the dimension (X or Y) that can have both high and low intensities

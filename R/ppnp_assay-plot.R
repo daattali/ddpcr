@@ -1,3 +1,41 @@
+## ddpcr - R package for analysis of droplet digital PCR data
+## Copyright (C) 2015 Dean Attali
+## This software is distributed under the AGPL-3 license
+
+#' Plot a ddPCR plate of type PPNP assay
+#' 
+#' Same plot as \code{\link[ddpcrS3]{plot.ddpcr_plate}} but with a few extra
+#' features that are specific to PPNP assays. The main additions are that
+#' the negative frequency of each well can be written in each well, and well
+#' background colours can be used to differentiate between wells with a
+#' significant negative cluster vs wells with mostly positive drops.
+#' 
+#' @inheritParams plot.ddpcr_plate
+#' @param col_drops_negative 
+#' @param col_drops_positive 
+#' @param col_drops_rain 
+#' @param show_negative_freq 
+#' @param text_size_negative_freq 
+#' @param alpha_drops_low_negative_freq 
+#' @param show_low_high_neg_freq 
+#' @param bg_negative 
+#' @param bg_positive 
+#' @param alpha_bg_low_high_neg_freq 
+#' @param ... Parameters to pass to \code{\link[ddpcrS3]{plot.ddpcr_plate}}.
+#' @return A ggplot2 plot object.
+#' @seealso
+#' \code{\link[ddpcrS3]{plot.ddpcr_plate}},
+#' \code{\link[ddpcrS3]{PPNP_ASSAY}}
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcrS3")
+#' plate <- new_plate(dir, type = PPNP_ASSAY)
+#' positive_dim(plate) <- "Y"
+#' plot(plate)
+#' plate <- plate %>% analyze
+#' plot(plate)
+#' plot(plate, "B01:C06", col_drops_rain = "blue")
+#' }
 #' @export
 plot.ppnp_assay <- function(
   x,
@@ -28,26 +66,27 @@ plot.ppnp_assay <- function(
   meta[['col']] %<>% as.factor  
   meta_used <- meta %>% dplyr::filter_(~ used)
   
+  # if the drops have not been classified yet, we can't show negative freq
   if (status(plate) < step(plate, 'CLASSIFY')) {
     show_negative_freq = FALSE
     show_low_high_neg_freq = FALSE
   }
   
-  # superimpose all the data from all the wells onto one plot instead of a grid
+  # if we're superimposing all wells into one, then don't show negative freq
   if (superimpose) {
     show_drops = TRUE
     show_negative_freq = FALSE
     show_low_high_neg_freq = FALSE
   }
   
-  # define the colours of the backgrounds of wells with high/low MT freq
+  # define the colours of the backgrounds of wells with high/low negative freq
   if (wells_positive(plate) %>% length > 0) {
     bg_cols <- c(bg_positive, bg_negative)
   } else {
     bg_cols <- c(bg_negative)
   }
   
-  # extract the mutant drops in wildtype wells
+  # extract the negative drops in mostly-positive wells
   neg_drops_low_freq <-
     plate %>%
     plate_data %>%
@@ -56,7 +95,7 @@ plot.ppnp_assay <- function(
   neg_drops_low_freq[['row']] <- substring(neg_drops_low_freq[['well']], 1, 1) %>% as.factor
   neg_drops_low_freq[['col']] <- substring(neg_drops_low_freq[['well']], 2, 3) %>% as.integer %>% as.factor
   
-  # show the drops
+  # show the negative drops in mostly-positive wells
   if (show_drops) {
     if (neg_drops_low_freq %>% nrow > 0) {
       p <- p +
@@ -70,7 +109,7 @@ plot.ppnp_assay <- function(
     }
   }
   
-  # show mutant vs wildtype well as background colour
+  # show mostly-positive vs significant-negative well as background colour
   if (show_low_high_neg_freq) {
     if (sum(meta_used[['success']], na.rm = TRUE) > 0) {
       p <- p +
@@ -86,10 +125,11 @@ plot.ppnp_assay <- function(
   
   ggb <- ggplot2::ggplot_build(p)
   
-  # show the mutant frequency as text on the plot
+  # show the negative frequency as text on each well
   if (show_negative_freq) {
     if (sum(meta_used[['success']], na.rm = TRUE) > 0) {
       
+      # determine where on the plot to show the text, depending on where the drops are
       if (!show_drops) {
         text_pos_x <- 0
         text_pos_y <- 0

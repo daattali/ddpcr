@@ -89,6 +89,8 @@ lines along the axes.}
 \item{text_size_axes_labels}{Text size of the X/Y axis labels.}
 
 \item{text_size_grid_labels}{Text size of the numeric grid line labels.}
+
+\item{...}{Ignored.}
 }
 \value{
 A ggplot2 plot object.
@@ -142,7 +144,7 @@ If you do need to provide a more customized plot function, it can be
 a good idea to use the output from this plot function as a basis and only
 add the code that is necessary to append to the plot.  See
 \code{\link[ddpcrS3]{plot.crosshair_thresholds}} as an example of how to
-extend this plot function.
+extend this plot function.B
 }
 \examples{
 \dontrun{

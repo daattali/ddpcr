@@ -2,9 +2,12 @@
 % Please edit documentation in R/type-ppnp_assay.R
 \name{positive_dim}
 \alias{positive_dim}
+\alias{positive_dim<-}
 \title{Positive dimension in a PPNP assay}
 \usage{
 positive_dim(plate)
+
+positive_dim(plate) <- value
 }
 \description{
 Get or set the dimension (X or Y) that has a high intensity in all non-empty
