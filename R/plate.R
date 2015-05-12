@@ -269,6 +269,7 @@ plate_meta <- function(plate, only_used = FALSE) {
   plate
 }
 
+#' @export
 well_info <- function(plate, well_id, var) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   

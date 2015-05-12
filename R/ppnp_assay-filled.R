@@ -67,6 +67,7 @@ get_filled_borders <- function(plate, well_id) {
 #' @return Dataframe with all filled droplets in the given well.
 #' @examples 
 #' file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcrS3")
+#' plate <- load_plate(file)
 #' get_filled_drops(plate, "B06")
 #' get_filled_drops(plate, "B06", get_filled_borders(plate, "B06"))
 #' @seealso \code{\link[ddpcrS3]{PPNP_ASSAy}},
