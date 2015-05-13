@@ -51,6 +51,24 @@ drops.}
 \item{alpha_bg_low_high_neg_freq}{The transparency value for \code{bg_negative}
 and \code{bg_positive}.}
 
+\item{col_drops_positive}{}
+
+\item{col_drops_rain}{}
+
+\item{show_negative_freq}{}
+
+\item{text_size_negative_freq}{}
+
+\item{alpha_drops_low_negative_freq}{}
+
+\item{show_low_high_neg_freq}{}
+
+\item{bg_negative}{}
+
+\item{bg_positive}{}
+
+\item{alpha_bg_low_high_neg_freq}{}
+
 \item{superimpose}{If \code{TRUE}, show all wells superimposed in one plot;
 otherwise, show wells in a grid.}
 
