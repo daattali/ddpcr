@@ -3,6 +3,7 @@ getTabDataset <- function() {
     title = "Dataset",
     id = "datasetTab",
     value = "datasetTab",
+    name = "datasetTab",
     
     h2("Select a dataset using one of the following options"),
 

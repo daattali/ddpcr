@@ -1,10 +1,15 @@
 library(shiny)
 library(shinyjs)
+library(ddpcrS3)
 
 # allow uploading files up to 100MB
 options(shiny.maxRequestSize = 100*1024^2) 
 
 shinyServer(function(input, output, session) {
+  # NOTE (daattali) the following line is a hacky fix to a shiny bug
+  # https://github.com/rstudio/shiny/issues/827
+  # if the bug gets resolved, the following line can be removed
+  updateTabsetPanel(session, "mainNav", "datasetTab")
 
   # reactive values we will use throughout the app
   dataValues <- reactiveValues(

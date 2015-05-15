@@ -2,6 +2,7 @@
 ## Copyright (C) 2015 Dean Attali
 ## This software is distributed under the AGPL-3 license
 
+#' @export
 CROSSHAIR_THRESHOLDS <- "crosshair_thresholds"
 
 define_clusters.crosshair_thresholds <- function(plate) {

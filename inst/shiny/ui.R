@@ -1,11 +1,12 @@
 library(shiny)
+library(ddpcrS3)
 
 source("tab-dataset.R")
 source("tab-analyze.R")
 source("tab-plot.R")
 
 shinyUI(navbarPage(
-  # title = "ddPCR Analysis", # creates ghost tab, bug in shiny
+  title = tags$b("ddPCR Analysis"),
   windowTitle = "ddPCR Analysis",
   id = "mainNav",
   inverse = TRUE,
@@ -15,7 +16,6 @@ shinyUI(navbarPage(
 #             includeCSS(file.path(staticDir, 'style.css'))
 #   ),
   
-#
   getTabDataset(),
   getTabAnalyze(),
   getTabPlot()
