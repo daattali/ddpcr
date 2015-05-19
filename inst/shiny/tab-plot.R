@@ -1,14 +1,12 @@
-getTabPlot <- function() {
-  tabPanel(
-    title = "Plot",
-    id = "plotTab",
-    value = "plotTab",
-    
-    actionButton(
-      "plotBtn",
-      "Plot",
-      class = "btn-primary"
-    ),
-    plotOutput("plot")
-  )
-}
+tabPanel(
+  title = "Plot",
+  id = "plotTab",
+  value = "plotTab",
+  
+  actionButton(
+    "plotBtn",
+    "Plot",
+    class = "btn-primary"
+  ),
+  plotOutput("plot")
+)
