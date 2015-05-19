@@ -69,6 +69,15 @@ shinyServer(function(input, output, session) {
       dataValues$plate %>% plot
     }, height = "auto")
   })
+  
+  output$saveBtn <- downloadHandler(
+    filename = function() {
+      dataValues$plate %>% name %>% normalize_to_rds
+    },
+    content = function(file) {
+      save_plate(dataValues$plate, file)
+    }
+  )  
 })
 
 fixUploadedFilesNames <- function(x) {
