@@ -50,7 +50,7 @@ shinyServer(function(input, output, session) {
   
   # whenever the plate gets updated
   observeEvent(dataValues$plate, {
-    cat("PLATE UPDATED\n")
+    
     # update the plate summary
     output$analyzePlateData <- renderPrint({
       dataValues$plate
@@ -93,6 +93,61 @@ shinyServer(function(input, output, session) {
   # toggle showing/hiding the well selection plot
   observeEvent(input$settingsShowAllWells, {
     toggle("settingsAllWells")
+  })
+  
+  # When the plate changes, update the advanced settings UI
+  observeEvent(dataValues$plate, {
+    plate <- dataValues$plate
+    output$advancedSettings <- renderUI({
+      
+      # loop through the parameters and create an input for each one
+      lapply(
+        plate %>% params %>% names,
+        function(major_name) {
+          lapply(
+            plate %>% params %>% .[[major_name]] %>% names,
+            function(minor_name) {
+              param_val <- plate %>% params %>% .[[c(major_name, minor_name)]] 
+              param_id <- sprintf("%s__%s", major_name, minor_name)
+              param_name <- sprintf("%s::%s", major_name, minor_name)
+              
+              # in order to ensure the correct type for each variable,
+              # we need to make sure that boolean/numeric/string parameters
+              # are rendered in an appropriate input type. Otherwise if I used
+              # textInput for all of them, then all parameters would be
+              # converted to string when reading them back.
+              if (param_val %>% is.logical) {
+                input_type <- checkboxInput
+              } else if (param_val %>% is.numeric) {
+                input_type <- numericInput
+              } else {
+                input_type <- textInput
+              }
+              do.call(input_type, list(param_id, param_name, param_val))
+            }
+          )
+        }
+      )
+    })
+  })
+
+  # When the advanced settings update button is clicked
+  observeEvent(input$updateAdvancedSettings, {
+    lapply(
+      dataValues$plate %>% params %>% names,
+      function(major_name) {
+        lapply(
+          dataValues$plate %>% params %>% .[[major_name]] %>% names,
+          function(minor_name) {
+            param_id <- sprintf("%s__%s", major_name, minor_name)
+            # if an advanced param is not empty, save it
+            if (!is.null(input[[param_id]]) && !is.na(input[[param_id]])) {
+              params(dataValues$plate, major_name, minor_name) <- input[[param_id]]
+            }
+          }
+        )
+      }
+    )    
   })
   
   # --- Analyze tab --- #

@@ -17,7 +17,7 @@ shinyUI(tagList(
     windowTitle = "ddPCR Analysis",
     id = "mainNav",
     inverse = TRUE,
-  
+    
     source("ui-tab-dataset.R",  local = TRUE)$value,
     source("ui-tab-settings.R", local = TRUE)$value,
     source("ui-tab-analyze.R",  local = TRUE)$value,
