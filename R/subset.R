@@ -51,7 +51,7 @@ subset.ddpcr_plate <- function(x, wells, samples, ...) {
   }
   
   # figure out what wells to keep
-  if (!missing(wells)) {
+  if (!missing(wells) && nzchar(wells)) {
     wells %<>% paste(collapse = ",")
     wells %<>% toupper
     wells %<>% range_list_to_vec

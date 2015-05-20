@@ -1,5 +1,8 @@
+# This is the main UI file that initializes the UI and aggregates all the tabs
+
 library(shiny)
 library(ddpcrS3)
+library(shinyjs)
 
 shinyUI(tagList(
   shinyjs::useShinyjs(),

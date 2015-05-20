@@ -11,6 +11,8 @@ shinyServer(function(input, output, session) {
     plate = NULL
   )
   
+  # --- Dataset tab --- #
+  
   # when data files are being chosen
   observeEvent(input$uploadDataFiles, ignoreNULL = FALSE, {
     shinyjs::toggleState("uploadFilesBtn", !is.null(input$uploadDataFiles))
@@ -44,45 +46,64 @@ shinyServer(function(input, output, session) {
     updateTabsetPanel(session, "mainNav", "analyzeTab")
   })
   
+  # --- General --- #
+  
   # whenever the plate gets updated
   observeEvent(dataValues$plate, {
-    cat("PLATE UPDATED")
-    output$anayzePlateData <- renderPrint({
+    cat("PLATE UPDATED\n")
+    # update the plate summary
+    output$analyzePlateData <- renderPrint({
       dataValues$plate
     })
     
+    # update the settings
     updateTextInput(session, "settingsXvar", value = dataValues$plate %>% x_var)
     updateTextInput(session, "settingsYvar", value = dataValues$plate %>% y_var)
-    #text("settingsAllWells", paste(dataValues$plate %>% wells_used, collapse = ", "))
     
-    ppp <-       ddpcrS3:::plot.ddpcr_plate(dataValues$plate, show_drops = FALSE,
-                                            bg_unused = "black", bg_failed = "white",
-                                            text_size_row_col = 20, xlab = NULL, ylab = NULL)
-    output$wellsUsedPlot <- renderPlot({
-      ppp
-    }, width = 50 * (1+attr(ppp, 'ddpcr_cols')),
-       height = 50 * (1+attr(ppp, 'ddpcr_rows')))
+    # update the plot that shows what wells are available
+    p <-
+      ddpcrS3:::plot.ddpcr_plate(
+        dataValues$plate, show_drops = FALSE,
+        bg_unused = "black", bg_failed = "white", bg_plot = "#f8f8f8",
+        text_size_row_col = 20, xlab = NULL, ylab = NULL
+      )
+    p_width <- 50 * (1 + attr(p, 'ddpcr_cols'))
+    p_height <- 50 * (1 + attr(p, 'ddpcr_rows'))
+    output$wellsUsedPlot <- renderPlot({p}, width = p_width, height = p_height)
   })  
   
-  # when the main navigation bar changes focus to a new tab
-  observeEvent(input$mainNav, {
-    if (input$mainNav == "analyzeTab") {
+  # --- Settings tab --- #
 
-    }
+  # plot that helps select wells is clicked
+  observeEvent(input$wellsUsedPlotClick, {
+    updateTextInput(session, "settingsSubset",
+                    value = paste0(input$settingsSubset,
+                                   input$wellsUsedPlotClick$panelvar2,
+                                   input$wellsUsedPlotClick$panelvar1,
+                                   ", "))
   })
+  
+  # update settings button is clicked
+  observeEvent(input$updateSettings, {
+    x_var(dataValues$plate) <- input$settingsXvar
+    y_var(dataValues$plate) <- input$settingsYvar
+    dataValues$plate <- subset(dataValues$plate, input$settingsSubset)
+  })
+  
+  # toggle showing/hiding the well selection plot
+  observeEvent(input$settingsShowAllWells, {
+    toggle("settingsAllWells")
+  })
+  
+  # --- Analyze tab --- #
   
   # analyze button is clicked
   observeEvent(input$analyzeBtn, {
     dataValues$plate <- dataValues$plate %>% analyze
-    updateTabsetPanel(session, "mainNav", "plotTab")
+    #updateTabsetPanel(session, "mainNav", "plotTab")
   })
   
-  observeEvent(input$plotBtn, {
-    output$plot <- renderPlot({
-      dataValues$plate %>% plot
-    }, height = "auto")
-  })
-  
+  # save button (download dataset) button is clicked
   output$saveBtn <- downloadHandler(
     filename = function() {
       dataValues$plate %>% name %>% normalize_to_rds
@@ -90,21 +111,20 @@ shinyServer(function(input, output, session) {
     content = function(file) {
       save_plate(dataValues$plate, file)
     }
-  )
+  )  
+  # --- Plot tab --- #
   
-  
-  
-  observeEvent(input$updateSettings, {
-    x_var(dataValues$plate) <- input$settingsXvar
-    y_var(dataValues$plate) <- input$settingsYvar
-    dataValues$plate <- subset(dataValues$plate, input$settingsSubset)
+  # plot button is clicked
+  observeEvent(input$plotBtn, {
+    output$plot <- renderPlot({
+      dataValues$plate %>% plot
+    }, height = "auto")
   })
   
-  observeEvent(input$settingsShowAllWells, {
-    toggle("settingsAllWells")
-  })
 })
 
+# When files get uploaded, their new filenames are gibberish.
+# This function renames all uploaded files to their original names
 fixUploadedFilesNames <- function(x) {
   if (is.null(x)) {
     return()

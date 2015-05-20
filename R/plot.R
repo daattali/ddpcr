@@ -37,6 +37,7 @@
 #' See 'Droplet visibility options' below.
 #' @param col_drops_outlier The colour to use for outlier droplets.
 #' See 'Droplet visibility options' below.
+#' @param bg_plot The background colour for the plot.
 #' @param bg_failed The background colour to use for failed wells.
 #' @param bg_unused The background colour to use for unused wells.
 #' @param alpha_drops The transparency of droplets.
@@ -115,7 +116,7 @@ plot.ddpcr_plate <- function(
   show_failed_wells = TRUE,
   col_drops = "black", col_drops_undefined = "black", col_drops_failed = "black",
   col_drops_empty = "black", col_drops_outlier = "orange",
-  bg_failed = "#111111", bg_unused = "#FFFFFF",
+  bg_plot = "transparent", bg_failed = "#111111", bg_unused = "#FFFFFF",
   alpha_drops = 0.1, alpha_drops_outlier = 1,
   alpha_bg_failed = 0.7,
   xlab = x_var(plate), ylab = y_var(plate), title = NULL,
@@ -205,7 +206,8 @@ plot.ddpcr_plate <- function(
       title            = ggplot2::element_text(size = text_size_title),
       axis.title       = ggplot2::element_text(size = text_size_axes_labels),
       axis.text        = ggplot2::element_text(size = text_size_grid_labels),
-      strip.text       = ggplot2::element_text(size = text_size_row_col)
+      strip.text       = ggplot2::element_text(size = text_size_row_col),
+      plot.background  = ggplot2::element_rect(fill = bg_plot, color = bg_plot)
     )
   
   # superimpose all the data from all the wells onto one plot instead of a grid

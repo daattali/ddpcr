@@ -1,3 +1,5 @@
+# This file contains the UI for the dataset selection tab
+
 tabPanel(
   title = "Dataset",
   id = "datasetTab",
@@ -51,6 +53,7 @@ tabPanel(
       )
     ),
     
+    # tab for loading existing dataset
     tabPanel(
       title = "Load saved data",
       id = "loadDatasetTab",

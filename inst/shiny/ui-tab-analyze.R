@@ -1,3 +1,5 @@
+# This file contains the UI for the data analysis tab
+
 tabPanel(
   title = "Analyze",
   id = "analyzeTab",
@@ -10,5 +12,5 @@ tabPanel(
   ),
   br(), br(),
   downloadButton('saveBtn', 'Save data'),
-  tags$pre(textOutput("anayzePlateData"))
+  tags$pre(textOutput("analyzePlateData"))
 )
