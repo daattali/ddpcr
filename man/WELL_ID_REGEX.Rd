@@ -4,7 +4,7 @@
 \name{WELL_ID_REGEX}
 \alias{WELL_ID_REGEX}
 \title{regex for a well ID}
-\format{\preformatted{ chr "^[A-H][0-1][0-9]$"
+\format{\preformatted{ chr "^[A-H]([0-1])?[0-9]$"
 }}
 \usage{
 WELL_ID_REGEX

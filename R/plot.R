@@ -312,6 +312,12 @@ plot.ddpcr_plate <- function(
   p <- p +
     ggplot2::coord_fixed(
       ratio = diff(ggb$panel$ranges[[1]]$x.range) / diff(ggb$panel$ranges[[1]]$y.range))
+ 
+  # attach information about how many rows and columns are displayed
+  rows <- meta[['row']] %>% unique %>% length
+  cols <- meta[['col']] %>% unique %>% length
+  attr(p, 'ddpcr_rows') <- rows
+  attr(p, 'ddpcr_cols') <- cols
   
   # Done!
   p

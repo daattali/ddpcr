@@ -52,10 +52,9 @@ subset.ddpcr_plate <- function(x, wells, samples, ...) {
   
   # figure out what wells to keep
   if (!missing(wells)) {
+    wells %<>% paste(collapse = ",")
     wells %<>% toupper
-    if (is_range(wells)) {
-      wells %<>% range_list_to_vec
-    }
+    wells %<>% range_list_to_vec
   } else if (!missing(samples)) {
     wells <-
       plate_meta(x) %>%
@@ -118,7 +117,7 @@ range_list_to_vec <- function(rangel) {
 #' regex for a well ID
 #' @keywords internal
 #' @export
-WELL_ID_REGEX <- "^[A-H][0-1][0-9]$"
+WELL_ID_REGEX <- "^[A-H]([0-1])?[0-9]$"
 
 #' Extract the two endpoints of a range
 #' @examples

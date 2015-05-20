@@ -46,9 +46,22 @@ shinyServer(function(input, output, session) {
   
   # whenever the plate gets updated
   observeEvent(dataValues$plate, {
+    cat("PLATE UPDATED")
     output$anayzePlateData <- renderPrint({
       dataValues$plate
     })
+    
+    updateTextInput(session, "settingsXvar", value = dataValues$plate %>% x_var)
+    updateTextInput(session, "settingsYvar", value = dataValues$plate %>% y_var)
+    #text("settingsAllWells", paste(dataValues$plate %>% wells_used, collapse = ", "))
+    
+    ppp <-       ddpcrS3:::plot.ddpcr_plate(dataValues$plate, show_drops = FALSE,
+                                            bg_unused = "black", bg_failed = "white",
+                                            text_size_row_col = 20, xlab = NULL, ylab = NULL)
+    output$wellsUsedPlot <- renderPlot({
+      ppp
+    }, width = 50 * (1+attr(ppp, 'ddpcr_cols')),
+       height = 50 * (1+attr(ppp, 'ddpcr_rows')))
   })  
   
   # when the main navigation bar changes focus to a new tab
@@ -77,7 +90,19 @@ shinyServer(function(input, output, session) {
     content = function(file) {
       save_plate(dataValues$plate, file)
     }
-  )  
+  )
+  
+  
+  
+  observeEvent(input$updateSettings, {
+    x_var(dataValues$plate) <- input$settingsXvar
+    y_var(dataValues$plate) <- input$settingsYvar
+    dataValues$plate <- subset(dataValues$plate, input$settingsSubset)
+  })
+  
+  observeEvent(input$settingsShowAllWells, {
+    toggle("settingsAllWells")
+  })
 })
 
 fixUploadedFilesNames <- function(x) {
