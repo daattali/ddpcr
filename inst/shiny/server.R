@@ -172,7 +172,12 @@ shinyServer(function(input, output, session) {
   # plot button is clicked
   observeEvent(input$plotBtn, {
     output$plot <- renderPlot({
-      dataValues$plate %>% plot
+      plot_params <- 
+        sapply(formals(ddpcrS3:::plot.ddpcr_plate) %>% names,
+               function(x) input[[sprintf("plot_param_%s", x)]] ) %>%
+        .[!lapply(., is.null) %>% unlist]
+      plot_params[['x']] <- dataValues$plate
+      do.call(plot, plot_params)
     }, height = "auto")
   })
   
