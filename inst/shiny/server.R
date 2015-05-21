@@ -108,7 +108,7 @@ shinyServer(function(input, output, session) {
             plate %>% params %>% .[[major_name]] %>% names,
             function(minor_name) {
               param_val <- plate %>% params %>% .[[c(major_name, minor_name)]] 
-              param_id <- sprintf("%s__%s", major_name, minor_name)
+              param_id <- sprintf("advanced_setting_param_%s__%s", major_name, minor_name)
               param_name <- sprintf("%s::%s", major_name, minor_name)
               
               # in order to ensure the correct type for each variable,
@@ -131,23 +131,19 @@ shinyServer(function(input, output, session) {
     })
   })
 
-  # When the advanced settings update button is clicked
+  # When the advanced settings update button is clicked,
+  # check all advanced settings and save them
   observeEvent(input$updateAdvancedSettings, {
-    lapply(
-      dataValues$plate %>% params %>% names,
-      function(major_name) {
-        lapply(
-          dataValues$plate %>% params %>% .[[major_name]] %>% names,
-          function(minor_name) {
-            param_id <- sprintf("%s__%s", major_name, minor_name)
-            # if an advanced param is not empty, save it
-            if (!is.null(input[[param_id]]) && !is.na(input[[param_id]])) {
-              params(dataValues$plate, major_name, minor_name) <- input[[param_id]]
-            }
-          }
-        )
+    advanced_param_regex <- "^advanced_setting_param_(.*)__(.*)$"
+    all_params <- 
+      grep(advanced_param_regex, names(input), value = TRUE)
+    lapply(all_params, function(x) {
+      if (!is.null(input[[x]]) && !is.na(input[[x]])) {
+        major_name <- gsub(advanced_param_regex, "\\1", x)
+        minor_name <- gsub(advanced_param_regex, "\\2", x)
+        params(dataValues$plate, major_name, minor_name) <- input[[x]]
       }
-    )    
+    })
   })
   
   # --- Analyze tab --- #
