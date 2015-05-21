@@ -4,13 +4,13 @@
 \alias{plot.ppnp_assay}
 \title{Plot a ddPCR plate of type PPNP assay}
 \usage{
-\method{plot}{ppnp_assay}(x, wells, samples, col_drops_negative = "purple3",
-  col_drops_positive = "green3", col_drops_rain = "black",
-  show_negative_freq = TRUE, text_size_negative_freq = 4,
-  alpha_drops_low_negative_freq = 0.5, show_low_high_neg_freq = TRUE,
-  bg_negative = "purple3", bg_positive = "green3",
-  alpha_bg_low_high_neg_freq = 0.1, superimpose = FALSE,
-  show_drops = TRUE, drops_size = 2, ...)
+\method{plot}{ppnp_assay}(x, wells, samples, ...,
+  col_drops_negative = "purple3", col_drops_positive = "green3",
+  col_drops_rain = "black", show_negative_freq = TRUE,
+  text_size_negative_freq = 4, alpha_drops_low_negative_freq = 0.5,
+  show_low_high_neg_freq = TRUE, bg_negative = "purple3",
+  bg_positive = "green3", alpha_bg_low_high_neg_freq = 0.1,
+  superimpose = FALSE, show_drops = TRUE, drops_size = 2)
 }
 \arguments{
 \item{x}{A ddPCR plate.}
@@ -19,6 +19,8 @@
 \code{\link[ddpcrS3]{subset}}.}
 
 \item{samples}{Only plot selected samples.}
+
+\item{...}{Parameters to pass to \code{\link[ddpcrS3]{plot.ddpcr_plate}}.}
 
 \item{col_drops_negative}{The colour to use for negative droplets.
 See 'Droplet visibility options' for \code{\link[ddpcrS3]{plot.ddpcr_plate}}.}
@@ -60,8 +62,6 @@ can be useful if there is other information depicated in the plot, such as
 any background colours or text that may appear in each well.}
 
 \item{drops_size}{Size of droplets.}
-
-\item{...}{Parameters to pass to \code{\link[ddpcrS3]{plot.ddpcr_plate}}.}
 }
 \value{
 A ggplot2 plot object.

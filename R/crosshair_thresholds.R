@@ -107,6 +107,19 @@ classify_thresholds <- function(plate) {
   
   plate_data(plate) <- data
   
+  # record how many drops are in each quadrant
+  drops_per_quadrant <- 
+    plyr::ddply(data, ~ well, function(x) {
+      data.frame(
+        'drops_empty' = sum(x[['cluster']] == cluster(plate, 'EMPTY')),
+        'drops_x_positive' = sum(x[['cluster']] == cluster(plate, 'X_POSITIVE')),
+        'drops_y_positive' = sum(x[['cluster']] == cluster(plate, 'Y_POSITIVE')),
+        'drops_both_positive' = sum(x[['cluster']] == cluster(plate, 'BOTH_POSITIVE'))
+      )
+    })
+  plate_meta(plate) %<>%
+    dplyr::left_join(drops_per_quadrant, by = "well")
+  
   status(plate) <- CURRENT_STEP
   step_end()
   
@@ -118,10 +131,12 @@ classify_thresholds <- function(plate) {
 plot.crosshair_thresholds <- function(
   x,
   wells, samples,
+  ...,
   show_thresholds = TRUE,
   col_thresholds = "black",
   show_drops_empty = TRUE,
-  ...)
+  col_drops_x_positive, col_drops_y_positive, col_drops_both_positive
+  )
 {
   # Plot a regular ddpcr plate
   p <- NextMethod("plot", x, show_drops_empty = show_drops_empty)
