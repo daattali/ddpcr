@@ -104,6 +104,7 @@ init_meta <- function(plate) {
   # populate the metadata with some initial variables
   wells_used <- plate_data[['well']] %>% unique
   plate_meta[['used']] <- plate_meta[['well']] %in% wells_used
+  plate_meta[['sample']][!plate_meta[['used']]] <- NA
   plate_meta <-
     plate_data %>%
     dplyr::group_by_("well") %>%
