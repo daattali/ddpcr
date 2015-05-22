@@ -8,6 +8,8 @@
 
 - rename to ddpcr
 
+- MIT license
+
 ### code
 
 - if(num_peaks > 1) {message(dens_smooth$x[maxima_idx][1]/dens_smooth$x[maxima_idx][2])}

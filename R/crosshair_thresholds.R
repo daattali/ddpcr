@@ -135,11 +135,17 @@ plot.crosshair_thresholds <- function(
   show_thresholds = TRUE,
   col_thresholds = "black",
   show_drops_empty = TRUE,
-  col_drops_x_positive, col_drops_y_positive, col_drops_both_positive
+  col_drops_x_positive = "green3",
+  col_drops_y_positive = "blue",
+  col_drops_both_positive = "orange"
   )
 {
   # Plot a regular ddpcr plate
-  p <- NextMethod("plot", x, show_drops_empty = show_drops_empty)
+  p <- NextMethod("plot", x,
+                  show_drops_empty = show_drops_empty,
+                  col_drops_x_positive = col_drops_x_positive,
+                  col_drops_y_positive = col_drops_y_positive,
+                  col_drops_both_positive = col_drops_both_positive)
   
   # Show the crosshair thresholds
   if (show_thresholds) {
