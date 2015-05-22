@@ -8,10 +8,10 @@ shinyUI(tagList(
   shinyjs::useShinyjs(),
   tags$head(
     includeScript(file.path("www", 'ddpcr.js')),
-#             includeScript(file.path(staticDir, 'helper-script.js')),
+    #             includeScript(file.path(staticDir, 'helper-script.js')),
     includeCSS(file.path("www", 'style.css'))
   ),
-
+  
   navbarPage(
     title = tags$b("ddPCR Analysis"),
     windowTitle = "ddPCR Analysis",
@@ -22,6 +22,13 @@ shinyUI(tagList(
     source("ui-tab-settings.R", local = TRUE)$value,
     source("ui-tab-analyze.R",  local = TRUE)$value,
     source("ui-tab-plot.R",     local = TRUE)$value
+  ),
+  
+  hidden(
+    div(id = "errorDiv",
+        div(br(), tags$b("Error: "), span(id = "errorMsg")),
+        style = "color: red; margin-left: 15px; font-size: 1.2em;"
+    )
   )
 ))
 

@@ -11,39 +11,62 @@ shinyServer(function(input, output, session) {
     plate = NULL
   )
   
+  # --- General --- #
+  
+  # When a tab is switched
+  observeEvent(input$mainNav, {
+    hide("errorDiv")
+  })
+  
   # --- Dataset tab --- #
   
   # when data files are being chosen
   observeEvent(input$uploadDataFiles, ignoreNULL = FALSE, {
-    shinyjs::toggleState("uploadFilesBtn", !is.null(input$uploadDataFiles))
+    toggleState("uploadFilesBtn", !is.null(input$uploadDataFiles))
   })
   
   # when "Upload data" button is clicked
   observeEvent(input$uploadFilesBtn, {
-    dataFiles <- input$uploadDataFiles %>% fixUploadedFilesNames
-    metaFile <- input$uploadMetaFile %>% fixUploadedFilesNames
+    # User-experience stuff
+    disable("uploadFilesBtn")
+    show("uploadFilesMsg")
+    on.exit({
+      enable("uploadFilesBtn")
+      hide("uploadFilesMsg")
+    })
+    hide("errorDiv")    
+
+    tryCatch({
+      dataFiles <- input$uploadDataFiles %>% fixUploadedFilesNames
+      metaFile <- input$uploadMetaFile %>% fixUploadedFilesNames
+      
+      # read plate using uploaded files
+      dataValues$plate <-
+        new_plate(data_files = dataFiles$datapath,
+                  meta_file = metaFile$datapath,
+                  type = input$uploadPlateType)
     
-    # rename the uploaded files to their original names
-    # so that we can infer the dataset name from file names
-    newNames <- file.path(dirname(dataFiles$datapath),
-                          dataFiles$name)
-    file.rename(from = dataFiles$datapath,
-                to = newNames)
-    
-    # read plate using uploaded files
-    dataValues$plate <-
-      new_plate(data_files = newNames,
-                meta_file = metaFile$datapath,
-                type = input$uploadPlateType)
-    
-    updateTabsetPanel(session, "mainNav", "analyzeTab")
+      updateTabsetPanel(session, "mainNav", "analyzeTab")
+    }, error = errorFunc)
   })
   
   # when a file is chosen to load a saved dataset
-  observeEvent(input$loadFile, {
-    file <- input$loadFile %>% fixUploadedFilesNames
-    dataValues$plate <- load_plate(file$datapath)
-    updateTabsetPanel(session, "mainNav", "analyzeTab")
+  observeEvent(input$loadFile, { 
+    # User-experience stuff
+    disable("uploadFilesBtn")
+    show("uploadFilesMsg")
+    on.exit({
+      enable("uploadFilesBtn")
+      hide("uploadFilesMsg")
+    })
+    hide("errorDiv")  
+    
+    tryCatch({
+      file <- input$loadFile %>% fixUploadedFilesNames
+      dataValues$plate <- load_plate(file$datapath)
+      updateTabsetPanel(session, "mainNav", "analyzeTab")
+    }, error = errorFunc)
+
   })
   
   # --- General --- #
@@ -178,6 +201,12 @@ shinyServer(function(input, output, session) {
   })
   
 })
+
+# Error handler that gets used in many tryCatch blocks
+errorFunc <- function(err) {
+  text("errorMsg", err$message)
+  show("errorDiv", TRUE, "fade")
+}
 
 # When files get uploaded, their new filenames are gibberish.
 # This function renames all uploaded files to their original names

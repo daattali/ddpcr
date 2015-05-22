@@ -50,6 +50,9 @@ tabPanel(
         "uploadFilesBtn",
         "Upload data",
         class = "btn-primary"
+      ),
+      hidden(
+        span(id = "uploadFilesMsg", "Uploading...", style = "margin-left: 15px;")
       )
     ),
     
@@ -66,7 +69,10 @@ tabPanel(
         accept = c(
           '.rds'
         )
-      )
+      ),
+      hidden(
+        span(id = "loadFileMsg", "Loading...", style = "margin-left: 15px;")
+      )      
     )
   )
 )
