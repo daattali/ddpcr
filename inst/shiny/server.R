@@ -6,12 +6,31 @@ library(ddpcrS3)
 options(shiny.maxRequestSize = 100*1024^2) 
 
 shinyServer(function(input, output, session) {
+
+  # --- General --- #
+  
   # reactive values we will use throughout the app
   dataValues <- reactiveValues(
     plate = NULL
-  )
+  )  
   
-  # --- General --- #
+  # we need to have a quasi-variable flag to indicate whether or not
+  # we have a dataset to work with or if we're waiting for dataset to be chosen
+  output$datasetChosen <- reactive({ FALSE })
+  outputOptions(output, 'datasetChosen', suspendWhenHidden = FALSE)  
+  
+  output$datasetDesc <- renderUI({
+    if (is.null(dataValues$plate)) {
+      div(id = "header-select", "Please select a dataset to begin")
+    } else {
+      div(
+        dataValues$plate %>% name, br(),
+        "Type:", dataValues$plate %>% type, br(),
+        dataValues$plate %>% wells_used %>% length, " wells; ",
+        dataValues$plate %>% plate_data %>% nrow %>% format(big.mark = ","), " droplets"
+      )
+    }
+  })
   
   # When a tab is switched
   observeEvent(input$mainNav, {
@@ -46,24 +65,20 @@ shinyServer(function(input, output, session) {
                   meta_file = metaFile$datapath,
                   type = input$uploadPlateType)
     
+      output$datasetChosen <- reactive({ TRUE })
       updateTabsetPanel(session, "mainNav", "analyzeTab")
     }, error = errorFunc)
   })
   
   # when a file is chosen to load a saved dataset
   observeEvent(input$loadFile, { 
-    # User-experience stuff
-    disable("uploadFilesBtn")
-    show("uploadFilesMsg")
-    on.exit({
-      enable("uploadFilesBtn")
-      hide("uploadFilesMsg")
-    })
     hide("errorDiv")  
     
     tryCatch({
       file <- input$loadFile %>% fixUploadedFilesNames
       dataValues$plate <- load_plate(file$datapath)
+      
+      output$datasetChosen <- reactive({ TRUE })
       updateTabsetPanel(session, "mainNav", "analyzeTab")
     }, error = errorFunc)
 

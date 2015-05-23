@@ -2,6 +2,40 @@ body {
   background: #f8f8f8;
 }
 
-.popover{
+.navbar {
+  margin-bottom: 0;
+}
+
+.navbar-header,
+.navbar-mav,
+.nav-tabs {
+  font-size: 1.2em;
+}
+
+body > .container {
+  background: #ffffff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  margin-top: -1px;
+  border-radius: 0 0 3px 3px;
+  -webkit-border-radius: 0 0 3px 3px;
+  -moz-border-radius: 0 0 3px 3px;
+}
+
+.popover {
   max-width: 500px;
+}
+
+#header-select {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.btn-msg {
+  margin-left: 15px;
+}
+
+#errorDiv {
+  color: red;
+  font-size: 1.2em;
 }

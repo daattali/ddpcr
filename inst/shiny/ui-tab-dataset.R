@@ -6,8 +6,6 @@ tabPanel(
   value = "datasetTab",
   name = "datasetTab",
   
-  h2("Select a dataset using one of the following options"),
-
   tabsetPanel(
     id = "datasetTabs", type = "tabs",    
     
@@ -52,7 +50,10 @@ tabPanel(
         class = "btn-primary"
       ),
       hidden(
-        span(id = "uploadFilesMsg", "Uploading...", style = "margin-left: 15px;")
+        span(id = "uploadFilesMsg",
+             "Uploading...",
+             class = "btn-msg"
+        )
       )
     ),
     
@@ -69,10 +70,7 @@ tabPanel(
         accept = c(
           '.rds'
         )
-      ),
-      hidden(
-        span(id = "loadFileMsg", "Loading...", style = "margin-left: 15px;")
-      )      
+      )
     )
   )
 )

@@ -25,6 +25,7 @@ setup_plate <- function(plate, type) {
   plate
 }
 
+#' @export
 type <- function(plate, all = FALSE) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   if (all) {
@@ -490,7 +491,7 @@ print.ddpcr_plate <- function(x, ...) {
     )
   }
   cat0("Data summary: ", 
-       x %>% plate_meta %>% .[['used']] %>% sum, " wells, ",
+       x %>% wells_used %>% length, " wells, ",
        x %>% plate_data %>% nrow, " drops\n")
   cat0("---\nDrops data:\n")
   cat0(x %>% plate_data %>% str)
