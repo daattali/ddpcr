@@ -11,8 +11,8 @@ Get the name of the variable that is along the dimension where all filled
 drops should be positive.
 }
 \seealso{
-\code{\link[ddpcrS3]{PPNP_ASSAy}},
-\code{\link[ddpcrS3]{positive_dim}}
+\code{\link[ddpcr]{PPNP_ASSAy}},
+\code{\link[ddpcr]{positive_dim}}
 }
 \keyword{internal}
 

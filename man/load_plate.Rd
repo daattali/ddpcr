@@ -13,10 +13,10 @@ load_plate(file)
 The plate that was saved in the given file.
 }
 \description{
-Reloads a plate that has been saved with \code{\link[ddpcrS3]{save_plate}}.
+Reloads a plate that has been saved with \code{\link[ddpcr]{save_plate}}.
 }
 \examples{
-dir <- system.file("sample_data", "small", package = "ddpcrS3")
+dir <- system.file("sample_data", "small", package = "ddpcr")
 plate <- new_plate(dir)
 save_plate(plate, "myplate")
 plate2 <- load_plate("myplate")
@@ -26,6 +26,6 @@ identical(plate, plate3)
 unlink("myplate.rds")
 }
 \seealso{
-\code{\link[ddpcrS3]{save_plate}}
+\code{\link[ddpcr]{save_plate}}
 }
 

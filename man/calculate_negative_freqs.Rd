@@ -14,13 +14,13 @@ The resulting plate has the same droplet data but an updated metadata with
 the number of negative/positive droplets and the negative frequency.
 }
 \examples{
-file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcrS3")
+file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
 plate <- load_plate(file)
 plate \%>\% calculate_negative_freqs \%>\%
   well_info(wells_success(plate), "negative_freq")
 }
 \seealso{
-\code{\link[ddpcrS3]{PPNP_ASSAy}}
+\code{\link[ddpcr]{PPNP_ASSAy}}
 }
 \keyword{internal}
 

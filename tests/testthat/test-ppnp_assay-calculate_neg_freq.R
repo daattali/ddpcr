@@ -7,7 +7,7 @@ test_that("calc_negative_freq_simple works", {
 })
 
 test_that("calculate_neg_freq_single works", {
-  file <- system.file("sample_data", "small", "analyzed.rds", package = "ddpcrS3")
+  file <- system.file("sample_data", "small", "analyzed.rds", package = "ddpcr")
   plate <- load_plate(file)
   expect_equal(plate %>% calculate_neg_freq_single("B06"),
                list("negative_num" = 141,
@@ -16,7 +16,7 @@ test_that("calculate_neg_freq_single works", {
 })
 
 test_that("calculate_negative_freqs works", {
-  file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcrS3")
+  file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
   plate <- load_plate(file)
   neg_freqs <-
     plate %>%

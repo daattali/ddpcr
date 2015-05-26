@@ -41,7 +41,7 @@ notation is only supported for the \code{wells} parameter, but not for the
 \code{samples} parameter.
 }
 \examples{
-dir <- system.file("sample_data", "small", package = "ddpcrS3")
+dir <- system.file("sample_data", "small", package = "ddpcr")
 plate <- new_plate(dir)
 plate \%>\% wells_used
 plate \%>\% subset("C01") \%>\% wells_used

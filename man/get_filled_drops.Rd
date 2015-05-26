@@ -12,8 +12,8 @@ get_filled_drops(plate, well_id, borders)
 \item{well_id}{Get borders of filled droplets for this well.}
 
 \item{borders}{(Optional) The filled droplets borders, as calculated by
-\code{\link[ddpcrS3]{get_filled_drops}}. If missing, then
-\code{\link[ddpcrS3]{get_filled_drops}} is called to calculate the borders.}
+\code{\link[ddpcr]{get_filled_drops}}. If missing, then
+\code{\link[ddpcr]{get_filled_drops}} is called to calculate the borders.}
 }
 \value{
 Dataframe with all filled droplets in the given well.
@@ -26,17 +26,17 @@ candidates for the \code{negative} and \code{positive} clusters.
 \code{get_filled_drops} returns the droplets that are considered filled.
 }
 \examples{
-file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcrS3")
+file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
 plate <- load_plate(file)
 get_filled_drops(plate, "B06")
 get_filled_drops(plate, "B06", get_filled_borders(plate, "B06"))
 }
 \seealso{
-\code{\link[ddpcrS3]{PPNP_ASSAy}},
+\code{\link[ddpcr]{PPNP_ASSAy}},
 
-\code{\link[ddpcrS3]{positive_dim}},
+\code{\link[ddpcr]{positive_dim}},
 
-\code{\link[ddpcrS3]{get_filled_drops}}
+\code{\link[ddpcr]{get_filled_drops}}
 }
 \keyword{internal}
 

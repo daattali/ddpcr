@@ -12,9 +12,9 @@ tabPanel(
       sidebarPanel(
         h3("Plot parameters"),
         lapply(
-          formals(ddpcrS3:::plot.ddpcr_plate) %>% names,
+          formals(ddpcr:::plot.ddpcr_plate) %>% names,
           function(param_name) {
-            param_val <- formals(ddpcrS3:::plot.ddpcr_plate) %>% .[[param_name]]
+            param_val <- formals(ddpcr:::plot.ddpcr_plate) %>% .[[param_name]]
             param_id <- sprintf("plot_param_%s", param_name)
             if (missing(param_val) || param_val %>% is.language) {
               return()

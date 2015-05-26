@@ -12,7 +12,7 @@
 #' 
 #' @param x A ddPCR plate.
 #' @param wells Only plot selected wells. Supports range notation, see
-#' \code{\link[ddpcrS3]{subset}}.
+#' \code{\link[ddpcr]{subset}}.
 #' @param samples Only plot selected samples.
 #' @param superimpose If \code{TRUE}, show all wells superimposed in one plot;
 #' otherwise, show wells in a grid.
@@ -73,7 +73,7 @@
 #' }
 #' 
 #' The \code{*} in the parameter name can be replaced by the name of any
-#' droplet cluster. Use the \code{\link[ddpcrS3]{clusters}} function to 
+#' droplet cluster. Use the \code{\link[ddpcr]{clusters}} function to 
 #' find out what clusters the droplets in a plate can be assigned to.
 #' 
 #' For example, the default clusters that exist in a plain \code{ddpcr_plate}
@@ -96,11 +96,11 @@
 #' If you do need to provide a more customized plot function, it can be
 #' a good idea to use the output from this plot function as a basis and only
 #' add the code that is necessary to append to the plot.  See
-#' \code{\link[ddpcrS3]{plot.crosshair_thresholds}} as an example of how to
+#' \code{\link[ddpcr]{plot.crosshair_thresholds}} as an example of how to
 #' extend this plot function.B
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcrS3")
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
 #' plate <- new_plate(dir)
 #' plot(plate)
 #' plate <- plate %>% analyze

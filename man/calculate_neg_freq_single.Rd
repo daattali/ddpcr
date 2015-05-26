@@ -19,12 +19,12 @@ drops, and fraction of negative drops.
 Calculate negative frequency of a single well
 }
 \examples{
-file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcrS3")
+file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
 plate <- load_plate(file)
 plate \%>\% calculate_neg_freq_single("B06")
 }
 \seealso{
-\code{\link[ddpcrS3]{PPNP_ASSAy}}
+\code{\link[ddpcr]{PPNP_ASSAy}}
 }
 \keyword{internal}
 

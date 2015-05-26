@@ -21,7 +21,7 @@ Calculate negative frequency based on number of drops
 calc_negative_freq_simple(5, 45)
 }
 \seealso{
-\code{\link[ddpcrS3]{PPNP_ASSAy}}
+\code{\link[ddpcr]{PPNP_ASSAy}}
 }
 \keyword{internal}
 

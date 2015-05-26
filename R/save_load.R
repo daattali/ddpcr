@@ -6,18 +6,18 @@
 #' 
 #' Saves a plate to a file, including all its data, parameters, and current
 #' analysis state.  The file can be read back later using 
-#' \code{\link[ddpcrS3]{load_plate}}.  The file is not human-readable - if
+#' \code{\link[ddpcr]{load_plate}}.  The file is not human-readable - if
 #' you want to save the droplets data or the metadata of a plate, then first
-#' retrieve the data using \code{\link[ddpcrS3]{plate_data}} or
-#' \code{\link[ddpcrS3]{plate_meta}} and save it with 
+#' retrieve the data using \code{\link[ddpcr]{plate_data}} or
+#' \code{\link[ddpcr]{plate_meta}} and save it with 
 #' \code{\link[base]{write.csv}}.
 #' 
 #' @param plate Plate object to save.
 #' @param file Name of the file where the plate will be saved.
 #' @return The given plate, unchanged.
-#' @seealso \code{\link[ddpcrS3]{load_plate}}
+#' @seealso \code{\link[ddpcr]{load_plate}}
 #' @examples
-#' dir <- system.file("sample_data", "small", package = "ddpcrS3")
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
 #' plate <- new_plate(dir)
 #' save_plate(plate, "myplate")
 #' unlink("myplate.rds")
@@ -43,13 +43,13 @@ save_plate <- function(plate, file) {
 }
 #' Load a ddPCR plate
 #' 
-#' Reloads a plate that has been saved with \code{\link[ddpcrS3]{save_plate}}.
+#' Reloads a plate that has been saved with \code{\link[ddpcr]{save_plate}}.
 #'  
 #' @param file Name of the file where the plate was saved.
 #' @return The plate that was saved in the given file.
-#' @seealso \code{\link[ddpcrS3]{save_plate}}
+#' @seealso \code{\link[ddpcr]{save_plate}}
 #' @examples
-#' dir <- system.file("sample_data", "small", package = "ddpcrS3")
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
 #' plate <- new_plate(dir)
 #' save_plate(plate, "myplate")
 #' plate2 <- load_plate("myplate")

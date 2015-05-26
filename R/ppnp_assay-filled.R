@@ -16,13 +16,13 @@
 #' @return A 2-element numeric vector defining the thresholds of filled drops
 #' in the positive dimension.
 #' @examples 
-#' file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcrS3")
+#' file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
 #' plate <- load_plate(file)
 #' get_filled_borders(plate, "B06")
 #' get_filled_borders(plate, "C09")
-#' @seealso \code{\link[ddpcrS3]{PPNP_ASSAy}},
-#' @seealso \code{\link[ddpcrS3]{positive_dim}},
-#' @seealso \code{\link[ddpcrS3]{get_filled_drops}}
+#' @seealso \code{\link[ddpcr]{PPNP_ASSAy}},
+#' @seealso \code{\link[ddpcr]{positive_dim}},
+#' @seealso \code{\link[ddpcr]{get_filled_drops}}
 #' @keywords internal
 #' @export
 get_filled_borders <- function(plate, well_id) {
@@ -62,17 +62,17 @@ get_filled_borders <- function(plate, well_id) {
 #' @param plate A ddPCR plate.
 #' @param well_id Get borders of filled droplets for this well.
 #' @param borders (Optional) The filled droplets borders, as calculated by
-#' \code{\link[ddpcrS3]{get_filled_drops}}. If missing, then
-#' \code{\link[ddpcrS3]{get_filled_drops}} is called to calculate the borders.
+#' \code{\link[ddpcr]{get_filled_drops}}. If missing, then
+#' \code{\link[ddpcr]{get_filled_drops}} is called to calculate the borders.
 #' @return Dataframe with all filled droplets in the given well.
 #' @examples 
-#' file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcrS3")
+#' file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
 #' plate <- load_plate(file)
 #' get_filled_drops(plate, "B06")
 #' get_filled_drops(plate, "B06", get_filled_borders(plate, "B06"))
-#' @seealso \code{\link[ddpcrS3]{PPNP_ASSAy}},
-#' @seealso \code{\link[ddpcrS3]{positive_dim}},
-#' @seealso \code{\link[ddpcrS3]{get_filled_drops}}
+#' @seealso \code{\link[ddpcr]{PPNP_ASSAy}},
+#' @seealso \code{\link[ddpcr]{positive_dim}},
+#' @seealso \code{\link[ddpcr]{get_filled_drops}}
 #' @keywords internal
 #' @export
 get_filled_drops <- function(plate, well_id, borders) {

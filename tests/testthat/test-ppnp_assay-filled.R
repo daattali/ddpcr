@@ -1,7 +1,7 @@
 context("ppnp_assay-filled")
 
 test_that("get_filled_borders works", {
-  file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcrS3")
+  file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
   plate <- load_plate(file)
   
   borders_B06 <- get_filled_borders(plate, "B06")
@@ -12,7 +12,7 @@ test_that("get_filled_borders works", {
 })
 
 test_that("get_filled_drops works", {
-  dir <- system.file("sample_data", "small", package = "ddpcrS3")
+  dir <- system.file("sample_data", "small", package = "ddpcr")
   plate <- load_plate(file.path(dir, "analyzed_ppnp.rds"))
   
   borders_B06 <- get_filled_borders(plate, "B06")

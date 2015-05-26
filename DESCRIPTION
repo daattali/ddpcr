@@ -1,4 +1,4 @@
-Package: ddpcrS3
+Package: ddpcr
 Title: Analysis and visualization of droplet digital PCR, designed around a wild-type negative BRAF-V600 assay
 Version: 0.0.0.9000
 Authors@R: c(

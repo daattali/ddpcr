@@ -14,15 +14,15 @@ Get or set the dimension (X or Y) that can have both high and low intensities
 in the non-empty drops in a \code{PPNP_ASSAY}.
 }
 \examples{
-dir <- system.file("sample_data", "small", package = "ddpcrS3")
+dir <- system.file("sample_data", "small", package = "ddpcr")
 plate <- new_plate(dir = dir, type = PPNP_ASSAY)
 variable_dim(plate) <- "Y"
 variable_dim(plate)
 positive_dim(plate)
 }
 \seealso{
-\code{\link[ddpcrS3]{PPNP_ASSAy}},
-\code{\link[ddpcrS3]{positive_dim}}
+\code{\link[ddpcr]{PPNP_ASSAy}},
+\code{\link[ddpcr]{positive_dim}}
 }
 \keyword{internal}
 

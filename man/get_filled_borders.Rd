@@ -24,17 +24,17 @@ candidates for the \code{negative} and \code{positive} clusters.
 dimension that are used to determine which drops are filled.
 }
 \examples{
-file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcrS3")
+file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
 plate <- load_plate(file)
 get_filled_borders(plate, "B06")
 get_filled_borders(plate, "C09")
 }
 \seealso{
-\code{\link[ddpcrS3]{PPNP_ASSAy}},
+\code{\link[ddpcr]{PPNP_ASSAy}},
 
-\code{\link[ddpcrS3]{positive_dim}},
+\code{\link[ddpcr]{positive_dim}},
 
-\code{\link[ddpcrS3]{get_filled_drops}}
+\code{\link[ddpcr]{get_filled_drops}}
 }
 \keyword{internal}
 

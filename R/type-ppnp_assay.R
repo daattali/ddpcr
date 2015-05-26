@@ -15,14 +15,14 @@
 #' in params or by defining a child type)
 #' 
 #' @examples 
-#' dir <- system.file("sample_data", "small", package = "ddpcrS3")
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
 #' new_plate(dir = dir, type = PPNP_ASSAY)
 #' new_plate(dir = dir, type = "wtnegbraf")
 #' @seealso
-#' \code{\link[ddpcrS3]{new_plate}},
-#' \code{\link[ddpcrS3]{positive_dim}},
-#' \code{\link[ddpcrS3]{wells_positive}},
-#' \code{\link[ddpcrS3]{wells_negative}}
+#' \code{\link[ddpcr]{new_plate}},
+#' \code{\link[ddpcr]{positive_dim}},
+#' \code{\link[ddpcr]{wells_positive}},
+#' \code{\link[ddpcr]{wells_negative}}
 #' @export
 PPNP_ASSAY <- "ppnp_assay"
 
@@ -86,10 +86,10 @@ define_params.ppnp_assay <- function(plate) {
 #' Get or set the dimension (X or Y) that has a high intensity in all non-empty
 #' drops in a \code{PPNP_ASSAY}.
 #' @seealso
-#' \code{\link[ddpcrS3]{PPNP_ASSAy}},
-#' \code{\link[ddpcrS3]{variable_dim}}
+#' \code{\link[ddpcr]{PPNP_ASSAy}},
+#' \code{\link[ddpcr]{variable_dim}}
 #' @examples 
-#' dir <- system.file("sample_data", "small", package = "ddpcrS3")
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
 #' plate <- new_plate(dir = dir, type = PPNP_ASSAY)
 #' positive_dim(plate) <- "Y"
 #' @name positive_dim
@@ -115,10 +115,10 @@ positive_dim <- function(plate) {
 #' Get or set the dimension (X or Y) that can have both high and low intensities
 #' in the non-empty drops in a \code{PPNP_ASSAY}.
 #' @seealso
-#' \code{\link[ddpcrS3]{PPNP_ASSAy}},
-#' \code{\link[ddpcrS3]{positive_dim}}
+#' \code{\link[ddpcr]{PPNP_ASSAy}},
+#' \code{\link[ddpcr]{positive_dim}}
 #' @examples 
-#' dir <- system.file("sample_data", "small", package = "ddpcrS3")
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
 #' plate <- new_plate(dir = dir, type = PPNP_ASSAY)
 #' variable_dim(plate) <- "Y"
 #' variable_dim(plate)
@@ -149,8 +149,8 @@ variable_dim <- function(plate) {
 #' Get the name of the variable that is along the dimension where all filled 
 #' drops should be positive.
 #' @seealso
-#' \code{\link[ddpcrS3]{PPNP_ASSAy}},
-#' \code{\link[ddpcrS3]{positive_dim}}
+#' \code{\link[ddpcr]{PPNP_ASSAy}},
+#' \code{\link[ddpcr]{positive_dim}}
 #' @keywords internal
 #' @export
 positive_dim_var <- function(plate) {
@@ -165,8 +165,8 @@ positive_dim_var <- function(plate) {
 #' Get the name of the variable that is along the dimension where the droplets
 #' will cluster into two groups.
 #' @seealso
-#' \code{\link[ddpcrS3]{PPNP_ASSAy}},
-#' \code{\link[ddpcrS3]{variable_dim}}
+#' \code{\link[ddpcr]{PPNP_ASSAy}},
+#' \code{\link[ddpcr]{variable_dim}}
 #' @keywords internal
 #' @export
 variable_dim_var <- function(plate) {
@@ -192,9 +192,9 @@ other_dim <- function(dim) {
 #' non-empty clusters. If they are changed, then any variable in the metadata
 #' will be renamed to use these names. \code{meta_var_name} translated a
 #' default metadata variable name to the correct one.
-#' @seealso \code{\link[ddpcrS3]{PPNP_ASSAy}}
+#' @seealso \code{\link[ddpcr]{PPNP_ASSAy}}
 #' @examples 
-#' dir <- system.file("sample_data", "small", package = "ddpcrS3")
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
 #' plate <- new_plate(dir = dir, type = PPNP_ASSAY)
 #' params(plate, 'GENERAL', 'NEGATIVE_NAME') <- "mutant"
 #' meta_var_name(plate, 'num_negative_drops')
@@ -214,12 +214,12 @@ meta_var_name <- function(plate, var) {
 #' negative cluster is not necessarily in every well. \code{wells_positive}
 #' returns a list of wells that have mostly positive drops.
 #' @seealso
-#' \code{\link[ddpcrS3]{PPNP_ASSAy}},
-#' \code{\link[ddpcrS3]{wells_negative}}
+#' \code{\link[ddpcr]{PPNP_ASSAy}},
+#' \code{\link[ddpcr]{wells_negative}}
 #' @param x A ddPCR plate of type PPNP_ASSAY
 #' @return Vector of wells with mostly positive drops.
 #' @examples 
-#' file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcrS3")
+#' file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
 #' plate <- load_plate(file)
 #' plate %>% wells_positive
 #' @export
@@ -246,12 +246,12 @@ wells_positive <- function(x) {
 #' negative cluster is not necessarily in every well. \code{wells_negative}
 #' returns a list of wells that have a significant number of negative drops.
 #' @seealso
-#' \code{\link[ddpcrS3]{PPNP_ASSAy}},
-#' \code{\link[ddpcrS3]{wells_positive}}
+#' \code{\link[ddpcr]{PPNP_ASSAy}},
+#' \code{\link[ddpcr]{wells_positive}}
 #' @param x A ddPCR plate of type PPNP_ASSAY
 #' @return Vector of wells with significant number of negative drops.
 #' @examples 
-#' file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcrS3")
+#' file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
 #' plate <- load_plate(file)
 #' plate %>% wells_negative
 #' @export

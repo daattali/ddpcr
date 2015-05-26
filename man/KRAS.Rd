@@ -17,13 +17,13 @@ plate that uses the KRAS assay.
 TODO what this assay looks like
 }
 \examples{
-dir <- system.file("sample_data", "small", package = "ddpcrS3")
+dir <- system.file("sample_data", "small", package = "ddpcr")
 new_plate(dir = dir, type = KRAS)
 new_plate(dir = dir, type = "kras")
 }
 \seealso{
-\code{\link[ddpcrS3]{new_plate}},
-\code{\link[ddpcrS3]{PPNP_ASSAy}}
+\code{\link[ddpcr]{new_plate}},
+\code{\link[ddpcr]{PPNP_ASSAy}}
 }
 \keyword{datasets}
 

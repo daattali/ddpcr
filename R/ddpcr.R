@@ -2,11 +2,11 @@
 ## Copyright (C) 2015 Dean Attali
 ## This software is distributed under the AGPL-3 license
 
-#' ddPCRS3
+#' ddPCR
 #' 
 #' Analyze ddPCR data
 #' 
 #' @docType package
 #' @importFrom magrittr %<>%
-#' @name ddpcrS3
+#' @name ddpcr
 NULL

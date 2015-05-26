@@ -14,12 +14,12 @@ Get or set the dimension (X or Y) that has a high intensity in all non-empty
 drops in a \code{PPNP_ASSAY}.
 }
 \examples{
-dir <- system.file("sample_data", "small", package = "ddpcrS3")
+dir <- system.file("sample_data", "small", package = "ddpcr")
 plate <- new_plate(dir = dir, type = PPNP_ASSAY)
 positive_dim(plate) <- "Y"
 }
 \seealso{
-\code{\link[ddpcrS3]{PPNP_ASSAy}},
-\code{\link[ddpcrS3]{variable_dim}}
+\code{\link[ddpcr]{PPNP_ASSAy}},
+\code{\link[ddpcr]{variable_dim}}
 }
 

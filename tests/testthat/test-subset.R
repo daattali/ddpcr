@@ -1,7 +1,7 @@
 context("subset")
 
 test_that("subset works", {
-  dir <- system.file("sample_data", "small", package = "ddpcrS3")
+  dir <- system.file("sample_data", "small", package = "ddpcr")
   plate <- new_plate(dir)
   
   expect_identical(plate %>% subset %>% wells_used,

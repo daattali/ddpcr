@@ -19,12 +19,12 @@ negative cluster is not necessarily in every well. \code{wells_negative}
 returns a list of wells that have a significant number of negative drops.
 }
 \examples{
-file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcrS3")
+file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
 plate <- load_plate(file)
 plate \%>\% wells_negative
 }
 \seealso{
-\code{\link[ddpcrS3]{PPNP_ASSAy}},
-\code{\link[ddpcrS3]{wells_positive}}
+\code{\link[ddpcr]{PPNP_ASSAy}},
+\code{\link[ddpcr]{wells_positive}}
 }
 

@@ -1,4 +1,4 @@
 library(testthat)
-library(ddpcrS3)
+library(ddpcr)
 
-test_check("ddpcrS3")
+test_check("ddpcr")

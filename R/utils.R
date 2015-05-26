@@ -255,7 +255,7 @@ point2d <- function(x) {
 #' Calculate the distance between two points in 2D space. If only one points is
 #' given, then the distance to the origin is calculated.
 #' @param x,y Points generated with \code{point2d}
-#' @seealso \code{\link[ddpcrS3]{point2d}}
+#' @seealso \code{\link[ddpcr]{point2d}}
 #' @keywords internal
 #' @export
 diff.point2d <- function(x, y, ...) {

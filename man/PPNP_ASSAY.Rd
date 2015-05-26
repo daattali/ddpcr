@@ -22,15 +22,15 @@ TODO what this assay looks like (POSITIVE_DIMENSION must be set, either
 in params or by defining a child type)
 }
 \examples{
-dir <- system.file("sample_data", "small", package = "ddpcrS3")
+dir <- system.file("sample_data", "small", package = "ddpcr")
 new_plate(dir = dir, type = PPNP_ASSAY)
 new_plate(dir = dir, type = "wtnegbraf")
 }
 \seealso{
-\code{\link[ddpcrS3]{new_plate}},
-\code{\link[ddpcrS3]{positive_dim}},
-\code{\link[ddpcrS3]{wells_positive}},
-\code{\link[ddpcrS3]{wells_negative}}
+\code{\link[ddpcr]{new_plate}},
+\code{\link[ddpcr]{positive_dim}},
+\code{\link[ddpcr]{wells_positive}},
+\code{\link[ddpcr]{wells_negative}}
 }
 \keyword{datasets}
 

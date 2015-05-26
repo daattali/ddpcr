@@ -1,6 +1,6 @@
 library(shiny)
 library(shinyjs)
-library(ddpcrS3)
+library(ddpcr)
 
 # allow uploading files up to 100MB
 options(shiny.maxRequestSize = 100*1024^2) 
@@ -100,7 +100,7 @@ shinyServer(function(input, output, session) {
     
     # update the plot that shows what wells are available
     p <-
-      ddpcrS3:::plot.ddpcr_plate(
+      ddpcr:::plot.ddpcr_plate(
         dataValues$plate, show_drops = FALSE,
         bg_unused = "black", bg_failed = "white", bg_plot = "#f8f8f8",
         text_size_row_col = 20, xlab = NULL, ylab = NULL
@@ -207,7 +207,7 @@ shinyServer(function(input, output, session) {
   observeEvent(input$plotBtn, {
     output$plot <- renderPlot({
       plot_params <- 
-        sapply(formals(ddpcrS3:::plot.ddpcr_plate) %>% names,
+        sapply(formals(ddpcr:::plot.ddpcr_plate) %>% names,
                function(x) input[[sprintf("plot_param_%s", x)]] ) %>%
         .[!lapply(., is.null) %>% unlist]
       plot_params[['x']] <- dataValues$plate

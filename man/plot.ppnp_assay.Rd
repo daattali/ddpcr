@@ -16,20 +16,20 @@
 \item{x}{A ddPCR plate.}
 
 \item{wells}{Only plot selected wells. Supports range notation, see
-\code{\link[ddpcrS3]{subset}}.}
+\code{\link[ddpcr]{subset}}.}
 
 \item{samples}{Only plot selected samples.}
 
-\item{...}{Parameters to pass to \code{\link[ddpcrS3]{plot.ddpcr_plate}}.}
+\item{...}{Parameters to pass to \code{\link[ddpcr]{plot.ddpcr_plate}}.}
 
 \item{col_drops_negative}{The colour to use for negative droplets.
-See 'Droplet visibility options' for \code{\link[ddpcrS3]{plot.ddpcr_plate}}.}
+See 'Droplet visibility options' for \code{\link[ddpcr]{plot.ddpcr_plate}}.}
 
 \item{col_drops_positive}{The colour to use for positive droplets.
-See 'Droplet visibility options' for \code{\link[ddpcrS3]{plot.ddpcr_plate}}.}
+See 'Droplet visibility options' for \code{\link[ddpcr]{plot.ddpcr_plate}}.}
 
 \item{col_drops_rain}{The colour to use for rain droplets.
-See 'Droplet visibility options' for \code{\link[ddpcrS3]{plot.ddpcr_plate}}.}
+See 'Droplet visibility options' for \code{\link[ddpcr]{plot.ddpcr_plate}}.}
 
 \item{show_negative_freq}{If \code{TRUE}, show the negative frequency
 as a percentage on each well.}
@@ -67,17 +67,17 @@ any background colours or text that may appear in each well.}
 A ggplot2 plot object.
 }
 \description{
-Same plot as \code{\link[ddpcrS3]{plot.ddpcr_plate}} but with a few extra
+Same plot as \code{\link[ddpcr]{plot.ddpcr_plate}} but with a few extra
 features that are specific to PPNP assays. The main additions are that
 the negative frequency of each well can be written in each well, and well
 background colours can be used to differentiate between wells with a
 significant negative cluster vs wells with mostly positive drops. Take a look
-at \code{\link[ddpcrS3]{plot.ddpcr_plate}} to see all supported parameters
+at \code{\link[ddpcr]{plot.ddpcr_plate}} to see all supported parameters
 and more information.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcrS3")
+dir <- system.file("sample_data", "small", package = "ddpcr")
 plate <- new_plate(dir, type = PPNP_ASSAY)
 positive_dim(plate) <- "Y"
 plot(plate)
@@ -87,7 +87,7 @@ plot(plate, "B01:C06", col_drops_rain = "blue")
 }
 }
 \seealso{
-\code{\link[ddpcrS3]{plot.ddpcr_plate}},
-\code{\link[ddpcrS3]{PPNP_ASSAY}}
+\code{\link[ddpcr]{plot.ddpcr_plate}},
+\code{\link[ddpcr]{PPNP_ASSAY}}
 }
 

@@ -48,7 +48,7 @@ test_that("get_consensus_name_from_data_files works", {
 # -------- Finding the correct data/metadata files ---------
 
 testdir <- function(dirname) {
-  system.file("sample_data", dirname, package = "ddpcrS3")
+  system.file("sample_data", dirname, package = "ddpcr")
 }
 
 test_that("find_data_files basic functionality works", {
@@ -89,7 +89,7 @@ test_that("find_meta_file basic functionality works", {
 # -------- Reading the data ---------
 
 .empty_plate <-
-  system.file("sample_data", "empty_plate.rds", package = "ddpcrS3") %>%
+  system.file("sample_data", "empty_plate.rds", package = "ddpcr") %>%
   load_plate
 get_empty_plate <- function() {
   .empty_plate

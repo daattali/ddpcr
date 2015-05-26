@@ -11,8 +11,8 @@ Get the name of the variable that is along the dimension where the droplets
 will cluster into two groups.
 }
 \seealso{
-\code{\link[ddpcrS3]{PPNP_ASSAy}},
-\code{\link[ddpcrS3]{variable_dim}}
+\code{\link[ddpcr]{PPNP_ASSAy}},
+\code{\link[ddpcr]{variable_dim}}
 }
 \keyword{internal}
 

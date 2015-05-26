@@ -13,13 +13,13 @@ will be renamed to use these names. \code{meta_var_name} translated a
 default metadata variable name to the correct one.
 }
 \examples{
-dir <- system.file("sample_data", "small", package = "ddpcrS3")
+dir <- system.file("sample_data", "small", package = "ddpcr")
 plate <- new_plate(dir = dir, type = PPNP_ASSAY)
 params(plate, 'GENERAL', 'NEGATIVE_NAME') <- "mutant"
 meta_var_name(plate, 'num_negative_drops')
 }
 \seealso{
-\code{\link[ddpcrS3]{PPNP_ASSAy}}
+\code{\link[ddpcr]{PPNP_ASSAy}}
 }
 \keyword{internal}
 
