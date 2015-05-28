@@ -61,17 +61,22 @@ save_plate <- function(plate, file) {
 load_plate <- function(file) {
   file %<>% normalize_to_rds
   
-  object <- readRDS(file = file)
-  
-  plate             <- empty_plate()
-  class(plate)      <- object[['class']]
-  plate_data(plate) <- object[['plate_data']]
-  plate_meta(plate) <- object[['plate_meta']]
-  name(plate)       <- object[['name']]
-  status(plate)     <- object[['status']]
-  params(plate)     <- object[['params']]
-  clusters(plate)   <- object[['clusters']]
-  steps(plate)      <- object[['steps']]
+  plate <- empty_plate()
+  tryCatch({
+    object <- readRDS(file = file)
+    class(plate)      <- object[['class']]
+    plate_data(plate) <- object[['plate_data']]
+    plate_meta(plate) <- object[['plate_meta']]
+    name(plate)       <- object[['name']]
+    status(plate)     <- object[['status']]
+    params(plate)     <- object[['params']]
+    clusters(plate)   <- object[['clusters']]
+    steps(plate)      <- object[['steps']]
+  },
+  error = function(err) {
+    err_msg(paste("The given file is not a valid ddPCR file",
+                 "(are you sure it was saved using this program?)"))
+  })
   
   plate
 }
