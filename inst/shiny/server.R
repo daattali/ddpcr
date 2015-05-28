@@ -67,13 +67,13 @@ shinyServer(function(input, output, session) {
         dataValues$plate <-
           new_plate(data_files = dataFiles$datapath,
                     meta_file = metaFile$datapath,
-                    type = input$uploadPlateType)
+                    type = WTNEGBRAF)
       },
       message = function(m) {
       })
     
       output$datasetChosen <- reactive({ TRUE })
-      updateTabsetPanel(session, "mainNav", "analyzeTab")
+      updateTabsetPanel(session, "mainNav", "settingsTab")
     }, error = errorFunc)
   })
   
@@ -86,7 +86,7 @@ shinyServer(function(input, output, session) {
       dataValues$plate <- load_plate(file$datapath)
       
       output$datasetChosen <- reactive({ TRUE })
-      updateTabsetPanel(session, "mainNav", "analyzeTab")
+      updateTabsetPanel(session, "mainNav", "settingsTab")
     }, error = errorFunc)
 
   })
@@ -102,8 +102,14 @@ shinyServer(function(input, output, session) {
     })
     
     # update the settings
+    updateSelectInput(session, "settingsPlateType", selected = dataValues$plate %>% type)
+    updateTextInput(session, "settingsName", value = dataValues$plate %>% name)
     updateTextInput(session, "settingsXvar", value = dataValues$plate %>% x_var)
     updateTextInput(session, "settingsYvar", value = dataValues$plate %>% y_var)
+    if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
+      updateTextInput(session, "settingsXThreshold", value = dataValues$plate %>% x_threshold)
+      updateTextInput(session, "settingsYThreshold", value = dataValues$plate %>% y_threshold)
+    }
     
     # update the plot that shows what wells are available
     p <-
@@ -130,15 +136,21 @@ shinyServer(function(input, output, session) {
   
   # update settings button is clicked
   observeEvent(input$updateSettings, {
+    if (type(dataValues$plate) != input$settingsPlateType) {
+      dataValues$plate <- reset(dataValues$plate, input$settingsPlateType)
+    }
+    name(dataValues$plate) <- input$settingsName
     x_var(dataValues$plate) <- input$settingsXvar
     y_var(dataValues$plate) <- input$settingsYvar
-    dataValues$plate <- subset(dataValues$plate, input$settingsSubset)
+    if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
+      x_threshold(dataValues$plate) <- input$settingsXThreshold
+      y_threshold(dataValues$plate) <- input$settingsYThreshold
+    }
   })
   
-  # toggle showing/hiding the well selection plot
-  observeEvent(input$settingsShowAllWells, {
-    toggle("settingsAllWells")
-  })
+  observeEvent(input$updateSubsetSettings, {
+    dataValues$plate <- subset(dataValues$plate, input$settingsSubset)
+  })   
   
   # When the plate changes, update the advanced settings UI
   observeEvent(dataValues$plate, {
@@ -175,7 +187,7 @@ shinyServer(function(input, output, session) {
       )
     })
   })
-
+  
   # When the advanced settings update button is clicked,
   # check all advanced settings and save them
   observeEvent(input$updateAdvancedSettings, {

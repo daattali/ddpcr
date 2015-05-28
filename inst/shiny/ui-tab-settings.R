@@ -16,32 +16,40 @@ tabPanel(
         title = "Basic",
         id = "basicSettingsTab",
         br(),
-        textInput(
-          "settingsSubset",
-          span(
-            "Keep only certain wells ",
-            helpPopup(
-              content = paste("You can select multiple wells using aspecial ",
-              "\"range notation\". Non-adjacent wells can be specified by separating",
-              "them with commas. Adjacent wells can be selected with the colon",
-              "operator, which will select all wells in the rectangle defined by",
-              "the two end-points. For example, \"B01, C04:D06, F10\" will select",
-              "wells B01, C04, C05, C06, D04, D05, D06, F10."),
-              title = "Range notation")),
-          value = ""
+        
+        fixedRow(
+          column(6,
+            selectInput(
+              "settingsPlateType",
+              "Plate type",
+              c("Wild type negative BRAF" = WTNEGBRAF,
+                "KRAS" = KRAS,
+                "General (manually set crosshair thresholds)" = CROSSHAIR_THRESHOLDS)
+            )
+          ),
+          column(6,
+            textInput("settingsName", "Dataset name", "")
+          )
         ),
-        actionLink("settingsShowAllWells", "Show all available wells"), br(),
-        hidden(
-          div(id = "settingsAllWells", 
-              span("White wells are available in this dataset. Click any well to add it to the list above."),
-              plotOutput("wellsUsedPlot", click = "wellsUsedPlotClick",
-                         height="auto",width="auto")
-          )),
-        
-        br(), br(),
-        textInput("settingsXvar", "Dye along X axis", ""),
-        textInput("settingsYvar", "Dye along Y axis", ""),
-        
+        fixedRow(
+          column(6,
+            textInput("settingsXvar", "Dye along X axis", "")
+          ),
+          column(6,
+            textInput("settingsYvar", "Dye along Y axis", "")
+          )
+        ),
+        conditionalPanel(
+          sprintf("input.settingsPlateType == '%s'", CROSSHAIR_THRESHOLDS),
+          fixedRow(
+            column(6,
+              numericInput("settingsXThreshold", "X threshold", 5000, min = 0, step = 100)
+            ),
+            column(6,
+              numericInput("settingsYThreshold", "Y threshold", 5000, min = 0, step = 100)
+            )
+          )
+        ),
         br(),
         actionButton(
           "updateSettings",
@@ -49,7 +57,39 @@ tabPanel(
           class = "btn-primary"
         )
       ),
-      
+
+      # Advanced settings tab
+      tabPanel(
+        title = "Subset",
+        id = "subsetSettingsTab",
+        br(),
+        textInput(
+          "settingsSubset",
+          span(
+            "Keep only certain wells ",
+            helpPopup(
+              content = paste("You can select multiple wells using aspecial ",
+                              "\"range notation\". Non-adjacent wells can be specified by separating",
+                              "them with commas. Adjacent wells can be selected with the colon",
+                              "operator, which will select all wells in the rectangle defined by",
+                              "the two end-points. For example, \"B01, C04:D06, F10\" will select",
+                              "wells B01, C04, C05, C06, D04, D05, D06, F10."),
+              title = "Range notation")),
+          value = ""
+        ),
+        div(id = "settingsAllWells", 
+            span("White wells are available in this dataset. Click any well to add it to the list above."),
+            plotOutput("wellsUsedPlot",
+                       click = "wellsUsedPlotClick",
+                       height = "auto", width = "auto")
+        ),
+        actionButton(
+          "updateSubsetSettings",
+          "Apply",
+          class = "btn-primary"
+        )      
+      ),
+            
       # Advanced settings tab
       tabPanel(
         title = "Advanced",

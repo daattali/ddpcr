@@ -37,15 +37,6 @@ tabPanel(
         )
       ),
       
-      selectInput(
-        "uploadPlateType",
-        "Plate type",
-        c("Wild type negative BRAF" = WTNEGBRAF,
-          "KRAS" = KRAS,
-          "General (manually set crosshair thresholds)" = CROSSHAIR_THRESHOLDS),
-        WTNEGBRAF
-      ),
-      
       actionButton(
         "uploadFilesBtn",
         "Upload data",
