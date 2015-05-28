@@ -96,10 +96,15 @@ init_meta <- function(plate) {
     plate_meta <- DEFAULT_PLATE_META
   } else {
     meta_cols_keep <- c("well", "sample")
-    plate_meta %<>%
-      dplyr::select_(~ one_of(meta_cols_keep)) %>%
-      unique %>%
-      merge_dfs_overwrite_col(DEFAULT_PLATE_META, ., "sample", "well")
+    tryCatch({
+      plate_meta %<>%
+        dplyr::select_(~ one_of(meta_cols_keep)) %>%
+        unique %>%
+        merge_dfs_overwrite_col(DEFAULT_PLATE_META, ., "sample", "well")
+    },
+    error = function(err) {
+      err_msg("the metadata file is invalid")
+    })
   }
   
   # populate the metadata with some initial variables

@@ -32,8 +32,11 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  # When a tab is switched
-  observeEvent(input$mainNav, {
+  # When a main tab or secondary tab is switched, clear the error message
+  observe({
+    input$mainNav
+    input$datasetTabs
+    
     hide("errorDiv")
   })
   
@@ -60,10 +63,14 @@ shinyServer(function(input, output, session) {
       metaFile <- input$uploadMetaFile %>% fixUploadedFilesNames
       
       # read plate using uploaded files
-      dataValues$plate <-
-        new_plate(data_files = dataFiles$datapath,
-                  meta_file = metaFile$datapath,
-                  type = input$uploadPlateType)
+      withCallingHandlers({
+        dataValues$plate <-
+          new_plate(data_files = dataFiles$datapath,
+                    meta_file = metaFile$datapath,
+                    type = input$uploadPlateType)
+      },
+      message = function(m) {
+      })
     
       output$datasetChosen <- reactive({ TRUE })
       updateTabsetPanel(session, "mainNav", "analyzeTab")
@@ -219,7 +226,8 @@ shinyServer(function(input, output, session) {
 
 # Error handler that gets used in many tryCatch blocks
 errorFunc <- function(err) {
-  text("errorMsg", err$message)
+  errMessage <- gsub("^ddpcr: (.*)", "\\1", err$message)
+  text("errorMsg", errMessage)
   show("errorDiv", TRUE, "fade")
 }
 

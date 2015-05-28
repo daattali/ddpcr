@@ -26,6 +26,13 @@ body > .container {
   max-width: 500px;
 }
 
+.popover-link > i.fa {
+  vertical-align: top;
+}
+
+h3 .popover-link {
+  font-size: 18px;
+}
 #header-select {
   font-size: 2em;
   margin-bottom: 20px;

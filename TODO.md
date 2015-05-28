@@ -17,8 +17,7 @@
 
 - add tests
 
-- add documentation (type-kras, type-wtnegbraf, type-ppnp_assay, ppnp_assay-reclassify/empty/classify*,
-                     plate, outlieres, ...)
+- add documentation
 
 
 

@@ -58,25 +58,35 @@ read_files <- function(plate, data_files, meta_file) {
   # I purposely keep the wells as character rather than factor because
   # the data.frame is large and it's much faster to search through it using
   # dplyr::filter when using character
-  plate_data <-
-    lapply(data_files, function(x) {
-      wellNum <- get_well_from_data_file(x)
-      wdat <-
-        readr::read_csv(x, progress = FALSE) %>%
-        dplyr::select_(~ 2:1) %>%
-        dplyr::mutate_(.dots = setNames(list(~ wellNum), "well"))
-      wdat
-    }) %>%
-    dplyr::bind_rows() %>%
-    move_front("well")
+  tryCatch({
+    plate_data <-
+      lapply(data_files, function(x) {
+        wellNum <- get_well_from_data_file(x)
+        wdat <-
+          readr::read_csv(x, progress = FALSE) %>%
+          dplyr::select_(~ 2:1) %>%
+          dplyr::mutate_(.dots = setNames(list(~ wellNum), "well"))
+        wdat
+      }) %>%
+      dplyr::bind_rows() %>%
+      move_front("well")
+  },
+  error = function(err) {
+    err_msg("there was a problem reading one or more of the data files")
+  })
   
   plate_data(plate) <- plate_data
   
   # Read the metadata file if one was given
   if (!is.null(meta_file)) {
-    plate_meta <-
-      read.csv(meta_file, stringsAsFactors = FALSE) %>%
-      magrittr::set_colnames(colnames(.) %>% tolower)
+    tryCatch({
+      plate_meta <-
+        read.csv(meta_file, stringsAsFactors = FALSE) %>%
+        magrittr::set_colnames(colnames(.) %>% tolower)
+    },
+    error = function(err) {
+      err_msg("there was a problem reading the metadata file")
+    })
     plate_meta(plate) <- plate_meta
   }
   

@@ -4,6 +4,8 @@ library(shiny)
 library(ddpcr)
 library(shinyjs)
 
+source("ui-helper-helpPopup.R")
+
 shinyUI(tagList(
   shinyjs::useShinyjs(),
   tags$head(
@@ -35,4 +37,3 @@ shinyUI(tagList(
       )
   )
 ))
-

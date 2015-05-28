@@ -13,9 +13,9 @@ tabPanel(
     tabPanel(
       title = "Upload new dataset",
       id = "newDatasetTab",
-      br(),
-      h3("If you have data from QuantaSoft that you want to analyze, upload it here.",
-         "(You must first export the data from QuantaSoft to .csv files.)"),
+      h3("Upload data from QuantaSoft ",
+         helpPopup("You must first export the data from QuantaSoft to .csv files")
+      ),
       fileInput(
         "uploadDataFiles",
         "Data files (one file per well)",
@@ -40,7 +40,9 @@ tabPanel(
       selectInput(
         "uploadPlateType",
         "Plate type",
-        c(KRAS, WTNEGBRAF, CROSSHAIR_THRESHOLDS) %>% sort,
+        c("Wild type negative BRAF" = WTNEGBRAF,
+          "KRAS" = KRAS,
+          "General (manually set crosshair thresholds)" = CROSSHAIR_THRESHOLDS),
         WTNEGBRAF
       ),
       
@@ -59,10 +61,10 @@ tabPanel(
     
     # tab for loading existing dataset
     tabPanel(
-      title = "Load saved data",
+      title = "Load saved dataset",
       id = "loadDatasetTab",
-      br(),
-      h3("If you've previously used this tool to save data, you can restore it."),
+      h3("Upload previously saved data",
+         helpPopup("If you've previously used this tool to save data, you can restore it here")),
       fileInput(
         "loadFile",
         "Saved ddPCR file",
