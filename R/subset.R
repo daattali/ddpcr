@@ -64,6 +64,11 @@ subset.ddpcr_plate <- function(x, wells, samples, ...) {
     return(x)  # if no arguments, just return the same plate
   }
   
+  # if no valid wells were given, don't do anything
+  if (sum(wells %in% (x %>% wells_used)) == 0) {
+    return(x)
+  }  
+  
   # keep only the droplet data for these wells
   plate_data(x) %<>%
     dplyr::filter_(~ well %in% wells)
@@ -102,6 +107,9 @@ is_range <- function(x) {
 range_list_to_vec <- function(rangel) {
   rangel <- gsub("[[:space:]]", "", rangel)
   ranges <- strsplit(rangel, ",") %>% unlist %>% .[. != ""]
+  if (length(ranges) == 0) {
+    return(NULL)
+  }
   
   wells <- 
     lapply(ranges, function(range) {

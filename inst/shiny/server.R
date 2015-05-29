@@ -173,12 +173,26 @@ shinyServer(function(input, output, session) {
       
       show("updateBasicSettingsDone")
       hide(id = "updateBasicSettingsDone", anim = TRUE,
-           animType = "fade", time = 0.5, delay = 3)
+           animType = "fade", time = 0.5, delay = 4)
     }, error = errorFunc)
   })
   
   observeEvent(input$updateSubsetSettings, {
-    dataValues$plate <- subset(dataValues$plate, input$settingsSubset)
+    # User-experience stuff
+    disable("updateSubsetSettings")
+    show("updateSubsetSettingsMsg")
+    on.exit({
+      enable("updateSubsetSettings")
+      hide("updateSubsetSettingsMsg")
+    })
+    hide("errorDiv")
+    
+    tryCatch({
+      dataValues$plate <- subset(dataValues$plate, input$settingsSubset)
+      show("updateSubsetSettingsDone")
+      hide(id = "updateSubsetSettingsDone", anim = TRUE,
+           animType = "fade", time = 0.5, delay = 4)
+    }, error = errorFunc)
   })   
   
   # When the plate changes, update the advanced settings UI
@@ -254,7 +268,7 @@ shinyServer(function(input, output, session) {
 
       show("updateAdvancedSettingsDone")
       hide(id = "updateAdvancedSettingsDone", anim = TRUE,
-           animType = "fade", time = 0.5, delay = 3)
+           animType = "fade", time = 0.5, delay = 4)
     }, error = errorFunc)
   })
   

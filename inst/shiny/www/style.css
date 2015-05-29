@@ -26,6 +26,10 @@ body > .container {
   max-width: 500px;
 }
 
+.popover-title {
+  font-weight: bold;
+}
+
 .popover-link > i.fa {
   vertical-align: top;
 }
@@ -42,9 +46,15 @@ h3 .popover-link {
 
 .btn-msg {
   margin-left: 15px;
+  font-size: 1.2em;
+}
+
+.btn-msg-done {
+  color: green;
 }
 
 #errorDiv {
+  margin-top: 10px;
   color: red;
   font-size: 1.2em;
 }

@@ -65,7 +65,7 @@ tabPanel(
         hidden(
           span(id = "updateBasicSettingsDone",
                "Done",
-               class = "btn-msg"
+               class = "btn-msg btn-msg-done"
           )
         )
       ),
@@ -80,25 +80,39 @@ tabPanel(
           span(
             "Keep only certain wells ",
             helpPopup(
-              content = paste("You can select multiple wells using aspecial ",
-                              "\"range notation\". Non-adjacent wells can be specified by separating",
-                              "them with commas. Adjacent wells can be selected with the colon",
-                              "operator, which will select all wells in the rectangle defined by",
-                              "the two end-points. For example, \"B01, C04:D06, F10\" will select",
-                              "wells B01, C04, C05, C06, D04, D05, D06, F10."),
+              content = paste("You can select multiple wells using a special",
+                              "<i>range notation</i>.<br/>Non-adjacent wells can be specified by separating",
+                              "them with <strong>commas</strong>. Adjacent wells can be selected with a <strong>colon</strong>,",
+                              "which will select all wells in the rectangle defined by",
+                              "the two end-points.<br/><br/>Example: \"B01, C04:D06, F10\" will select",
+                              "wells <i>B01, C04, C05, C06, D04, D05, D06, F10</i>."),
               title = "Range notation")),
           value = ""
         ),
         div(id = "settingsAllWells", 
-            span("White wells are available in this dataset. Click any well to add it to the list above."),
+            p("Click any well to add it to the list above.", br(),
+              "White wells are available in the current dataset."),
             plotOutput("wellsUsedPlot",
                        click = "wellsUsedPlotClick",
                        height = "auto", width = "auto")
         ),
+        br(),
         actionButton(
           "updateSubsetSettings",
           "Apply",
           class = "btn-primary"
+        ),
+        hidden(
+          span(id = "updateSubsetSettingsMsg",
+               "Applying changes...",
+               class = "btn-msg"
+          )
+        ),
+        hidden(
+          span(id = "updateSubsetSettingsDone",
+               icon("check"), "Done",
+               class = "btn-msg btn-msg-done"
+          )
         )      
       ),
             
@@ -123,7 +137,7 @@ tabPanel(
         hidden(
           span(id = "updateAdvancedSettingsDone",
                "Done",
-               class = "btn-msg"
+               class = "btn-msg btn-msg-done"
           )
         )        
       )

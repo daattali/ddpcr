@@ -31,7 +31,7 @@ shinyUI(tagList(
       column(12,
           hidden(
           div(id = "errorDiv",
-              div(tags$b("Error: "), span(id = "errorMsg"))
+              div(icon("exclamation-circle"), tags$b("Error: "), span(id = "errorMsg"))
           )
         )
       )
