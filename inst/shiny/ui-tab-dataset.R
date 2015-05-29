@@ -14,11 +14,12 @@ tabPanel(
       title = "Upload new dataset",
       id = "newDatasetTab",
       h3("Upload data from QuantaSoft ",
-         helpPopup("You must first export the data from QuantaSoft to .csv files")
+         helpPopup("You must first export the data from QuantaSoft to <i>.csv</i> (Excel) files")
       ),
       fileInput(
         "uploadDataFiles",
-        "Data files (one file per well)",
+        div("Data files (one file per well)",
+            helpPopup("These are all the <i>_Amplitude</i> files exported by QuantaSoft")),
         multiple = TRUE,
         accept = c(
           'text/csv',
@@ -28,7 +29,8 @@ tabPanel(
       ),
       fileInput(
         "uploadMetaFile",
-        "Metadata file (optional; only used to get sample names)",
+        div("Metadata file (optional)",
+            helpPopup("This is the Excel file exported by QuantaSoft that contains two lines with many variables for every well")),
         multiple = FALSE,
         accept = c(
           'text/csv',
@@ -55,7 +57,7 @@ tabPanel(
       title = "Load saved dataset",
       id = "loadDatasetTab",
       h3("Upload previously saved data",
-         helpPopup("If you've previously used this tool to save data, you can restore it here")),
+         helpPopup("If you've previously used this program to save data, you can load it here")),
       
       fileInput(
         "loadFile",

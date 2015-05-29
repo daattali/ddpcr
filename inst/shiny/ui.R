@@ -6,7 +6,7 @@ library(ddpcr)
 
 source("ui-helper-helpPopup.R")
 
-shinyUI(tagList(
+tagList(
   useShinyjs(),
   tags$head(
     includeScript(file.path("www", 'ddpcr.js')),
@@ -36,4 +36,4 @@ shinyUI(tagList(
         )
       )
   )
-))
+)

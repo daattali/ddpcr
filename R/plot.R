@@ -149,33 +149,36 @@ plot.ddpcr_plate <- function(
   # prepare the data to be plotted
   meta[['row']] %<>% as.factor
   meta[['col']] %<>% as.factor
-  data[['row']] <- data[['well']] %>% get_row %>% as.factor
-  data[['col']] <- data[['well']] %>% get_col %>% as.integer %>% as.factor
-  data[['cluster']] %<>% as.factor
   
-  # Remove drops that we don't want to show
-  visible_clusters <-
-    data[['cluster']] %>%
-    unique %>%
-    as.character %>%
-    as.numeric %>%
-    sort %>%
-    cluster_name(plate, .)
-  show_clusters <- 
-    vapply(visible_clusters,
-           function(cluster) {
-             param_name <- paste0("show_drops_", cluster) %>% tolower
-             param_idx <- which(param_name == all_params %>% names %>% tolower)
-             if (length(param_idx) > 0) {
-               show_cluster <- as.logical(all_params[[param_idx %>% tail(1)]])
-             } else {
-               show_cluster <- TRUE
-             }
-             show_cluster
-           },
-           logical(1)
-    )  
-  data %<>% dplyr::filter_(~ show_clusters[cluster]) %>% droplevels
+  if (show_drops) {
+    data[['row']] <- data[['well']] %>% get_row %>% as.factor
+    data[['col']] <- data[['well']] %>% get_col %>% as.integer %>% as.factor
+    data[['cluster']] %<>% as.factor
+    
+    # Remove drops that we don't want to show
+    visible_clusters <-
+      data[['cluster']] %>%
+      unique %>%
+      as.character %>%
+      as.numeric %>%
+      sort %>%
+      cluster_name(plate, .)
+    show_clusters <- 
+      vapply(visible_clusters,
+             function(cluster) {
+               param_name <- paste0("show_drops_", cluster) %>% tolower
+               param_idx <- which(param_name == all_params %>% names %>% tolower)
+               if (length(param_idx) > 0) {
+                 show_cluster <- as.logical(all_params[[param_idx %>% tail(1)]])
+               } else {
+                 show_cluster <- TRUE
+               }
+               show_cluster
+             },
+             logical(1)
+      )  
+    data %<>% dplyr::filter_(~ show_clusters[cluster]) %>% droplevels
+  }
     
   # make sure after removing unwanted drops/wells, we still have something to show
   if (plate %>% wells_used %>% length == 0) {
@@ -206,7 +209,8 @@ plot.ddpcr_plate <- function(
       axis.title       = ggplot2::element_text(size = text_size_axes_labels),
       axis.text        = ggplot2::element_text(size = text_size_grid_labels),
       strip.text       = ggplot2::element_text(size = text_size_row_col),
-      plot.background  = ggplot2::element_rect(fill = bg_plot, color = bg_plot)
+      plot.background  = ggplot2::element_rect(fill = bg_plot, color = bg_plot),
+      aspect.ratio     = 1
     )
   
   # superimpose all the data from all the wells onto one plot instead of a grid
@@ -308,12 +312,6 @@ plot.ddpcr_plate <- function(
       ggplot2::geom_text(data = meta, ggplot2::aes(0, 0, label = ""))
   }
   
-  # ensure the aspect ratio is a square for each well
-  ggb <- ggplot2::ggplot_build(p)
-  p <- p +
-    ggplot2::coord_fixed(
-      ratio = diff(ggb$panel$ranges[[1]]$x.range) / diff(ggb$panel$ranges[[1]]$y.range))
- 
   # attach information about how many rows and columns are displayed
   rows <- meta[['row']] %>% unique %>% length
   cols <- meta[['col']] %>% unique %>% length

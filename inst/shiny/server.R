@@ -111,39 +111,69 @@ shinyServer(function(input, output, session) {
       updateTextInput(session, "settingsXThreshold", value = dataValues$plate %>% x_threshold)
       updateTextInput(session, "settingsYThreshold", value = dataValues$plate %>% y_threshold)
     }
-    
-    # update the plot that shows what wells are available
-    p <-
-      ddpcr:::plot.ddpcr_plate(
-        dataValues$plate, show_drops = FALSE,
-        bg_unused = "black", bg_failed = "white", bg_plot = "#f8f8f8",
-        text_size_row_col = 20, xlab = NULL, ylab = NULL
-      )
-    p_width <- 50 * (1 + attr(p, 'ddpcr_cols'))
-    p_height <- 50 * (1 + attr(p, 'ddpcr_rows'))
-    output$wellsUsedPlot <- renderPlot({p}, width = p_width, height = p_height)
   })  
   
   # --- Settings tab --- #
 
+  # update the plot that shows what wells are available
+  output$wellsUsedPlot <- renderPlot({
+    meta <- plate_meta(dataValues$plate)
+    meta[['col']] <- as.factor(meta[['col']])
+    meta[['row']] <- as.factor(meta[['row']])
+    meta[['row']] <- factor(meta[['row']], levels = rev(levels(meta[['row']])))
+    
+    p <-
+      ggplot2::ggplot(meta, ggplot2::aes(col, row)) +
+      ggplot2::geom_tile(ggplot2::aes(fill = used), color = "#222222", show_guide = FALSE) +
+      ggplot2::scale_fill_manual(values = c("FALSE" = "#333333", "TRUE" = "white")) +
+      ggplot2::theme(
+        panel.grid       = ggplot2::element_blank(),
+        line             = ggplot2::element_blank(),
+        axis.text        = ggplot2::element_text(size = 20, color = "black"),
+        panel.background = ggplot2::element_blank()
+      ) +
+      ggplot2::xlab(NULL) + 
+      ggplot2::ylab(NULL) +
+      ggplot2::coord_fixed()
+    p
+  })  
+  
   # plot that helps select wells is clicked
   observeEvent(input$wellsUsedPlotClick, {
-    clickedWell <- sprintf(
-      "%s%02d",
-      input$wellsUsedPlotClick$panelvar2,
-      input$wellsUsedPlotClick$panelvar1 %>% as.integer
-    )
-
+    col <- floor(input$wellsUsedPlotClick$x + 0.5) %>% num_to_col
+    row <- ceiling(8.5 - input$wellsUsedPlotClick$y) %>% num_to_row
+    clickedWell <- sprintf("%s%s", row, col)
+    
     if (!clickedWell %in% (dataValues$plate %>% wells_used)) {
       return(NULL)
     }
     
     oldValue <- input$settingsSubset
     if (grepl(clickedWell, oldValue)) {
-      newValue <- gsub(paste0(clickedWell, "(, )?"), "", oldValue)
+      newValue <- gsub(sprintf("([^:]?)%s, ", clickedWell), "\\1", oldValue, perl = TRUE)
     } else {
       newValue <- paste0(oldValue, clickedWell, ", ")      
     }
+    updateTextInput(session, "settingsSubset", value = newValue)
+  })
+  
+  observeEvent(input$wellsUsedPlotBrush, {
+    col1 <- floor(input$wellsUsedPlotBrush$xmin + 0.5) %>% num_to_col
+    col2 <- floor(input$wellsUsedPlotBrush$xmax + 0.5) %>% num_to_col
+    row1 <- ceiling(8.5 - input$wellsUsedPlotBrush$ymin) %>% num_to_row
+    row2 <- ceiling(8.5 - input$wellsUsedPlotBrush$ymax) %>% num_to_row
+
+    well1 <- sprintf("%s%s", row1, col1)
+    well2 <- sprintf("%s%s", row2, col2)
+
+    if (length(well1) == 0 || length(well2) == 0 ||
+        !grepl(WELL_ID_REGEX, well1) || !grepl(WELL_ID_REGEX, well2) ||
+        well1 == well2 ||
+        !any((dataValues$plate %>% wells_used) %in% get_wells_btwn(well1, well2))) {
+      return(NULL)
+    }
+    
+    newValue <- paste0(input$settingsSubset, well1, ":", well2, ",")
     updateTextInput(session, "settingsSubset", value = newValue)
   })
   

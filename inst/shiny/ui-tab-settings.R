@@ -90,13 +90,19 @@ tabPanel(
           value = ""
         ),
         div(id = "settingsAllWells", 
-            p("Click any well to add it to the list above.", br(),
-              "White wells are available in the current dataset."),
+            p("Below is a diagram of the plate, with white",
+              "wells denoting wells that are available in the current dataset.", br(),
+              "Click any well to add it to the list above, or select multiple",
+              "wells by clicking the mouse and dragging it across the plate."),
             plotOutput("wellsUsedPlot",
                        click = "wellsUsedPlotClick",
-                       height = "auto", width = "auto")
+                       brush = brushOpts("wellsUsedPlotBrush", delay = 5000),
+                       height = 450, width = 650)
         ),
         br(),
+        p("Note: this action is not reversible. Once you subset the dataset to only keep certain wells,",
+          "the rest of the data is removed and the only way to retrieve the original data is by uploading",
+          "the dataset again."),
         actionButton(
           "updateSubsetSettings",
           "Apply",
