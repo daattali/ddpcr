@@ -101,7 +101,7 @@ is_range <- function(x) {
 #' @export
 range_list_to_vec <- function(rangel) {
   rangel <- gsub("[[:space:]]", "", rangel)
-  ranges <- strsplit(rangel, ",") %>% unlist
+  ranges <- strsplit(rangel, ",") %>% unlist %>% .[. != ""]
   
   wells <- 
     lapply(ranges, function(range) {

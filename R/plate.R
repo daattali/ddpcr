@@ -503,9 +503,3 @@ print.ddpcr_plate <- function(x, ...) {
   cat0("---\nPlate meta data:\n")
   cat0(x %>% plate_meta %>% str)
 }
-
-# pmini <- new_plate("../../data/mini141")
-# p141 <- new_plate("../../data/2-26-2014-BRAFWTNEGASSAY-FFPEDNA-CRC-1-41") %>% analyze
-
-#tstart <- proc.time(); a <- Plate$new("2014-06-06_BRAFWTNEGASSAY_FFPEThyroidscrolls")$analyze(); tend <- proc.time(); print(round(tend-tstart)[1]) 
-#7-8 seconds

@@ -33,9 +33,11 @@ body > .container {
 h3 .popover-link {
   font-size: 18px;
 }
+
 #header-select {
   font-size: 2em;
   margin-bottom: 20px;
+  font-weight: bold;
 }
 
 .btn-msg {

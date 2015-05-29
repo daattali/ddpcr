@@ -56,12 +56,19 @@ tabPanel(
       id = "loadDatasetTab",
       h3("Upload previously saved data",
          helpPopup("If you've previously used this tool to save data, you can restore it here")),
+      
       fileInput(
         "loadFile",
         "Saved ddPCR file",
         multiple = FALSE,
         accept = c(
           '.rds'
+        )
+      ),
+      hidden(
+        span(id = "loadFileMsg",
+             "Loading...",
+             class = "btn-msg"
         )
       )
     )

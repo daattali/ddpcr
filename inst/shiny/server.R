@@ -12,13 +12,13 @@ shinyServer(function(input, output, session) {
   # reactive values we will use throughout the app
   dataValues <- reactiveValues(
     plate = NULL
-  )  
+  )
   
   # we need to have a quasi-variable flag to indicate whether or not
   # we have a dataset to work with or if we're waiting for dataset to be chosen
   output$datasetChosen <- reactive({ FALSE })
-  outputOptions(output, 'datasetChosen', suspendWhenHidden = FALSE)  
-  
+  outputOptions(output, 'datasetChosen', suspendWhenHidden = FALSE)
+
   output$datasetDesc <- renderUI({
     if (is.null(dataValues$plate)) {
       div(id = "header-select", "Please select a dataset to begin")
@@ -63,14 +63,10 @@ shinyServer(function(input, output, session) {
       metaFile <- input$uploadMetaFile %>% fixUploadedFilesNames
       
       # read plate using uploaded files
-      withCallingHandlers({
-        dataValues$plate <-
-          new_plate(data_files = dataFiles$datapath,
-                    meta_file = metaFile$datapath,
-                    type = WTNEGBRAF)
-      },
-      message = function(m) {
-      })
+      dataValues$plate <-
+        new_plate(data_files = dataFiles$datapath,
+                  meta_file = metaFile$datapath,
+                  type = WTNEGBRAF)
     
       output$datasetChosen <- reactive({ TRUE })
       updateTabsetPanel(session, "mainNav", "settingsTab")
@@ -79,7 +75,12 @@ shinyServer(function(input, output, session) {
   
   # when a file is chosen to load a saved dataset
   observeEvent(input$loadFile, { 
-    hide("errorDiv")  
+    # User-experience stuff
+    show("loadFileMsg")
+    on.exit({
+      hide("loadFileMsg")
+    })
+    hide("errorDiv")
     
     tryCatch({
       file <- input$loadFile %>% fixUploadedFilesNames
@@ -127,25 +128,53 @@ shinyServer(function(input, output, session) {
 
   # plot that helps select wells is clicked
   observeEvent(input$wellsUsedPlotClick, {
-    updateTextInput(session, "settingsSubset",
-                    value = paste0(input$settingsSubset,
-                                   input$wellsUsedPlotClick$panelvar2,
-                                   input$wellsUsedPlotClick$panelvar1,
-                                   ", "))
+    clickedWell <- sprintf(
+      "%s%02d",
+      input$wellsUsedPlotClick$panelvar2,
+      input$wellsUsedPlotClick$panelvar1 %>% as.integer
+    )
+
+    if (!clickedWell %in% (dataValues$plate %>% wells_used)) {
+      return(NULL)
+    }
+    
+    oldValue <- input$settingsSubset
+    if (grepl(clickedWell, oldValue)) {
+      newValue <- gsub(paste0(clickedWell, "(, )?"), "", oldValue)
+    } else {
+      newValue <- paste0(oldValue, clickedWell, ", ")      
+    }
+    updateTextInput(session, "settingsSubset", value = newValue)
   })
   
   # update settings button is clicked
-  observeEvent(input$updateSettings, {
-    if (type(dataValues$plate) != input$settingsPlateType) {
-      dataValues$plate <- reset(dataValues$plate, input$settingsPlateType)
-    }
-    name(dataValues$plate) <- input$settingsName
-    x_var(dataValues$plate) <- input$settingsXvar
-    y_var(dataValues$plate) <- input$settingsYvar
-    if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
-      x_threshold(dataValues$plate) <- input$settingsXThreshold
-      y_threshold(dataValues$plate) <- input$settingsYThreshold
-    }
+  observeEvent(input$updateBasicSettings, {
+    # User-experience stuff
+    disable("updateBasicSettings")
+    show("updateBasicSettingsMsg")
+    on.exit({
+      enable("updateBasicSettings")
+      hide("updateBasicSettingsMsg")
+    })
+    hide("errorDiv")    
+    
+    tryCatch({
+      if (type(dataValues$plate) != input$settingsPlateType &&
+          input$settingsPlateType != "") {
+        dataValues$plate <- ddpcr::reset(dataValues$plate, input$settingsPlateType)
+      }
+      name(dataValues$plate) <- input$settingsName
+      x_var(dataValues$plate) <- input$settingsXvar
+      y_var(dataValues$plate) <- input$settingsYvar
+      if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
+        x_threshold(dataValues$plate) <- input$settingsXThreshold
+        y_threshold(dataValues$plate) <- input$settingsYThreshold
+      }
+      
+      show("updateBasicSettingsDone")
+      hide(id = "updateBasicSettingsDone", anim = TRUE,
+           animType = "fade", time = 0.5, delay = 3)
+    }, error = errorFunc)
   })
   
   observeEvent(input$updateSubsetSettings, {
@@ -164,9 +193,20 @@ shinyServer(function(input, output, session) {
           lapply(
             plate %>% params %>% .[[major_name]] %>% names,
             function(minor_name) {
+              param_name <- sprintf("%s::%s", major_name, minor_name)
+              
+              params_ignore <- c(
+                "GENERAL::X_VAR", "GENERAL::Y_VAR",
+                "CLASSIFY::X_THRESHOLD", "CLASSIFY::Y_THRESHOLD"
+              )
+              
+              if (param_name %in% params_ignore) {
+                return(NULL)
+              }
+              
               param_val <- plate %>% params %>% .[[c(major_name, minor_name)]] 
               param_id <- sprintf("advanced_setting_param_%s__%s", major_name, minor_name)
-              param_name <- sprintf("%s::%s", major_name, minor_name)
+              
               
               # in order to ensure the correct type for each variable,
               # we need to make sure that boolean/numeric/string parameters
@@ -191,16 +231,31 @@ shinyServer(function(input, output, session) {
   # When the advanced settings update button is clicked,
   # check all advanced settings and save them
   observeEvent(input$updateAdvancedSettings, {
-    advanced_param_regex <- "^advanced_setting_param_(.*)__(.*)$"
-    all_params <- 
-      grep(advanced_param_regex, names(input), value = TRUE)
-    lapply(all_params, function(x) {
-      if (!is.null(input[[x]]) && !is.na(input[[x]])) {
-        major_name <- gsub(advanced_param_regex, "\\1", x)
-        minor_name <- gsub(advanced_param_regex, "\\2", x)
-        params(dataValues$plate, major_name, minor_name) <- input[[x]]
-      }
+    # User-experience stuff
+    disable("updateAdvancedSettings")
+    show("updateAdvancedSettingsMsg")
+    on.exit({
+      enable("updateAdvancedSettings")
+      hide("updateAdvancedSettingsMsg")
     })
+    hide("errorDiv")   
+    
+    tryCatch({
+      advanced_param_regex <- "^advanced_setting_param_(.*)__(.*)$"
+      all_params <- 
+        grep(advanced_param_regex, names(input), value = TRUE)
+      lapply(all_params, function(x) {
+        if (!is.null(input[[x]]) && !is.na(input[[x]])) {
+          major_name <- gsub(advanced_param_regex, "\\1", x)
+          minor_name <- gsub(advanced_param_regex, "\\2", x)
+          params(dataValues$plate, major_name, minor_name) <- input[[x]]
+        }
+      })
+
+      show("updateAdvancedSettingsDone")
+      hide(id = "updateAdvancedSettingsDone", anim = TRUE,
+           animType = "fade", time = 0.5, delay = 3)
+    }, error = errorFunc)
   })
   
   # --- Analyze tab --- #

@@ -126,7 +126,6 @@ plot.ddpcr_plate <- function(
   text_size_grid_labels = 12,
   ...)
 {
-  
   # only keep the requested wells/samples
   plate <- subset(x, wells, samples)
   rm(x)

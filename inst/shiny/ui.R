@@ -1,13 +1,13 @@
 # This is the main UI file that initializes the UI and aggregates all the tabs
 
 library(shiny)
-library(ddpcr)
 library(shinyjs)
+library(ddpcr)
 
 source("ui-helper-helpPopup.R")
 
 shinyUI(tagList(
-  shinyjs::useShinyjs(),
+  useShinyjs(),
   tags$head(
     includeScript(file.path("www", 'ddpcr.js')),
     #             includeScript(file.path(staticDir, 'helper-script.js')),
@@ -29,7 +29,7 @@ shinyUI(tagList(
     
     footer = 
       column(12,
-        hidden(
+          hidden(
           div(id = "errorDiv",
               div(tags$b("Error: "), span(id = "errorMsg"))
           )

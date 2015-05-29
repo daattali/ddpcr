@@ -13,7 +13,7 @@ tabPanel(
       
       # Basic settings tab
       tabPanel(
-        title = "Basic",
+        title = "Basic Settings",
         id = "basicSettingsTab",
         br(),
         
@@ -52,15 +52,27 @@ tabPanel(
         ),
         br(),
         actionButton(
-          "updateSettings",
-          "Update",
+          "updateBasicSettings",
+          "Apply",
           class = "btn-primary"
+        ),
+        hidden(
+          span(id = "updateBasicSettingsMsg",
+               "Applying settings...",
+               class = "btn-msg"
+          )
+        ),
+        hidden(
+          span(id = "updateBasicSettingsDone",
+               "Done",
+               class = "btn-msg"
+          )
         )
       ),
 
       # Advanced settings tab
       tabPanel(
-        title = "Subset",
+        title = "Subset Plate",
         id = "subsetSettingsTab",
         br(),
         textInput(
@@ -92,16 +104,28 @@ tabPanel(
             
       # Advanced settings tab
       tabPanel(
-        title = "Advanced",
+        title = "Advanced Settings",
         id = "advancedSettingsTab",
         br(),
         h4("These are advanced options, only use them if you know what you're doing."),
         uiOutput("advancedSettings"),  
         actionButton(
           "updateAdvancedSettings",
-          "Update Advanced Settings",
+          "Apply",
           class = "btn-primary"
-        )      
+        ),
+        hidden(
+          span(id = "updateAdvancedSettingsMsg",
+               "Applying settings...",
+               class = "btn-msg"
+          )
+        ),
+        hidden(
+          span(id = "updateAdvancedSettingsDone",
+               "Done",
+               class = "btn-msg"
+          )
+        )        
       )
     )
   )
