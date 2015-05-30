@@ -58,3 +58,7 @@ h3 .popover-link {
   color: red;
   font-size: 1.2em;
 }
+
+#settingsSubset {
+  width: 650px;
+}

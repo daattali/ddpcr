@@ -111,6 +111,7 @@ shinyServer(function(input, output, session) {
       updateTextInput(session, "settingsXThreshold", value = dataValues$plate %>% x_threshold)
       updateTextInput(session, "settingsYThreshold", value = dataValues$plate %>% y_threshold)
     }
+    updateTextInput(session, "settingsSubset", value = "")
   })  
   
   # --- Settings tab --- #
@@ -148,11 +149,10 @@ shinyServer(function(input, output, session) {
       return(NULL)
     }
     
-    oldValue <- input$settingsSubset
-    if (grepl(clickedWell, oldValue)) {
-      newValue <- gsub(sprintf("([^:]?)%s, ", clickedWell), "\\1", oldValue, perl = TRUE)
+    if (input$settingsSubset == "") {
+      newValue <- clickedWell
     } else {
-      newValue <- paste0(oldValue, clickedWell, ", ")      
+      newValue <- sprintf("%s, %s", input$settingsSubset, clickedWell)
     }
     updateTextInput(session, "settingsSubset", value = newValue)
   })
@@ -168,12 +168,15 @@ shinyServer(function(input, output, session) {
 
     if (length(well1) == 0 || length(well2) == 0 ||
         !grepl(WELL_ID_REGEX, well1) || !grepl(WELL_ID_REGEX, well2) ||
-        well1 == well2 ||
         !any((dataValues$plate %>% wells_used) %in% get_wells_btwn(well1, well2))) {
       return(NULL)
     }
     
-    newValue <- paste0(input$settingsSubset, well1, ":", well2, ",")
+    if (input$settingsSubset == "") {
+      newValue <- sprintf("%s:%s", well1, well2)
+    } else {
+      newValue <- sprintf("%s, %s:%s", input$settingsSubset, well1, well2)
+    }    
     updateTextInput(session, "settingsSubset", value = newValue)
   })
   
@@ -210,15 +213,14 @@ shinyServer(function(input, output, session) {
   observeEvent(input$updateSubsetSettings, {
     # User-experience stuff
     disable("updateSubsetSettings")
-    show("updateSubsetSettingsMsg")
     on.exit({
       enable("updateSubsetSettings")
-      hide("updateSubsetSettingsMsg")
     })
     hide("errorDiv")
     
     tryCatch({
       dataValues$plate <- subset(dataValues$plate, input$settingsSubset)
+      updateTextInput(session, "settingsSubset", value = "")
       show("updateSubsetSettingsDone")
       hide(id = "updateSubsetSettingsDone", anim = TRUE,
            animType = "fade", time = 0.5, delay = 4)
