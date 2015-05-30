@@ -35,6 +35,7 @@ type <- function(plate, all = FALSE) {
   }
 }
 
+#' @export
 reset <- function(plate, type, params,
                   keep_type = FALSE, keep_params = FALSE) {
   if (keep_type) {
@@ -181,6 +182,10 @@ parent_plate_type.default <- function(plate) {
 
 #' @export
 set_default_params <- function(plate) {
+  new_params <- define_params(plate)
+  x_var(plate) <- new_params[['GENERAL']]['X_VAR']
+  y_var(plate) <- new_params[['GENERAL']]['Y_VAR']
+  
   params(plate) <- define_params(plate)
   plate
 }

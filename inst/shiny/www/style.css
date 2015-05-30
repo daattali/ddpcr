@@ -44,6 +44,25 @@ h3 .popover-link {
   font-weight: bold;
 }
 
+#datasetDescName {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+#datasetDescType {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+#datasetDescSummary {
+  font-weight: bold;
+}
+
+#saveBtn {
+  margin-bottom: 20px;
+}
+
+
 .btn-msg {
   margin-left: 15px;
   font-size: 1.2em;
@@ -61,4 +80,8 @@ h3 .popover-link {
 
 #settingsSubset {
   width: 650px;
+}
+
+#resetParamsBtn {
+  margin-left: 15px;
 }

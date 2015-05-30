@@ -128,11 +128,9 @@ tabPanel(
           "Apply",
           class = "btn-primary"
         ),
-        hidden(
-          span(id = "updateAdvancedSettingsMsg",
-               "Applying settings...",
-               class = "btn-msg"
-          )
+        actionButton(
+          "resetParamsBtn",
+          "Use defaults"
         ),
         hidden(
           span(id = "updateAdvancedSettingsDone",

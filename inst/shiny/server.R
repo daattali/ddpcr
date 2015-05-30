@@ -24,10 +24,13 @@ shinyServer(function(input, output, session) {
       div(id = "header-select", "Please select a dataset to begin")
     } else {
       div(
-        dataValues$plate %>% name, br(),
-        "Type:", dataValues$plate %>% type, br(),
-        dataValues$plate %>% wells_used %>% length, " wells; ",
-        dataValues$plate %>% plate_data %>% nrow %>% format(big.mark = ","), " droplets"
+        div(id = "datasetDescName", dataValues$plate %>% name),
+        div(id = "datasetDescType", "Type:", dataValues$plate %>% type),
+        div(id = "datasetDescSummary",
+          dataValues$plate %>% wells_used %>% length, " wells; ",
+          dataValues$plate %>% plate_data %>% nrow %>% format(big.mark = ","), " droplets"
+        ),
+        downloadButton('saveBtn', 'Save data')
       )
     }
   })
@@ -190,15 +193,17 @@ shinyServer(function(input, output, session) {
       hide("updateBasicSettingsMsg")
     })
     hide("errorDiv")    
-    
+   
     tryCatch({
       if (type(dataValues$plate) != input$settingsPlateType &&
           input$settingsPlateType != "") {
         dataValues$plate <- ddpcr::reset(dataValues$plate, input$settingsPlateType)
       }
+    
       name(dataValues$plate) <- input$settingsName
       x_var(dataValues$plate) <- input$settingsXvar
       y_var(dataValues$plate) <- input$settingsYvar
+    
       if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
         x_threshold(dataValues$plate) <- input$settingsXThreshold
         y_threshold(dataValues$plate) <- input$settingsYThreshold
@@ -207,7 +212,7 @@ shinyServer(function(input, output, session) {
       show("updateBasicSettingsDone")
       hide(id = "updateBasicSettingsDone", anim = TRUE,
            animType = "fade", time = 0.5, delay = 4)
-    }, error = errorFunc)
+   }, error = errorFunc)
   })
   
   observeEvent(input$updateSubsetSettings, {
@@ -279,10 +284,8 @@ shinyServer(function(input, output, session) {
   observeEvent(input$updateAdvancedSettings, {
     # User-experience stuff
     disable("updateAdvancedSettings")
-    show("updateAdvancedSettingsMsg")
     on.exit({
       enable("updateAdvancedSettings")
-      hide("updateAdvancedSettingsMsg")
     })
     hide("errorDiv")   
     
@@ -304,6 +307,22 @@ shinyServer(function(input, output, session) {
     }, error = errorFunc)
   })
   
+  observeEvent(input$resetParamsBtn, {
+    # User-experience stuff
+    disable("resetParamsBtn")
+    on.exit({
+      enable("resetParamsBtn")
+    })
+    hide("errorDiv")
+    
+    tryCatch({
+      dataValues$plate <- set_default_params(dataValues$plate)
+      show("updateAdvancedSettingsDone")
+      hide(id = "updateAdvancedSettingsDone", anim = TRUE,
+           animType = "fade", time = 0.5, delay = 4)
+    }, error = errorFunc)
+  })
+
   # --- Analyze tab --- #
   
   # analyze button is clicked

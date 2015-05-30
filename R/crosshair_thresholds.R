@@ -40,20 +40,24 @@ define_params.crosshair_thresholds <- function(plate) {
   params
 }
 
+#' @export
 x_threshold <- function(plate) {
   stopifnot(plate %>% inherits("crosshair_thresholds"))
   params(plate, 'CLASSIFY', 'X_THRESHOLD')
 }
+#' @export
 `x_threshold<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("crosshair_thresholds"))
   params(plate, 'CLASSIFY', 'X_THRESHOLD') <- value
   plate
 }
 
+#' @export
 y_threshold <- function(plate) {
   stopifnot(plate %>% inherits("crosshair_thresholds"))
   params(plate, 'CLASSIFY', 'Y_THRESHOLD')
 }
+#' @export
 `y_threshold<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("crosshair_thresholds"))
   params(plate, 'CLASSIFY', 'Y_THRESHOLD') <- value
