@@ -1,5 +1,5 @@
 body {
-  background: #f8f8f8;
+  background-color: #f8f8f8;
 }
 
 .navbar {
@@ -13,7 +13,7 @@ body {
 }
 
 body > .container {
-  background: #ffffff;
+  background-color: #ffffff;
   padding: 20px;
   border: 1px solid #ccc;
   margin-top: -1px;
@@ -36,6 +36,26 @@ body > .container {
 
 h3 .popover-link {
   font-size: 18px;
+}
+
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:hover,
+.nav-tabs>li.active>a:focus {
+  font-weight: bold;
+}
+
+.nav-tabs>li {
+  margin-left: 7px;
+}
+
+.nav-tabs>li>a {
+  background-color: #f8f8f8;
+  border: 1px solid #dddddd;
+}
+
+.nav>li>a:hover,
+.nav>li>a:focus {
+  background-color: #dddddd;
 }
 
 #headerDatasetDesc {
