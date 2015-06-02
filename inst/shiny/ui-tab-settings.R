@@ -100,9 +100,6 @@ tabPanel(
                        height = 450, width = 650)
         ),
         br(),
-        p("Note: this action is not reversible. Once you subset the dataset to only keep certain wells,",
-          "the rest of the data is removed. To retrieve the original data later, you will need to upload the dataset again.",
-          "the dataset again."),
         actionButton(
           "updateSubsetSettings",
           "Apply",
@@ -113,7 +110,10 @@ tabPanel(
                icon("check"), "Done",
                class = "btn-msg btn-msg-done"
           )
-        )      
+        ),
+        p("Note: this action is not reversible. Once you subset the dataset to only keep certain wells,",
+          "the rest of the data is removed. To retrieve the original data later, you will need to upload the dataset again.",
+          "the dataset again.")
       ),
             
       # Advanced settings tab
@@ -128,9 +128,11 @@ tabPanel(
           "Apply",
           class = "btn-primary"
         ),
-        actionButton(
-          "resetParamsBtn",
-          "Use defaults"
+        hidden(
+          span(id = "updateAdvancedSettingsMsg",
+               "Applying settings...",
+               class = "btn-msg"
+          )
         ),
         hidden(
           span(id = "updateAdvancedSettingsDone",

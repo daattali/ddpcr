@@ -82,6 +82,20 @@ hr.small {
   width: 650px;
 }
 
+#updateSubsetSettings {
+  margin-bottom: 10px;
+}
+
 #resetParamsBtn {
   margin-left: 15px;
+}
+
+#analyzeProgress {
+  margin-top: 15px;
+  padding: 0;
+  font-size: inherit;
+  background: none;
+  font-family: inherit;
+  font-weight: bold;
+  border: none;
 }

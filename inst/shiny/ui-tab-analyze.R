@@ -6,14 +6,21 @@ tabPanel(
   value = "analyzeTab",
   
   conditionalPanel(
-    condition = "output.datasetChosen",  
-  
+    condition = "output.datasetChosen", 
+    
+    p("Analyze the droplets to classify each droplet into a group.", br(),
+      "This may take several minutes depending on the number of wells."),
     actionButton(
       "analyzeBtn",
       "Run analysis",
       class = "btn-primary"
     ),
-    br(), br(),
-    tags$pre(textOutput("analyzePlateData"))
+    pre(id = "analyzeProgress"),
+    hidden(
+      span(id = "analyzeDone",
+           icon("check"), "Done",
+           class = "btn-msg-done"
+      )
+    )
   )
 )

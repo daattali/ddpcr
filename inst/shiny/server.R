@@ -13,27 +13,22 @@ shinyServer(function(input, output, session) {
   dataValues <- reactiveValues(
     plate = NULL
   )
-  
+
   # we need to have a quasi-variable flag to indicate whether or not
   # we have a dataset to work with or if we're waiting for dataset to be chosen
   output$datasetChosen <- reactive({ FALSE })
   outputOptions(output, 'datasetChosen', suspendWhenHidden = FALSE)
 
-  output$datasetDescName <- renderText({
-    if (is.null(dataValues$plate)) return()
-    dataValues$plate %>% name
-  })
+  # save button (download dataset) button is clicked
+  output$saveBtn <- downloadHandler(
+    filename = function() {
+      dataValues$plate %>% name %>% normalize_to_rds
+    },
+    content = function(file) {
+      save_plate(dataValues$plate, file)
+    }
+  ) 
   
-  output$datasetDescNumWells <- renderText({
-    if (is.null(dataValues$plate)) return()
-    dataValues$plate %>% wells_used %>% length
-  })
-  
-  output$datasetDescNumDrops <- renderText({
-    if (is.null(dataValues$plate)) return()
-    dataValues$plate %>% plate_data %>% nrow %>% format(big.mark = ",")
-  })  
-
   # When a main tab or secondary tab is switched, clear the error message
   observe({
     input$mainNav
@@ -98,11 +93,15 @@ shinyServer(function(input, output, session) {
   
   # whenever the plate gets updated
   observeEvent(dataValues$plate, {
-    
-    # update the plate summary
-    output$analyzePlateData <- renderPrint({
-      dataValues$plate
+    output$datasetDescName <- renderText({
+      dataValues$plate %>% name
     })
+    output$datasetDescNumWells <- renderText({
+      dataValues$plate %>% wells_used %>% length
+    })
+    output$datasetDescNumDrops <- renderText({
+      dataValues$plate %>% plate_data %>% nrow %>% format(big.mark = ",")
+    })  
     
     # update the settings
     updateSelectInput(session, "settingsPlateType", selected = dataValues$plate %>% type)
@@ -326,19 +325,27 @@ shinyServer(function(input, output, session) {
   
   # analyze button is clicked
   observeEvent(input$analyzeBtn, {
-    dataValues$plate <- dataValues$plate %>% analyze
-    #updateTabsetPanel(session, "mainNav", "plotTab")
+    # User-experience stuff
+    disable("analyzeBtn")
+    on.exit({
+      enable("analyzeBtn")
+    })
+    hide("errorDiv")
+    
+    tryCatch({
+      text("analyzeProgress", "")
+      withCallingHandlers(
+        dataValues$plate <- dataValues$plate %>% analyze(restart = TRUE),
+        message = function(m) {
+          text("analyzeProgress", m$message, TRUE)
+        }
+      )
+      show("analyzeDone")
+      hide(id = "analyzeDone", anim = TRUE,
+           animType = "fade", time = 0.5, delay = 4)
+    }, error = errorFunc)
   })
   
-  # save button (download dataset) button is clicked
-  output$saveBtn <- downloadHandler(
-    filename = function() {
-      dataValues$plate %>% name %>% normalize_to_rds
-    },
-    content = function(file) {
-      save_plate(dataValues$plate, file)
-    }
-  )  
   # --- Plot tab --- #
   
   # plot button is clicked
