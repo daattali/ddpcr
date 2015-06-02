@@ -19,22 +19,21 @@ shinyServer(function(input, output, session) {
   output$datasetChosen <- reactive({ FALSE })
   outputOptions(output, 'datasetChosen', suspendWhenHidden = FALSE)
 
-  output$datasetDesc <- renderUI({
-    if (is.null(dataValues$plate)) {
-      div(id = "header-select", "Please select a dataset to begin")
-    } else {
-      div(
-        div(id = "datasetDescName", dataValues$plate %>% name),
-        div(id = "datasetDescType", "Type:", dataValues$plate %>% type),
-        div(id = "datasetDescSummary",
-          dataValues$plate %>% wells_used %>% length, " wells; ",
-          dataValues$plate %>% plate_data %>% nrow %>% format(big.mark = ","), " droplets"
-        ),
-        downloadButton('saveBtn', 'Save data')
-      )
-    }
+  output$datasetDescName <- renderText({
+    if (is.null(dataValues$plate)) return()
+    dataValues$plate %>% name
   })
   
+  output$datasetDescNumWells <- renderText({
+    if (is.null(dataValues$plate)) return()
+    dataValues$plate %>% wells_used %>% length
+  })
+  
+  output$datasetDescNumDrops <- renderText({
+    if (is.null(dataValues$plate)) return()
+    dataValues$plate %>% plate_data %>% nrow %>% format(big.mark = ",")
+  })  
+
   # When a main tab or secondary tab is switched, clear the error message
   observe({
     input$mainNav

@@ -33,7 +33,7 @@ read_dir <- function(plate, dir) {
 read_files <- function(plate, data_files, meta_file) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
-  # make sure all given data files are valid paths
+  # make sure all given data files are valid data files
   if (missing(data_files) || length(data_files) == 0) {
     err_msg("no data files provided")
   }
@@ -42,6 +42,10 @@ read_files <- function(plate, data_files, meta_file) {
     all
   if (!all_files) {
     err_msg("could not find all data files")
+  }
+  if (!all(grepl(DATA_FILE_REGEX, data_files))) {
+    err_msg(paste("not all data files provided are valid data files",
+                  "(ddpcr expects the \"_Amplitude\" files exported by QuantaSoft)"))
   }
   
   # make sure metadata file is a valid path

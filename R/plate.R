@@ -182,11 +182,13 @@ parent_plate_type.default <- function(plate) {
 
 #' @export
 set_default_params <- function(plate) {
-  new_params <- define_params(plate)
-  x_var(plate) <- new_params[['GENERAL']]['X_VAR']
-  y_var(plate) <- new_params[['GENERAL']]['Y_VAR']
-  
-  params(plate) <- define_params(plate)
+  if (!is_empty_plate(plate)) {
+    new_params <- define_params(plate)
+    x_var(plate) <- new_params[['GENERAL']]['X_VAR']
+    y_var(plate) <- new_params[['GENERAL']]['Y_VAR']
+  }
+
+    params(plate) <- define_params(plate)
   plate
 }
 
@@ -316,6 +318,9 @@ status <- function(plate) {
 `status<-` <- function(plate, value) {
   plate[['status']] <- value
   plate
+}
+is_empty_plate <- function(plate) {
+  is.null(status(plate))
 }
 
 #' @export
@@ -481,7 +486,7 @@ step_end <- function(time) {
 
 #' @export
 print.ddpcr_plate <- function(x, ...) {
-  if (is.null(status(x))) {
+  if (is_empty_plate(x)) {
     cat0("Empty ddPCR plate")
     return()
   }

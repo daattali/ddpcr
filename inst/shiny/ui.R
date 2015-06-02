@@ -20,8 +20,28 @@ tagList(
     id = "mainNav",
     inverse = TRUE,
     fluid = FALSE,
-    header = column(12, uiOutput("datasetDesc")),
-    
+    header = column(12,
+                    div(id = "headerDatasetDesc",
+                      conditionalPanel(
+                        condition = "!output.datasetChosen",
+                        div(id = "datasetDescSelect",
+                            "Please select a dataset to begin")
+                      ),
+                      conditionalPanel(
+                        condition = "output.datasetChosen",
+                        textOutput("datasetDescName"),
+                        div(id = "datasetDescSummary",
+                            "Plate with",
+                            textOutput("datasetDescNumWells", inline = TRUE),
+                            "wells and",
+                            textOutput("datasetDescNumDrops", inline = TRUE),
+                            "droplets"
+                        ),
+                        downloadButton('saveBtn', 'Save data')
+                      ),
+                      hr(class = "small")
+                    )
+             ),
     source("ui-tab-dataset.R",  local = TRUE)$value,
     source("ui-tab-settings.R", local = TRUE)$value,
     source("ui-tab-analyze.R",  local = TRUE)$value,
