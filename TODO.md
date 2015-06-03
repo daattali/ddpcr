@@ -48,9 +48,19 @@ small p value (suggesting that even one mutant drop is significant)
 
 ### shiny
 
-- look into progress bar (http://shiny.rstudio.com/articles/progress.html)
+save plot
+	
+general settings (wells, samples, superimpose, fullplate, showdrops, showdropsempty, showdropsoutlier,showfailedwells)
 
-- use navbarPage to have navigation on top (dataset/summary/visualize) 
+plot settings (xlab, ylab, title, showgrid, showgridlabels, dropssize, textsizetitle, textsizerowcol, textsizeaxeslabel, textsizegridlabels, height, width)
 
-- explore data: boxplot/density plot of # empty drops, boxplot/density plot of
-total # drops, box+violin plot of FAM/HEX
+droplet colours
+
+background colours
+
+
+show_mutant_freq = TRUE, text_size_mutant_freq, show_low_high_mut_freq
+col_thresholds, show_thresholds
+ 
+
+- explore data: boxplot/density/histogram for every numeric metadata column
