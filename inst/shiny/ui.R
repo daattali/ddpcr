@@ -4,13 +4,12 @@ library(shiny)
 library(shinyjs)
 library(ddpcr)
 
-source("ui-helper-helpPopup.R")
+source(file.path("ui", "helpers.R"))
 
 tagList(
   useShinyjs(),
   tags$head(
     includeScript(file.path("www", 'ddpcr.js')),
-    #             includeScript(file.path(staticDir, 'helper-script.js')),
     includeCSS(file.path("www", 'style.css'))
   ),
   
@@ -20,32 +19,11 @@ tagList(
     id = "mainNav",
     inverse = TRUE,
     fluid = FALSE,
-    header = column(12,
-                    div(id = "headerDatasetDesc",
-                      conditionalPanel(
-                        condition = "!output.datasetChosen",
-                        div(id = "datasetDescSelect",
-                            "Please select a dataset to begin")
-                      ),
-                      conditionalPanel(
-                        condition = "output.datasetChosen",
-                        textOutput("datasetDescName"),
-                        div(id = "datasetDescSummary",
-                            "Plate with",
-                            textOutput("datasetDescNumWells", inline = TRUE),
-                            "wells and",
-                            textOutput("datasetDescNumDrops", inline = TRUE),
-                            "droplets"
-                        ),
-                        downloadButton('saveBtn', 'Save data')
-                      ),
-                      hr(class = "small")
-                    )
-             ),
-    source("ui-tab-dataset.R",  local = TRUE)$value,
-    source("ui-tab-settings.R", local = TRUE)$value,
-    source("ui-tab-analyze.R",  local = TRUE)$value,
-    source("ui-tab-plot.R",     local = TRUE)$value,
+    header = source(file.path("ui", "header.R"),  local = TRUE)$value,
+    source(file.path("ui", "tab-dataset.R"),  local = TRUE)$value,
+    source(file.path("ui", "tab-settings.R"), local = TRUE)$value,
+    source(file.path("ui", "tab-analyze.R"),  local = TRUE)$value,
+    source(file.path("ui", "tab-results.R"),  local = TRUE)$value,
     
     footer = 
       column(12,

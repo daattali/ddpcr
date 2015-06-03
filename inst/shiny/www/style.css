@@ -17,6 +17,7 @@ body > .container {
   padding: 20px;
   border: 1px solid #ccc;
   margin-top: -1px;
+  margin-bottom: 30px;
   border-radius: 0 0 3px 3px;
   -webkit-border-radius: 0 0 3px 3px;
   -moz-border-radius: 0 0 3px 3px;
@@ -68,11 +69,18 @@ h3 .popover-link {
 #datasetDescName {
   font-size: 3em;
   font-weight: bold;
+  word-break: break-all;
 }
 
 #datasetDescSummary {
   font-size: 1.3em;
   margin-bottom: 5px;
+  vertical-align: middle;
+}
+
+#saveBtn {
+  vertical-align: middle;
+  margin-left: 10px;
 }
 
 hr.small {
