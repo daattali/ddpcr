@@ -37,11 +37,29 @@ output$clustersMapping <- renderUI({
 })
 
 
-output$metaTable <- DT::renderDataTable(
-  dataValues$plate %>% plate_meta,
-  rownames = FALSE,
-  options = list(searching = FALSE)
-)
+output$metaTable <- DT::renderDataTable({
+  meta <- dataValues$plate %>% plate_meta(only_used = TRUE)
+  colnames <- meta %>% humanFriendlyColname
+  hiddenCols <- meta %>% metaColsHideIdx
+  
+  DT::datatable(meta,
+    rownames = FALSE,
+    class = 'cell-border stripe',
+    colnames = colnames,
+    extensions = list(
+      'ColVis' = NULL,  # show the "show/hide columns" button 
+      FixedColumns = list(leftColumns = 1)  # fix the Well column
+    ),
+    options = list(
+      searching = FALSE, paging = FALSE,
+      scrollX = TRUE, scrollY = 500,
+      columnDefs = list(list(visible = FALSE,
+                             targets = hiddenCols)),
+      dom = 'C<"clear">lfrtip',
+      scrollCollapse = TRUE
+    )
+  )
+})
 
 output$saveMetaBtn <- downloadHandler(
   filename = function() { 
@@ -51,3 +69,18 @@ output$saveMetaBtn <- downloadHandler(
     write.csv(dataValues$plate %>% plate_meta, file, row.names = FALSE)
   }
 )
+
+metaColsHideIdx <- function(x) {
+  colsHide <- c("row", "col", "used", "comment",
+                "mutant_borders", "wildtype_borders", "filled_borders")
+  if (all(is.na(x[['sample']]))) {
+    colsHide <- c(colsHide, "sample")
+  }
+  which(colnames(x) %in% colsHide) - 1
+}
+
+humanFriendlyColname <- function(x) {
+  x <- colnames(x)
+  paste0(toupper(substring(x, 1, 1)),
+         substring(gsub("_", " ", x), 2))
+}

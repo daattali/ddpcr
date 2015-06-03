@@ -56,10 +56,10 @@ tabPanel(
         downloadButton("saveDropletsBtn", "Download droplets data"),
         br(), br(),
         fixedRow(
-          column(6,
+          column(8,
             DT::dataTableOutput("dropletsTable")
           ),
-          column(6,
+          column(4,
             br(),
             div(id = "clustersMappingOuter",
               span(id = "clustersMappingInner",
@@ -78,7 +78,6 @@ tabPanel(
         br(),
         downloadButton("saveMetaBtn", "Download plate summary"),
         br(), br(),
-        checkboxInput("showUnusedTable", "Show unused wells", FALSE),
         DT::dataTableOutput("metaTable")
       )      
     )

@@ -140,7 +140,7 @@ hr.small {
   border-radius: 3px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  padding: 10px 20px;
+  padding: 10px 25px;
   background-color: #fafafa;
   font-size: 1.3em;
   text-align: left;
@@ -153,4 +153,21 @@ hr.small {
 
 #clustersMapping {
   text-transform: lowercase;
+}
+
+#dropletsTable .dataTable {
+  border: 1px solid #111;
+}
+
+#metaTable .dataTables_scroll,
+#metaTable .DTFC_LeftWrapper {
+  border: 1px solid #111;
+}
+
+#metaTable .dataTables_scrollBody {
+  border-bottom: 0;
+}
+
+ul.ColVis_collection {
+  width: auto !important;
 }
