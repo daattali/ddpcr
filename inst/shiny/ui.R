@@ -27,9 +27,12 @@ tagList(
     
     footer = 
       column(12,
-          hidden(
+        hidden(
           div(id = "errorDiv",
-              div(icon("exclamation-circle"), tags$b("Error: "), span(id = "errorMsg"))
+            div(icon("exclamation-circle"),
+                tags$b("Error: "),
+                span(id = "errorMsg")
+            )
           )
         )
       )

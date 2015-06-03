@@ -2,9 +2,9 @@
 
 tabPanel(
   title = "Dataset",
-  id = "datasetTab",
+  id    = "datasetTab",
   value = "datasetTab",
-  name = "datasetTab",
+  name  = "datasetTab",
   
   tabsetPanel(
     id = "datasetTabs", type = "tabs",    

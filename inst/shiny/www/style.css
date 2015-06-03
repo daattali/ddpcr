@@ -89,6 +89,8 @@ hr.small {
   border-width: 4px;
   border-color: inherit;
   border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
 }
 
 .btn-msg {
@@ -126,4 +128,29 @@ hr.small {
   font-family: inherit;
   font-weight: bold;
   border: none;
+}
+
+#clustersMappingOuter {
+  text-align: center;
+}
+
+#clustersMappingInner {
+  display: inline-block;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  padding: 10px 20px;
+  background-color: #fafafa;
+  font-size: 1.3em;
+  text-align: left;
+}
+
+#clustersTitle {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+#clustersMapping {
+  text-transform: lowercase;
 }

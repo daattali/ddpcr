@@ -64,7 +64,7 @@ tabPanel(
         ),
         hidden(
           span(id = "updateBasicSettingsDone",
-               "Done",
+               icon("check"), "Done",
                class = "btn-msg btn-msg-done"
           )
         )
@@ -136,7 +136,7 @@ tabPanel(
         ),
         hidden(
           span(id = "updateAdvancedSettingsDone",
-               "Done",
+               icon("check"), "Done",
                class = "btn-msg btn-msg-done"
           )
         )        

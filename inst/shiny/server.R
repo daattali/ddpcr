@@ -24,7 +24,10 @@ shinyServer(function(input, output, session) {
 ### TODO this is a hack for testing so that there would be a plate pre-loaded
 if (exists("ppp")) {
 dataValues$plate <- ppp 
-output$datasetChosen <- reactive({ TRUE }) 
+output$datasetChosen <- reactive({ TRUE })
+updateTabsetPanel(session, "mainNav", "resultsTab")
+} else {
+ppp <<- new_plate("~/data/mini141/")
 }
 
   # save button (download dataset) button is clicked

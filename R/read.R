@@ -89,7 +89,7 @@ read_files <- function(plate, data_files, meta_file) {
         magrittr::set_colnames(colnames(.) %>% tolower)
     },
     error = function(err) {
-      err_msg("there was a problem reading the metadata file")
+      err_msg("there was a problem with the metadata file")
     })
     plate_meta(plate) <- plate_meta
   }
