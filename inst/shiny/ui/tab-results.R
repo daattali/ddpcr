@@ -15,37 +15,57 @@ tabPanel(
         title = "Plot",
         id = "plotTab",   
 
-        sidebarLayout(
-          sidebarPanel(
-            h3("Plot parameters"),
-            lapply(
-              formals(ddpcr:::plot.ddpcr_plate) %>% names,
-              function(param_name) {
-                param_val <- formals(ddpcr:::plot.ddpcr_plate) %>% .[[param_name]]
-                param_id <- sprintf("plot_param_%s", param_name)
-                if (missing(param_val) || param_val %>% is.language) {
-                  return()
-                } else if (param_val %>% is.logical) {
-                  input_type <- checkboxInput
-                } else if (param_val %>% is.numeric) {
-                  input_type <- numericInput
-                } else {
-                  input_type <- textInput
-                }
-                do.call(input_type, list(param_id, param_name, param_val))
-              }
-            )
-          ),
+        br(),
+        div("Settings",
+        tabsetPanel(
+          id = "plotParamsTabs", type = "pills",    
           
-          mainPanel(
-            actionButton(
-              "plotBtn",
-              "Plot",
-              class = "btn-primary"
-            ),
-            plotOutput("plot")
+          tabPanel(
+            title = "General",
+            id = "plotTab"
+          ),
+          tabPanel(
+            title = "Droplet colours",
+            id = "plotTab"
+          ),
+          tabPanel(
+            title = "Background colours",
+            id = "plotTab"
           )
-        )
+        ))
+      
+        
+#         sidebarLayout(
+#           sidebarPanel(
+#             h3("Plot parameters"),
+#             lapply(
+#               formals(ddpcr:::plot.ddpcr_plate) %>% names,
+#               function(param_name) {
+#                 param_val <- formals(ddpcr:::plot.ddpcr_plate) %>% .[[param_name]]
+#                 param_id <- sprintf("plot_param_%s", param_name)
+#                 if (missing(param_val) || param_val %>% is.language) {
+#                   return()
+#                 } else if (param_val %>% is.logical) {
+#                   input_type <- checkboxInput
+#                 } else if (param_val %>% is.numeric) {
+#                   input_type <- numericInput
+#                 } else {
+#                   input_type <- textInput
+#                 }
+#                 do.call(input_type, list(param_id, param_name, param_val))
+#               }
+#             )
+#           ),
+#           
+#           mainPanel(
+#             actionButton(
+#               "plotBtn",
+#               "Plot",
+#               class = "btn-primary"
+#             ),
+#             plotOutput("plot")
+#           )
+#         )
       ),
       
       # Droplets data tab

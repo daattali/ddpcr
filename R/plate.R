@@ -230,6 +230,7 @@ set_default_clusters <- function(plate) {
 define_clusters <- function(plate) {
   UseMethod("define_clusters")
 }
+#' @export
 clusters <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   plate[['clusters']]
