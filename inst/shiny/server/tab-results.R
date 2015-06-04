@@ -78,6 +78,48 @@ humanFriendlyColname <- function() {
 
 # --- Plot tab --- #
 
+observeEvent(input$plotBtn, {
+  show("mainPlotContainer")
+})
+
+makePlot <- eventReactive(input$plotBtn, {
+  plotParams <- list()
+  plotParams[['x']] <- dataValues$plate
+  
+  if (input$plotParamSubsetType == 'wells' && !is.null(input$plotParamWells)) {
+    plotParams[['wells']] <- input$plotParamWells
+  } else if (input$plotParamSubsetType == 'samples' && !is.null(input$plotParamSamples)) {
+    plotParams[['samples']] <- input$plotParamSamples
+  }
+  plotParams[['show_failed_wells']] <- input$plotParamIncludeFailed
+  plotParams[['show_drops']] <- input$plotParamShowDrops
+  plotParams[['drops_size']] <- input$plotParamDropsSize
+  plotParams[['col_drops']] <- input$plotParamDropsCol
+  plotParams[['alpha_drops']] <- input$plotParamDropsAlpha
+  plotParams[['superimpose']] <- input$plotParamSuperimpose
+  plotParams[['show_full_plate']] <- input$plotParamShowFullPlate
+  if (!is.null(input$plotParamShowThresholds)) {
+    plotParams[['show_thresholds']] <- input$plotParamShowThresholds
+  }
+  if (!is.null(input$plotParamThresholdsCol)) {
+    plotParams[['col_thresholds']] <- input$plotParamThresholdsCol
+  }
+  if (!is.null(input$plotParamShowFreq)) {
+    plotParams[['show_mutant_freq']] <- input$plotParamShowFreq
+  }
+  if (!is.null(input$plotParamMutFreqSize)) {
+    plotParams[['text_size_mutant_freq']] <- input$plotParamMutFreqSize
+  }
+#   plotParams[['']] <- input$
+#   plotParams[['']] <- input$
+#   plotParams[['']] <- input$
+#   plotParams[['']] <- input$
+#   plotParams[['']] <- input$
+#     
+bb<<-plotParams
+  do.call(plot, plotParams)
+})
+
 output$downloadPlot <- downloadHandler(
   filename = function() { 
     sprintf("%s-plot.png", dataValues$plate %>% name)
@@ -94,18 +136,9 @@ output$downloadPlot <- downloadHandler(
   }
 )
 
-# plot button is clicked
-output$plot <- renderPlot({
-  if (input$plotBtn == 0) return()
-  
-  isolate({
-    plot_params <- 
-      sapply(formals(ddpcr:::plot.ddpcr_plate) %>% names,
-             function(x) input[[sprintf("plot_param_%s", x)]] ) %>%
-      .[!lapply(., is.null) %>% unlist]
-    plot_params[['x']] <- dataValues$plate
-    do.call(plot, plot_params)
-  })
+# main plot
+output$mainPlot <- renderPlot({
+  makePlot()
 }, height = "auto")
 
 # logic that turns certain options on/off if they conflict with other options
@@ -123,6 +156,7 @@ observe({
   toggleState("plotParamSuperimpose", !input$plotParamShowFullPlate && input$plotParamShowDrops)
   toggleState("plotParamShowFullPlate", !input$plotParamSuperimpose)
   toggleState("plotParamMutFreqSize", input$plotParamShowFreq)
+  toggleState("plotParamThresholdsCol", input$plotParamShowThresholds)
 })
 
 # create select box input for choosing wells and sample

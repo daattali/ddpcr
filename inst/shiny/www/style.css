@@ -201,3 +201,24 @@ ul.ColVis_collection {
 #plotParamsTabs.nav>li>a {
   padding: 5px 15px;
 }
+
+#mainPlotContainer {
+  position: relative;
+}
+
+#plotSpinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -33px;
+  margin-left: -33px;
+  z-index: 1;
+}
+
+#mainPlot {
+  position: relative;
+  z-index: 2;
+}
+#mainPlot.recalculating {
+  z-index: 0;
+}

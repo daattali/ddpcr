@@ -135,6 +135,12 @@ tabPanel(
                 id = "plotTab"
               )
             )
+        ),
+        hidden(
+          div(id = "mainPlotContainer",
+              img(src = "ajax-loader.gif", id = "plotSpinner"),
+              plotOutput("mainPlot")
+          )
         )
       )
     )
