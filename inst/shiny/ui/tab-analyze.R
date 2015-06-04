@@ -16,12 +16,6 @@ tabPanel(
       "Run analysis",
       class = "btn-primary"
     ),
-    pre(id = "analyzeProgress"),
-    hidden(
-      span(id = "analyzeDone",
-           icon("check"), "Done",
-           class = "btn-msg-done"
-      )
-    )
+    pre(id = "analyzeProgress")
   )
 )

@@ -17,8 +17,6 @@ observeEvent(input$analyzeBtn, {
         text("analyzeProgress", m$message, TRUE)
       }
     )
-    show("analyzeDone")
-    hide(id = "analyzeDone", anim = TRUE,
-         animType = "fade", time = 0.5, delay = 4)
+    updateTabsetPanel(session, "mainNav", "resultsTab")
   }, error = errorFunc)
 })

@@ -122,7 +122,7 @@ tabPanel(
         title = "Advanced Settings",
         id = "advancedSettingsTab",
         br(),
-        h4("These are advanced options, only use them if you know what you're doing."),
+        h3(strong("These are advanced options. Only use them if you know what you're doing.")),
         uiOutput("advancedSettings"),  
         actionButton(
           "updateAdvancedSettings",

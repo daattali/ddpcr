@@ -48,19 +48,4 @@ small p value (suggesting that even one mutant drop is significant)
 
 ### shiny
 
-save plot
-	
-general settings (wells, samples, superimpose, fullplate, showdrops, showdropsempty, showdropsoutlier,showfailedwells)
-
-plot settings (xlab, ylab, title, showgrid, showgridlabels, textsizetitle, textsizerowcol, textsizeaxeslabel, textsizegridlabels, height, width)
-
-droplet colours
-
-background colours
-
-
-show_mutant_freq = TRUE, text_size_mutant_freq, show_low_high_mut_freq
-col_thresholds, show_thresholds
- 
-
 - explore data: boxplot/density/histogram for every numeric metadata column
