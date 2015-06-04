@@ -47,8 +47,8 @@ shinyServer(function(input, output, session) {
   observe({
     input$mainNav
     input$datasetTabs
-    input$settingsTab
-    input$resultsTab
+    input$settingsTabs
+    input$resultsTabs
     
     # don't show the dataset description in About tab
     toggle(id = "headerDatasetDesc",
@@ -81,6 +81,14 @@ shinyServer(function(input, output, session) {
       updateTextInput(session, "settingsYThreshold", value = dataValues$plate %>% y_threshold)
     }
     updateTextInput(session, "settingsSubset", value = "")
+    
+    # update plot settings
+    hide(selector = ".plotParamsDropRow")
+    show(selector = sprintf(".plotParamsDropRow[data-drop-type~=%s]",
+                            dataValues$plate %>% type))
+    if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
+      updateSelectInput(session, "plotParamDropShow-empty", selected = "TRUE")
+    }
   })  
   
   # include logic for each tab

@@ -183,6 +183,7 @@ ul.ColVis_collection {
 #plotOptionsSection {
   font-size: 1.2em;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 #plotOptionsTitle {
@@ -192,14 +193,32 @@ ul.ColVis_collection {
   font-weight: bold;
 }
 
+#plotParamsTabs.nav-pills>li>a {
+  border-radius: 3px 3px 0 0;
+  -webkit-border-radius: 3px 3px 0 0;
+  -moz-border-radius: 3px 3px 0 0;  
+}
+
 #plotParamsTabs.nav-pills>li.active>a {
   color: #222;
   font-weight: bold;
-  background-color: #d0d0d0;
+  background-color: #fcfcfc;
+  border: 1px solid #ccc;
+  border-bottom: 0;
 }
 
 #plotParamsTabs.nav>li>a {
   padding: 5px 15px;
+}
+
+#plotOptionsSection .tab-content {
+  padding: 0 20px;
+  background-color: #fcfcfc;
+  border: 1px solid #ccc;
+  margin-top: -1px;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
 }
 
 #mainPlotContainer {
@@ -221,4 +240,9 @@ ul.ColVis_collection {
 }
 #mainPlot.recalculating {
   z-index: 0;
+}
+
+.plotParamDropName {
+  text-align: right;
+  padding-top: 5px;
 }

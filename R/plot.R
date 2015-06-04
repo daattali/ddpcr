@@ -133,7 +133,7 @@ plot.ddpcr_plate <- function(
   # don't show failed wells
   if (!show_failed_wells &&
       plate %>% has_step('REMOVE_FAILURES') &&
-      plate %>% status(plate) >= step(plate, 'REMOVE_FAILURES')) {
+      status(plate) >= step(plate, 'REMOVE_FAILURES')) {
     plate %<>% subset(wells_success(.))
   }
   

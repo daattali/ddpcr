@@ -80,12 +80,14 @@ humanFriendlyColname <- function() {
 
 observeEvent(input$plotBtn, {
   show("mainPlotContainer")
+  show("downloadPlot")
 })
 
 makePlot <- eventReactive(input$plotBtn, {
   plotParams <- list()
   plotParams[['x']] <- dataValues$plate
   
+  # general settings
   if (input$plotParamSubsetType == 'wells' && !is.null(input$plotParamWells)) {
     plotParams[['wells']] <- input$plotParamWells
   } else if (input$plotParamSubsetType == 'samples' && !is.null(input$plotParamSamples)) {
@@ -110,13 +112,39 @@ makePlot <- eventReactive(input$plotBtn, {
   if (!is.null(input$plotParamMutFreqSize)) {
     plotParams[['text_size_mutant_freq']] <- input$plotParamMutFreqSize
   }
+  
+  # droplet settings
+  if (input$plotParamShowDrops) {
+    dropsParams <- 
+      lapply(dataValues$plate %>% clusters %>% tolower, function(x) {
+        inputNameShow <- sprintf("plotParamDropShow-%s", x)
+        inputNameCol <- sprintf("plotParamDropCol-%s", x)
+        inputNameAlpha <- sprintf("plotParamDropAlpha-%s", x)
+        paramNameShow <- sprintf("show_drops_%s", x)
+        paramNameCol <- sprintf("col_drops_%s", x)
+        paramNameAlpha <- sprintf("alpha_drops_%s", x)
+        if (is.null(input[[inputNameShow]])) {
+          return()
+        }
+        paramList <- list()
+        paramList[[paramNameShow]] <- as.logical(input[[inputNameShow]])
+        paramList[[paramNameCol]] <- input[[inputNameCol]]
+        paramList[[paramNameAlpha]] <- input[[inputNameAlpha]]
+        if (paramList[[paramNameCol]] == "Default") {
+          paramList[[paramNameCol]] <- input$plotParamDropsCol
+        }
+        paramList
+      })
+    dropsParams <- unlist(dropsParams, recursive = FALSE)
+    plotParams <- append(plotParams, dropsParams)
+  }
 #   plotParams[['']] <- input$
 #   plotParams[['']] <- input$
 #   plotParams[['']] <- input$
 #   plotParams[['']] <- input$
 #   plotParams[['']] <- input$
 #     
-bb<<-plotParams
+  
   do.call(plot, plotParams)
 })
 
@@ -157,6 +185,32 @@ observe({
   toggleState("plotParamShowFullPlate", !input$plotParamSuperimpose)
   toggleState("plotParamMutFreqSize", input$plotParamShowFreq)
   toggleState("plotParamThresholdsCol", input$plotParamShowThresholds)
+  toggle(id = "plotParamsDropRow-failed", condition = input$plotParamIncludeFailed)
+})
+
+# if the user chooses to not show a cluster of drops, disable the options
+# for that cluster
+observe({
+  paramsDropShowRegex <- "^plotParamDropShow-(.*)$"
+  paramsDropShow <- grep(paramsDropShowRegex, names(input), value = TRUE)
+  
+  lapply(paramsDropShow, function(x) {
+    name <- gsub(paramsDropShowRegex, "\\1", x)
+
+    toggleState(sprintf("plotParamDropCol-%s", name), as.logical(input[[x]]))
+    toggleState(sprintf("plotParamDropAlpha-%s", name), as.logical(input[[x]]))
+  })
+})
+
+observe({
+  value <- input$plotParamDropsAlpha
+  paramsDropAlphaRegex <- "^plotParamDropAlpha-(.*)$"
+  paramsDropAlpha <- grep(paramsDropAlphaRegex, names(input), value = TRUE)
+  lapply(paramsDropAlpha, function(x) {
+    if (!grepl("outlier", x)) {
+      updateSliderInput(session, x, value = value)
+    }
+  })
 })
 
 # create select box input for choosing wells and sample

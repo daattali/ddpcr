@@ -48,6 +48,14 @@ plot.mutant_wildtype_assay <- function(
   alpha_bg_low_high_mut_freq = 0.1
   )
 {
+  dots <- list(...)
+  if (missing(col_drops_mutant) && !is.null(dots[["col_drops_negative"]])) {
+    col_drops_mutant <- dots[["col_drops_negative"]]
+  }
+  if (missing(col_drops_wildtype) && !is.null(dots[["col_drops_positive"]])) {
+    col_drops_wildtype <- dots[["col_drops_positive"]]
+  }
+  
   # call the plot function for general mutant/wildtype ddpcr plates
   # but use more user-friendly param names 
   NextMethod("plot", x,

@@ -10,12 +10,14 @@ tabPanel(
   conditionalPanel(
     condition = "output.datasetChosen",
     tabsetPanel(
-      id = "datasetTabs", type = "tabs",    
+      id = "settingsTabs", type = "tabs",    
       
       # Basic settings tab
       tabPanel(
         title = "Basic Settings",
-        id = "basicSettingsTab",
+        id    = "basicSettingsTab",
+        value = "basicSettingsTab",
+        name  = "basicSettingsTab",
         br(),
         
         fixedRow(

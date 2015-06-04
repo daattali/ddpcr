@@ -1,4 +1,8 @@
-allCols <- sort(colours(TRUE))
+allCols <- sort(c(
+  "aqua", "black", "blue", "fuchsia", "gray", "green3", "lime", "maroon",
+  "navy", "olive", "orange", "purple3", "red", "silver", "teal", "white",
+  "yellow", "brown", "gold"
+))
 allColsDefault <- c("Default", allCols)
 
 tabPanel(
@@ -17,7 +21,9 @@ tabPanel(
       # Plate data tab
       tabPanel(
         title = "Plate summary",
-        id = "metaTab",
+        id    = "metaTab",
+        value = "metaTab",
+        name  = "metaTab",
         br(),
         downloadButton("saveMetaBtn", "Download plate summary"),
         br(), br(),
@@ -53,12 +59,6 @@ tabPanel(
         id = "plotTab",   
         
         br(),
-        actionButton(
-          "plotBtn",
-          "Plot",
-          class = "btn-primary"
-        ),
-        downloadButton("downloadPlot", "Save plot"),        
         div(id = "plotOptionsSection",
             div(id = "plotOptionsTitle", "Plot options"),
             tabsetPanel(
@@ -94,7 +94,7 @@ tabPanel(
                     selectInput("plotParamDropsCol", "Droplets colour",
                                 allCols, "black"),
                     sliderInput("plotParamDropsAlpha", "Droplets transparency",
-                                0, 1, 0.1, 0.05)
+                                0, 1, 0.1, 0.05, ticks = FALSE)
                   ),
                   column(
                     4,
@@ -119,15 +119,56 @@ tabPanel(
               tabPanel(
                 title = "Droplets",
                 id = "plotDropsTab",
-                br(),
-                conditionalPanel(
-                  "input.plotParamShowDrops",
-                  "dsfds"
-                ),
                 conditionalPanel(
                   "!input.plotParamShowDrops",
                   h4(strong("Turn on \"Show droplets\" in the General options",
-                                 "to see more droplet options."))
+                            "to see more droplet options."))
+                ),
+                conditionalPanel(
+                  "input.plotParamShowDrops",
+                  fixedRow(
+                    column(
+                      width = 3,
+                      offset = 6,
+                      h3(strong("Colour"))
+                    ),
+                    column(
+                      3,
+                      h3(strong("Transparency"))
+                    )
+                  ),
+                  lapply(names(plotDropsParams), function(x) {
+                    div(
+                      id = sprintf("plotParamsDropRow-%s", x),
+                      class = "plotParamsDropRow",
+                      `data-drop-type` = paste(plotDropsParams[[x]]$type, collapse = " "),
+                      fixedRow(
+                        column(
+                          4,
+                          strong(plotDropsParams[[x]]$name),
+                          class = "plotParamDropName"
+                        ),
+                        column(
+                          2,
+                          selectInput(sprintf("plotParamDropShow-%s", x),
+                                      NULL,
+                                      c("Show" = TRUE, "Don't show" = FALSE),
+                                      plotDropsParams[[x]]$show)
+                        ),
+                        column(
+                          3,
+                          selectInput(sprintf("plotParamDropCol-%s", x),
+                                      NULL, allColsDefault, plotDropsParams[[x]]$col)
+                        ),
+                        column(
+                          3,
+                          sliderInput(sprintf("plotParamDropAlpha-%s", x), NULL,
+                                      0, 1, plotDropsParams[[x]]$alpha, 0.05,
+                                      ticks = FALSE)
+                        )
+                      )
+                    )
+                  })
                 )
               ),
               tabPanel(
@@ -136,6 +177,12 @@ tabPanel(
               )
             )
         ),
+        actionButton(
+          "plotBtn",
+          "Plot",
+          class = "btn-primary btn-lg"
+        ),
+        hidden(downloadButton("downloadPlot", "Save plot")),
         hidden(
           div(id = "mainPlotContainer",
               img(src = "ajax-loader.gif", id = "plotSpinner"),
