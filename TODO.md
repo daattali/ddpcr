@@ -52,7 +52,7 @@ save plot
 	
 general settings (wells, samples, superimpose, fullplate, showdrops, showdropsempty, showdropsoutlier,showfailedwells)
 
-plot settings (xlab, ylab, title, showgrid, showgridlabels, dropssize, textsizetitle, textsizerowcol, textsizeaxeslabel, textsizegridlabels, height, width)
+plot settings (xlab, ylab, title, showgrid, showgridlabels, textsizetitle, textsizerowcol, textsizeaxeslabel, textsizegridlabels, height, width)
 
 droplet colours
 

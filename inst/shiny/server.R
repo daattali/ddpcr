@@ -43,11 +43,18 @@ shinyServer(function(input, output, session) {
     }
   ) 
   
-  # When a main or secondary tab is switched, clear the error message
+  # When a main or secondary tab is switched
   observe({
     input$mainNav
     input$datasetTabs
+    input$settingsTab
+    input$resultsTab
     
+    # don't show the dataset description in About tab
+    toggle(id = "headerDatasetDesc",
+           condition = input$mainNav != "aboutTab")
+    
+    # clear the error message
     hide("errorDiv")
   })
 

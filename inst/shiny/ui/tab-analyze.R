@@ -2,8 +2,9 @@
 
 tabPanel(
   title = "Analyze",
-  id = "analyzeTab",
+  id    = "analyzeTab",
   value = "analyzeTab",
+  icon  = icon("calculator"),
   
   conditionalPanel(
     condition = "output.datasetChosen", 

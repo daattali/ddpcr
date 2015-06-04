@@ -1,18 +1,4 @@
-# --- Plot tab --- #
-
-# plot button is clicked
-output$plot <- renderPlot({
-  if (input$plotBtn == 0) return()
-  
-  isolate({
-    plot_params <- 
-      sapply(formals(ddpcr:::plot.ddpcr_plate) %>% names,
-             function(x) input[[sprintf("plot_param_%s", x)]] ) %>%
-      .[!lapply(., is.null) %>% unlist]
-    plot_params[['x']] <- dataValues$plate
-    do.call(plot, plot_params)
-  })
-}, height = "auto")
+# --- Droplets data tab ---
 
 output$dropletsTable <- DT::renderDataTable(
   dataValues$plate %>% plate_data,
@@ -36,6 +22,7 @@ output$clustersMapping <- renderUI({
   })
 })
 
+# --- Plate summary tab ---
 
 output$metaTable <- DT::renderDataTable({
   meta <- dataValues$plate %>% plate_meta(only_used = TRUE)
@@ -84,3 +71,35 @@ humanFriendlyColname <- function(x) {
   paste0(toupper(substring(x, 1, 1)),
          substring(gsub("_", " ", x), 2))
 }
+
+# --- Plot tab --- #
+
+output$downloadPlot <- downloadHandler(
+  filename = function() { 
+    sprintf("%s-plot.png", dataValues$plate %>% name)
+  },
+  content = function(file) {
+    png(file
+        #width = plotWidth(),
+        #height = plotHeight(),
+        #units = "px",
+        #res = 100
+    )
+    print(plotInput()$p)
+    dev.off()
+  }
+)
+
+# plot button is clicked
+output$plot <- renderPlot({
+  if (input$plotBtn == 0) return()
+  
+  isolate({
+    plot_params <- 
+      sapply(formals(ddpcr:::plot.ddpcr_plate) %>% names,
+             function(x) input[[sprintf("plot_param_%s", x)]] ) %>%
+      .[!lapply(., is.null) %>% unlist]
+    plot_params[['x']] <- dataValues$plate
+    do.call(plot, plot_params)
+  })
+}, height = "auto")

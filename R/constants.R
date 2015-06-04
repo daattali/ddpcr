@@ -27,6 +27,7 @@ cluster <- function(plate, cluster) {
   }
   res
 }
+#' @export
 cluster_name <- function(plate, cluster) {
   cluster %>% as.integer
   if (cluster < 1 || cluster > plate %>% clusters %>% length) {

@@ -31,6 +31,10 @@ body > .container {
   font-weight: bold;
 }
 
+.popover-link {
+  color: #333;
+}
+
 .popover-link > i.fa {
   vertical-align: top;
 }
@@ -170,4 +174,30 @@ hr.small {
 
 ul.ColVis_collection {
   width: auto !important;
+}
+
+#downloadPlot {
+  margin-left: 10px;
+}
+
+#plotOptionsSection {
+  font-size: 1.2em;
+  margin-top: 20px;
+}
+
+#plotOptionsTitle {
+  float: left;
+  padding: 3px 15px 0 0;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+#plotParamsTabs.nav-pills>li.active>a {
+  color: #222;
+  font-weight: bold;
+  background-color: #d0d0d0;
+}
+
+#plotParamsTabs.nav>li>a {
+  padding: 5px 15px;
 }

@@ -5,6 +5,7 @@ tabPanel(
   id    = "datasetTab",
   value = "datasetTab",
   name  = "datasetTab",
+  icon  = icon("table"),
   
   tabsetPanel(
     id = "datasetTabs", type = "tabs",    

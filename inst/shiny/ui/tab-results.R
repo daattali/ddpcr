@@ -3,6 +3,7 @@ tabPanel(
   id    = "resultsTab",
   value = "resultsTab",
   name  = "resultsTab",
+  icon  = icon("bar-chart"),
   
   conditionalPanel(
     condition = "output.datasetChosen",
@@ -16,23 +17,31 @@ tabPanel(
         id = "plotTab",   
 
         br(),
-        div("Settings",
-        tabsetPanel(
-          id = "plotParamsTabs", type = "pills",    
-          
-          tabPanel(
-            title = "General",
-            id = "plotTab"
-          ),
-          tabPanel(
-            title = "Droplet colours",
-            id = "plotTab"
-          ),
-          tabPanel(
-            title = "Background colours",
-            id = "plotTab"
+        actionButton(
+          "plotBtn",
+          "Plot",
+          class = "btn-primary"
+        ),
+        downloadButton("downloadPlot", "Save plot"),        
+        div(id = "plotOptionsSection",
+          div(id = "plotOptionsTitle", "Plot options"),
+          tabsetPanel(
+            id = "plotParamsTabs", type = "pills",    
+  
+            tabPanel(
+              title = "General",
+              id = "plotTab"
+            ),
+            tabPanel(
+              title = "Droplet colours",
+              id = "plotTab"
+            ),
+            tabPanel(
+              title = "Background colours",
+              id = "plotTab"
+            )
           )
-        ))
+        )
       
         
 #         sidebarLayout(

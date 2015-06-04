@@ -24,6 +24,7 @@ tagList(
     source(file.path("ui", "tab-settings.R"), local = TRUE)$value,
     source(file.path("ui", "tab-analyze.R"),  local = TRUE)$value,
     source(file.path("ui", "tab-results.R"),  local = TRUE)$value,
+    source(file.path("ui", "tab-about.R"),    local = TRUE)$value,
     
     footer = 
       column(12,

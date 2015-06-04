@@ -5,6 +5,7 @@ tabPanel(
   id = "settingsTab",
   value = "settingsTab",
   name = "settingsTab",
+  icon  = icon("cog"),
 
   conditionalPanel(
     condition = "output.datasetChosen",
