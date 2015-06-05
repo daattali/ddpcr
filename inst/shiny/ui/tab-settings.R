@@ -20,6 +20,7 @@ tabPanel(
         name  = "basicSettingsTab",
         br(),
         
+        div(id = "basicSettingsTabContent",
         fixedRow(
           column(6,
             selectInput(
@@ -52,7 +53,7 @@ tabPanel(
               numericInput("settingsYThreshold", "Y threshold", 5000, min = 0, step = 100)
             )
           )
-        ),
+        )),
         br(),
         actionButton(
           "updateBasicSettings",
@@ -125,6 +126,7 @@ tabPanel(
         id = "advancedSettingsTab",
         br(),
         h3(strong("These are advanced options. Only use them if you know what you're doing.")),
+        br(),
         uiOutput("advancedSettings"),  
         actionButton(
           "updateAdvancedSettings",

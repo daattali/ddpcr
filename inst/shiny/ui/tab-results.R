@@ -59,134 +59,175 @@ tabPanel(
         id = "plotTab",   
         
         br(),
-        div(id = "plotOptionsSection",
-            div(id = "plotOptionsTitle", "Plot options"),
-            tabsetPanel(
-              id = "plotParamsTabs", type = "pills",    
-              
-              tabPanel(
-                title = "General",
-                id = "plotGeneralTab",
-                br(),
-                fixedRow(
-                  column(
-                    4,
-                    selectInput(
-                      "plotParamSubsetType", NULL,
-                      c("Show all wells" = "all",
-                        "Select specific wells" = "wells",
-                        "Select specific samples" = "samples"),
-                      selected = "all"),
-                    conditionalPanel(
-                      "input.plotParamSubsetType == 'wells'",
-                      uiOutput("plotParamWellsSelect")
-                    ),
-                    conditionalPanel(
-                      "input.plotParamSubsetType == 'samples'",
-                      uiOutput("plotParamSamplesSelect")
-                    ),
-                    checkboxInput("plotParamIncludeFailed", "Include failed wells", TRUE),
-                    checkboxInput("plotParamShowDrops", "Show droplets", TRUE)
+        div(
+          id = "plotOptionsSection",
+          tabsetPanel(
+            id = "plotParamsTabs", type = "pills",    
+            
+            tabPanel(
+              title = "General options",
+              id = "plotGeneralTab",
+              br(),
+              fixedRow(
+                column(
+                  4,
+                  selectInput(
+                    "plotParamSubsetType", NULL,
+                    c("Show all wells" = "all",
+                      "Select specific wells" = "wells",
+                      "Select specific samples" = "samples"),
+                    selected = "all"),
+                  conditionalPanel(
+                    "input.plotParamSubsetType == 'wells'",
+                    uiOutput("plotParamWellsSelect")
                   ),
-                  column(
-                    4,
-                    numericInput("plotParamDropsSize", "Droplets size", 2, 0, 50),
-                    selectInput("plotParamDropsCol", "Droplets colour",
-                                allCols, "black"),
-                    sliderInput("plotParamDropsAlpha", "Droplets transparency",
-                                0, 1, 0.1, 0.05, ticks = FALSE)
+                  conditionalPanel(
+                    "input.plotParamSubsetType == 'samples'",
+                    uiOutput("plotParamSamplesSelect")
                   ),
-                  column(
-                    4,
-                    checkboxInput("plotParamSuperimpose", "Superimpose all data in one panel", FALSE),
-                    checkboxInput("plotParamShowFullPlate", "Show full plate", FALSE),
-                    conditionalPanel(
-                      sprintf("input.settingsPlateType == '%s'", CROSSHAIR_THRESHOLDS),
-                      checkboxInput("plotParamShowThresholds", "Show threshold borders", TRUE),
-                      selectInput("plotParamThresholdsCol", "Threshold borders colour",
-                                  allCols, "black")
-                    ),
-                    conditionalPanel(
-                      sprintf("input.settingsPlateType == '%s' || input.settingsPlateType == '%s'",
-                              KRAS, WTNEGBRAF),
-                      checkboxInput("plotParamShowFreq", "Show mutant frequency", TRUE),
-                      numericInput("plotParamMutFreqSize", "Mutant frequency text size", 4, 0, 50)
-                    )
+                  div(
+                    `data-ddpcr-type` = paste(KRAS, "ddpcr_plate", WTNEGBRAF, collapse = " "),
+                    checkboxInput("plotParam_show_failed_wells", "Include failed wells", TRUE)
+                  ),
+                  checkboxInput("plotParam_show_drops", "Show droplets", TRUE)
+                ),
+                column(
+                  4,
+                  numericInput("plotParam_drops_size", "Droplets size", 2, 0, 50),
+                  selectInput("plotParam_col_drops", "Droplets colour",
+                              allCols, "black"),
+                  sliderInput("plotParam_alpha_drops", "Droplets transparency",
+                              0, 1, 0.1, 0.05, ticks = FALSE)
+                ),
+                column(
+                  4,
+                  checkboxInput("plotParam_superimpose", "Superimpose all data in one panel", FALSE),
+                  checkboxInput("plotParam_show_full_plate", "Show full plate", FALSE),
+                  div(
+                    `data-ddpcr-type` = CROSSHAIR_THRESHOLDS,
+                    checkboxInput("plotParam_show_thresholds", "Show threshold borders", TRUE),
+                    selectInput("plotParam_col_thresholds", "Threshold borders colour",
+                                allCols, "black")
+                  ),
+                  div(
+                    `data-ddpcr-type` = paste(KRAS, WTNEGBRAF, collapse = " "),
+                    checkboxInput("plotParam_show_mutant_freq", "Show mutant frequency", TRUE),
+                    numericInput("plotParam_text_size_mutant_freq", "Mutant frequency text size", 4, 0, 100)
                   )
                 )
+              )
+            ),
+            
+            tabPanel(
+              title = "Droplets",
+              id = "plotDropsTab",
+              conditionalPanel(
+                "!input.plotParam_show_drops",
+                br(),
+                h4("Turn on \"Show droplets\" in the General options",
+                   "to see more droplet options."),
+                br()
               ),
-              
-              tabPanel(
-                title = "Droplets",
-                id = "plotDropsTab",
-                conditionalPanel(
-                  "!input.plotParamShowDrops",
-                  h4(strong("Turn on \"Show droplets\" in the General options",
-                            "to see more droplet options."))
-                ),
-                conditionalPanel(
-                  "input.plotParamShowDrops",
-                  fixedRow(
-                    column(
-                      width = 3,
-                      offset = 6,
-                      h3(strong("Colour"))
-                    ),
-                    column(
-                      3,
-                      h3(strong("Transparency"))
-                    )
+              conditionalPanel(
+                "input.plotParam_show_drops",
+                fixedRow(
+                  column(
+                    width = 3,
+                    offset = 6,
+                    h3(strong("Colour"))
                   ),
-                  lapply(names(plotDropsParams), function(x) {
-                    div(
-                      id = sprintf("plotParamsDropRow-%s", x),
-                      class = "plotParamsDropRow",
-                      `data-drop-type` = paste(plotDropsParams[[x]]$type, collapse = " "),
-                      fixedRow(
-                        column(
-                          4,
-                          strong(plotDropsParams[[x]]$name),
-                          class = "plotParamDropName"
-                        ),
-                        column(
-                          2,
-                          selectInput(sprintf("plotParamDropShow-%s", x),
-                                      NULL,
-                                      c("Show" = TRUE, "Don't show" = FALSE),
-                                      plotDropsParams[[x]]$show)
-                        ),
-                        column(
-                          3,
-                          selectInput(sprintf("plotParamDropCol-%s", x),
-                                      NULL, allColsDefault, plotDropsParams[[x]]$col)
-                        ),
-                        column(
-                          3,
-                          sliderInput(sprintf("plotParamDropAlpha-%s", x), NULL,
-                                      0, 1, plotDropsParams[[x]]$alpha, 0.05,
-                                      ticks = FALSE)
-                        )
+                  column(
+                    3,
+                    h3(strong("Transparency"))
+                  )
+                ),
+                lapply(names(plotDropsParams), function(x) {
+                  div(
+                    id = sprintf("plotParamsDropRow-%s", x),
+                    class = "plotParamsDropRow",
+                    `data-ddpcr-type` = paste(plotDropsParams[[x]]$type, collapse = " "),
+                    fixedRow(
+                      column(
+                        4,
+                        strong(plotDropsParams[[x]]$name),
+                        class = "plotParamDropName"
+                      ),
+                      column(
+                        2,
+                        selectInput(sprintf("plotParamDropShow-%s", x),
+                                    NULL,
+                                    c("Show" = TRUE, "Don't show" = FALSE),
+                                    plotDropsParams[[x]]$show)
+                      ),
+                      column(
+                        3,
+                        selectInput(sprintf("plotParamDropCol-%s", x),
+                                    NULL, allColsDefault, plotDropsParams[[x]]$col)
+                      ),
+                      column(
+                        3,
+                        sliderInput(sprintf("plotParamDropAlpha-%s", x), NULL,
+                                    0, 1, plotDropsParams[[x]]$alpha, 0.05,
+                                    ticks = FALSE)
                       )
                     )
-                  })
-                )
-              ),
-              tabPanel(
-                title = "Background colours",
-                id = "plotTab"
+                  )
+                })
+              )
+            ),
+            tabPanel(
+              title = "Background colours",
+              id = "plotBgTab"
+            ),
+            tabPanel(
+              title = "Figure options",
+              id = "plotFigureTab",
+              br(),
+              fixedRow(
+                column(
+                  4,
+                  textInput("plotParam_title", "Title", NULL),
+                  textInput("plotParam_xlab", "X-axis label", ""),
+                  textInput("plotParam_ylab", "Y-axis label", "")
+                ),
+                column(
+                  4,
+                  numericInput("plotParam_text_size_title", "Title text size", 14, 0, 100),
+                  numericInput("plotParam_text_size_axes_labels", "X/Y labels text size", 12, 0, 100),
+                  numericInput("plotParam_text_size_grid_labels", "Grid line labels text size", 12, 0, 100),
+                  numericInput("plotParam_text_size_row_col", "Row/col number text size", 12, 0, 100)
+                ),
+                column(
+                  4,
+                  selectInput("plotParam_height_type", "Height",
+                              c("Automatic" = "auto", "Custom (specify pixels)" = "custom")),
+                  conditionalPanel(
+                    "input.plotParam_height_type == 'custom'",
+                    numericInput("plotParam_height", NULL, 500, min = 0, step = 50)
+                  ),
+                  selectInput("plotParam_width_type", "Width",
+                              c("Automatic" = "auto", "Custom (specify pixels)" = "custom")),
+                  conditionalPanel(
+                    "input.plotParam_width_type == 'custom'",
+                    numericInput("plotParam_width", NULL, 500, min = 0, step = 50)
+                  ),
+                  checkboxInput("plotParam_show_grid", "Show grid lines", FALSE),
+                  checkboxInput("plotParam_show_grid_labels", "Label grid lines", FALSE)
+                )              
               )
             )
+          )
         ),
         actionButton(
           "plotBtn",
           "Plot",
           class = "btn-primary btn-lg"
         ),
-        hidden(downloadButton("downloadPlot", "Save plot")),
+        hidden(downloadButton("downloadPlot", "Save figure")),
         hidden(
           div(id = "mainPlotContainer",
               img(src = "ajax-loader.gif", id = "plotSpinner"),
-              plotOutput("mainPlot")
+              plotOutput("mainPlot", width = "auto", height = "auto")
           )
         )
       )

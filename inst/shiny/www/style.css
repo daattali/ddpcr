@@ -112,6 +112,10 @@ hr.small {
   font-size: 1.2em;
 }
 
+#basicSettingsTabContent .shiny-input-container {
+  width: 400px;
+}
+
 #settingsSubset {
   width: 650px;
 }
@@ -122,6 +126,10 @@ hr.small {
 
 #resetParamsBtn {
   margin-left: 15px;
+}
+
+#analyzeTabContent {
+  font-size: 1.5em;
 }
 
 #analyzeProgress {
@@ -186,13 +194,6 @@ ul.ColVis_collection {
   margin-bottom: 20px;
 }
 
-#plotOptionsTitle {
-  float: left;
-  padding: 3px 15px 0 0;
-  font-size: 1.2em;
-  font-weight: bold;
-}
-
 #plotParamsTabs.nav-pills>li>a {
   border-radius: 3px 3px 0 0;
   -webkit-border-radius: 3px 3px 0 0;
@@ -229,12 +230,17 @@ ul.ColVis_collection {
   position: absolute;
   left: 50%;
   top: 50%;
-  margin-top: -33px;
+  margin-top: -50px;
   margin-left: -33px;
   z-index: 1;
 }
 
+#plotBtn {
+  padding: 10px 25px;
+}
+
 #mainPlot {
+  text-align: center;
   position: relative;
   z-index: 2;
 }

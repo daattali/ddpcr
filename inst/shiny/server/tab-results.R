@@ -78,74 +78,11 @@ humanFriendlyColname <- function() {
 
 # --- Plot tab --- #
 
+dataValues$lastPlot <- NULL
+
 observeEvent(input$plotBtn, {
   show("mainPlotContainer")
   show("downloadPlot")
-})
-
-makePlot <- eventReactive(input$plotBtn, {
-  plotParams <- list()
-  plotParams[['x']] <- dataValues$plate
-  
-  # general settings
-  if (input$plotParamSubsetType == 'wells' && !is.null(input$plotParamWells)) {
-    plotParams[['wells']] <- input$plotParamWells
-  } else if (input$plotParamSubsetType == 'samples' && !is.null(input$plotParamSamples)) {
-    plotParams[['samples']] <- input$plotParamSamples
-  }
-  plotParams[['show_failed_wells']] <- input$plotParamIncludeFailed
-  plotParams[['show_drops']] <- input$plotParamShowDrops
-  plotParams[['drops_size']] <- input$plotParamDropsSize
-  plotParams[['col_drops']] <- input$plotParamDropsCol
-  plotParams[['alpha_drops']] <- input$plotParamDropsAlpha
-  plotParams[['superimpose']] <- input$plotParamSuperimpose
-  plotParams[['show_full_plate']] <- input$plotParamShowFullPlate
-  if (!is.null(input$plotParamShowThresholds)) {
-    plotParams[['show_thresholds']] <- input$plotParamShowThresholds
-  }
-  if (!is.null(input$plotParamThresholdsCol)) {
-    plotParams[['col_thresholds']] <- input$plotParamThresholdsCol
-  }
-  if (!is.null(input$plotParamShowFreq)) {
-    plotParams[['show_mutant_freq']] <- input$plotParamShowFreq
-  }
-  if (!is.null(input$plotParamMutFreqSize)) {
-    plotParams[['text_size_mutant_freq']] <- input$plotParamMutFreqSize
-  }
-  
-  # droplet settings
-  if (input$plotParamShowDrops) {
-    dropsParams <- 
-      lapply(dataValues$plate %>% clusters %>% tolower, function(x) {
-        inputNameShow <- sprintf("plotParamDropShow-%s", x)
-        inputNameCol <- sprintf("plotParamDropCol-%s", x)
-        inputNameAlpha <- sprintf("plotParamDropAlpha-%s", x)
-        paramNameShow <- sprintf("show_drops_%s", x)
-        paramNameCol <- sprintf("col_drops_%s", x)
-        paramNameAlpha <- sprintf("alpha_drops_%s", x)
-        if (is.null(input[[inputNameShow]])) {
-          return()
-        }
-        paramList <- list()
-        paramList[[paramNameShow]] <- as.logical(input[[inputNameShow]])
-        paramList[[paramNameCol]] <- input[[inputNameCol]]
-        paramList[[paramNameAlpha]] <- input[[inputNameAlpha]]
-        if (paramList[[paramNameCol]] == "Default") {
-          paramList[[paramNameCol]] <- input$plotParamDropsCol
-        }
-        paramList
-      })
-    dropsParams <- unlist(dropsParams, recursive = FALSE)
-    plotParams <- append(plotParams, dropsParams)
-  }
-#   plotParams[['']] <- input$
-#   plotParams[['']] <- input$
-#   plotParams[['']] <- input$
-#   plotParams[['']] <- input$
-#   plotParams[['']] <- input$
-#     
-  
-  do.call(plot, plotParams)
 })
 
 output$downloadPlot <- downloadHandler(
@@ -153,39 +90,190 @@ output$downloadPlot <- downloadHandler(
     sprintf("%s-plot.png", dataValues$plate %>% name)
   },
   content = function(file) {
-    png(file
-        #width = plotWidth(),
-        #height = plotHeight(),
-        #units = "px",
-        #res = 100
+    png(file,
+        width = calcPlotWidthForce(),
+        height = calcPlotHeight(),
+        units = "px",
+        res = 100
     )
-    print(plotInput()$p)
+    print(dataValues$lastPlot)
     dev.off()
   }
 )
 
+# calculate height of plot (or use a user-entered value)
+calcPlotHeight <- eventReactive(makePlot(), {
+  if (input$plotParam_height_type == "custom") {
+    return(input$plotParam_height)
+  }
+  
+  plot <- makePlot()
+  rows <- attr(plot, 'ddpcr_rows')
+  cols <- attr(plot, 'ddpcr_cols')
+  size <- ifelse(cols > 8, 70, 100)
+  height <- 
+    (rows * size) +
+    (nzchar(input$plotParam_title) * input$plotParam_text_size_title) +
+    (nzchar(input$plotParam_xlab) * input$plotParam_text_size_axes_labels) +
+    (isTRUE(input$plotParam_show_grid_labels) * 2 * input$plotParam_text_size_grid_labels) +
+    input$plotParam_text_size_row_col + 
+    100
+  
+  updateNumericInput(session, "plotParam_height", value = height)
+  
+  height
+})
+
+calcPlotWidthForce <- eventReactive(makePlot(), {
+  if (input$plotParam_width_type == "custom") {
+    return(input$plotParam_width)
+  }
+  
+  plot <- makePlot()
+  cols <- attr(plot, 'ddpcr_cols')
+  size <- ifelse(cols > 8, 70, 100)
+  width <- 
+    (cols * size) +
+    (nzchar(input$plotParam_ylab) * input$plotParam_text_size_axes_labels) +
+    (isTRUE(input$plotParam_show_grid_labels) * 2 * input$plotParam_text_size_grid_labels) +
+    input$plotParam_text_size_row_col +
+    100
+  
+  updateNumericInput(session, "plotParam_width", value = width)
+  width
+})
+
+calcPlotWidth <- eventReactive(makePlot(), {
+  if (input$plotParam_width_type == "custom") {
+    return(input$plotParam_width)
+  } else {
+    calcPlotWidthForce()
+    return("auto")
+  }
+})
+
+makePlot <- eventReactive(input$plotBtn, {
+  disable("plotBtn")
+  on.exit({
+    enable("plotBtn")
+  })
+  hide("errorDiv")  
+
+  tryCatch({
+    plotParams <- list()
+    plotParams[['x']] <- dataValues$plate
+    
+    # general settings
+    if (input$plotParamSubsetType == 'wells' && !is.null(input$plotParamWells)) {
+      plotParams[['wells']] <- input$plotParamWells
+    } else if (input$plotParamSubsetType == 'samples' && !is.null(input$plotParamSamples)) {
+      plotParams[['samples']] <- input$plotParamSamples
+    }
+    generalParamNames <-
+      c("show_failed_wells", "show_drops", "drops_size", "col_drops", "alpha_drops",
+        "superimpose", "show_full_plate", "show_thresholds", "col_thresholds",
+        "show_mutant_freq", "text_size_mutant_freq")
+    generalParams <-
+      lapply(generalParamNames, function(x) {
+        inputName <- sprintf("plotParam_%s", x)
+        value <- input[[inputName]]
+        if (is.na(value)) {
+          err_msg(sprintf("Invalid value for %s", x))
+        }
+        setNames(value, x) %>% as.list
+      })
+    generalParams <- unlist(generalParams, recursive = FALSE)
+    plotParams <- append(plotParams, generalParams)    
+    
+    # droplet settings
+    if (input$plotParam_show_drops) {
+      dropsParams <- 
+        lapply(dataValues$plate %>% clusters %>% tolower, function(x) {
+          inputNameShow <- sprintf("plotParamDropShow-%s", x)
+          inputNameCol <- sprintf("plotParamDropCol-%s", x)
+          inputNameAlpha <- sprintf("plotParamDropAlpha-%s", x)
+          paramNameShow <- sprintf("show_drops_%s", x)
+          paramNameCol <- sprintf("col_drops_%s", x)
+          paramNameAlpha <- sprintf("alpha_drops_%s", x)
+          if (is.null(input[[inputNameShow]])) {
+            return()
+          }
+          paramList <- list()
+          paramList[[paramNameShow]] <- as.logical(input[[inputNameShow]])
+          paramList[[paramNameCol]] <- input[[inputNameCol]]
+          paramList[[paramNameAlpha]] <- input[[inputNameAlpha]]
+          if (paramList[[paramNameCol]] == "Default") {
+            paramList[[paramNameCol]] <- input$plotParam_col_drops
+          }
+          paramList
+        })
+      dropsParams <- unlist(dropsParams, recursive = FALSE)
+      plotParams <- append(plotParams, dropsParams)
+    }
+  
+    # figure settings
+    if (nzchar(input$plotParam_title)) {
+      plotParams[['title']] <- input$plotParam_title
+    } else {
+      plotParams['title'] <- list(NULL) # note the trick with one bracket to assign NULL
+    }
+    if (nzchar(input$plotParam_xlab)) {
+      plotParams[['xlab']] <- input$plotParam_xlab
+    } else {
+      plotParams['xlab'] <- list(NULL)
+    }
+    if (nzchar(input$plotParam_ylab)) {
+      plotParams[['ylab']] <- input$plotParam_ylab
+    } else {
+      plotParams['ylab'] <- list(NULL)
+    }
+    figureParamNames <-
+      c("show_grid", "show_grid_labels",
+        "text_size_title", "text_size_axes_labels",
+        "text_size_grid_labels", "text_size_row_col")
+    figureParams <-
+      lapply(figureParamNames, function(x) {
+        inputName <- sprintf("plotParam_%s", x)
+        value <- input[[inputName]]
+        if (is.na(value)) {
+          err_msg(sprintf("Invalid value for %s", x))
+        }
+        setNames(value, x) %>% as.list
+      })
+    figureParams <- unlist(figureParams, recursive = FALSE)
+    plotParams <- append(plotParams, figureParams)
+    
+    plot <- do.call(plot, plotParams)
+    dataValues$lastPlot <- plot
+    plot
+  }, error = errorFunc)
+})
+
 # main plot
-output$mainPlot <- renderPlot({
-  makePlot()
-}, height = "auto")
+output$mainPlot <- renderPlot(
+  makePlot(),
+  width = function() { calcPlotWidth() },
+  height = function() { calcPlotHeight() },
+  units = "px",
+  res = 100
+)
 
 # logic that turns certain options on/off if they conflict with other options
 observe({
-  if (input$plotParamShowDrops) {
-    enable("plotParamDropsSize")
-    enable("plotParamDropsCol")
-    enable("plotParamDropsAlpha")
+  if (input$plotParam_show_drops) {
+    enable("plotParam_drops_size")
+    enable("plotParam_col_drops")
+    enable("plotParam_alpha_drops")
   } else {
-    disable("plotParamDropsSize")
-    disable("plotParamDropsCol")
-    disable("plotParamDropsAlpha")
+    disable("plotParam_drops_size")
+    disable("plotParam_col_drops")
+    disable("plotParam_alpha_drops")
   }
   
-  toggleState("plotParamSuperimpose", !input$plotParamShowFullPlate && input$plotParamShowDrops)
-  toggleState("plotParamShowFullPlate", !input$plotParamSuperimpose)
-  toggleState("plotParamMutFreqSize", input$plotParamShowFreq)
-  toggleState("plotParamThresholdsCol", input$plotParamShowThresholds)
-  toggle(id = "plotParamsDropRow-failed", condition = input$plotParamIncludeFailed)
+  toggleState("plotParam_superimpose", !input$plotParam_show_full_plate && input$plotParam_show_drops)
+  toggleState("plotParam_show_full_plate", !input$plotParam_superimpose)
+  toggleState("plotParam_text_size_mutant_freq", input$plotParam_show_mutant_freq)
+  toggleState("plotParam_col_thresholds", input$plotParam_show_thresholds)
 })
 
 # if the user chooses to not show a cluster of drops, disable the options
@@ -203,7 +291,7 @@ observe({
 })
 
 observe({
-  value <- input$plotParamDropsAlpha
+  value <- input$plotParam_alpha_drops
   paramsDropAlphaRegex <- "^plotParamDropAlpha-(.*)$"
   paramsDropAlpha <- grep(paramsDropAlphaRegex, names(input), value = TRUE)
   lapply(paramsDropAlpha, function(x) {

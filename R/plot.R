@@ -315,6 +315,10 @@ plot.ddpcr_plate <- function(
   # attach information about how many rows and columns are displayed
   rows <- meta[['row']] %>% unique %>% length
   cols <- meta[['col']] %>% unique %>% length
+  if (superimpose) {
+    rows <- 3
+    cols <- 3
+  }
   attr(p, 'ddpcr_rows') <- rows
   attr(p, 'ddpcr_cols') <- cols
   

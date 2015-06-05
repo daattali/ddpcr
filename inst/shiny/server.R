@@ -83,12 +83,14 @@ shinyServer(function(input, output, session) {
     updateTextInput(session, "settingsSubset", value = "")
     
     # update plot settings
-    hide(selector = ".plotParamsDropRow")
-    show(selector = sprintf(".plotParamsDropRow[data-drop-type~=%s]",
-                            dataValues$plate %>% type))
+    hide(selector = "[data-ddpcr-type]")
+    show(selector = sprintf("[data-ddpcr-type~=%s]", dataValues$plate %>% type))
     if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
       updateSelectInput(session, "plotParamDropShow-empty", selected = "TRUE")
     }
+    updateTextInput(session, "plotParam_xlab", value = dataValues$plate %>% x_var)
+    updateTextInput(session, "plotParam_ylab", value = dataValues$plate %>% y_var)
+    
   })  
   
   # include logic for each tab
