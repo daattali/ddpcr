@@ -48,4 +48,4 @@ small p value (suggesting that even one mutant drop is significant)
 
 ### shiny
 
-- explore data: boxplot/density/histogram for every numeric metadata column
+- about tab

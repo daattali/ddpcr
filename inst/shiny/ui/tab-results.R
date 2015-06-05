@@ -1,7 +1,6 @@
 allCols <- sort(c(
-  "aqua", "black", "blue", "fuchsia", "gray", "green3", "lime", "maroon",
-  "navy", "orange", "purple3", "red", "silver", "teal", "white",
-  "yellow", "brown", "gold", "gray7"
+  "black", "blue", "green" = "green3", "orange", "purple" = "purple3",
+  "red", "silver", "teal", "yellow", "brown", "gold", "gray" = "gray7", "white"
 ))
 allColsDefault <- c("Default", allCols)
 
@@ -30,29 +29,6 @@ tabPanel(
         DT::dataTableOutput("metaTable")
       ),
       
-      # Droplets data tab
-      tabPanel(
-        title = "Droplets data",
-        id = "dropletsTab",
-        br(),
-        downloadButton("saveDropletsBtn", "Download droplets data"),
-        br(), br(),
-        fixedRow(
-          column(8,
-            DT::dataTableOutput("dropletsTable")
-          ),
-          column(4,
-            br(),
-            div(id = "clustersMappingOuter",
-              span(id = "clustersMappingInner",
-                  div(id = "clustersTitle", "Clusters"),
-                  uiOutput("clustersMapping")
-              )
-            )
-          )
-        )
-      ),
-
       # Plot tab
       tabPanel(
         title = "Plot",
@@ -256,6 +232,43 @@ tabPanel(
           div(id = "mainPlotContainer",
               img(src = "ajax-loader.gif", id = "plotSpinner"),
               plotOutput("mainPlot", width = "auto", height = "auto")
+          )
+        )
+      ),
+      
+      # Explore summary variable tabl
+      tabPanel(
+        title = "Explore summary variable",
+        id    = "exploreTab",
+        br(),
+        uiOutput("exploreVarOutput"),
+        selectInput("explorePlotType", "Graph type",
+                    c("Box plot" = "box",
+                      "Density plot" = "density",
+                      "Histogram" = "histogram")),
+        downloadButton("saveExplorePlot", "Save figure"),
+        plotOutput("explorePlot", width = "500")
+      ),
+
+      # Droplets data tab
+      tabPanel(
+        title = "Droplets data",
+        id = "dropletsTab",
+        br(),
+        downloadButton("saveDropletsBtn", "Download droplets data"),
+        br(), br(),
+        fixedRow(
+          column(8,
+                 DT::dataTableOutput("dropletsTable")
+          ),
+          column(4,
+                 br(),
+                 div(id = "clustersMappingOuter",
+                     span(id = "clustersMappingInner",
+                          div(id = "clustersTitle", "Clusters"),
+                          uiOutput("clustersMapping")
+                     )
+                 )
           )
         )
       )

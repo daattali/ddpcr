@@ -26,11 +26,11 @@ output$clustersMapping <- renderUI({
 
 output$metaTable <- DT::renderDataTable({
   meta <- dataValues$plate %>% plate_meta(only_used = TRUE)
-  
+  colnames <- meta %>% colnames %>% humanFriendlyNames
   DT::datatable(meta,
     rownames = FALSE,
     class = 'cell-border stripe',
-    colnames = humanFriendlyColname(),
+    colnames = colnames,
     extensions = list(
       'ColVis' = NULL,  # show the "show/hide columns" button 
       FixedColumns = list(leftColumns = 1)  # fix the Well column
@@ -70,8 +70,7 @@ metaColsHideIdx <- function() {
   which(colnames(meta) %in% colsHide) - 1
 }
 
-humanFriendlyColname <- function() {
-  colnames <- dataValues$plate %>% plate_meta(only_used = TRUE) %>% colnames
+humanFriendlyNames <- function(colnames) {
   paste0(toupper(substring(colnames, 1, 1)),
          substring(gsub("_", " ", colnames), 2))
 }
@@ -338,3 +337,58 @@ output$plotParamSamplesSelect <- renderUI({
     "There are no sample names in this dataset"
   }
 })
+
+# --- Explore tab ---
+
+# Show a select input with all numeric variables as options
+output$exploreVarOutput <- renderUI({
+  meta <- dataValues$plate %>% plate_meta(only_used = TRUE)
+  vars <- vapply(meta, is.numeric, logical(1)) %>% which %>% names
+  vars <- vars[vars != "col"]
+  niceVars <- humanFriendlyNames(vars)
+  selectInput("exploreVarSelect", "Choose summary variable",
+              setNames(vars, niceVars))
+})
+
+# this is a function rather than a reactive because base graphics
+# don't play nice with reactives because they don't store the plot
+# in the return value so it's impossible to reuse the value
+makeExplorePlot <- function() {
+  if (is.null(input$exploreVarSelect)) {
+    return()
+  }
+  
+  data <- dataValues$plate %>% plate_meta %>% .[[input$exploreVarSelect]]
+  niceVar <- humanFriendlyNames(input$exploreVarSelect)
+  title <- sprintf("%s per well", niceVar)
+  if (input$explorePlotType == "box") {
+    boxplot(data, main = title, ylab = niceVar, col = "#eeeeee")
+  } else if (input$explorePlotType == "density") {
+    dens <- density(data, na.rm = TRUE)
+    plot(dens, main = title, xlab = niceVar, ylab = "")
+    polygon(dens, col = "#eeeeee")
+  } else {
+    hist(data, col = "#eeeeee", main = title, xlab = niceVar, ylab = "# of wells")
+  }
+}
+
+output$explorePlot <- renderPlot({
+  makeExplorePlot()
+})
+
+output$saveExplorePlot <- downloadHandler(
+  filename = function() { 
+    sprintf("%s-%s.png", dataValues$plate %>% name, input$exploreVarSelect)
+  },
+  content = function(file) {
+    png(file,
+        width = 500,
+        height = 400,
+        units = "px",
+        res = 100
+    )
+    print(makeExplorePlot())
+    dev.off()
+  }
+)
+
