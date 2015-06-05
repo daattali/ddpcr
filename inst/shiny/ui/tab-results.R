@@ -1,7 +1,7 @@
 allCols <- sort(c(
   "aqua", "black", "blue", "fuchsia", "gray", "green3", "lime", "maroon",
-  "navy", "olive", "orange", "purple3", "red", "silver", "teal", "white",
-  "yellow", "brown", "gold"
+  "navy", "orange", "purple3", "red", "silver", "teal", "white",
+  "yellow", "brown", "gold", "gray7"
 ))
 allColsDefault <- c("Default", allCols)
 
@@ -148,12 +148,12 @@ tabPanel(
                     `data-ddpcr-type` = paste(plotDropsParams[[x]]$type, collapse = " "),
                     fixedRow(
                       column(
-                        4,
-                        strong(plotDropsParams[[x]]$name),
+                        3,
+                        strong(HTML(plotDropsParams[[x]]$name)),
                         class = "plotParamDropName"
                       ),
                       column(
-                        2,
+                        3,
                         selectInput(sprintf("plotParamDropShow-%s", x),
                                     NULL,
                                     c("Show" = TRUE, "Don't show" = FALSE),
@@ -176,10 +176,6 @@ tabPanel(
               )
             ),
             tabPanel(
-              title = "Background colours",
-              id = "plotBgTab"
-            ),
-            tabPanel(
               title = "Figure options",
               id = "plotFigureTab",
               br(),
@@ -195,7 +191,7 @@ tabPanel(
                   numericInput("plotParam_text_size_title", "Title text size", 14, 0, 100),
                   numericInput("plotParam_text_size_axes_labels", "X/Y labels text size", 12, 0, 100),
                   numericInput("plotParam_text_size_grid_labels", "Grid line labels text size", 12, 0, 100),
-                  numericInput("plotParam_text_size_row_col", "Row/col number text size", 12, 0, 100)
+                  numericInput("plotParam_text_size_row_col", "Row/column number text size", 12, 0, 100)
                 ),
                 column(
                   4,
@@ -214,6 +210,38 @@ tabPanel(
                   checkboxInput("plotParam_show_grid", "Show grid lines", FALSE),
                   checkboxInput("plotParam_show_grid_labels", "Label grid lines", FALSE)
                 )              
+              )
+            ),
+            tabPanel(
+              title = "Well colours",
+              id = "plotWellTab",
+              br(),
+              fixedRow(
+                column(
+                  6,
+                  selectInput("plotParam_bg_unused", "Unused wells colour",
+                              allCols, "white"),
+                  selectInput("plotParam_bg_failed", "Failed wells colour",
+                              allCols, "gray7"),
+                  sliderInput("plotParam_alpha_bg_failed", "Transparency of failed wells",
+                              0, 1, 0.7, 0.05, ticks = FALSE)
+                ),
+                column(
+                  6,
+                  div(
+                    `data-ddpcr-type` = paste(KRAS, WTNEGBRAF, collapse = " "),
+                    checkboxInput("plotParam_show_low_high_mut_freq",
+                                  "Different colours for wells with high vs low mutant frequency",
+                                  TRUE),
+                    selectInput("plotParam_bg_mutant", "Mutant wells colour",
+                                allCols, "purple3"),
+                    selectInput("plotParam_bg_wildtype", "Wild type wells colour",
+                                allCols, "green3"),
+                    sliderInput("plotParam_alpha_bg_low_high_mut_freq",
+                                "Transparency of mutant/wild type wells",
+                                0, 1, 0.1, 0.05, ticks = FALSE)
+                  )
+                )
               )
             )
           )

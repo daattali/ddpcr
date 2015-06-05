@@ -11,7 +11,7 @@ helpPopup <- function(content, title = NULL) {
 
 plotDropsParams <- list(
   "failed" = list(
-    name = "Droplets in failed wells",
+    name = "Droplets in<br/>failed wells",
     type = c(KRAS, WTNEGBRAF, "ddpcr_plate"),
     show = TRUE,
     col = "Default",

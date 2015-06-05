@@ -243,6 +243,23 @@ makePlot <- eventReactive(input$plotBtn, {
     figureParams <- unlist(figureParams, recursive = FALSE)
     plotParams <- append(plotParams, figureParams)
     
+    # well colour settings
+    wellParamNames <-
+      c("bg_unused", "bg_failed", "alpha_bg_failed",
+        "show_low_high_mut_freq", "bg_mutant", "bg_wildtype",
+        "alpha_bg_low_high_mut_freq")
+    wellParams <-
+      lapply(wellParamNames, function(x) {
+        inputName <- sprintf("plotParam_%s", x)
+        value <- input[[inputName]]
+        if (is.na(value)) {
+          err_msg(sprintf("Invalid value for %s", x))
+        }
+        setNames(value, x) %>% as.list
+      })
+    wellParams <- unlist(wellParams, recursive = FALSE)
+    plotParams <- append(plotParams, wellParams)
+        
     plot <- do.call(plot, plotParams)
     dataValues$lastPlot <- plot
     plot
@@ -260,20 +277,23 @@ output$mainPlot <- renderPlot(
 
 # logic that turns certain options on/off if they conflict with other options
 observe({
-  if (input$plotParam_show_drops) {
-    enable("plotParam_drops_size")
-    enable("plotParam_col_drops")
-    enable("plotParam_alpha_drops")
-  } else {
-    disable("plotParam_drops_size")
-    disable("plotParam_col_drops")
-    disable("plotParam_alpha_drops")
-  }
-  
+  toggleState("plotParam_drops_size", input$plotParam_show_drops)
+  toggleState("plotParam_col_drops", input$plotParam_show_drops)
+  toggleState("plotParam_alpha_drops", input$plotParam_show_drops)
   toggleState("plotParam_superimpose", !input$plotParam_show_full_plate && input$plotParam_show_drops)
   toggleState("plotParam_show_full_plate", !input$plotParam_superimpose)
   toggleState("plotParam_text_size_mutant_freq", input$plotParam_show_mutant_freq)
   toggleState("plotParam_col_thresholds", input$plotParam_show_thresholds)
+  toggleState("plotParam_bg_mutant", input$plotParam_show_low_high_mut_freq)
+  toggleState("plotParam_bg_wildtype", input$plotParam_show_low_high_mut_freq)
+  toggleState("plotParam_alpha_bg_low_high_mut_freq", input$plotParam_show_low_high_mut_freq)
+})
+
+observeEvent(input$plotParam_show_failed_wells, {
+  updateSelectInput(session, "plotParamDropShow-failed",
+                    selected = as.character(input$plotParam_show_failed_wells))
+  toggleState("plotParam_bg_failed", input$plotParam_show_failed_wells)
+  toggleState("plotParam_alpha_bg_failed", input$plotParam_show_failed_wells)
 })
 
 # if the user chooses to not show a cluster of drops, disable the options

@@ -252,3 +252,7 @@ ul.ColVis_collection {
   text-align: right;
   padding-top: 5px;
 }
+
+#plotParamsDropRow-failed .plotParamDropName {
+  margin-top: -10px;
+}
