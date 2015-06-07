@@ -1,22 +1,17 @@
-# --- Dataset tab --- #
+# ddPCR R package - Dean Attali 2015
+# --- Dataset tab server --- #
 
-# when data files are being chosen
+# only enable the upload buttons when their corresponding input has a file selected
 observeEvent(input$uploadDataFiles, ignoreNULL = FALSE, {
   toggleState("uploadFilesBtn", !is.null(input$uploadDataFiles))
+})
+observeEvent(input$loadFile, ignoreNULL = FALSE, {
+  toggleState("loadFileBtn", !is.null(input$loadFile))
 })
 
 # when "Upload data" button is clicked
 observeEvent(input$uploadFilesBtn, {
-  # User-experience stuff
-  disable("uploadFilesBtn")
-  show("uploadFilesMsg")
-  on.exit({
-    enable("uploadFilesBtn")
-    hide("uploadFilesMsg")
-  })
-  hide("errorDiv")    
-  
-  tryCatch({
+  withBusyIndicator("uploadFilesBtn", {
     dataFiles <- input$uploadDataFiles %>% fixUploadedFilesNames
     metaFile <- input$uploadMetaFile %>% fixUploadedFilesNames
     
@@ -27,25 +22,15 @@ observeEvent(input$uploadFilesBtn, {
                 type = WTNEGBRAF)
     
     output$datasetChosen <- reactive({ TRUE })
-    updateTabsetPanel(session, "mainNav", "settingsTab")
-  }, error = errorFunc)
+  })
 })
 
 # when a file is chosen to load a saved dataset
-observeEvent(input$loadFile, { 
-  # User-experience stuff
-  show("loadFileMsg")
-  on.exit({
-    hide("loadFileMsg")
-  })
-  hide("errorDiv")
-  
-  tryCatch({
+observeEvent(input$loadFileBtn, {
+  withBusyIndicator("loadFileBtn", {
     file <- input$loadFile %>% fixUploadedFilesNames
     dataValues$plate <- load_plate(file$datapath)
     
     output$datasetChosen <- reactive({ TRUE })
-    updateTabsetPanel(session, "mainNav", "settingsTab")
-  }, error = errorFunc)
-  
+  })
 })

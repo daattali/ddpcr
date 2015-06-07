@@ -1,15 +1,9 @@
-# --- Analyze tab --- #
+# ddPCR R package - Dean Attali 2015
+# --- Analyze tab server --- #
 
 # analyze button is clicked
 observeEvent(input$analyzeBtn, {
-  # User-experience stuff
-  disable("analyzeBtn")
-  on.exit({
-    enable("analyzeBtn")
-  })
-  hide("errorDiv")
-  
-  tryCatch({
+  withBusyIndicator("analyzeBtn", {
     text("analyzeProgress", "")
     withCallingHandlers(
       dataValues$plate <- dataValues$plate %>% analyze(restart = TRUE),
@@ -17,6 +11,5 @@ observeEvent(input$analyzeBtn, {
         text("analyzeProgress", m$message, TRUE)
       }
     )
-    updateTabsetPanel(session, "mainNav", "resultsTab")
-  }, error = errorFunc)
+  })
 })

@@ -1,3 +1,5 @@
+/* ddPCR R package - Dean Attali 2015 */
+
 body {
   background-color: #f8f8f8;
 }
@@ -97,12 +99,12 @@ hr.small {
   -moz-border-radius: 3px;
 }
 
-.btn-msg {
-  margin-left: 15px;
+.btn-loading-container {
+  margin-left: 10px;
   font-size: 1.2em;
 }
 
-.btn-msg-done {
+.btn-done-indicator {
   color: green;
 }
 

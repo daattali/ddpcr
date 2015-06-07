@@ -1,4 +1,52 @@
-# --- Settings tab --- #
+# ddPCR R package - Dean Attali 2015
+# --- Settings tab server --- #
+
+# Update the settings whenever the plate gets updated
+observeEvent(dataValues$plate, {
+  updateSelectInput(session, "settingsPlateType", selected = dataValues$plate %>% type)
+  updateTextInput(session, "settingsName", value = dataValues$plate %>% name)
+  updateTextInput(session, "settingsXvar", value = dataValues$plate %>% x_var)
+  updateTextInput(session, "settingsYvar", value = dataValues$plate %>% y_var)
+  if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
+    updateTextInput(session, "settingsXThreshold", value = dataValues$plate %>% x_threshold)
+    updateTextInput(session, "settingsYThreshold", value = dataValues$plate %>% y_threshold)
+  }
+  updateTextInput(session, "settingsSubset", value = "")
+})
+
+# Basic settings ----
+
+# update basic settings button is clicked
+observeEvent(input$updateBasicSettings, {
+  withBusyIndicator("updateBasicSettings", {
+    
+    # if a new plate type is chosen, need to reset the plate
+    if (type(dataValues$plate) != input$settingsPlateType &&
+        input$settingsPlateType != "") {
+      dataValues$plate <-
+        ddpcr::reset(dataValues$plate, input$settingsPlateType)
+    }
+    
+    name(dataValues$plate) <- input$settingsName
+    x_var(dataValues$plate) <- input$settingsXvar
+    y_var(dataValues$plate) <- input$settingsYvar
+    
+    if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
+      x_threshold(dataValues$plate) <- input$settingsXThreshold
+      y_threshold(dataValues$plate) <- input$settingsYThreshold
+    }
+  })
+})
+
+# Subset plate ----
+
+# subset plate button is clicked
+observeEvent(input$updateSubsetSettings, {
+  withBusyIndicator("updateSubsetSettings", {
+    dataValues$plate <- subset(dataValues$plate, input$settingsSubset)
+    updateTextInput(session, "settingsSubset", value = "")
+  })
+})   
 
 # update the plot that shows what wells are available
 output$wellsUsedPlot <- renderPlot({
@@ -23,12 +71,14 @@ output$wellsUsedPlot <- renderPlot({
   p
 })  
 
-# plot that helps select wells is clicked
+# user double clicks on a well in the subset plot
 observeEvent(input$wellsUsedPlotClick, {
+  # find out what well was clicked
   col <- floor(input$wellsUsedPlotClick$x + 0.5) %>% num_to_col
   row <- ceiling(8.5 - input$wellsUsedPlotClick$y) %>% num_to_row
   clickedWell <- sprintf("%s%s", row, col)
   
+  # don't do anything if the well isn't available in the data
   if (!clickedWell %in% (dataValues$plate %>% wells_used)) {
     return(NULL)
   }
@@ -41,7 +91,9 @@ observeEvent(input$wellsUsedPlotClick, {
   updateTextInput(session, "settingsSubset", value = newValue)
 })
 
+# user selects a region in the subset plot
 observeEvent(input$wellsUsedPlotBrush, {
+  # figure out what wells are selected
   col1 <- floor(input$wellsUsedPlotBrush$xmin + 0.5) %>% num_to_col
   col2 <- floor(input$wellsUsedPlotBrush$xmax + 0.5) %>% num_to_col
   row1 <- ceiling(8.5 - input$wellsUsedPlotBrush$ymin) %>% num_to_row
@@ -50,6 +102,7 @@ observeEvent(input$wellsUsedPlotBrush, {
   well1 <- sprintf("%s%s", row1, col1)
   well2 <- sprintf("%s%s", row2, col2)
   
+  # if none of the wells are available in the data, ignore
   if (length(well1) == 0 || length(well2) == 0 ||
         !grepl(WELL_ID_REGEX, well1) || !grepl(WELL_ID_REGEX, well2) ||
         !any((dataValues$plate %>% wells_used) %in% get_wells_btwn(well1, well2))) {
@@ -64,54 +117,31 @@ observeEvent(input$wellsUsedPlotBrush, {
   updateTextInput(session, "settingsSubset", value = newValue)
 })
 
-# update settings button is clicked
-observeEvent(input$updateBasicSettings, {
-  # User-experience stuff
-  disable("updateBasicSettings")
-  show("updateBasicSettingsMsg")
-  on.exit({
-    enable("updateBasicSettings")
-    hide("updateBasicSettingsMsg")
+# Advanced settings ----
+
+# When the advanced settings update button is clicked,
+# check all advanced settings and save them
+observeEvent(input$updateAdvancedSettings, {
+  withBusyIndicator("updateAdvancedSettings", {
+    advanced_param_regex <- "^advanced_setting_param_(.*)__(.*)$"
+    all_params <- 
+      grep(advanced_param_regex, names(input), value = TRUE)
+    lapply(all_params, function(x) {
+      if (!is.null(input[[x]]) && !is.na(input[[x]])) {
+        major_name <- gsub(advanced_param_regex, "\\1", x)
+        minor_name <- gsub(advanced_param_regex, "\\2", x)
+        params(dataValues$plate, major_name, minor_name) <- input[[x]]
+      }
+    })
   })
-  hide("errorDiv")    
-  
-  tryCatch({
-    if (type(dataValues$plate) != input$settingsPlateType &&
-          input$settingsPlateType != "") {
-      dataValues$plate <- ddpcr::reset(dataValues$plate, input$settingsPlateType)
-    }
-    
-    name(dataValues$plate) <- input$settingsName
-    x_var(dataValues$plate) <- input$settingsXvar
-    y_var(dataValues$plate) <- input$settingsYvar
-    
-    if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
-      x_threshold(dataValues$plate) <- input$settingsXThreshold
-      y_threshold(dataValues$plate) <- input$settingsYThreshold
-    }
-    
-    show("updateBasicSettingsDone")
-    hide(id = "updateBasicSettingsDone", anim = TRUE,
-         animType = "fade", time = 0.5, delay = 4)
-  }, error = errorFunc)
 })
 
-observeEvent(input$updateSubsetSettings, {
-  # User-experience stuff
-  disable("updateSubsetSettings")
-  on.exit({
-    enable("updateSubsetSettings")
-  })
-  hide("errorDiv")
-  
-  tryCatch({
-    dataValues$plate <- subset(dataValues$plate, input$settingsSubset)
-    updateTextInput(session, "settingsSubset", value = "")
-    show("updateSubsetSettingsDone")
-    hide(id = "updateSubsetSettingsDone", anim = TRUE,
-         animType = "fade", time = 0.5, delay = 4)
-  }, error = errorFunc)
-})   
+# reset settings to default
+observeEvent(input$resetParamsBtn, {
+  withBusyIndicator("resetParamsBtn",
+    dataValues$plate <- set_default_params(dataValues$plate)
+  )
+})
 
 # When the plate changes, update the advanced settings UI
 observeEvent(dataValues$plate, {
@@ -158,48 +188,4 @@ observeEvent(dataValues$plate, {
       }
     )
   })
-})
-
-# When the advanced settings update button is clicked,
-# check all advanced settings and save them
-observeEvent(input$updateAdvancedSettings, {
-  # User-experience stuff
-  disable("updateAdvancedSettings")
-  on.exit({
-    enable("updateAdvancedSettings")
-  })
-  hide("errorDiv")   
-  
-  tryCatch({
-    advanced_param_regex <- "^advanced_setting_param_(.*)__(.*)$"
-    all_params <- 
-      grep(advanced_param_regex, names(input), value = TRUE)
-    lapply(all_params, function(x) {
-      if (!is.null(input[[x]]) && !is.na(input[[x]])) {
-        major_name <- gsub(advanced_param_regex, "\\1", x)
-        minor_name <- gsub(advanced_param_regex, "\\2", x)
-        params(dataValues$plate, major_name, minor_name) <- input[[x]]
-      }
-    })
-    
-    show("updateAdvancedSettingsDone")
-    hide(id = "updateAdvancedSettingsDone", anim = TRUE,
-         animType = "fade", time = 0.5, delay = 4)
-  }, error = errorFunc)
-})
-
-observeEvent(input$resetParamsBtn, {
-  # User-experience stuff
-  disable("resetParamsBtn")
-  on.exit({
-    enable("resetParamsBtn")
-  })
-  hide("errorDiv")
-  
-  tryCatch({
-    dataValues$plate <- set_default_params(dataValues$plate)
-    show("updateAdvancedSettingsDone")
-    hide(id = "updateAdvancedSettingsDone", anim = TRUE,
-         animType = "fade", time = 0.5, delay = 4)
-  }, error = errorFunc)
 })

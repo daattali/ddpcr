@@ -9,8 +9,6 @@ source(file.path("server", "helpers.R"))
 
 shinyServer(function(input, output, session) {
 
-  # --- General --- #
-  
   # reactive values we will use throughout the app
   dataValues <- reactiveValues(
     plate = NULL
@@ -31,7 +29,8 @@ shinyServer(function(input, output, session) {
     }
   ) 
   
-  # When a main or secondary tab is switched
+  # When a main or secondary tab is switched, clear the error message
+  # and don't show the dataset info on the About tab
   observe({
     input$mainNav
     input$datasetTabs
@@ -46,29 +45,18 @@ shinyServer(function(input, output, session) {
     hide("errorDiv")
   })
 
-  # whenever the plate gets updated
+  # whenever the plate gets updated, update the dataset info
   observeEvent(dataValues$plate, {
     # update the plate description
-    output$datasetDescName <- renderText({
+    output$datasetDescName <- renderText(
       dataValues$plate %>% name
-    })
-    output$datasetDescNumWells <- renderText({
+    )
+    output$datasetDescNumWells <- renderText(
       dataValues$plate %>% wells_used %>% length
-    })
-    output$datasetDescNumDrops <- renderText({
+    )
+    output$datasetDescNumDrops <- renderText(
       dataValues$plate %>% plate_data %>% nrow %>% format(big.mark = ",")
-    })  
-    
-    # update the settings
-    updateSelectInput(session, "settingsPlateType", selected = dataValues$plate %>% type)
-    updateTextInput(session, "settingsName", value = dataValues$plate %>% name)
-    updateTextInput(session, "settingsXvar", value = dataValues$plate %>% x_var)
-    updateTextInput(session, "settingsYvar", value = dataValues$plate %>% y_var)
-    if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
-      updateTextInput(session, "settingsXThreshold", value = dataValues$plate %>% x_threshold)
-      updateTextInput(session, "settingsYThreshold", value = dataValues$plate %>% y_threshold)
-    }
-    updateTextInput(session, "settingsSubset", value = "")
+    )  
     
     # update plot settings
     hide(selector = "[data-ddpcr-type]")

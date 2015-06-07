@@ -1,4 +1,5 @@
-# This file contains the UI for the settings tab
+# ddPCR R package - Dean Attali 2015
+# --- Settings tab UI --- #
 
 tabPanel(
   title = "Settings",
@@ -55,26 +56,16 @@ tabPanel(
           )
         )),
         br(),
-        actionButton(
-          "updateBasicSettings",
-          "Apply",
-          class = "btn-primary"
-        ),
-        hidden(
-          span(id = "updateBasicSettingsMsg",
-               "Applying settings...",
-               class = "btn-msg"
-          )
-        ),
-        hidden(
-          span(id = "updateBasicSettingsDone",
-               icon("check"), "Done",
-               class = "btn-msg btn-msg-done"
+        withBusyIndicator(
+          actionButton(
+            "updateBasicSettings",
+            "Apply",
+            class = "btn-primary"
           )
         )
       ),
 
-      # Advanced settings tab
+      # Subset plate tab
       tabPanel(
         title = "Subset Plate",
         id = "subsetSettingsTab",
@@ -104,15 +95,11 @@ tabPanel(
                        height = 450, width = 650)
         ),
         br(),
-        actionButton(
-          "updateSubsetSettings",
-          "Apply",
-          class = "btn-primary"
-        ),
-        hidden(
-          span(id = "updateSubsetSettingsDone",
-               icon("check"), "Done",
-               class = "btn-msg btn-msg-done"
+        withBusyIndicator(
+          actionButton(
+            "updateSubsetSettings",
+            "Apply",
+            class = "btn-primary"
           )
         ),
         p("Note: this action is not reversible. Once you subset the dataset to only keep certain wells,",
@@ -128,23 +115,13 @@ tabPanel(
         h3(strong("These are advanced options. Only use them if you know what you're doing.")),
         br(),
         uiOutput("advancedSettings"),  
-        actionButton(
-          "updateAdvancedSettings",
-          "Apply",
-          class = "btn-primary"
-        ),
-        hidden(
-          span(id = "updateAdvancedSettingsMsg",
-               "Applying settings...",
-               class = "btn-msg"
+        withBusyIndicator(
+          actionButton(
+            "updateAdvancedSettings",
+            "Apply",
+            class = "btn-primary"
           )
-        ),
-        hidden(
-          span(id = "updateAdvancedSettingsDone",
-               icon("check"), "Done",
-               class = "btn-msg btn-msg-done"
-          )
-        )        
+        )
       )
     )
   )

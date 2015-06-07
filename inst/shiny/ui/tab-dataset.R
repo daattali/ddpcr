@@ -1,4 +1,5 @@
-# This file contains the UI for the dataset selection tab
+# ddPCR R package - Dean Attali 2015
+# --- Dataset tab UI --- #
 
 tabPanel(
   title = "Dataset",
@@ -10,13 +11,14 @@ tabPanel(
   tabsetPanel(
     id = "datasetTabs", type = "tabs",    
     
-    # tab for uploading a new dataset 
+    # tab for uploading a new dataset ----
     tabPanel(
       title = "Upload new dataset",
       id = "newDatasetTab",
-      h3("Upload data from QuantaSoft ",
+      h3(strong("Upload data from QuantaSoft "),
          helpPopup("You must first export the data from QuantaSoft to <i>.csv</i> (Excel) files")
       ),
+      br(),
       fileInput(
         "uploadDataFiles",
         div("Data files (one file per well)",
@@ -40,26 +42,22 @@ tabPanel(
         )
       ),
       
-      actionButton(
-        "uploadFilesBtn",
-        "Upload data",
-        class = "btn-primary"
-      ),
-      hidden(
-        span(id = "uploadFilesMsg",
-             "Uploading...",
-             class = "btn-msg"
+      withBusyIndicator(
+        actionButton(
+          "uploadFilesBtn",
+          "Upload data",
+          class = "btn-primary"
         )
       )
     ),
     
-    # tab for loading existing dataset
+    # tab for loading existing dataset ----
     tabPanel(
       title = "Load saved dataset",
       id = "loadDatasetTab",
-      h3("Upload previously saved data",
+      h3(strong("Upload previously saved data"),
          helpPopup("If you've previously used this program to save data, you can load it here")),
-      
+      br(),
       fileInput(
         "loadFile",
         "Saved ddPCR file",
@@ -68,10 +66,11 @@ tabPanel(
           '.rds'
         )
       ),
-      hidden(
-        span(id = "loadFileMsg",
-             "Loading...",
-             class = "btn-msg"
+      withBusyIndicator(
+        actionButton(
+          "loadFileBtn",
+          "Load data",
+          class = "btn-primary"
         )
       )
     )
