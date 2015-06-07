@@ -85,7 +85,8 @@ tabPanel(
           value = ""
         ),
         div(id = "settingsAllWells", 
-            p("Below is a diagram of the plate, with white",
+            p(id = "subsetPlotDesc",
+              "Below is a diagram of the plate, with white",
               "wells denoting wells that are available in the current dataset.", br(),
               "Double click any well to add it to the list above, or select multiple",
               "wells by clicking the mouse and dragging it across the plate."),
@@ -95,16 +96,21 @@ tabPanel(
                        height = 450, width = 650)
         ),
         br(),
+        div(id = "subsetNotReversibleNote",
+          "Note: this action is not reversible",
+          helpPopup(paste(
+            "Once you subset the dataset to only keep certain wells,",
+            "the rest of the data is removed. To retrieve the original data",
+            "later, you will need to upload the dataset again."
+          ))
+        ),
         withBusyIndicator(
           actionButton(
             "updateSubsetSettings",
             "Apply",
             class = "btn-primary"
           )
-        ),
-        p("Note: this action is not reversible. Once you subset the dataset to only keep certain wells,",
-          "the rest of the data is removed. To retrieve the original data later, you will need to upload the dataset again.",
-          "the dataset again.")
+        )
       ),
             
       # Advanced settings tab
@@ -113,15 +119,25 @@ tabPanel(
         id = "advancedSettingsTab",
         h3(strong("These are advanced options. Only use them if you know what you're doing.")),
         br(),
-        uiOutput("advancedSettings"),  
+        uiOutput("advancedSettings"),
+        actionButton(
+          "updateAdvancedSettings",
+          "Apply",
+          class = "btn-primary"
+        ),
         withBusyIndicator(
           actionButton(
-            "updateAdvancedSettings",
-            "Apply",
-            class = "btn-primary"
+            "resetParamsBtn",
+            "Reset to default"
           )
         )
       )
+    ),
+    div(
+      id = "settingsNextMsg",
+      class = "next-msg",
+      "When you are finished with the settings, continue to",
+      actionLink("toAnalyze", "Analyze")
     )
   )
 )

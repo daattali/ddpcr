@@ -7,10 +7,9 @@ tabPanel(
   value = "analyzeTab",
   icon  = icon("calculator"),
   
-  div(id = "analyzeTabContent",
-    conditionalPanel(
-      condition = "output.datasetChosen", 
-      
+  conditionalPanel(
+    condition = "output.datasetChosen", 
+    div(id = "analyzeTabContent",
       p("Analyze the droplets to classify each droplet into a group.", br(),
         "This may take several minutes depending on the number of wells."),
       
@@ -22,6 +21,15 @@ tabPanel(
         )
       ),
       pre(id = "analyzeProgress")
-    )
+    ),
+    
+    hidden(
+      div(
+        id = "analyzeNextMsg",
+        class = "next-msg",
+        "The data has been analyzed, you can continue to",
+        actionLink("toResults", "Results")
+      )
+    )    
   )
 )

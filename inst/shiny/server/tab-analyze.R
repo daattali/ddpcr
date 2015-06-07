@@ -11,5 +11,11 @@ observeEvent(input$analyzeBtn, {
         text("analyzeProgress", m$message, TRUE)
       }
     )
+    show("analyzeNextMsg")
   })
 })
+
+# change to results tab when clicking on link
+observeEvent(input$toResults,
+  updateTabsetPanel(session, "mainNav", "resultsTab")
+)

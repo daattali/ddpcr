@@ -46,6 +46,10 @@ shinyServer(function(input, output, session) {
     
     # clear the error message
     hide("errorDiv")
+    
+    # hide the "finished, move on to next tab" messages
+    hide("datasetNextMsg")
+    hide("analyzeNextMsg")
   })
 
   # whenever the plate gets updated, update the dataset info

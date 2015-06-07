@@ -122,7 +122,8 @@ observeEvent(input$wellsUsedPlotBrush, {
 # When the advanced settings update button is clicked,
 # check all advanced settings and save them
 observeEvent(input$updateAdvancedSettings, {
-  withBusyIndicator("updateAdvancedSettings", {
+  withBusyIndicator("resetParamsBtn", {
+    disable("updateAdvancedSettings")
     advanced_param_regex <- "^advanced_setting_param_(.*)__(.*)$"
     all_params <- 
       grep(advanced_param_regex, names(input), value = TRUE)
@@ -133,14 +134,17 @@ observeEvent(input$updateAdvancedSettings, {
         params(dataValues$plate, major_name, minor_name) <- input[[x]]
       }
     })
+    enable("updateAdvancedSettings")
   })
 })
 
 # reset settings to default
 observeEvent(input$resetParamsBtn, {
-  withBusyIndicator("resetParamsBtn",
+  withBusyIndicator("resetParamsBtn", {
+    disable("updateAdvancedSettings")
     dataValues$plate <- set_default_params(dataValues$plate)
-  )
+    enable("updateAdvancedSettings")
+  })
 })
 
 # When the plate changes, update the advanced settings UI
@@ -189,3 +193,8 @@ observeEvent(dataValues$plate, {
     )
   })
 })
+
+# change to analyze tab when clicking on link
+observeEvent(input$toAnalyze,
+  updateTabsetPanel(session, "mainNav", "analyzeTab")
+)

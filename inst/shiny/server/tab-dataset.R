@@ -22,6 +22,7 @@ observeEvent(input$uploadFilesBtn, {
                 type = WTNEGBRAF)
     
     output$datasetChosen <- reactive({ TRUE })
+    show("datasetNextMsg")
   })
 })
 
@@ -32,5 +33,11 @@ observeEvent(input$loadFileBtn, {
     dataValues$plate <- load_plate(file$datapath)
     
     output$datasetChosen <- reactive({ TRUE })
+    show("datasetNextMsg")
   })
 })
+
+# change to settings tab when clicking on link
+observeEvent(input$toSettings,
+  updateTabsetPanel(session, "mainNav", "settingsTab")
+)

@@ -87,16 +87,6 @@ body > .container {
   margin-left: 10px;
 }
 
-hr.small {
-  max-width: 400px;
-  margin: 15px auto;
-  border-width: 4px;
-  border-color: inherit;
-  border-radius: 3px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-}
-
 .btn-loading-container {
   margin-left: 10px;
   font-size: 1.2em;
@@ -124,6 +114,13 @@ button.btn-primary.lg-btn {
   padding: 10px 20px;
 }
 
+.next-msg {
+  margin-top: 20px;
+  color: #777;
+  font-size: 1.4em;
+  font-weight: bold;
+}
+
 #basicSettingsTabContent .shiny-input-container {
   width: 400px;
 }
@@ -132,8 +129,16 @@ button.btn-primary.lg-btn {
   width: 650px;
 }
 
-#updateSubsetSettings {
-  margin-bottom: 10px;
+#subsetPlotDesc {
+  font-size: 1.2em;
+}
+
+#subsetNotReversibleNote {
+  font-size: 1.2em;
+}
+
+#subsetNotReversibleNote .popover-link {
+  font-size: 14px;
 }
 
 #resetParamsBtn {
@@ -151,6 +156,7 @@ button.btn-primary.lg-btn {
 
 #analyzeProgress {
   margin-top: 15px;
+  color: #444444;
   padding: 0;
   font-size: inherit;
   background: none;

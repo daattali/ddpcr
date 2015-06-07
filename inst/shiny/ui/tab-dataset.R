@@ -74,5 +74,14 @@ tabPanel(
         )
       )
     )
+  ),
+  
+  hidden(
+    div(
+      id = "datasetNextMsg",
+      class = "next-msg",
+      "The data has been loaded, you can continue to",
+      actionLink("toSettings", "Settings")
+    )
   )
 )

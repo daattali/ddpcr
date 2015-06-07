@@ -45,7 +45,7 @@ read_files <- function(plate, data_files, meta_file) {
   }
   if (!all(grepl(DATA_FILE_REGEX, data_files))) {
     err_msg(paste("not all data files provided are valid data files",
-                  "(ddpcr expects the \"_Amplitude\" files exported by QuantaSoft)"))
+                  "(ddpcr expects only the \"_Amplitude\" files exported by QuantaSoft)"))
   }
   
   # make sure metadata file is a valid path
