@@ -1,8 +1,5 @@
-allCols <- sort(c(
-  "black", "blue", "green" = "green3", "orange", "purple" = "purple3",
-  "red", "silver", "teal", "yellow", "brown", "gold", "gray" = "gray7", "white"
-))
-allColsDefault <- c("Default", allCols)
+# ddPCR R package - Dean Attali 2015
+# --- Results tab UI --- #
 
 tabPanel(
   title = "Results",
@@ -17,7 +14,7 @@ tabPanel(
     tabsetPanel(
       id = "resultsTabs", type = "tabs",    
       
-      # Plate data tab
+      # Plate data tab ----
       tabPanel(
         title = "Plate summary",
         id    = "metaTab",
@@ -29,7 +26,7 @@ tabPanel(
         DT::dataTableOutput("metaTable")
       ),
       
-      # Plot tab
+      # Plot tab ----
       tabPanel(
         title = "Plot",
         id = "plotTab",   
@@ -48,7 +45,7 @@ tabPanel(
                 column(
                   4,
                   selectInput(
-                    "plotParamSubsetType", NULL,
+                    "plotParamSubsetType", "Wells to plot",
                     c("Show all wells" = "all",
                       "Select specific wells" = "wells",
                       "Select specific samples" = "samples"),
@@ -125,7 +122,7 @@ tabPanel(
                     fixedRow(
                       column(
                         3,
-                        strong(HTML(plotDropsParams[[x]]$name)),
+                        tags$label(strong(HTML(plotDropsParams[[x]]$name))),
                         class = "plotParamDropName"
                       ),
                       column(
@@ -236,7 +233,7 @@ tabPanel(
         )
       ),
       
-      # Explore summary variable tabl
+      # Explore summary variable tab ----
       tabPanel(
         title = "Explore summary variable",
         id    = "exploreTab",
@@ -250,7 +247,7 @@ tabPanel(
         plotOutput("explorePlot", width = "500")
       ),
 
-      # Droplets data tab
+      # Droplets data tab ----
       tabPanel(
         title = "Droplets data",
         id = "dropletsTab",

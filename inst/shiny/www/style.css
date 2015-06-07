@@ -2,6 +2,7 @@
 
 body {
   background-color: #f8f8f8;
+  margin-top: 50px;
 }
 
 .navbar {
@@ -34,15 +35,12 @@ body > .container {
 }
 
 .popover-link {
-  color: #333;
+  color: #444;
+  font-size: 16px;
 }
 
 .popover-link > i.fa {
   vertical-align: top;
-}
-
-h3 .popover-link {
-  font-size: 18px;
 }
 
 .nav-tabs>li.active>a,
@@ -114,6 +112,18 @@ hr.small {
   font-size: 1.2em;
 }
 
+label {
+  font-size: 1.2em;
+}
+
+button.btn-primary:not(.lg-btn) {
+  font-size: 1.2em;
+}
+
+button.btn-primary.lg-btn {
+  padding: 10px 20px;
+}
+
 #basicSettingsTabContent .shiny-input-container {
   width: 400px;
 }
@@ -132,6 +142,11 @@ hr.small {
 
 #analyzeTabContent {
   font-size: 1.5em;
+  color: #444;
+}
+
+#analyzeBtn {
+  font-size: 1em;
 }
 
 #analyzeProgress {
@@ -173,6 +188,11 @@ hr.small {
   border: 1px solid #111;
 }
 
+#metaTable .ColVis_Button {
+  height: auto;
+  font-size: 1.2em;
+}
+
 #metaTable .dataTables_scroll,
 #metaTable .DTFC_LeftWrapper {
   border: 1px solid #111;
@@ -191,7 +211,6 @@ ul.ColVis_collection {
 }
 
 #plotOptionsSection {
-  font-size: 1.2em;
   margin-top: 20px;
   margin-bottom: 20px;
 }
@@ -199,7 +218,8 @@ ul.ColVis_collection {
 #plotParamsTabs.nav-pills>li>a {
   border-radius: 3px 3px 0 0;
   -webkit-border-radius: 3px 3px 0 0;
-  -moz-border-radius: 3px 3px 0 0;  
+  -moz-border-radius: 3px 3px 0 0;
+  font-size: 1.2em;
 }
 
 #plotParamsTabs.nav-pills>li.active>a {
@@ -235,10 +255,6 @@ ul.ColVis_collection {
   margin-top: -50px;
   margin-left: -33px;
   z-index: 1;
-}
-
-#plotBtn {
-  padding: 10px 25px;
 }
 
 #mainPlot {

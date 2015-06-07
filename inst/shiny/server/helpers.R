@@ -4,8 +4,9 @@
 # For better user experience, when a button is pressed this will disable
 # the button while the action is being taken, show a loading indicator, and
 # show a checkmark when it's done. If an error occurs, show the error message. 
-# This only works if the given button was set up with `withBusyIndicator` in
-# the UI
+# This works best if the given button was set up with `withBusyIndicator` in
+# the UI (otherwise it will only disable the button and take care of errors,
+# but won't show the loading/done indicators)
 withBusyIndicator <- function(buttonId, expr) {
   
   loadingEl <- sprintf("[data-for-btn=%s] .btn-loading-indicator", buttonId)
@@ -13,19 +14,19 @@ withBusyIndicator <- function(buttonId, expr) {
   disable(buttonId)
   show(selector = loadingEl)
   hide(selector = doneEl)
-  hide("errorDiv")  
-  
-  tryCatch({
-    expr
-    show(selector = doneEl)
-    hide(selector = doneEl, anim = TRUE, animType = "fade",
-         time = 0.5, delay = 3)
-  },
-  error = errorFunc,
-  finally = {
+  hide("errorDiv")
+  on.exit({
     enable(buttonId)
     hide(selector = loadingEl)
   })
+  
+  tryCatch({
+    value <- expr
+    show(selector = doneEl)
+    hide(selector = doneEl, anim = TRUE, animType = "fade",
+         time = 0.5, delay = 3)
+    value
+  }, error = errorFunc)
 }
 
 # Error handler that gets used in many tryCatch blocks
@@ -48,4 +49,11 @@ fixUploadedFilesNames <- function(x) {
   file.rename(from = oldNames, to = newNames)
   x$datapath <- newNames
   x
+}
+
+# convet a column name to a nicer human readable version by using
+# spaces instead of underscores and capitalizing first letter
+humanFriendlyNames <- function(colnames) {
+  paste0(toupper(substring(colnames, 1, 1)),
+         substring(gsub("_", " ", colnames), 2))
 }

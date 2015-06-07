@@ -1,3 +1,6 @@
+# ddPCR R package - Dean Attali 2015
+# --- Main server logic for shiny app --- #
+
 library(shiny)
 library(shinyjs)
 library(ddpcr)
@@ -56,24 +59,12 @@ shinyServer(function(input, output, session) {
     )
     output$datasetDescNumDrops <- renderText(
       dataValues$plate %>% plate_data %>% nrow %>% format(big.mark = ",")
-    )  
-    
-    # update plot settings
-    hide(selector = "[data-ddpcr-type]")
-    show(selector = sprintf("[data-ddpcr-type~=%s]", dataValues$plate %>% type))
-    if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
-      updateSelectInput(session, "plotParamDropShow-empty", selected = "TRUE")
-    }
-    updateTextInput(session, "plotParam_xlab", value = dataValues$plate %>% x_var)
-    updateTextInput(session, "plotParam_ylab", value = dataValues$plate %>% y_var)
-    
+    )
   })  
   
   # include logic for each tab
-  source(file.path("server", "tab-dataset.R"),  local = TRUE)$value
-  source(file.path("server", "tab-settings.R"), local = TRUE)$value
-  source(file.path("server", "tab-analyze.R"),  local = TRUE)$value
-  source(file.path("server", "tab-results.R"),  local = TRUE)$value
+  source(file.path("server", "tab-dataset.R"),   local = TRUE)$value
+  source(file.path("server", "tab-settings.R"),  local = TRUE)$value
+  source(file.path("server", "tab-analyze.R"),   local = TRUE)$value
+  source(file.path("server", "tab-results.R"),   local = TRUE)$value
 })
-
-

@@ -1,4 +1,5 @@
-# This is the main UI file that initializes the UI and aggregates all the tabs
+# ddPCR R package - Dean Attali 2015
+# --- Main UI file for shiny app --- #
 
 library(shiny)
 library(shinyjs)
@@ -19,7 +20,11 @@ tagList(
     id = "mainNav",
     inverse = TRUE,
     fluid = FALSE,
+    position = "fixed-top",
+    collapsible = TRUE,
     header = source(file.path("ui", "header.R"),  local = TRUE)$value,
+    
+    # include the UI for each tab
     source(file.path("ui", "tab-dataset.R"),  local = TRUE)$value,
     source(file.path("ui", "tab-settings.R"), local = TRUE)$value,
     source(file.path("ui", "tab-analyze.R"),  local = TRUE)$value,
