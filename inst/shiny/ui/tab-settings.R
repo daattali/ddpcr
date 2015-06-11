@@ -38,10 +38,10 @@ tabPanel(
         ),
         fixedRow(
           column(6,
-            textInput("settingsXvar", "Dye along X axis", "")
+            textInput("settingsXvar", "Dye along X axis (Channel 2)", "")
           ),
           column(6,
-            textInput("settingsYvar", "Dye along Y axis", "")
+            textInput("settingsYvar", "Dye along Y axis (Channel 1)", "")
           )
         ),
         conditionalPanel(

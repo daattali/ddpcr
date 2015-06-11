@@ -23,7 +23,13 @@ tabPanel(
         br(),
         downloadButton("saveMetaBtn", "Download plate summary"),
         br(), br(),
-        DT::dataTableOutput("metaTable")
+        h4(id = "aggregateDesc",
+          "Select multiple rows to see combined statistics",
+          helpPopup(paste("Selecting multiple rows by clicking on them will show a table at the",
+                          "bottom of the page. The table will show statistics for all the selected wells combined."))
+        ),
+        DT::dataTableOutput("metaTable"),
+        DT::dataTableOutput("metaAggregate", width = 500)
       ),
       
       # Plot tab ----
@@ -254,20 +260,13 @@ tabPanel(
         br(),
         downloadButton("saveDropletsBtn", "Download droplets data"),
         br(), br(),
-        fixedRow(
-          column(8,
-                 DT::dataTableOutput("dropletsTable")
-          ),
-          column(4,
-                 br(),
-                 div(id = "clustersMappingOuter",
-                     span(id = "clustersMappingInner",
-                          div(id = "clustersTitle", "Clusters"),
-                          uiOutput("clustersMapping")
-                     )
-                 )
-          )
-        )
+        DT::dataTableOutput("dropletsTable", width = 500),
+        div(id = "clustersMappingOuter",
+            span(id = "clustersMappingInner",
+                 div(id = "clustersTitle", "Clusters"),
+                 uiOutput("clustersMapping")
+            )
+        )        
       )
     )
   )

@@ -19,6 +19,13 @@ metaColsHideIdx <- eventReactive(dataValues$plate, {
   which(colnames(meta) %in% colsHide) - 1
 })
 
+# return all numeric metadata variables except for column
+metaNumericVars <- eventReactive(dataValues$plate, {
+  meta <- dataValues$plate %>% plate_meta(only_used = TRUE)
+  vars <- vapply(meta, is.numeric, logical(1)) %>% which %>% names
+  vars <- vars[vars != "col"]
+})
+
 # Update the plot parameters whenever the plate gets updated
 observeEvent(dataValues$plate, {
   updateTextInput(session, "plotParam_xlab", value = dataValues$plate %>% x_var)
@@ -38,6 +45,7 @@ observeEvent(dataValues$plate, {
 output$dropletsTable <- DT::renderDataTable(
   dataValues$plate %>% plate_data,
   rownames = FALSE,
+  selection = "none",
   options = list(searching = FALSE)
 )
 
@@ -65,21 +73,57 @@ output$metaTable <- DT::renderDataTable({
   meta <- dataValues$plate %>% plate_meta(only_used = TRUE)
   colnames <- meta %>% colnames %>% humanFriendlyNames
   DT::datatable(meta,
-    rownames = FALSE,
-    class = 'cell-border stripe',
-    colnames = colnames,
-    extensions = list(
-      'ColVis' = NULL,  # show the "show/hide columns" button 
-      FixedColumns = list(leftColumns = 1)  # fix the Well column
-    ),
-    options = list(
-      searching = FALSE, paging = FALSE,
-      scrollX = TRUE, scrollY = 500,
-      columnDefs = list(list(visible = FALSE,
-                             targets = metaColsHideIdx())),
-      dom = 'C<"clear">lfrtip',
-      scrollCollapse = TRUE
+                rownames = FALSE,
+                class = 'cell-border stripe',
+                colnames = colnames,
+                extensions = c("ColVis"),
+                options = list(
+                  searching = FALSE, paging = FALSE,
+                  scrollX = TRUE, scrollY = 500,
+                  columnDefs = list(list(visible = FALSE,
+                                         targets = metaColsHideIdx())),
+                  dom = 'C<"clear">lfrtp',
+                  scrollCollapse = TRUE
+                )
+  )
+})
+
+# show statistics for selected wells
+output$metaAggregate <- DT::renderDataTable({
+  if (is.null(input$metaTable_rows_selected)) {
+    return()
+  }
+  
+  wells <- input$metaTable_rows_selected
+  vars <- metaNumericVars()
+  niceVars <- humanFriendlyNames(vars)
+  selectInput("exploreVarSelect", "Choose summary variable",
+              setNames(vars, niceVars))
+  
+  meta <-
+    dataValues$plate %>%
+    subset(wells) %>%
+    plate_meta(only_used = TRUE) %>%
+    dplyr::select_(~ one_of(vars)) %>%
+    magrittr::set_colnames(humanFriendlyNames(colnames(.)))
+  
+  # calculate mean and standard error for each numeric variable
+  data <- 
+    plyr::ldply(meta, function(x) {
+      data.frame(Mean = mean(x, na.rm = TRUE),
+                 `Standard error` = sd(x, na.rm = TRUE) / sqrt(length(x)),
+                 check.names = FALSE)},
+      .id = "Variable"
     )
+
+  DT::datatable(data,
+                rownames = FALSE,
+                class = 'cell-border stripe',
+                selection = "none",
+                options = list(
+                  searching = FALSE, paging = FALSE, scrollCollapse = TRUE,
+                  info = FALSE, ordering = FALSE
+                )
   )
 })
 
@@ -97,9 +141,7 @@ output$saveMetaBtn <- downloadHandler(
 
 # Show a select input with all numeric variables as options
 output$exploreVarOutput <- renderUI({
-  meta <- dataValues$plate %>% plate_meta(only_used = TRUE)
-  vars <- vapply(meta, is.numeric, logical(1)) %>% which %>% names
-  vars <- vars[vars != "col"]
+  vars <- metaNumericVars()
   niceVars <- humanFriendlyNames(vars)
   selectInput("exploreVarSelect", "Choose summary variable",
               setNames(vars, niceVars))
@@ -292,7 +334,7 @@ makePlot <- eventReactive(input$plotBtn, {
       dropsParams <- unlist(dropsParams, recursive = FALSE)
       plotParams <- append(plotParams, dropsParams)
     }
-  
+    
     # gather all figure settings
     if (nzchar(input$plotParam_title)) {
       plotParams[['title']] <- input$plotParam_title

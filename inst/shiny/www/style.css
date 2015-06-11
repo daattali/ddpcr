@@ -190,8 +190,15 @@ button.btn-primary.lg-btn {
   border: none;
 }
 
+#dropletsTable {
+  float: left;
+}
+
 #clustersMappingOuter {
   text-align: center;
+  float: left;
+  margin-left: 50px;
+  margin-top: 25px;
 }
 
 #clustersMappingInner {
@@ -215,17 +222,9 @@ button.btn-primary.lg-btn {
   text-transform: lowercase;
 }
 
-#dropletsTable .dataTable {
-  border: 1px solid #111;
-}
-
-#metaTable .ColVis_Button {
-  height: auto;
-  font-size: 1.2em;
-}
-
-#metaTable .dataTables_scroll,
-#metaTable .DTFC_LeftWrapper {
+#dropletsTable .dataTable,
+#metaAggregate .dataTable,
+#metaTable .dataTables_scroll {
   border: 1px solid #111;
 }
 
@@ -233,8 +232,24 @@ button.btn-primary.lg-btn {
   border-bottom: 0;
 }
 
+#metaTable .ColVis_Button {
+  height: auto;
+  font-size: 1.2em;
+}
+
 ul.ColVis_collection {
   width: auto !important;
+}
+
+#aggregateDesc {
+  font-weight: bold;
+  position: relative;
+  z-index: 2;
+  margin-bottom: -30px;
+}
+
+#metaAggregate {
+  margin-top: 35px;
 }
 
 #downloadPlot {

@@ -200,8 +200,8 @@ define_params.ddpcr_plate <- function(plate) {
   # Each parameter has a somewhat descriptive name of what it is used for, and
   # all parameters used by a single step in the pipeline are in a list together
   PARAMS_GENERAL <- list()
-  PARAMS_GENERAL['X_VAR'] <- "Channel_2"
-  PARAMS_GENERAL['Y_VAR'] <- "Channel_1"
+  PARAMS_GENERAL['X_VAR'] <- "HEX"
+  PARAMS_GENERAL['Y_VAR'] <- "FAM"
   PARAMS_GENERAL['DROPLET_VOLUME'] <- 0.91e-3
   PARAMS_REMOVE_OUTLIERS <- list()
   PARAMS_REMOVE_OUTLIERS['TOP_PERCENT'] <- 1
