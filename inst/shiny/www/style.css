@@ -5,6 +5,18 @@ body {
   margin-top: 50px;
 }
 
+#loading-content {
+  position: absolute;
+  background: #000000;
+  z-index: 10000;
+  left: 0;
+  right: 0;
+  top: 50px;
+  bottom: 0;
+  text-align: center;
+  color: #FFFFFF;
+}
+
 .navbar {
   margin-bottom: 0;
 }
@@ -13,6 +25,17 @@ body {
 .navbar-mav,
 .nav-tabs {
   font-size: 1.2em;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+  border-top: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.navbar-inverse .navbar-nav>.active>a,
+.navbar-inverse .navbar-nav>.active>a:hover,
+.navbar-inverse .navbar-nav>.active>a:focus {
+  border-top-color: #CCC;
 }
 
 body > .container {
@@ -46,6 +69,8 @@ body > .container {
 .nav-tabs>li.active>a,
 .nav-tabs>li.active>a:hover,
 .nav-tabs>li.active>a:focus {
+  border-top: 2px solid orange;
+  border-bottom: 0;
   font-weight: bold;
 }
 
@@ -234,10 +259,12 @@ ul.ColVis_collection {
   background-color: #fcfcfc;
   border: 1px solid #ccc;
   border-bottom: 0;
+  border-top: 2px solid orange;
 }
 
 #plotParamsTabs.nav>li>a {
   padding: 5px 15px;
+  border-top: 2px solid transparent;
 }
 
 #plotOptionsSection .tab-content {

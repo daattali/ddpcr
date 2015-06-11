@@ -13,6 +13,7 @@ tagList(
     includeScript(file.path("www", 'ddpcr.js')),
     includeCSS(file.path("www", 'style.css'))
   ),
+  div(id = "loading-content", h1("Loading...")),
   
   navbarPage(
     title = tags$b("ddPCR Analysis"),

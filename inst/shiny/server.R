@@ -71,4 +71,7 @@ shinyServer(function(input, output, session) {
   source(file.path("server", "tab-settings.R"),  local = TRUE)$value
   source(file.path("server", "tab-analyze.R"),   local = TRUE)$value
   source(file.path("server", "tab-results.R"),   local = TRUE)$value
+  
+  # hide the loading message
+  hide("loading-content", TRUE, "fade")  
 })
