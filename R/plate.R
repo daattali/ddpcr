@@ -419,6 +419,7 @@ y_var <- function(plate) {
 `x_var<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
+  value %<>% make.names
   plate_data(plate) %<>%
     dplyr::rename_(.dots = setNames(x_var(plate), value))
   params(plate, 'GENERAL', 'X_VAR') <- value
@@ -428,6 +429,7 @@ y_var <- function(plate) {
 `y_var<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
+  value %<>% make.names
   plate_data(plate) %<>%
     dplyr::rename_(.dots = setNames(y_var(plate), value))
   params(plate, 'GENERAL', 'Y_VAR') <- value

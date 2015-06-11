@@ -21,7 +21,7 @@ tabPanel(
       br(),
       fileInput(
         "uploadDataFiles",
-        div("Data files (one file per well)",
+        div("Data files",
             helpPopup("These are all the <i>_Amplitude</i> files exported by QuantaSoft")),
         multiple = TRUE,
         accept = c(
@@ -32,8 +32,8 @@ tabPanel(
       ),
       fileInput(
         "uploadMetaFile",
-        div("Metadata file (optional)",
-            helpPopup("This is the Excel file exported by QuantaSoft that contains two lines with many variables for every well")),
+        div("Main results file (optional)",
+            helpPopup("This is the Excel file exported by QuantaSoft that contains the main results for every well.")),
         multiple = FALSE,
         accept = c(
           'text/csv',

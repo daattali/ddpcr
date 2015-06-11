@@ -3,10 +3,10 @@
 ## This software is distributed under the AGPL-3 license
 
 border_to_str <- function(border) {
-  paste(border %>% as.integer, collapse = ",")
+  paste(border %>% as.integer, collapse = ";")
 }
 str_to_border <- function(str) {
-  strsplit(str, ",") %>% unlist %>% as.integer
+  strsplit(str, ";") %>% unlist %>% as.integer
 }
 
 #' @export

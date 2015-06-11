@@ -101,7 +101,7 @@ plotDropsParams <- list(
 
 # Clours to let user select from in various inputs fields
 allCols <- sort(c(
-  "black", "blue", "green" = "green3", "orange", "purple" = "purple3",
-  "red", "silver", "teal", "yellow", "brown", "gold", "gray" = "gray7", "white"
+  "black", "blue", "green" = "green3", "purple" = "purple3", "orange", "darkgreen",
+  "pink", "red", "yellow", "brown", "gold", "gray" = "gray7", "cyan", "white"
 ))
 allColsDefault <- c("Default", allCols)

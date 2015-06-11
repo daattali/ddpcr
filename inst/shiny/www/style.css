@@ -35,7 +35,7 @@ body {
 .navbar-inverse .navbar-nav>.active>a,
 .navbar-inverse .navbar-nav>.active>a:hover,
 .navbar-inverse .navbar-nav>.active>a:focus {
-  border-top-color: #CCC;
+  border-top-color: orange;
 }
 
 body > .container {
@@ -230,6 +230,11 @@ button.btn-primary.lg-btn {
 
 #metaTable .dataTables_scrollBody {
   border-bottom: 0;
+}
+
+#metaTable .ColVis {
+  position: relative;
+  z-index: 3;
 }
 
 #metaTable .ColVis_Button {

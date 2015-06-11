@@ -115,6 +115,7 @@ output$metaAggregate <- DT::renderDataTable({
                  check.names = FALSE)},
       .id = "Variable"
     )
+  data[] <- lapply(data, format, scientific = FALSE, big.mark = ",", drop0trailing = TRUE) 
 
   DT::datatable(data,
                 rownames = FALSE,
