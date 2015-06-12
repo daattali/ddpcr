@@ -11,21 +11,20 @@
 #' 
 #' @examples 
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' new_plate(dir = dir, type = KRAS)
-#' new_plate(dir = dir, type = "kras")
+#' new_plate(dir = dir, type = HEX_POSITIVE_PPNP)
 #' @seealso
 #' \code{\link[ddpcr]{new_plate}},
 #' \code{\link[ddpcr]{PPNP_ASSAy}}
 #' @export
-KRAS <- "kras"
+HEX_POSITIVE_PPNP <- "hex_positive_ppnp"
 
 #' @export
-parent_plate_type.kras <- function(plate) {
-  "mutant_wildtype_assay"
+parent_plate_type.hex_positive_ppnp <- function(plate) {
+  "wildtype_mutant_ppnp"
 }
 
 #' @export
-define_params.kras <- function(plate) {
+define_params.hex_positive_ppnp <- function(plate) {
   params <- NextMethod("define_params")
   
   new_params <- list(

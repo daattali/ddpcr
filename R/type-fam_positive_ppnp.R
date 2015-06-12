@@ -11,21 +11,20 @@
 #' 
 #' @examples 
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' new_plate(dir = dir, type = WTNEGBRAF)
-#' new_plate(dir = dir, type = "wtnegbraf")
+#' new_plate(dir = dir, type = FAM_POSITIVE_PPNP)
 #' @seealso
 #' \code{\link[ddpcr]{new_plate}},
 #' \code{\link[ddpcr]{PPNP_ASSAy}}
 #' @export
-WTNEGBRAF <- "wtnegbraf"
+FAM_POSITIVE_PPNP <- "fam_positive_ppnp"
 
 #' @export
-parent_plate_type.wtnegbraf <- function(plate) {
-  "mutant_wildtype_assay"
+parent_plate_type.fam_positive_ppnp <- function(plate) {
+  "wildtype_mutant_ppnp"
 }
 
 #' @export
-define_params.wtnegbraf <- function(plate) {
+define_params.fam_positive_ppnp <- function(plate) {
   params <- NextMethod("define_params")
   
   new_params <- list(

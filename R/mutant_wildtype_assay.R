@@ -2,13 +2,13 @@
 ## Copyright (C) 2015 Dean Attali
 ## This software is distributed under the AGPL-3 license
 
-MUTANT_WILDTYPE_ASSAY <- "mutant_wildtype_assay"
+WILDTYPE_MUTANT_PPNP <- "wildtype_mutant_ppnp"
 
-parent_plate_type.mutant_wildtype_assay <- function(plate) {
+parent_plate_type.wildtype_mutant_ppnp <- function(plate) {
   "ppnp_assay"
 }
 
-define_params.mutant_wildtype_assay <- function(plate) {
+define_params.wildtype_mutant_ppnp <- function(plate) {
   params <- NextMethod("define_params")
   
   new_params <- list(
@@ -24,18 +24,18 @@ define_params.mutant_wildtype_assay <- function(plate) {
 
 #' @export
 wells_wildtype <- function(x) {
-  stopifnot(x %>% inherits("mutant_wildtype_assay"))
+  stopifnot(x %>% inherits("wildtype_mutant_ppnp"))
   wells_positive(x)
 }
 
 #' @export
 wells_mutant <- function(x) {
-  stopifnot(x %>% inherits("mutant_wildtype_assay"))
+  stopifnot(x %>% inherits("wildtype_mutant_ppnp"))
   wells_negative(x)
 }
 
 #' @export
-plot.mutant_wildtype_assay <- function(
+plot.wildtype_mutant_ppnp <- function(
   x,
   wells, samples,
   ...,

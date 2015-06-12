@@ -23,17 +23,21 @@ tabPanel(
         
         div(id = "basicSettingsTabContent",
         fixedRow(
-          column(6,
+          column(12,
             selectInput(
               "settingsPlateType",
-              "Plate type",
-              c("Wild type negative BRAF" = WTNEGBRAF,
-                "KRAS" = KRAS,
-                "General (manually set crosshair thresholds)" = CROSSHAIR_THRESHOLDS)
+              div("Droplet clusters",
+                  helpPopup("Select <strong>(FAM+) / (FAM+HEX+)</strong> or <strong>(HEX+) / (FAM+HEX+)</strong> if your data has a main cluster of double-positive droplets (considered wild type) and a secondary cluster of FAM+ or HEX+ droplets (considered mutant).<br/><br/>Select <strong>Manually set crosshair thresholds</strong> if your data does not fit these models and you want to simply cluster the droplets into 4 quadrants.")
+              ),
+              c("(FAM+) / (FAM+HEX+)" = FAM_POSITIVE_PPNP,
+                "(HEX+) / (FAM+HEX+)" = HEX_POSITIVE_PPNP,
+                "Manually set crosshair thresholds" = CROSSHAIR_THRESHOLDS)
             )
-          ),
-          column(6,
-            textInput("settingsName", "Dataset name", "")
+          )
+        ),
+        fixedRow(
+          column(12,
+                 textInput("settingsName", "Dataset name", "")
           )
         ),
         fixedRow(

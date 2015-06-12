@@ -62,7 +62,11 @@ output$saveDropletsBtn <- downloadHandler(
 # show the cluster number --> cluster name mapping
 output$clustersMapping <- renderUI({
   lapply(seq_along(clusters(dataValues$plate)), function(x) {
-    div(x, "=", tolower(cluster_name(dataValues$plate, x)))
+    cluster_name <- tolower(cluster_name(dataValues$plate, x))
+    if (inherits(dataValues$plate, PPNP_ASSAY)) {
+      cluster_name <- meta_var_name(dataValues$plate, cluster_name)
+    }
+    div(x, "=", cluster_name)
   })
 })
 

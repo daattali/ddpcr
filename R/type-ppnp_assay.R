@@ -17,7 +17,7 @@
 #' @examples 
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
 #' new_plate(dir = dir, type = PPNP_ASSAY)
-#' new_plate(dir = dir, type = "wtnegbraf")
+#' new_plate(dir = dir, type = FAM_POSITIVE_PPNP)
 #' @seealso
 #' \code{\link[ddpcr]{new_plate}},
 #' \code{\link[ddpcr]{positive_dim}},
