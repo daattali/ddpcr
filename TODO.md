@@ -19,6 +19,8 @@
 
 - add documentation
 
+- chip: can i add sample data from crc 1-41 patients and from cellline data?
+
 
 
 ### stats
