@@ -232,11 +232,6 @@ button.btn-primary.lg-btn {
   border-bottom: 0;
 }
 
-#metaTable .ColVis {
-  position: relative;
-  z-index: 3;
-}
-
 #metaTable .ColVis_Button {
   height: auto;
   font-size: 1.2em;
@@ -248,9 +243,12 @@ ul.ColVis_collection {
 
 #aggregateDesc {
   font-weight: bold;
-  position: relative;
-  z-index: 2;
   margin-bottom: -30px;
+}
+
+#aggregateDesc .popover-link {
+  position: relative;
+  z-index: 1;
 }
 
 #metaAggregate {
