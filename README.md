@@ -23,7 +23,7 @@ This tool was initially developed to automatically gate data for a particular dd
 
 In other words, the built-in automatic gating will work when there are three clusters of droplets: (1) double-negative, (2) double-positive, and (3) either FAM+ or HEX+. These types of experiments will be referred to as **(FAM+)/(FAM+HEX+)** or  **(HEX+)/(FAM+HEX+)**. Here is what a typical well could look like from each of these experiments:
 
-![Supported experiment types](vignettes/figures/supported-exp-types.png)
+[![Supported experiment types](vignettes/figures/supported-exp-types.png)](vignettes/figures/supported-exp-types.png)
 
 If your ddPCR experiment doesn't look like this, you can still use this tool for some basic analysis, exploration, and plotting. You could also manually gate the droplets just like QuantaSoft allows you to do.
 
@@ -37,3 +37,8 @@ The main features that can be used for **all** experiment types include:
 - **Calculating template concentration** - after knowing how many empty droplets are in each well, the template concentration in each well can be calculated.
 - **Explore results** - the results from each well (# of drops, # of outliers, # of empty drops, concentration) can be explored as a histogram or boxplot to see the distribution of all wells in the plate.
 - **Plot** - you can plot the data in the plate with many customizable features.
+
+If your experiment falls under the criteria for **(FAM+)/(FAM+HEX+)** or **(HEX+)/(FAM+HEX+)**, then after calculating empty droplets the program will analyze the rest of the droplets and assign each droplet one of the following three clustes: FAM+ (or HEX+), FAM+HEX+, or rain. This is the result of analyzing a single well from a **(FAM+)/(FAM+HEX+)** experiment and plotting it:
+
+[![Analyze result](vignettes/figures/ppnp-simple-result.png)](vignettes/figures/ppnp-simple-result.png)
+
