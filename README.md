@@ -42,3 +42,14 @@ If your experiment falls under the criteria for **(FAM+)/(FAM+HEX+)** or **(HEX+
 
 [![Analyze result](vignettes/figures/ppnp-simple-result.png)](vignettes/figures/ppnp-simple-result.png)
 
+## Using the interactive tool
+
+If you're not comfortable using R and would like to use a visual tool that requires no programming, you can [use the tool online](TODO). If you do know how to run R, using the interactive tool (built with [shiny](http://shiny.rstudio.com/))
+
+## Quick start
+
+```
+library(ddpcr)
+dir <- "../../data/mini141"
+plate <- new_plate(dir)
+```
