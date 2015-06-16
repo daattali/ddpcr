@@ -21,7 +21,10 @@ This tool was initially developed to automatically gate data for a particular dd
 - The majority of non-empty droplets are double-positive
 - There can be a third cluster of either FAM+ or HEX+ droplets
 
-In other words, the built-in automatic gating will work when there are three clusters of droplets: (1) double-negative, (2) double-positive, and (3) either FAM+ or HEX+. These types of experiments will be referred to as *(FAM+)/(FAM+HEX+)* or  *(HEX+)/(FAM+HEX+)*. Here is what a typical well could look like from each of these experiments:
+In other words, the built-in automatic gating will work when there are three clusters of droplets: (1) double-negative, (2) double-positive, and (3) either FAM+ or HEX+. These types of experiments will be referred to as **(FAM+)/(FAM+HEX+)** or  **(HEX+)/(FAM+HEX+)**. Here is what a typical well could look like from each of these experiments:
 
 ![Supported experiment types](vignettes/figures/supported-exp-types.png)
 
+If your ddPCR experiment doesn't look like this, you can still use this tool for some basic analysis, exploration, and plotting. You could also manually gate the droplets just like QuantaSoft allows you to do.
+
+`ddpcr` is built to be easily extensible, which means that you can add your own experiment "type". Custom experiment types need to define their own method for gating the droplets in a well, and then they can be used in the same way as the built-in experiment types.
