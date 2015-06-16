@@ -12,7 +12,7 @@ After running a ddPCR experiment, a key step in the analysis is gating the dropl
 
 ## Overview
 
-The `ddpcr` package allows you to upload ddPCR data, perform some basic analysis (more on that later), explore characteristic of the data, and create customizable figures.
+The `ddpcr` package allows you to upload ddPCR data, perform some basic analysis, explore characteristic of the data, and create customizable figures od the data.  
 
 This tool was initially developed to automatically gate data for a particular ddPCR assay (the paper for that experiment is in progress), and any assay with similar characteristics can also use this tool to automatically gate the droplets. In order to benefit from the full automatic analysis, your ddPCR experiment needs to have these characteristics:  
 
@@ -28,3 +28,10 @@ In other words, the built-in automatic gating will work when there are three clu
 If your ddPCR experiment doesn't look like this, you can still use this tool for some basic analysis, exploration, and plotting. You could also manually gate the droplets just like QuantaSoft allows you to do.
 
 `ddpcr` is built to be easily extensible, which means that you can add your own experiment "type". Custom experiment types need to define their own method for gating the droplets in a well, and then they can be used in the same way as the built-in experiment types.
+
+The main features that can be used for **all** experiment types include:
+
+- **Identify failed wells** - determining which wells in the plate seemed to have failed the ddPCR experiment, and thus these wells will be excluded from all downstream analysis. No template control (NTC) will be deemed as failures by this tool.
+- **Identify outlier droplets** - sometimes a few droplets can have an extremely high fluorescent intensity value that is probably erroneous, perhaps as a result of an error with the fluorescent reader. These droplets are identified and removed from the downstream analysis.
+- **Identify empty droplets** - droplets with very low fluorescent emissions are considered empty and are removed from the downstream analysis. Removing these droplets is beneficial for two reasons: 1. the size of the data is greatly reduced, which means the computations will be faster on the remaining droplets, and 2. the real signal of interest is in the non-empty droplets, and empty droplets can be regarded as noise.
+- 
