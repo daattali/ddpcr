@@ -45,14 +45,64 @@ If your experiment matches the criteria for a **PNPP** experiment (either a **(F
 
 If your ddPCR experiment is not a **PNPPP** type, you can still use this tool for the rest of the analysis, exploration, and plotting, but it will not benefit from the automatic gating. However, `ddpcr` is built to be easily extensible, which means that you can add your own experiment "type". Custom experiment types need to define their own method for gating the droplets in a well, and then they can be used in the same way as the built-in experiment types.
 
-## Using the interactive tool
+## Analysis using the interactive tool
 
 If you're not comfortable using R and would like to use a visual tool that requires no programming, you can [use the tool online](TODO). If you do know how to run R, using the interactive tool (built with [shiny](http://shiny.rstudio.com/))
 
-## Quick start
+## Analysis using R
+
+Enough talking, time for action!
+
+First, install `ddpcr`
+
+```
+devtools::install_github("daattali/ddpcr")
+```
+
+### Loading ddPCR data
+
+The first step is to get the ddPCR data into R. `ddpcr` uses the data files that are exported by QuantaSoft as its input. You need to have all the well files for the wells you want to analyze (one file per well), and you can optionally add the results file from QuantaSoft. If you loaded an experiment named *2015-05-20_mouse* with 50 wells to QuantaSoft, then QuantaSoft will export the following files:
+
+- 50 data files (well files): each well will have its own file with the name ending in *_Amplitude.csv". For example, the droplets in well A01 will be saved in *2015-05-20_mouse_A01_Aamplitude.csv*
+- 1 results file: a small file named *2015-05-20_mouse.csv* will be generated with some information about the plate, including the name of the sample in each well (assuming you named the samples previously)
+
+The well files are the only required input to `ddpcr`, and since ddPCR plates contain 96 wells, you can upload anywhere from 1 to 96 well files. The results file is not mandatory, but if you don't provide it then the wells will not have sample names attached to them.
+
+`ddpcr` contains a sample dataset called *small* that has 5 wells. We use the `new_plate()` function to initialize a new ddPCR plate object. We can either explicitly provide `new_plate()` with the well files and (optionally) the result file, or point `new_plate()` to a directory containing the files. We'll use the latter approach.
 
 ```
 library(ddpcr)
-dir <- "../../data/mini141"
+dir <- system.file("sample_data", "small", package = "ddpcr")
 plate <- new_plate(dir)
 ```
+
+You will see some messages appear - every time `ddpcr` runs an analysis step (initializing the plate is part of the analysis), it will output a message decribing what it's doing. 
+
+### Explore the data
+
+We can explore the data we loaded even before doing any analysis
+
+```
+plate
+```
+
+Among other things, this tells us how many wells and total droplets we have in the data, and what step of the analysis we are at. `ddpcr` is designed to play nicely with the [magrittr pipe](https://github.com/smbache/magrittr) `%>%`, so if we want to find out what wells wells are in the data we can use
+
+```
+plate %>% wells_used
+```
+
+Or to see all the data and the results so far, we can use the `plate_data()` and `plate_meta()` functions
+
+```
+plate %>% plate_data
+plate %>% plate_meta(only_used = TRUE)
+```
+
+Notice that *meta* (short for *metadata*) is synonymous with *results* for our purposes.  
+
+
+
+subset
+clusters
+type
