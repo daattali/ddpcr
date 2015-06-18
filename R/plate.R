@@ -494,8 +494,12 @@ print.ddpcr_plate <- function(x, ...) {
     return()
   }
   
+  cat0("ddpcr plate\n-----------\n")
   cat0("Dataset name: ", x %>% name, "\n")
   cat0("Plate type: ", x %>% type(TRUE) %>% paste(collapse = ", "), "\n")
+  cat0("Data summary: ", 
+       x %>% wells_used %>% length, " wells; ",
+       x %>% plate_data %>% nrow %>% prettyNum(big.mark = ","), " drops\n")  
   if (analysis_complete(x)) {
     cat0("Analysis completed\n")
   } else {
@@ -508,11 +512,4 @@ print.ddpcr_plate <- function(x, ...) {
          "\n"
     )
   }
-  cat0("Data summary: ", 
-       x %>% wells_used %>% length, " wells, ",
-       x %>% plate_data %>% nrow, " drops\n")
-  cat0("---\nDrops data:\n")
-  cat0(x %>% plate_data %>% str)
-  cat0("---\nPlate meta data:\n")
-  cat0(x %>% plate_meta %>% str)
 }

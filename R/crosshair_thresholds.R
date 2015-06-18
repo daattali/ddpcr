@@ -74,6 +74,9 @@ thresholds <- function(plate) {
   params(plate, 'CLASSIFY', 'Y_THRESHOLD') <- value[2]
   plate
 }
+set_thresholds <- function(plate, value) {
+  `thresholds<-`(plate, value)
+}
 
 classify_thresholds <- function(plate) {
   stopifnot(plate %>% inherits("crosshair_thresholds"))
