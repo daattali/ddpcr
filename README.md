@@ -1,8 +1,11 @@
-# ddpcr: Analysis and visualization of Digital Droplet PCR data in R and on the web
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+ddpcr: Analysis and visualization of Digital Droplet PCR data in R and on the web
+=================================================================================
 
 This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. An interactive tool was also created and is available online to facilitate this analysis for anyone who is not comfortable with using R.
 
-## Background
+Background
+----------
 
 Droplet Digital PCR (ddPCR) is a technology provided by Bio-Rad for performing digital PCR. The basic workflow of ddPCR involves three main steps: partitioning sample DNA into 20,000 droplets, PCR amplifying the nucleic acid in each droplet, and finally passing the droplets through a reader that detects flurescent intensities in two different wavelengths corresponding to FAM and HEX dyes. As a result, the data obtained from a ddPCR experiment can be visualized as a 2D scatterplot (one dimension is FAM intensity and the other dimension is HEX intensity) with 20,000 points (each droplet represents a point).
 
@@ -10,32 +13,33 @@ ddPCR experiments can be defined as singleplex, duplex, or multiplex depending o
 
 After running a ddPCR experiment, a key step in the analysis is gating the droplets to determine how many droplets belong to each cluster. Bio-Rad provides an analysis software called QuantaSoft which can be used to perform gating. QuantaSoft can either do the gating automatically or allow the user to set the gates manually. Most ddPCR users currently gate their data manually because QuantaSoft's automatic gating often does a poor job and **there are no other tools available for gating ddPCR data**.
 
-## Overview
+Overview
+--------
 
-The `ddpcr` package allows you to upload ddPCR data, perform some basic analysis, explore characteristic of the data, and create customizable figures of the data.  
+The `ddpcr` package allows you to upload ddPCR data, perform some basic analysis, explore characteristic of the data, and create customizable figures of the data.
 
 ### Main features
 
 The main features include:
 
-- **Identify failed wells** - determining which wells in the plate seemed to have failed the ddPCR experiment, and thus these wells will be excluded from all downstream analysis. No template control (NTC) will be deemed as failures by this tool.
-- **Identify outlier droplets** - sometimes a few droplets can have an extremely high fluorescent intensity value that is probably erroneous, perhaps as a result of an error with the fluorescent reader. These droplets are identified and removed from the downstream analysis.
-- **Identify empty droplets** - droplets with very low fluorescent emissions are considered empty and are removed from the downstream analysis. Removing these droplets is beneficial for two reasons: 1. the size of the data is greatly reduced, which means the computations will be faster on the remaining droplets, and 2. the real signal of interest is in the non-empty droplets, and empty droplets can be regarded as noise.
-- **Calculating template concentration** - after knowing how many empty droplets are in each well, the template concentration in each well can be calculated.
-- **Gating droplets** - if your experiment matches some criteria (more on that soon), then automatic gating can take place; otherwise, you can gate the data manually just like on QuantaSoft.
-- **Explore results** - the results from each well (# of drops, # of outliers, # of empty drops, concentration) can be explored as a histogram or boxplot to see the distribution of all wells in the plate.
-- **Plot** - you can plot the data in the plate with many customizable features.
+-   **Identify failed wells** - determining which wells in the plate seemed to have failed the ddPCR experiment, and thus these wells will be excluded from all downstream analysis. No template control (NTC) will be deemed as failures by this tool.
+-   **Identify outlier droplets** - sometimes a few droplets can have an extremely high fluorescent intensity value that is probably erroneous, perhaps as a result of an error with the fluorescent reader. These droplets are identified and removed from the downstream analysis.
+-   **Identify empty droplets** - droplets with very low fluorescent emissions are considered empty and are removed from the downstream analysis. Removing these droplets is beneficial for two reasons: 1. the size of the data is greatly reduced, which means the computations will be faster on the remaining droplets, and 2. the real signal of interest is in the non-empty droplets, and empty droplets can be regarded as noise.
+-   **Calculating template concentration** - after knowing how many empty droplets are in each well, the template concentration in each well can be calculated.
+-   **Gating droplets** - if your experiment matches some criteria (more on that soon), then automatic gating can take place; otherwise, you can gate the data manually just like on QuantaSoft.
+-   **Explore results** - the results from each well (\# of drops, \# of outliers, \# of empty drops, concentration) can be explored as a histogram or boxplot to see the distribution of all wells in the plate.
+-   **Plot** - you can plot the data in the plate with many customizable features.
 
 ### Supported experiment types
 
-While this tool was originally developed to automatically gate data for a particular ddPCR assay (the paper for that experiment is in progress), any assay with similar characteristics can also use this tool to automatically gate the droplets. In order to benefit from the full automatic analysis, your ddPCR experiment needs to have these characteristics:  
+While this tool was originally developed to automatically gate data for a particular ddPCR assay (the paper for that experiment is in progress), any assay with similar characteristics can also use this tool to automatically gate the droplets. In order to benefit from the full automatic analysis, your ddPCR experiment needs to have these characteristics:
 
-- The experiment is a duplex ddPCR experiment
-- The majority of droplets are empty (double-negative)
-- The majority of non-empty droplets are double-positive
-- There can be a third cluster of either FAM+ or HEX+ droplets
+-   The experiment is a duplex ddPCR experiment
+-   The majority of droplets are empty (double-negative)
+-   The majority of non-empty droplets are double-positive
+-   There can be a third cluster of either FAM+ or HEX+ droplets
 
-In other words, the built-in automatic gating will work when there are three clusters of droplets: (1) double-negative, (2) double-positive, and (3) either FAM+ or HEX+. These types of experiments will be referred to as **(FAM+)/(FAM+HEX+)** or  **(HEX+)/(FAM+HEX+)**. Both of these experiment types fall under the name of **PNPP experiments**; PNPP is short for PositiveNegative/PositivePositive, which is a reflection of the droplet clusters. Here is what a typical well from a PNPP experiment looks like:
+In other words, the built-in automatic gating will work when there are three clusters of droplets: (1) double-negative, (2) double-positive, and (3) either FAM+ or HEX+. These types of experiments will be referred to as **(FAM+)/(FAM+HEX+)** or **(HEX+)/(FAM+HEX+)**. Both of these experiment types fall under the name of **PNPP experiments**; PNPP is short for PositiveNegative/PositivePositive, which is a reflection of the droplet clusters. Here is what a typical well from a PNPP experiment looks like:
 
 [![Supported experiment types](vignettes/figures/supported-exp-types.png)](vignettes/figures/supported-exp-types.png)
 
@@ -45,64 +49,110 @@ If your experiment matches the criteria for a **PNPP** experiment (either a **(F
 
 If your ddPCR experiment is not a **PNPPP** type, you can still use this tool for the rest of the analysis, exploration, and plotting, but it will not benefit from the automatic gating. However, `ddpcr` is built to be easily extensible, which means that you can add your own experiment "type". Custom experiment types need to define their own method for gating the droplets in a well, and then they can be used in the same way as the built-in experiment types.
 
-## Analysis using the interactive tool
+Analysis using the interactive tool
+-----------------------------------
 
 If you're not comfortable using R and would like to use a visual tool that requires no programming, you can [use the tool online](TODO). If you do know how to run R, using the interactive tool (built with [shiny](http://shiny.rstudio.com/))
 
-## Analysis using R
+Analysis using R
+----------------
 
 Enough talking, time for action!
 
 First, install `ddpcr`
 
-```
-devtools::install_github("daattali/ddpcr")
-```
+    devtools::install_github("daattali/ddpcr")
+
+### Quick start
 
 ### Loading ddPCR data
 
-The first step is to get the ddPCR data into R. `ddpcr` uses the data files that are exported by QuantaSoft as its input. You need to have all the well files for the wells you want to analyze (one file per well), and you can optionally add the results file from QuantaSoft. If you loaded an experiment named *2015-05-20_mouse* with 50 wells to QuantaSoft, then QuantaSoft will export the following files:
+The first step is to get the ddPCR data into R. `ddpcr` uses the data files that are exported by QuantaSoft as its input. You need to have all the well files for the wells you want to analyze (one file per well), and you can optionally add the results file from QuantaSoft. If you loaded an experiment named *2015-05-20\_mouse* with 50 wells to QuantaSoft, then QuantaSoft will export the following files:
 
-- 50 data files (well files): each well will have its own file with the name ending in *_Amplitude.csv". For example, the droplets in well A01 will be saved in *2015-05-20_mouse_A01_Aamplitude.csv*
-- 1 results file: a small file named *2015-05-20_mouse.csv* will be generated with some information about the plate, including the name of the sample in each well (assuming you named the samples previously)
+-   50 data files (well files): each well will have its own file with the name ending in \*\_Amplitude.csv". For example, the droplets in well A01 will be saved in *2015-05-20\_mouse\_A01\_Aamplitude.csv*
+-   1 results file: a small file named *2015-05-20\_mouse.csv* will be generated with some information about the plate, including the name of the sample in each well (assuming you named the samples previously)
 
 The well files are the only required input to `ddpcr`, and since ddPCR plates contain 96 wells, you can upload anywhere from 1 to 96 well files. The results file is not mandatory, but if you don't provide it then the wells will not have sample names attached to them.
 
-`ddpcr` contains a sample dataset called *small* that has 5 wells. We use the `new_plate()` function to initialize a new ddPCR plate object. We can either explicitly provide `new_plate()` with the well files and (optionally) the result file, or point `new_plate()` to a directory containing the files. We'll use the latter approach.
+`ddpcr` contains a sample dataset called *small* that has 5 wells. We use the `new_plate()` function to initialize a new ddPCR plate object. If given a directory, it will automatically find all the valid well files in the directory and attempt to find a matching results file.
 
-```
+``` r
 library(ddpcr)
 dir <- system.file("sample_data", "small", package = "ddpcr")
 plate <- new_plate(dir)
+#> Reading data files into plate... DONE (0 seconds)
+#> Initializing plate of type `ddpcr_plate`... DONE (0 seconds)
 ```
 
-You will see some messages appear - every time `ddpcr` runs an analysis step (initializing the plate is part of the analysis), it will output a message decribing what it's doing. 
+You will see some messages appear - every time `ddpcr` runs an analysis step (initializing the plate is part of the analysis), it will output a message decribing what it's doing.
 
 ### Explore the data
 
 We can explore the data we loaded even before doing any analysis
 
-```
+``` r
 plate
+#> Dataset name: small
+#> Plate type: ddpcr_plate
+#> Completed analysis steps: INITIALIZE
+#> Remaining analysis steps: REMOVE_FAILURES, REMOVE_OUTLIERS, REMOVE_EMPTY
+#> Data summary: 5 wells, 76143 drops
+#> ---
+#> Drops data:
+#> Classes 'tbl_df', 'tbl' and 'data.frame':    76143 obs. of  4 variables:
+#>  $ well   : chr  "B01" "B01" "B01" "B01" ...
+#>  $ HEX    : int  1374 1411 1428 1313 1362 1290 1319 1492 1312 1294 ...
+#>  $ FAM    : int  1013 1018 1024 1026 1027 1028 1030 1032 1036 1037 ...
+#>  $ cluster: int  1 1 1 1 1 1 1 1 1 1 ...
+#> ---
+#> Plate meta data:
+#> 'data.frame':    96 obs. of  6 variables:
+#>  $ well  : chr  "B01" "B06" "C01" "C06" ...
+#>  $ sample: chr  "#1" "#9" "#3" "#12" ...
+#>  $ row   : chr  "B" "B" "C" "C" ...
+#>  $ col   : int  1 6 1 6 9 1 2 3 4 5 ...
+#>  $ used  : logi  TRUE TRUE TRUE TRUE TRUE FALSE ...
+#>  $ drops : int  17458 13655 15279 14513 15238 NA NA NA NA NA ...
 ```
 
 Among other things, this tells us how many wells and total droplets we have in the data, and what step of the analysis we are at. `ddpcr` is designed to play nicely with the [magrittr pipe](https://github.com/smbache/magrittr) `%>%`, so if we want to find out what wells wells are in the data we can use
 
-```
+``` r
 plate %>% wells_used
+#> [1] "B01" "B06" "C01" "C06" "C09"
 ```
 
 Or to see all the data and the results so far, we can use the `plate_data()` and `plate_meta()` functions
 
-```
+``` r
 plate %>% plate_data
+#> Source: local data frame [76,143 x 4]
+#> 
+#>    well  HEX  FAM cluster
+#> 1   B01 1374 1013       1
+#> 2   B01 1411 1018       1
+#> 3   B01 1428 1024       1
+#> 4   B01 1313 1026       1
+#> 5   B01 1362 1027       1
+#> 6   B01 1290 1028       1
+#> 7   B01 1319 1030       1
+#> 8   B01 1492 1032       1
+#> 9   B01 1312 1036       1
+#> 10  B01 1294 1037       1
+#> ..  ...  ...  ...     ...
 plate %>% plate_meta(only_used = TRUE)
+#>   well sample row col used drops
+#> 1  B01     #1   B   1 TRUE 17458
+#> 2  B06     #9   B   6 TRUE 13655
+#> 3  C01     #3   C   1 TRUE 15279
+#> 4  C06    #12   C   6 TRUE 14513
+#> 5  C09    #30   C   9 TRUE 15238
 ```
 
-Notice that *meta* (short for *metadata*) is synonymous with *results* for our purposes.  
+Notice that *meta* (short for *metadata*) is synonymous with *results* for our purposes.
 
+### Subset the plate
 
+If you aren't interested in all the wells, you can use the `subset()` function to retain only certain wells. Alternatively, you can use the `data_files` argument of the `new_plate()` function to only load certain well files instead of a full directory.
 
-subset
-clusters
-type
+subset clusters type
