@@ -114,9 +114,9 @@ dir <- system.file("sample_data", "small", package = "ddpcr")
 plate <- new_plate(dir)
 ```
 
-You will see some messages appear - every time `ddpcr` runs an analysis step (initializing the plate is part of the analysis), it will output a message decribing what it's doing. 
+You will see some messages appear - every time `ddpcr` runs an analysis step (initializing the plate is part of the analysis), it will output a message decribing what it's doing.
 
-### Explore the data
+### Explore the data pre-analysis
 
 We can explore the data we loaded even before doing any analysis
 
@@ -124,25 +124,103 @@ We can explore the data we loaded even before doing any analysis
 plate
 ```
 
-Among other things, this tells us how many wells and total droplets we have in the data, and what step of the analysis we are at. , so if we want to find out what wells wells are in the data we can use
+Among other things, this tells us how many wells and total droplets we have in the data, and what steps of the analysis are remaining. All the information that gets shown when you print a ddpcr plate object is also available through other functions that are dedicated to show one piece of information. For example
+
+```{r}
+plate %>% name
+plate %>% type
+```
+
+Since we didn't specify an experiment type, this plate object has the default type of `ddpcr_plate`.
+
+We can see what wells are in our data with `wells_used()`   
 
 ```{r}
 plate %>% wells_used
 ```
 
-Or to see all the data and the results so far, we can use the `plate_data()` and `plate_meta()` functions
+There are 5 wells because the sample data folder has 5 well files.
+
+We can see all the droplets data with `plate_data()` 
 
 ```{r}
 plate %>% plate_data
+```
+
+This shows us the fluorescent intensities of each droplet, along with the current cluster assignment of each droplet. Right now all droplets are assigned to cluster 1 which corresponds to *undefined* since no analysis has taken place yet.  You can see all the clusters that a droplet can belong to with the `clusters()` function
+
+```{r}
+plate %>% clusters
+```
+
+This tells us that any droplet in a `ddpcr_plate`-type experiment can be classified into those clusters.
+
+We can see the results of the plate so far with `plate_meta()`
+
+```{r}
 plate %>% plate_meta(only_used = TRUE)
 ```
 
-Notice that *meta* (short for *metadata*) is synonymous with *results* for our purposes.  
+The `only_used` parameter is used so that we'll only get data about the 5 existing wells and ignore the other 91 unused wells on the plate. Notice that *meta* (short for *metadata*) is used instead of *results*. This is because the meta/results table contains information for each well such as its name, number of drops, number of empty drops, concentration, and many other calculated values. 
 
 ### Subset the plate
 
-If you aren't interested in all the wells, you can use the `subset()` function to retain only certain wells. Alternatively, you can use the `data_files` argument of the `new_plate()` function to only load certain well files instead of a full directory.
+If you aren't interested in all the wells, you can use the `subset()` function to retain only certain wells. Alternatively, you can use the `data_files` argument of the `new_plate()` function to only load certain well files instead of a full directory.  
+The `subset()` function can take accept either a list of sample names, a list of wells, or a special *range notation*. The range notation is a convenient way to select many wells: use a colon (`:`) to specify a range of wells and a comma (`,`) to add another well or range. A range of wells is defined as all wells in the rectangular area between the two endpoints. For example, `B05:C06` corresponds to the four wells `B05, B06, C05, C06`.  The following diagram shows the result of subsetting with a range notation of `A01:H03, C05, E06, B07:C08` on a plate that initially contains all 96 wells.  
 
-subset
-clusters
+[![Subset example](vignettes/figures/ex-subset.png)](vignettes/figures/ex-subset.png)
+
+Back to our data: we have 5 wells, let's keep 4 of them
+
+```{r}
+plate <- plate %>% subset("B01:C06")
+# could have also used subset("B01, B06, C01, C06")
+plate %>% wells_used
+```
+
+### Run analysis
+
+An analysis of a ddPCR plate consists of running the plate through a sequence of steps. You can see what all the steps for a particular experiment are
+
+```{r}
+plate %>% steps %>% names
+```
+
+These steps are the default steps that any ddpcr plate will go through by default if no type is specified. At this point all we did was load the data, so the initialization step was done and there are 3 remaining steps. You can either run through the steps one by one using `next_steps()` or run all remaining steps with `analyze()`.
+
+```{r}
+plate <- plate %>% analyze
+# equivalent to `plate %>% next_step(3)`
+# also equivalent to `plate %>% next_step %>% next_step %>% next_step`
+```
+
+As each step of the analysis is performed, a message describing the current step is printed to the screen. Since we only have 2 wells, it should be very fast, but when you have a full 96-well plate, the analysis could take several minutes. Sometimes it can be useful to run each step individually rather than all of them together if you want to inspect the data after each step.
+
+### Explore the data post-analysis
+
+We can look at the plate again, now that it has been analyzed.
+
+```{r}
+plate
+plate %>% plate_data
+plate %>% plate_meta
+```
+
+We see TODO
+
+
+
+
+
+
+### Parameters
+
+(general and specific to every step)
+
+
+save/load
+settype
+reset
 type
+clusters
+steps

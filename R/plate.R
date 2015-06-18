@@ -251,6 +251,7 @@ set_default_steps <- function(plate) {
 define_steps <- function(plate) {
   UseMethod("define_steps")
 }
+#' @export
 steps <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   plate[['steps']]

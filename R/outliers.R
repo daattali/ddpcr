@@ -87,7 +87,7 @@ remove_outliers <- function(plate) {
 remove_outliers.ddpcr_plate <- function(plate) {
   CURRENT_STEP <- plate %>% step('REMOVE_OUTLIERS')
   plate %>% check_step(CURRENT_STEP, TRUE)
-  step_begin("Finding outlier droplets")
+  step_begin("Identifying outlier droplets")
   
   data <- plate_data(plate)
   

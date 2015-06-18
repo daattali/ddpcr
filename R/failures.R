@@ -117,7 +117,7 @@ remove_failures <- function(plate) {
 remove_failures.ddpcr_plate <- function(plate) {
   CURRENT_STEP <- plate %>% step('REMOVE_FAILURES')
   plate %>% check_step(CURRENT_STEP, TRUE)
-  step_begin("Finding failed wells")
+  step_begin("Identifying failed wells")
   
   data <- plate_data(plate)
   

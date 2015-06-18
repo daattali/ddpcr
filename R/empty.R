@@ -97,7 +97,7 @@ remove_empty <- function(plate) {
 remove_empty.ddpcr_plate <- function(plate) {
   CURRENT_STEP <- plate %>% step('REMOVE_EMPTY')
   plate %>% check_step(CURRENT_STEP, TRUE)
-  step_begin("Finding empty droplets")
+  step_begin("Identifying empty droplets")
   
   # ---
   
