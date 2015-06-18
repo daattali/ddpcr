@@ -74,6 +74,7 @@ thresholds <- function(plate) {
   params(plate, 'CLASSIFY', 'Y_THRESHOLD') <- value[2]
   plate
 }
+#' @export
 set_thresholds <- function(plate, value) {
   `thresholds<-`(plate, value)
 }

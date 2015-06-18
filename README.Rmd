@@ -10,7 +10,7 @@ output:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-"
+  fig.path = "vignettes/README-"
 )
 ```
 
@@ -77,7 +77,25 @@ devtools::install_github("daattali/ddpcr")
 
 ### Quick start
 
+Here are two basic examples of how to use `ddpcr` to analyze and plot your ddPCR data. One example shows an analysis where the gating thresholds are manually set, and the other example uses the automated analysis. Note how `ddpcr` is designed to play nicely with the [magrittr pipe](https://github.com/smbache/magrittr) `%>%` for easier pipeline workflows. Explanation will follow, these are just here as a spoiler.
 
+```{r, message = FALSE, fig.show='hold', out.width='50%', fig.retina=FALSE}
+library(ddpcr)
+dir <- system.file("sample_data", "small", package = "ddpcr")
+
+# example 1: manually set thresholds
+new_plate(dir, type = CROSSHAIR_THRESHOLDS) %>%
+  subset("B01,B06") %>%
+  set_thresholds(c(5000, 7500)) %>%
+  analyze %>%
+  plot(show_grid_labels = TRUE, title = "Ex 1 - manually set gating thresholds")
+
+# example 2: automatic gating
+new_plate(dir, type = FAM_POSITIVE_PPNP) %>%
+  subset("B01:B06") %>%
+  analyze %>%
+  plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, title = "Ex 2 - automatic gating")
+```
 
 ### Loading ddPCR data
 
@@ -106,7 +124,7 @@ We can explore the data we loaded even before doing any analysis
 plate
 ```
 
-Among other things, this tells us how many wells and total droplets we have in the data, and what step of the analysis we are at. `ddpcr` is designed to play nicely with the [magrittr pipe](https://github.com/smbache/magrittr) `%>%`, so if we want to find out what wells wells are in the data we can use
+Among other things, this tells us how many wells and total droplets we have in the data, and what step of the analysis we are at. , so if we want to find out what wells wells are in the data we can use
 
 ```{r}
 plate %>% wells_used

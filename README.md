@@ -65,6 +65,28 @@ First, install `ddpcr`
 
 ### Quick start
 
+Here are two basic examples of how to use `ddpcr` to analyze and plot your ddPCR data. One example shows an analysis where the gating thresholds are manually set, and the other example uses the automated analysis. Note how `ddpcr` is designed to play nicely with the [magrittr pipe](https://github.com/smbache/magrittr) `%>%` for easier pipeline workflows. Explanation will follow, these are just here as a spoiler.
+
+``` r
+library(ddpcr)
+dir <- system.file("sample_data", "small", package = "ddpcr")
+
+# example 1: manually set thresholds
+new_plate(dir, type = CROSSHAIR_THRESHOLDS) %>%
+  subset("B01,B06") %>%
+  set_thresholds(c(5000, 7500)) %>%
+  analyze %>%
+  plot(show_grid_labels = TRUE, title = "Ex 1 - manually set gating thresholds")
+
+# example 2: automatic gating
+new_plate(dir, type = FAM_POSITIVE_PPNP) %>%
+  subset("B01:B06") %>%
+  analyze %>%
+  plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, title = "Ex 2 - automatic gating")
+```
+
+<img src="vignettes/README-unnamed-chunk-2-1.png" title="" alt="" width="50%" /><img src="vignettes/README-unnamed-chunk-2-2.png" title="" alt="" width="50%" />
+
 ### Loading ddPCR data
 
 The first step is to get the ddPCR data into R. `ddpcr` uses the data files that are exported by QuantaSoft as its input. You need to have all the well files for the wells you want to analyze (one file per well), and you can optionally add the results file from QuantaSoft. If you loaded an experiment named *2015-05-20\_mouse* with 50 wells to QuantaSoft, then QuantaSoft will export the following files:
@@ -92,30 +114,16 @@ We can explore the data we loaded even before doing any analysis
 
 ``` r
 plate
+#> ddpcr plate
+#> -----------
 #> Dataset name: small
 #> Plate type: ddpcr_plate
+#> Data summary: 5 wells; 76,143 drops
 #> Completed analysis steps: INITIALIZE
 #> Remaining analysis steps: REMOVE_FAILURES, REMOVE_OUTLIERS, REMOVE_EMPTY
-#> Data summary: 5 wells, 76143 drops
-#> ---
-#> Drops data:
-#> Classes 'tbl_df', 'tbl' and 'data.frame':    76143 obs. of  4 variables:
-#>  $ well   : chr  "B01" "B01" "B01" "B01" ...
-#>  $ HEX    : int  1374 1411 1428 1313 1362 1290 1319 1492 1312 1294 ...
-#>  $ FAM    : int  1013 1018 1024 1026 1027 1028 1030 1032 1036 1037 ...
-#>  $ cluster: int  1 1 1 1 1 1 1 1 1 1 ...
-#> ---
-#> Plate meta data:
-#> 'data.frame':    96 obs. of  6 variables:
-#>  $ well  : chr  "B01" "B06" "C01" "C06" ...
-#>  $ sample: chr  "#1" "#9" "#3" "#12" ...
-#>  $ row   : chr  "B" "B" "C" "C" ...
-#>  $ col   : int  1 6 1 6 9 1 2 3 4 5 ...
-#>  $ used  : logi  TRUE TRUE TRUE TRUE TRUE FALSE ...
-#>  $ drops : int  17458 13655 15279 14513 15238 NA NA NA NA NA ...
 ```
 
-Among other things, this tells us how many wells and total droplets we have in the data, and what step of the analysis we are at. `ddpcr` is designed to play nicely with the [magrittr pipe](https://github.com/smbache/magrittr) `%>%`, so if we want to find out what wells wells are in the data we can use
+Among other things, this tells us how many wells and total droplets we have in the data, and what step of the analysis we are at. , so if we want to find out what wells wells are in the data we can use
 
 ``` r
 plate %>% wells_used
