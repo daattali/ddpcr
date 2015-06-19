@@ -272,30 +272,20 @@ plate %>% plate_data
 This isn't very informative since it shows the cluster assignment for each droplet, which is not easy for a human to digest. Instead, this information can be visualized by plotting the plate (coming up). We can also look at the plate results
 
 ``` r
-plate %>% plate_meta(only_used = TRUE)
-#>   well sample row col used drops success
-#> 1  B01     #1   B   1 TRUE 17458    TRUE
-#> 2  B06     #9   B   6 TRUE 13655    TRUE
-#> 3  C01     #3   C   1 TRUE 15279    TRUE
-#> 4  C06    #12   C   6 TRUE 14513   FALSE
-#>                                                            comment
-#> 1                                                             <NA>
-#> 2                                                             <NA>
-#> 3                                                             <NA>
-#> 4 There are too many empty drops (lambda of lower cluster: 0.9983)
-#>   drops_outlier drops_empty drops_non_empty drops_empty_fraction
-#> 1             0       16690             768                0.956
-#> 2             0       12925             730                0.947
-#> 3             0       13903            1376                0.910
-#> 4             3          NA              NA                   NA
-#>   concentration
-#> 1            49
-#> 2            59
-#> 3           103
-#> 4            NA
+plate %>% plate_meta(only_used = TRUE) %>% dplyr::select(-comment)
+#>   well sample row col used drops success drops_outlier drops_empty
+#> 1  B01     #1   B   1 TRUE 17458    TRUE             0       16690
+#> 2  B06     #9   B   6 TRUE 13655    TRUE             0       12925
+#> 3  C01     #3   C   1 TRUE 15279    TRUE             0       13903
+#> 4  C06    #12   C   6 TRUE 14513   FALSE             3          NA
+#>   drops_non_empty drops_empty_fraction concentration
+#> 1             768                0.956            49
+#> 2             730                0.947            59
+#> 3            1376                0.910           103
+#> 4              NA                   NA            NA
 ```
 
-Now there's a bit more information in the results table. The *comment* column is used to store any additional information relating to the analysis and is fairly technical in nature; you can safely ignore it. The *success* column indicates whether or not the ddPCR run was successful in that particular well; notice how well `C06` was deemed a failure, and thus is not included the any subsequent analysis steps.
+Now there's a bit more information in the results table. The *comment* column is omitted for brevity and because it's not terribly useful - it is used to store any additional information relating to the analysis and is fairly technical in nature. The *success* column indicates whether or not the ddPCR run was successful in that particular well; notice how well `C06` was deemed a failure, and thus is not included the any subsequent analysis steps.
 
 ### Plot
 

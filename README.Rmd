@@ -219,10 +219,10 @@ plate %>% plate_data
 This isn't very informative since it shows the cluster assignment for each droplet, which is not easy for a human to digest. Instead, this information can be visualized by plotting the plate (coming up). We can also look at the plate results 
 
 ```{r explore-post-3}
-plate %>% plate_meta(only_used = TRUE)
+plate %>% plate_meta(only_used = TRUE) %>% dplyr::select(-comment)
 ```
 
-Now there's a bit more information in the results table. The *comment* column is used to store any additional information relating to the analysis and is fairly technical in nature; you can safely ignore it. The *success* column indicates whether or not the ddPCR run was successful in that particular well; notice how well `C06` was deemed a failure, and thus is not included the any subsequent analysis steps.
+Now there's a bit more information in the results table. The *comment* column is omitted for brevity and because it's not terribly useful - it is used to store any additional information relating to the analysis and is fairly technical in nature. The *success* column indicates whether or not the ddPCR run was successful in that particular well; notice how well `C06` was deemed a failure, and thus is not included the any subsequent analysis steps.
 
 ### Plot
 
