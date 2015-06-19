@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 
 # ddpcr: Analysis and visualization of Digital Droplet PCR data in R and on the web
 
+[![Build Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
+
 This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. An interactive tool was also created and is available online to facilitate this analysis for anyone who is not comfortable with using R.
 
 # Background
