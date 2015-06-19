@@ -92,8 +92,8 @@ new_plate(dir, type = FAM_POSITIVE_PPNP) %>%
 
 <img src="vignettes/README-quickstart-1.png" title="" alt="" width="50%" /><img src="vignettes/README-quickstart-2.png" title="" alt="" width="50%" />
 
-Running a full analysis - walkthrough
--------------------------------------
+Running a basic analysis - walkthrough
+--------------------------------------
 
 This section will go into details of how to use `ddpcr` to analyze ddPCR data.
 
@@ -381,6 +381,91 @@ params(plate, "REMOVE_FAILURES", "TOTAL_DROPS_T")
 #> [1] 1000
 ```
 
-settype reset type
+Note that if you change any parameters, you need to re-run the analysis. If you try running `analyze()` after a plate has already been analyzed, you will simply get a message saying the plate is already analyzed. To force an already-analyzed plate to re-run the analysis, you need to use the `restart = TRUE` parameter
+
+``` r
+plate <- analyze(plate)
+#> Analysis complete
+plate <- analyze(plate, restart = TRUE)
+#> Restarting analysis
+#> Initializing plate of type `ddpcr_plate`... DONE (0 seconds)
+#> Identifying failed wells... DONE (0 seconds)
+#> Identifying outlier droplets... DONE (0 seconds)
+#> Identifying empty droplets... DONE (1 seconds)
+#> Analysis complete
+```
+
+Analysis with manual droplet gating
+-----------------------------------
+
+The previous walkthrough shows the results of a basic analysis when using the default plate type. If you want to also perform a simple 4-quadrant gating like the one available in QuantaSoft, you need to set the type of the plate object to `CROSSHAIR_THRESHOLDS`. This can either be done when initializing a new plate or by reseting an existing plate object.
+
+``` r
+plate_manual <- reset(plate, type = CROSSHAIR_THRESHOLDS)
+plate_manual2 <- new_plate(dir, type = CROSSHAIR_THRESHOLDS) %>% subset("B01:C06")
+identical(plate_manual, plate_manual2)
+#> [1] TRUE
+plate_manual
+#> ddpcr plate
+#> -----------
+#> Dataset name: small
+#> Plate type: crosshair_thresholds, ddpcr_plate
+#> Data summary: 4 wells; 60,905 drops
+#> Completed analysis steps: INITIALIZE
+#> Remaining analysis steps: REMOVE_OUTLIERS, CLASSIFY
+rm(plate_manual2)
+```
+
+It's usually a good idea to take a look at the raw data to decide where the draw the thresholds
+
+``` r
+plot(plate_manual, show_grid_labels = TRUE)
+```
+
+![](vignettes/README-plotcrosshair-1.png)
+
+If you noticed, there's a droplet in well *C06* that has a HEX value of 25000 and is probably an outlier, which is the cause of the weird scale. After analyzing the plate, it will be identified as an outlier and hidden automatically. Before running the analysis, we should set where the thresholds will be. By default, the thresholds are at (5000, 5000), which is very arbitrary. It looks like the x coordinate is fine, but the y border should move up to approximately 8000. Then run the analysis.
+
+``` r
+thresholds(plate_manual)
+#> [1] "(5000, 5000)"
+thresholds(plate_manual) <- c(5000, 8000)
+plate_manual <- analyze(plate_manual)
+#> Identifying outlier droplets... DONE (0 seconds)
+#> Classifying droplets... DONE (0 seconds)
+#> Analysis complete
+```
+
+NoW the plate is ready and we can plot it or look at its results
+
+``` r
+plate_meta(plate_manual, only_used = TRUE)
+#>   well sample row col used drops drops_outlier drops_empty
+#> 1  B01     #1   B   1 TRUE 17458             0       16801
+#> 2  B06     #9   B   6 TRUE 13655             0       12998
+#> 3  C01     #3   C   1 TRUE 15279             0       14019
+#> 4  C06    #12   C   6 TRUE 14513             2       14487
+#>   drops_x_positive drops_y_positive drops_both_positive
+#> 1               20                3                 634
+#> 2                5              156                 496
+#> 3               12               12                1236
+#> 4                1                9                  14
+plot(plate_manual)
+```
+
+![](vignettes/README-crosshairresults-1.png)
+
+By default, the droplets in each quadrant are a different colour. If you want to change the colour of some droplets, we can use the `col_drops_*` parameter as before. Since now we're working with a different plate type, the names of the droplet clusters can be different, so we need to first know what they are
+
+``` r
+clusters(plate_manual)
+#> [1] "UNDEFINED"     "OUTLIER"       "EMPTY"         "X_POSITIVE"   
+#> [5] "Y_POSITIVE"    "BOTH_POSITIVE"
+```
+
+Now if we want to change the colour of the double-positive droplets to red, we just add a parameter `col_drops_both_positive = "red"`.
+
+Analysis with automated gating
+------------------------------
 
 Adding your own type (separate vignette)

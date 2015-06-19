@@ -63,10 +63,12 @@ y_threshold <- function(plate) {
   params(plate, 'CLASSIFY', 'Y_THRESHOLD') <- value
   plate
 }
+#' @export
 thresholds <- function(plate) {
   stopifnot(plate %>% inherits("crosshair_thresholds"))
   point2d(c(plate %>% x_threshold, plate %>% y_threshold))
 }
+#' @export
 `thresholds<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("crosshair_thresholds"))
   value <- point2d(value)
