@@ -88,13 +88,15 @@ new_plate(dir, type = CROSSHAIR_THRESHOLDS) %>%
   subset("B01,B06") %>%
   set_thresholds(c(5000, 7500)) %>%
   analyze %>%
-  plot(show_grid_labels = TRUE, title = "Ex 1 - manually set gating thresholds")
+  plot(show_grid_labels = TRUE, alpha_drops = 0.3,
+       title = "Manually set gating thresholds\nworks with any data")
 
 # example 2: automatic gating
 new_plate(dir, type = FAM_POSITIVE_PPNP) %>%
   subset("B01:B06") %>%
   analyze %>%
-  plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, title = "Ex 2 - automatic gating")
+  plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, alpha_drops = 0.3,
+       title = "Automatic gating\nworks with PPNP experiments")
 ```
 
 <img src="vignettes/README-quickstart-1.png" title="" alt="" width="50%" /><img src="vignettes/README-quickstart-2.png" title="" alt="" width="50%" />
@@ -135,7 +137,7 @@ plate
 #> -----------
 #> Dataset name: small
 #> Plate type: ddpcr_plate
-#> Data summary: 5 wells; 76,143 drops
+#> Data summary: 5 wells; 75,706 drops
 #> Completed analysis steps: INITIALIZE
 #> Remaining analysis steps: REMOVE_FAILURES, REMOVE_OUTLIERS, REMOVE_EMPTY
 ```
@@ -155,7 +157,7 @@ We can see what wells are in our data with `wells_used()`
 
 ``` r
 plate %>% wells_used
-#> [1] "B01" "B06" "C01" "C06" "C09"
+#> [1] "B01" "B06" "C01" "C06" "C08"
 ```
 
 There are 5 wells because the sample data folder has 5 well files.
@@ -164,7 +166,7 @@ We can see all the droplets data with `plate_data()`
 
 ``` r
 plate %>% plate_data
-#> Source: local data frame [76,143 x 4]
+#> Source: local data frame [75,706 x 4]
 #> 
 #>    well  HEX  FAM cluster
 #> 1   B01 1374 1013       1
@@ -187,7 +189,7 @@ plate %>% clusters
 #> [1] "UNDEFINED" "FAILED"    "OUTLIER"   "EMPTY"
 ```
 
-This tells us that any droplet in a `ddpcr_plate`-type experiment can be classified into those clusters.
+This tells us that any droplet in a `ddpcr_plate`-type experiment can be classified into those clusters. Any droplet is initially *UNDEFINED*, droplets in failed wells are marked as *FAILED*, and the other two names are self explanatory.
 
 We can see the results of the plate so far with `plate_meta()`
 
@@ -198,7 +200,7 @@ plate %>% plate_meta(only_used = TRUE)
 #> 2  B06     #9   B   6 TRUE 13655
 #> 3  C01     #3   C   1 TRUE 15279
 #> 4  C06    #12   C   6 TRUE 14513
-#> 5  C09    #30   C   9 TRUE 15238
+#> 5  C08   <NA>   C   8 TRUE 14801
 ```
 
 The `only_used` parameter is used so that we'll only get data about the 5 existing wells and ignore the other 91 unused wells on the plate. Notice that *meta* (short for *metadata*) is used instead of *results*. This is because the meta/results table contains information for each well such as its name, number of drops, number of empty drops, concentration, and many other calculated values.
@@ -294,6 +296,13 @@ plate %>% plate_meta(only_used = TRUE) %>% dplyr::select(-comment)
 
 Now there's a bit more information in the results table. The *comment* column is omitted for brevity and because it's not terribly useful - it is used to store any additional information relating to the analysis and is fairly technical in nature. The *success* column indicates whether or not the ddPCR run was successful in that particular well; notice how well `C06` was deemed a failure, and thus is not included the any subsequent analysis steps.
 
+You can use the `well_info()` function to get the value of a specific variable of a specific well from the results.
+
+``` r
+well_info(plate, "B06", "drops_empty")
+#> [1] 12925
+```
+
 ### Plot
 
 The easiest way to visualize a ddPCR plate is using the `plot()` function.
@@ -302,7 +311,7 @@ The easiest way to visualize a ddPCR plate is using the `plot()` function.
 plate %>% plot
 ```
 
-![](vignettes/README-explore-post-4-1.png)
+![](vignettes/README-plotsimple-1.png)
 
 Notice well `C06` is grayed out, which means that it is a failed well. By default, failed wells have a grey background, and empty and outlier droplets are excluded from the plot.
 
@@ -492,16 +501,131 @@ If you have a *PNPP* experiment (*(FAM+)/(FAM+HEX+)* or *(HEX+)/(FAM+HEX+)*) the
 The first step is to define the type of plate. Again, this can be done wither by resetting an existing plate and specifying a different type, or by specifying a type when initializing a plate.
 
 ``` r
-plate_pnpp <- reset(plate, type = PPNP_ASSAY)
+plate_pnpp <- new_plate(dir, type = PPNP_ASSAY)
+#> Reading data files into plate... DONE (0 seconds)
 #> Initializing plate of type `ppnp_assay`... DONE (0 seconds)
 ```
 
-Before being able to analyze the plate, we need to set one important parameter: the *positive dimension*. This parameter tells `ddpcr` whether this is a *(FAM+)/(FAM+HEX+)* or a *(HEX+)/(FAM+HEX+)* experiment. The possible values are "X" and "Y", which correspond to HEX+ and FAM+, respectively.
+This time the plate is not being subset, so we will retain all 5 wells in the raw data.
+
+### Defining *(FAM+)/(FAM+HEX+)* vs *(HEX+)/(FAM+HEX+)*
+
+Before being able to analyze the plate, we need to set one important parameter: the *positive dimension*. This parameter tells `ddpcr` whether this is a c or a *(HEX+)/(FAM+HEX+)* experiment. The possible values are "X" and "Y", which correspond to HEX+ and FAM+, respectively.
 
 ``` r
 positive_dim(plate_pnpp) <- "Y"
 ```
 
-Now
+### Clusters of a PNPP experiment
+
+Before running the analysis, you should know what are the possible cluster groupings that a droplet can belong to
+
+``` r
+clusters(plate_pnpp)
+#> [1] "UNDEFINED" "FAILED"    "OUTLIER"   "EMPTY"     "RAIN"      "POSITIVE" 
+#> [7] "NEGATIVE"
+```
+
+The first 4 are common to all plate types and were seen in the previous examples. Droplets in the *HEX+FAM+* cluster are considered *POSITIVE*, while dropets in the *FAM+* cluster are considered *NEGATIVE* since they are *HEX-*. If this were a *(HEX+)/(FAM+HEX+)* instead and we had defined the *positive\_dim* to be *HEX*, then the *NEGATIVE* cluster would refer to *HEX+*. Any droplets that are not empty but don't emit enough fluorescent intensity to be in the *POSITIVE* or *NEGATIVE* clusters are considered *RAIN*.
+
+### Analysis of a PNPP experiment
+
+Now we can analyze the plate
+
+``` r
+plate_pnpp <- analyze(plate_pnpp)
+#> Identifying failed wells... DONE (0 seconds)
+#> Identifying outlier droplets... DONE (0 seconds)
+#> Identifying empty droplets... DONE (0 seconds)
+#> Classifying droplets... DONE (0 seconds)
+#> Not reclassifying droplets because there are not enough wells with significant negative clusters
+#> Analysis complete
+```
+
+One of the key goals in running the analysis is to determine the number of *POSITIVE* and *NEGATIVE* droplets in each well, and similarly the *negative frequency*. If a well has 95 *POSITIVE* droplets and 5 *NEGATIVE* droplets, then the *negative frequency* in the well is 5%.
+You can see from the output that the two last steps are **classifying** and **reclassifying** the droplets, and that the reclassification didn't take place. The classification step identifies all the non-empty droplets as either *RAIN*, *POSITIVE*, or *NEGATIVE* by analyzing each well individually. Wells with a very small *negative frequency* (there are few droplets in the *NEGATIVE* cluster) are much harder to gate accurately, which is the reason for the reclassification step. The reclassification step uses information from wells with high a *negative frequency* to make, where the gates are more clearly defined, to adjust the gates in wells with a low *negative frequency*. The reclassification step only takes place if there are enough wells with a high negative frequency.
+
+### Results of a PNPP experiment
+
+Take a look at the results
+
+``` r
+plate_pnpp %>% plate_meta(only_used = TRUE) %>% dplyr::select(-comment)
+#>   well sample row col used drops success drops_outlier drops_empty
+#> 1  B01     #1   B   1 TRUE 17458    TRUE             0       16691
+#> 2  B06     #9   B   6 TRUE 13655    TRUE             0       12925
+#> 3  C01     #3   C   1 TRUE 15279    TRUE             0       13903
+#> 4  C08   <NA>   C   8 TRUE 14801    TRUE             0       14023
+#> 5  C06    #12   C   6 TRUE 14513   FALSE             9          NA
+#>   drops_non_empty drops_empty_fraction concentration negative_borders
+#> 1             767                0.956            49           0;3309
+#> 2             730                0.947            59           0;4160
+#> 3            1376                0.910           103           0;4199
+#> 4             778                0.947            59           0;4132
+#> 5              NA                   NA            NA             <NA>
+#>   positive_borders filled_borders significant_negative_cluster
+#> 1        3310;7156      7945;9217                        FALSE
+#> 2        4161;7859     8971;10329                         TRUE
+#> 3        4200;7519      8524;9724                        FALSE
+#> 4        4133;7714     8869;10139                         TRUE
+#> 5             <NA>           <NA>                           NA
+#>   negative_num positive_num negative_freq
+#> 1            1          642         0.156
+#> 2          141          478        22.800
+#> 3            2         1212         0.165
+#> 4          174          477        26.700
+#> 5           NA           NA            NA
+```
+
+Explanation of some of the variables:
+
+-   **negative\_num** and **positive\_num** - the number of droplets in the *negative* and *positive* clusters
+-   **negative\_freq** - the frequency (0-1) of non-empty, non-rain droplets that are *negative*
+-   **significant\_negative\_cluster** - TRUE if the a contains a statistically significant number of *negative* droplets, FALSE if most droplets are *positive*
+
+Plotting the data is usually the best way to see the results
+
+``` r
+plate_pnpp %>% plot(text_size_negative_freq = 8)
+```
+
+![](vignettes/README-pnppplot-1.png)
+
+The *positive* droplets are green and the *negative* droplets are purple. The well colours themselves reflect the **significant\_negative\_cluster** variable: wells that are mostly *positive* droplets are green, and wells with significant negative clusters are purple. There are parameters to set all these colours, the transparency levels, and many more options.
+
+Similarly to how `wells_failed()` returns the failed wells, you can use the `wells_negative()` and `wells_positive()` functions to extract the wells with a significant negative cluster and those without.
+
+``` r
+plate_pnpp %>% wells_negative
+#> [1] "B06" "C08"
+plate_pnpp %>% wells_positive
+#> [1] "B01" "C01"
+```
+
+#### Reclassification of wells with low negative frequency
+
+By default, the reclassification step takes place if there are at least 4 wells with a high enough negative frequency. If you look at the results or the plot of this dataset, you'll see that there are two such wells. You can change that number just like any other parameter, so we can lower it to 2
+
+``` r
+params(plate_pnpp, 'RECLASSIFY', 'MIN_WELLS_NEGATIVE_CLUSTER') <- 2
+```
+
+As a reminder, `params(plate_ppnp) %>% str` will list all the available parameters.
+
+Now if we re-analyze the plate, the two wells with mostly *positive* droplets will be reanalyzed using the gate information from the other wells, which should not change much but it could be a little more accurate.
+
+``` r
+plate_pnpp %>% analyze(restart = TRUE) %>% plot(text_size_negative_freq = 8)
+#> Restarting analysis
+#> Initializing plate of type `ppnp_assay`... DONE (0 seconds)
+#> Identifying failed wells... DONE (0 seconds)
+#> Identifying outlier droplets... DONE (0 seconds)
+#> Identifying empty droplets... DONE (0 seconds)
+#> Classifying droplets... DONE (0 seconds)
+#> Reclassify droplets based on info in all wells... DONE (0 seconds)
+#> Analysis complete
+```
+
+![](vignettes/README-pnppreclassifyplot-1.png)
 
 TODO Adding your own type (separate vignette) TODO document shiny app

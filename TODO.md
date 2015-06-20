@@ -11,7 +11,7 @@
 
 - do a bit of time/memory profiling with hadley::lineprof  
 
-- parallelize some time consuming steps
+- look into `parallel` package
 
 - separate functions into proper files
 
