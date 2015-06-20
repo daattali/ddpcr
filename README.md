@@ -67,6 +67,13 @@ First, install `ddpcr`
 
     devtools::install_github("daattali/ddpcr")
 
+Note: throughout this document, *FAM* will be synonymous to *Y axis* and *HEX* will be synonymous to *X axis*, as a reflection of the fact that conventionally when visualizing the data the FAM intensity is plotted on the Y axis and the HEX intensity is on the X axis.
+
+Running the interactive tool through R
+--------------------------------------
+
+Even if you do know R, using the interactive application can be easier and more convenient than running R commands. If you want to use the tool, simply run `ddpcr::shine()` and it will run the same application that's hosted online on your own machine.
+
 Quick start
 -----------
 
@@ -381,7 +388,19 @@ params(plate, "REMOVE_FAILURES", "TOTAL_DROPS_T")
 #> [1] 1000
 ```
 
-Note that if you change any parameters, you need to re-run the analysis. If you try running `analyze()` after a plate has already been analyzed, you will simply get a message saying the plate is already analyzed. To force an already-analyzed plate to re-run the analysis, you need to use the `restart = TRUE` parameter
+If you look at the full parameters of the plate, you'll notice that by default `ddpcr` assumes that the dyes used are *FAM* and *HEX*. If you are using a different dye and want the name of that dye appear in the results instead, you can use the `x_var()` or `y_var()` functions.
+
+``` r
+orig_x <- x_var(plate)
+orig_x
+#> [1] "HEX"
+x_var(plate) <- "VIC"
+plate %>% plate_data %>% names
+#> [1] "well"    "VIC"     "FAM"     "cluster"
+x_var(plate) <- orig_x
+```
+
+Note that if you change any parameters, you need to re-run the analysis. If you try running `analyze()` after a plate has already been analyzed, you will simply get a message saying the plate is already analyzed. To force an already-analyzed plate to re-run the analysis, you need to use the `restart = TRUE` parameter.
 
 ``` r
 plate <- analyze(plate)
@@ -395,8 +414,8 @@ plate <- analyze(plate, restart = TRUE)
 #> Analysis complete
 ```
 
-Analysis with manual droplet gating
------------------------------------
+Analysing any ddPCR plate with manual droplet gating
+----------------------------------------------------
 
 The previous walkthrough shows the results of a basic analysis when using the default plate type. If you want to also perform a simple 4-quadrant gating like the one available in QuantaSoft, you need to set the type of the plate object to `CROSSHAIR_THRESHOLDS`. This can either be done when initializing a new plate or by reseting an existing plate object.
 
@@ -465,7 +484,24 @@ clusters(plate_manual)
 
 Now if we want to change the colour of the double-positive droplets to red, we just add a parameter `col_drops_both_positive = "red"`.
 
-Analysis with automated gating
-------------------------------
+Analysing PNPP experiments with automated gating
+------------------------------------------------
 
-Adding your own type (separate vignette)
+If you have a *PNPP* experiment (*(FAM+)/(FAM+HEX+)* or *(HEX+)/(FAM+HEX+)*) then `ddpcr` can do a full automatic analysis on the plate. The sample dataset is from a *(FAM+)/(FAM+HEX+)* experiment, so we can take advantage of the automatic gating.
+
+The first step is to define the type of plate. Again, this can be done wither by resetting an existing plate and specifying a different type, or by specifying a type when initializing a plate.
+
+``` r
+plate_pnpp <- reset(plate, type = PPNP_ASSAY)
+#> Initializing plate of type `ppnp_assay`... DONE (0 seconds)
+```
+
+Before being able to analyze the plate, we need to set one important parameter: the *positive dimension*. This parameter tells `ddpcr` whether this is a *(FAM+)/(FAM+HEX+)* or a *(HEX+)/(FAM+HEX+)* experiment. The possible values are "X" and "Y", which correspond to HEX+ and FAM+, respectively.
+
+``` r
+positive_dim(plate_pnpp) <- "Y"
+```
+
+Now
+
+TODO Adding your own type (separate vignette) TODO document shiny app
