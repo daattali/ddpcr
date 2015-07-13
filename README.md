@@ -84,11 +84,12 @@ library(ddpcr)
 dir <- system.file("sample_data", "small", package = "ddpcr")
 
 # example 1: manually set thresholds
-new_plate(dir, type = CROSSHAIR_THRESHOLDS) %>%
+plate1 <-
+  new_plate(dir, type = CROSSHAIR_THRESHOLDS) %>%
   subset("B01,B06") %>%
   set_thresholds(c(5000, 7500)) %>%
-  analyze %>%
-  plot(show_grid_labels = TRUE, alpha_drops = 0.3,
+  analyze
+plot(plate1, show_grid_labels = TRUE, alpha_drops = 0.3,
        title = "Manually set gating thresholds\nworks with any data")
 
 # example 2: automatic gating
@@ -101,8 +102,8 @@ new_plate(dir, type = FAM_POSITIVE_PPNP) %>%
 
 <img src="vignettes/README-quickstart-1.png" title="" alt="" width="50%" /><img src="vignettes/README-quickstart-2.png" title="" alt="" width="50%" />
 
-Running a basic analysis - walkthrough
---------------------------------------
+Running a basic analysis - detailed walkthrough
+-----------------------------------------------
 
 This section will go into details of how to use `ddpcr` to analyze ddPCR data.
 
@@ -127,7 +128,7 @@ plate <- new_plate(dir)
 
 You will see some messages appear - every time `ddpcr` runs an analysis step (initializing the plate is part of the analysis), it will output a message decribing what it's doing.
 
-### Explore the data pre-analysis
+### Pre-analysis exploration of the data
 
 We can explore the data we loaded even before doing any analysis
 
@@ -244,7 +245,7 @@ plate <- plate %>% analyze
 
 As each step of the analysis is performed, a message describing the current step is printed to the screen. Since we only have 2 wells, it should be very fast, but when you have a full 96-well plate, the analysis could take several minutes. Sometimes it can be useful to run each step individually rather than all of them together if you want to inspect the data after each step.
 
-### Explore the data post-analysis
+### Post-analysis exploration of the data
 
 We can explore the plate again, now that it has been analyzed.
 
@@ -628,4 +629,52 @@ plate_pnpp %>% analyze(restart = TRUE) %>% plot(text_size_negative_freq = 8)
 
 ![](vignettes/README-pnppreclassifyplot-1.png)
 
-TODO Adding your own type (separate vignette) TODO document shiny app
+Algorithms used in each step
+----------------------------
+
+If you want to know how a step is performed, you can see the exact algorithm used in each step with the `steps()` function.
+
+``` r
+plate_pnpp %>% steps
+#> $INITIALIZE
+#> [1] "init_plate"
+#> 
+#> $REMOVE_FAILURES
+#> [1] "remove_failures"
+#> 
+#> $REMOVE_OUTLIERS
+#> [1] "remove_outliers"
+#> 
+#> $REMOVE_EMPTY
+#> [1] "remove_empty"
+#> 
+#> $CLASSIFY
+#> [1] "classify_droplets"
+#> 
+#> $RECLASSIFY
+#> [1] "reclassify_droplets"
+```
+
+This list contains all the steps of analyzing the given plate, with each item in the list containing both the name of the step and the R function that performs it. For example, the first step is *INITIALIZE* and it uses the function `init_plate()`. You can see the code for that function by running `ddpcr:::init_plate`.
+
+``` r
+ddpcr:::init_plate
+#> function(plate) {
+#>   stopifnot(plate %>% inherits("ddpcr_plate"))
+#>   step_begin(sprintf("Initializing plate of type `%s`", type(plate)))
+#>   
+#>   plate %<>%
+#>     set_default_clusters %>%
+#>     set_default_steps %>%
+#>     init_data %>%
+#>     init_meta
+#>   
+#>   status(plate) <- step(plate, 'INITIALIZE')
+#>   step_end()
+#>   
+#>   plate
+#> }
+#> <environment: namespace:ddpcr>
+```
+
+Adding your own type (separate vignette) TODO document shiny app
