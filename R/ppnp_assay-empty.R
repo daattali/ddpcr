@@ -1,6 +1,5 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
-## This software is distributed under the AGPL-3 license
 
 # for this assay, we know that we don't expect any drops on the bottom right,
 # so it's ok to only have an empty cutoff in the y dimension to save time

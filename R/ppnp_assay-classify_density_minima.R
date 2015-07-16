@@ -1,6 +1,5 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
-## This software is distributed under the AGPL-3 license
 
 # Advantage of density over normal: faster, better at finding mutant drops in
 # wells with low mutant frequency, works with the case where there are tons of

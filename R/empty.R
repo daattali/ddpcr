@@ -1,6 +1,5 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
-## This software is distributed under the AGPL-3 license
 
 # For a given well, calculate the Y cutoff where all drops below this
 # value are considered empty

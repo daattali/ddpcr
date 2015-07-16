@@ -1,6 +1,5 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
-## This software is distributed under the AGPL-3 license
 
 #' Calculate negative frequency based on number of drops
 #' @param negative_drops Number of negative drops.

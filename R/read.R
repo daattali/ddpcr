@@ -1,6 +1,5 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
-## This software is distributed under the AGPL-3 license
 
 # Read a plate data from a directory or list of files
 read_plate <- function(plate, dir, data_files, meta_file) {
