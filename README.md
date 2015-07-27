@@ -1,3 +1,5 @@
+Note: This package is still in development, use with caution
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 ddpcr: Analysis and visualization of Digital Droplet PCR data in R and on the web
 =================================================================================
