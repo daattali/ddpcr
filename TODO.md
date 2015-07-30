@@ -9,10 +9,6 @@
 
 - cleanup code inside failures.R and decide on a method (fast vs slow) and make it work with generic inheritance
 
-- do a bit of time/memory profiling with hadley::lineprof  
-
-- look into `parallel` package
-
 - separate functions into proper files
 
 - add tests
@@ -27,6 +23,8 @@
 
 - matias (stats prof) - better stats for outlier detection?
 
+- determining if a significant mutant cluster exists: using jenny's initial idea of bootstrap using Normal assumption: assume well is truly wildtype, sample from wt drops and see how likely it is to get the number of mutant drops we see. This doesn't work well because we ALWAYS get an extremely small p value - even having just one mutant drop seems to be very significant. Also, according to shapiro-wilks, the wildtype drops aren't normally distributed.
+
 - determining if a significant mutant cluster exists: use a more statistic method.
 for example, use a binomial/chi square test. we can call a well as mutant if it is
 statistically significantly more then 1% with a p-val < 0.01. For example, if 500
@@ -34,19 +32,6 @@ drops and 8 mutants, then we want P(x>=8) = 1-P(x<=8)+P(x=8) =
 1-pbinom(8, 500, .01)+dbinom(8, 500, .01) = 0.13 so not significantly many mutants,
 therefore wildtype.  But if same ratio but with 80 mutants out of 5000, we get
 p=5e-05 which is very significant so well is mutant.
-
-- bootstrap to determine if wildtype well or not (assume well is truly wildtype,
-sample from the wt drops distribution and see how likely it is to get the few mutant
-drops that we got)
-
-- I tested for normality of wildtype drops HEX using shapiro-wilks and it always
-comes back as significantly non-normal :(
-
-- preliminary attempt at bootstrap using Normal assumption: it seems that if we
-take the wildtype drops, use the mean and sd to see what's the probability of
-seeing observations as extreme as the mutant drops, we'll always get an extremely
-small p value (suggesting that even one mutant drop is significant)
-
 
 ### shiny
 
