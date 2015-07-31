@@ -44,7 +44,7 @@ classify_droplets_density_minima <- function(plate, well_id, plot = FALSE) {
                                         var = as.name(variable_var)))
       
       if (nrow(btwn_right_mins) < nrow(filled) * 0.1) {
-        # discard rightmost inflection points
+        # discard rightmost extreme points
         maxima_idx %<>% head(-1)
         minima_idx %<>% head(-1)
         msg <- sprintf("ignored small cluster of drops above the %s cluster",

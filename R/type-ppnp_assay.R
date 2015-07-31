@@ -68,7 +68,7 @@ define_params.ppnp_assay <- function(plate) {
       'NO_NEG_CLUSTER_BORDER_NUM_SD' = 10,
       'ADJUST_MIN'                   = 4,
       'ADJUST_MAX'                   = 20,
-      'METHOD'                       = 'density_inflection_points'
+      'METHOD'                       = 'density_minima'
     ),
     'RECLASSIFY' = list(
       'MIN_WELLS_NEGATIVE_CLUSTER'   = 4,
