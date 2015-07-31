@@ -90,20 +90,6 @@ test_that("local_minima works", {
   expect_equal(local_minima(c(7, 1, -4, -3, -5, 6, 13, 12)), c(3, 5, 8))
 })
 
-test_that("get_inflection_pts works", {
-  curve1 <- dplyr::data_frame(x = -10:3, y = (x + 5) ^ 3 - 10)
-  expect_equal(curve1[get_inflection_pts(curve1), ]$x,
-               -5)
-  
-  curve2 <- dplyr::data_frame(x = seq(0, 10, 0.25), y = (x-1)*(x-2)*(x-3))
-  expect_equal(curve2[get_inflection_pts(curve2), ]$x,
-               1.75)
-  
-  curve3 <- dplyr::data_frame(x = seq(-0.1, 1.3, 0.01), y = (x^5 + x^9 - x - 1)^3)
-  expect_equal(curve3[get_inflection_pts(curve3), ]$x,
-               c(0.37, 0.86, 1.00))
-})
-
 test_that("diff.point2d works", {
   expect_equal(diff(point2d(c(10, 10))), sqrt(200))
   expect_equal(diff(point2d(c(10, 10)), point2d(c(5, 20))), sqrt(125))

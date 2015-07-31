@@ -183,28 +183,6 @@ local_minima <- function(x) {
   local_maxima(-x)
 }
 
-#' Get the indices of the inflection points in a curve
-#' @param dat Dataframe containing an \code{x} and \code{y} variable.
-#' @examples 
-#' curve1 <- dplyr::data_frame(x = -10:3, y = (x + 5) ^ 3 - 10)
-#' curve1[get_inflection_pts(curve1), ]$x
-#' @keywords internal
-#' @export
-get_inflection_pts <- function(dat) {
-  inf_points_idx <-
-    dat %>%
-    {smooth.spline(x = .$x, y = .$y)} %>%
-    predict(deriv = 2) %>%
-    .$y %>%
-    sign %>%
-    rle %>%
-    .$lengths %>%
-    cumsum
-  bogus_idx <- c(1, length(dat$x) - 1, length(dat$x))
-  inf_points_idx <- inf_points_idx[!inf_points_idx %in% bogus_idx]
-  inf_points_idx
-}
-
 #' Determine if a given path is a valid directory
 #' @keywords internal
 #' @export
