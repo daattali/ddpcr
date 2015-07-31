@@ -62,13 +62,9 @@ define_params.ppnp_assay <- function(plate) {
       'FAST'   = TRUE
     ),
     'CLASSIFY' = list(
-      'NUM_ATTEMPTS_SEGREGATE'       = 1,
-      'SEGREGATE_RATIO_THRESHOLD'    = 0.75,
       'CLUSTERS_BORDERS_NUM_SD'      = 3,
-      'NO_NEG_CLUSTER_BORDER_NUM_SD' = 10,
       'ADJUST_MIN'                   = 4,
-      'ADJUST_MAX'                   = 20,
-      'METHOD'                       = 'density_minima'
+      'ADJUST_MAX'                   = 20
     ),
     'RECLASSIFY' = list(
       'MIN_WELLS_NEGATIVE_CLUSTER'   = 4,
