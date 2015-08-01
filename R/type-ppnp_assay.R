@@ -63,8 +63,14 @@ define_params.ppnp_assay <- function(plate) {
     ),
     'CLASSIFY' = list(
       'CLUSTERS_BORDERS_NUM_SD'      = 3,
-      'ADJUST_MIN'                   = 4,
-      'ADJUST_MAX'                   = 20
+      'ADJUST_BW_MIN'                = 4,
+      'ADJUST_BW_MAX'                = 20,
+      # a well with a mutant frequency that is statistically significantly above
+      # this value is considered a mutant well
+      'SIGNIFICANT_NEGATIVE_FREQ'    = 0.01,
+      # the p value to use for the statistical significance test used to determine
+      # is a well is mutant or not
+      'SIGNIFICANT_P_VALUE'          = 0.01
     ),
     'RECLASSIFY' = list(
       'MIN_WELLS_NEGATIVE_CLUSTER'   = 4,
@@ -261,4 +267,11 @@ wells_negative <- function(x) {
     plate_meta %>%
     dplyr::filter_(as.name(meta_var_name(x, "significant_negative_cluster"))) %>%
     .[['well']]
+}
+
+border_to_str <- function(border) {
+  paste(border %>% as.integer, collapse = ";")
+}
+str_to_border <- function(str) {
+  strsplit(str, ";") %>% unlist %>% as.integer
 }

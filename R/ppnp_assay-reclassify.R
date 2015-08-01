@@ -32,8 +32,6 @@ reclassify_droplets_single.ppnp_assay <- function(plate, well_id, consensus_bord
   negative_borders <- c(0, negative_cutoff)
   positive_borders <- c(negative_borders[2] + 1, filled[[variable_var]] %>% max)
   
-  # TODO recalculate whehter or not has_mt_cluster is true
-  
   return(list(
     negative_borders = negative_borders %>% border_to_str,
     positive_borders = positive_borders %>% border_to_str

@@ -1,13 +1,6 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-border_to_str <- function(border) {
-  paste(border %>% as.integer, collapse = ";")
-}
-str_to_border <- function(str) {
-  strsplit(str, ";") %>% unlist %>% as.integer
-}
-
 #' @export
 classify_droplets_single <- function(plate, well_id) {
   UseMethod("classify_droplets_single")
@@ -26,7 +19,6 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id, plot = FALSE) {
   msg <- NA  
   well_data <- get_single_well(plate, well_id)
   
-  positive_var <- positive_dim_var(plate)
   variable_var <- variable_dim_var(plate)
   
   filled_borders <- get_filled_borders(plate, well_id)
@@ -38,8 +30,8 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id, plot = FALSE) {
   adj_prev <- NULL 
   # final "adjust" value
   adj_final <- NULL 
-  for (adj in seq(params(plate, 'CLASSIFY', 'ADJUST_MIN'),
-                  params(plate, 'CLASSIFY', 'ADJUST_MAX'),
+  for (adj in seq(params(plate, 'CLASSIFY', 'ADJUST_BW_MIN'),
+                  params(plate, 'CLASSIFY', 'ADJUST_BW_MAX'),
                   0.5)) {
     dens_smooth <- density(filled[[variable_var]], bw = "sj", adjust = adj)
     maxima_idx <- local_maxima(dens_smooth$y)
@@ -137,12 +129,12 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id, plot = FALSE) {
     abline(h = filled_borders, col = "black")
     abline(v = dens_smooth$x[minima_idx])
     abline(v = dens_smooth$x[maxima_idx], col = "grey")
-    #abline(v = negative_borders, col = "purple3")
-    #abline(v = positive_borders, col = "green3")
+    abline(v = negative_border_tight, col = "red")
   }
-  
-  # TODO come up with a better statistical solution here
-  signif_negative_cluster <- (negative_freq > 5 | nrow(negative_drops) > 30)
+
+  # detemine if the well has a statistically significant negative cluster 
+  signif_negative_cluster <-
+    has_signif_negative_cluster(plate, nrow(negative_drops), nrow(positive_drops))
   
   return(list(
     'negative_borders' = negative_borders %>% border_to_str,
@@ -239,4 +231,29 @@ mark_clusters <- function(plate, wells) {
   
   plate_data(plate) <- data
   plate
+}
+
+#' Classify a well as having a significant negative cluster (eg. a mutant well)
+#' or not using a binomial test.
+#' We can call a well as mutant if it is statistically significantly more then
+#' 1% with a p-val < 0.01. For example, if there are 500 total drops and 7
+#' mutant drops, then the mutant frequency is 1.4%, but is it statistically
+#' significantly more than 1%?
+#' P(x >= 7)
+#'   = 1 - P(x <= 7) + P(x = 7)
+#'   = 1 - pbinom(7, 500, .01) + dbinom(7, 500, .01)
+#'   = 0.237
+#'   > 0.01
+#' So not statistically significantly enough, so we say it's a wildtype well.
+#' But if there are 5000 drops and 70 mutant drops (same 1.4% frequency but
+#' with higher absolute numbers), then
+#' P(x >= 70) = 1 - pbinom(70, 5000, .01) + dbinom(70, 5000, .01) = 0.004
+#' So this is indeed significant, and this well would be deemed mutant.
+has_signif_negative_cluster <- function(plate, neg, pos) {
+  freq_threshold <- params(plate, 'CLASSIFY', 'SIGNIFICANT_NEGATIVE_FREQ')
+  pval <- params(plate, 'CLASSIFY', 'SIGNIFICANT_P_VALUE')
+  total <- neg + pos
+  result <- 
+    (1 - pbinom(neg, total, freq_threshold) + dbinom(neg, total, freq_threshold)) < pval
+  result
 }
