@@ -12,7 +12,7 @@ hasSampleNames <- eventReactive(dataValues$plate, {
 metaColsHideIdx <- eventReactive(dataValues$plate, {
   meta <- dataValues$plate %>% plate_meta(only_used = TRUE)
   colsHide <- c("row", "col", "used", "comment",
-                "mutant_borders", "wildtype_borders", "filled_borders")
+                "mutant_borders", "wildtype_borders", "filled_border")
   if (!hasSampleNames()) {
     colsHide <- c(colsHide, "sample")
   }

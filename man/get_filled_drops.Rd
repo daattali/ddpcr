@@ -4,16 +4,16 @@
 \alias{get_filled_drops}
 \title{Get filled droplets in PPNP assay}
 \usage{
-get_filled_drops(plate, well_id, borders)
+get_filled_drops(plate, well_id, border)
 }
 \arguments{
 \item{plate}{A ddPCR plate.}
 
-\item{well_id}{Get borders of filled droplets for this well.}
+\item{well_id}{Get border of filled droplets for this well.}
 
-\item{borders}{(Optional) The filled droplets borders, as calculated by
+\item{border}{(Optional) The filled droplets border, as calculated by
 \code{\link[ddpcr]{get_filled_drops}}. If missing, then
-\code{\link[ddpcr]{get_filled_drops}} is called to calculate the borders.}
+\code{\link[ddpcr]{get_filled_drops}} is called to calculate the border.}
 }
 \value{
 Dataframe with all filled droplets in the given well.
@@ -29,7 +29,7 @@ candidates for the \code{negative} and \code{positive} clusters.
 file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
 plate <- load_plate(file)
 get_filled_drops(plate, "B06")
-get_filled_drops(plate, "B06", get_filled_borders(plate, "B06"))
+get_filled_drops(plate, "B06", get_filled_border(plate, "B06"))
 }
 \seealso{
 \code{\link[ddpcr]{PPNP_ASSAy}},

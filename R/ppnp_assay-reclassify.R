@@ -7,18 +7,16 @@ reclassify_droplets_single <- function(plate, well_id, ...) {
 }
 
 #' @export
-reclassify_droplets_single.ppnp_assay <- function(plate, well_id, consensus_border_ratio, ...) {
+reclassify_droplets_single.ppnp_assay <- function(plate, well_id, ..., consensus_border_ratio) {
   
   well_data <- get_single_well(plate, well_id, clusters = TRUE)
   positive_var <- positive_dim_var(plate)
   variable_var <- variable_dim_var(plate)
   
-  filled <-
-    plate %>%
-    well_info(well_id, 'filled_borders') %>%
-    str_to_border %>%
+  filled_border <- well_info(plate, well_id, 'filled_border')
+  filled <- 
     {dplyr::filter_(well_data,
-                    lazyeval::interp(~ var %btwn% .,
+                    lazyeval::interp(~ var >= filled_border,
                                      var = as.name(positive_var)))}
   
   CLUSTER_POSITIVE <- plate %>% cluster('POSITIVE')
@@ -143,7 +141,7 @@ reclassify_droplets.ppnp_assay <- function(plate) {
   
   well_clusters_info <-
     vapply(wells_to_reclassify,
-           function(x) reclassify_droplets_single(plate, x, consensus_border_ratio),
+           function(x) reclassify_droplets_single(plate, x, consensus_border_ratio = consensus_border_ratio),
            vector("list", 2)) %>%
     lol_to_df %>%
     magrittr::set_names(lapply(names(.), function(x) meta_var_name(plate, x)))

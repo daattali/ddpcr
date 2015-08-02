@@ -2,12 +2,12 @@
 ## Copyright (C) 2015 Dean Attali
 
 #' @export
-classify_droplets_single <- function(plate, well_id) {
+classify_droplets_single <- function(plate, well_id, ...) {
   UseMethod("classify_droplets_single")
 }
 
 #' @export
-classify_droplets_single.ppnp_assay <- function(plate, well_id, plot = FALSE) {
+classify_droplets_single.ppnp_assay <- function(plate, well_id, ..., plot = FALSE) {
   # For a given well, merge the empty drops with the rain/mutant/wildtype drops
   # to result in a data frame containing all drops in a well marked with a cluster.
   #
@@ -21,8 +21,8 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id, plot = FALSE) {
   
   variable_var <- variable_dim_var(plate)
   
-  filled_borders <- get_filled_borders(plate, well_id)
-  filled <- get_filled_drops(plate, well_id, filled_borders)
+  filled_border <- get_filled_border(plate, well_id)
+  filled <- get_filled_drops(plate, well_id, filled_border)
   
   # whether or not the result is found using the first attempted bandwidth
   bw_orig <- TRUE
@@ -125,8 +125,7 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id, plot = FALSE) {
     points(filled, col = "blue")
     points(negative_drops, col = "purple3")
     points(positive_drops, col = "green3")
-    abline(h = filled_borders %>% mean, col = "grey")
-    abline(h = filled_borders, col = "black")
+    abline(h = filled_border, col = "black")
     abline(v = dens_smooth$x[minima_idx])
     abline(v = dens_smooth$x[maxima_idx], col = "grey")
     abline(v = negative_border_tight, col = "red")
@@ -139,7 +138,7 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id, plot = FALSE) {
   return(list(
     'negative_borders' = negative_borders %>% border_to_str,
     'positive_borders' = positive_borders %>% border_to_str,
-    'filled_borders'   = filled_borders %>% border_to_str,
+    'filled_border'    = filled_border,
     'significant_negative_cluster' = signif_negative_cluster,
     'comment'          = msg
   ))
@@ -206,7 +205,7 @@ mark_clusters <- function(plate, wells) {
       get_borders <- function(border_type) {
         well_info(plate, well_id, border_type) %>% str_to_border
       }
-      filled_borders <- get_borders('filled_borders')
+      filled_border <- well_info(plate, well_id, 'filled_border')
       negative_borders <- get_borders(meta_var_name(plate, 'negative_borders'))
       positive_borders <- get_borders(meta_var_name(plate, 'positive_borders'))
       
@@ -216,7 +215,7 @@ mark_clusters <- function(plate, wells) {
       classifiable_idx <-
         data[['well']] == well_id &
         (data[['cluster']] %in% CLUSTERS_UNANALYZED)
-      filled_idx <- classifiable_idx & data[[positive_var]] %btwn% filled_borders
+      filled_idx <- classifiable_idx & data[[positive_var]] >= filled_border
       negative_idx <- filled_idx & data[[variable_var]] %btwn% negative_borders
       positive_idx <- filled_idx & data[[variable_var]] %btwn% positive_borders
       
