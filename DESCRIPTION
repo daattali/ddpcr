@@ -10,15 +10,16 @@ Depends:
     R (>= 3.1.0)
 Imports:
     dplyr (>= 0.4.0),
+    DT (>= 0.1),
     ggplot2 (>= 1.0.0),
     lazyeval (>= 0.1.10),
     magrittr (>= 1.5),
     mixtools (>= 1.0.2),
+    shiny (>= 0.11.0),
+    shinyjs (>= 0.0.6.4),
     readr (>= 0.1.0)
 Suggests:
     knitr (>= 1.7),
-    shiny (>= 0.11.0),
-    shinyjs (>= 0.0.6.4),
     testthat (>= 0.9.1)
 License: file LICENSE
 LazyData: true
