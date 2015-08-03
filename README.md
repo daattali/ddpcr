@@ -1,5 +1,3 @@
-Note: This package is still in development, use with caution
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 ddpcr: Analysis and visualization of Digital Droplet PCR data in R and on the web
 =================================================================================
@@ -284,7 +282,7 @@ plate %>% plate_data
 This isn't very informative since it shows the cluster assignment for each droplet, which is not easy for a human to digest. Instead, this information can be visualized by plotting the plate (coming up). We can also look at the plate results
 
 ``` r
-plate %>% plate_meta(only_used = TRUE) %>% dplyr::select(-comment)
+plate %>% plate_meta(only_used = TRUE)
 #>   well sample row col used drops success drops_outlier drops_empty
 #> 1  B01     #1   B   1 TRUE 17458    TRUE             0       16690
 #> 2  B06     #9   B   6 TRUE 13655    TRUE             0       12925
@@ -297,7 +295,7 @@ plate %>% plate_meta(only_used = TRUE) %>% dplyr::select(-comment)
 #> 4              NA                   NA            NA
 ```
 
-Now there's a bit more information in the results table. The *comment* column is omitted for brevity and because it's not terribly useful - it is used to store any additional information relating to the analysis and is fairly technical in nature. The *success* column indicates whether or not the ddPCR run was successful in that particular well; notice how well `C06` was deemed a failure, and thus is not included the any subsequent analysis steps.
+Now there's a bit more information in the results table. The *success* column indicates whether or not the ddPCR run was successful in that particular well; notice how well `C06` was deemed a failure, and thus is not included the any subsequent analysis steps.
 
 You can use the `well_info()` function to get the value of a specific variable of a specific well from the results.
 
@@ -541,7 +539,7 @@ plate_pnpp <- analyze(plate_pnpp)
 #> Identifying outlier droplets... DONE (0 seconds)
 #> Identifying empty droplets... DONE (0 seconds)
 #> Classifying droplets... DONE (0 seconds)
-#> Not reclassifying droplets because there are not enough wells with significant negative clusters
+#> Reclassifying droplets... aborted because there are not enough wells with significant negative clusters
 #> Analysis complete
 ```
 
@@ -553,31 +551,31 @@ You can see from the output that the two last steps are **classifying** and **re
 Take a look at the results
 
 ``` r
-plate_pnpp %>% plate_meta(only_used = TRUE) %>% dplyr::select(-comment)
+plate_pnpp %>% plate_meta(only_used = TRUE)
 #>   well sample row col used drops success drops_outlier drops_empty
 #> 1  B01     #1   B   1 TRUE 17458    TRUE             0       16691
 #> 2  B06     #9   B   6 TRUE 13655    TRUE             0       12925
 #> 3  C01     #3   C   1 TRUE 15279    TRUE             0       13903
 #> 4  C08   <NA>   C   8 TRUE 14801    TRUE             0       14023
 #> 5  C06    #12   C   6 TRUE 14513   FALSE             9          NA
-#>   drops_non_empty drops_empty_fraction concentration negative_borders
-#> 1             767                0.956            49           0;3309
-#> 2             730                0.947            59           0;4160
-#> 3            1376                0.910           103           0;4199
-#> 4             778                0.947            59           0;4132
-#> 5              NA                   NA            NA             <NA>
-#>   positive_borders filled_borders significant_negative_cluster
-#> 1        3310;7156      7945;9217                        FALSE
-#> 2        4161;7859     8971;10329                         TRUE
-#> 3        4200;7519      8524;9724                        FALSE
-#> 4        4133;7714     8869;10139                         TRUE
-#> 5             <NA>           <NA>                           NA
-#>   negative_num positive_num negative_freq
-#> 1            1          642         0.156
-#> 2          141          478        22.800
-#> 3            2         1212         0.165
-#> 4          174          477        26.700
-#> 5           NA           NA            NA
+#>   drops_non_empty drops_empty_fraction concentration negative_border
+#> 1             767                0.956            49            3551
+#> 2             730                0.947            59            4090
+#> 3            1376                0.910           103            4424
+#> 4             778                0.947            59            3990
+#> 5              NA                   NA            NA              NA
+#>   filled_border significant_negative_cluster negative_num positive_num
+#> 1          7945                        FALSE            1          642
+#> 2          8971                         TRUE          140          479
+#> 3          8524                        FALSE            2         1214
+#> 4          8869                         TRUE          174          477
+#> 5            NA                           NA           NA           NA
+#>   negative_freq
+#> 1         0.156
+#> 2        22.600
+#> 3         0.164
+#> 4        26.700
+#> 5            NA
 ```
 
 Explanation of some of the variables:
