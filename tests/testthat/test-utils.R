@@ -69,11 +69,6 @@ test_that("%btwn% works", {
                c(FALSE, FALSE, FALSE, TRUE, TRUE))  
 })
 
-test_that("plus_minus works", {
-  expect_equal(plus_minus(50, 30), c(50 - 30, 50 + 30))
-  expect_equal(plus_minus(50, 100), c(50 - 100, 50 + 100))
-})
-
 test_that("local_maxima works", {
   expect_equal(local_maxima(1:10), 10)
   expect_equal(local_maxima(10:1), 1)

@@ -268,10 +268,3 @@ wells_negative <- function(x) {
     dplyr::filter_(as.name(meta_var_name(x, "significant_negative_cluster"))) %>%
     .[['well']]
 }
-
-border_to_str <- function(border) {
-  paste(border %>% as.integer, collapse = ";")
-}
-str_to_border <- function(str) {
-  strsplit(str, ";") %>% unlist %>% as.integer
-}
