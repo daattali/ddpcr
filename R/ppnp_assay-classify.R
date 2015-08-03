@@ -79,21 +79,19 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id, ..., plot = FALS
     err_msg(sprintf("Could not analyze well %s", well_id))
   }
   
-  right_border <- 0
+  negative_border <- 0
   if (num_peaks > 1) {
     # use the local minimum to the right of the left-most peak
     left_peak <- dens_smooth$x[maxima_idx][1]
     minimas <- dens_smooth$x[minima_idx]
-    right_border <- minimas[which(minimas > left_peak) %>% min]
+    negative_border <- minimas[which(minimas > left_peak) %>% min]
   }
-  
-  negative_borders <- c(0, right_border)
-  positive_borders <- c(negative_borders[2] + 1, max(filled[[variable_var]]))
+
   negative_drops <- filled %>%
-    dplyr::filter_(lazyeval::interp(~ var %btwn% negative_borders,
+    dplyr::filter_(lazyeval::interp(~ var <= negative_border,
                                     var = as.name(variable_var)))    
   positive_drops <- filled %>%
-    dplyr::filter_(lazyeval::interp(~ var %btwn% positive_borders,
+    dplyr::filter_(lazyeval::interp(~ var > negative_border,
                                     var = as.name(variable_var)))   
   
   # to try to replicate the human approach, we want to get the mutant border as
@@ -102,14 +100,13 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id, ..., plot = FALS
   negative_border_tight <-
     mean(negative_drops[[variable_var]]) +
     (sd(negative_drops[[variable_var]]) * 3)
-  if (!is.na(negative_border_tight) && negative_border_tight < right_border) {
-    negative_borders[2] <- negative_border_tight
-    positive_borders[1] <- negative_borders[2] + 1
+  if (!is.na(negative_border_tight) && negative_border_tight < negative_border) {
+    negative_border <- negative_border_tight
     negative_drops <- filled %>%
-      dplyr::filter_(lazyeval::interp(~ var %btwn% negative_borders,
-                                      var = as.name(variable_var)))       
+      dplyr::filter_(lazyeval::interp(~ var <= negative_border,
+                                      var = as.name(variable_var)))    
     positive_drops <- filled %>%
-      dplyr::filter_(lazyeval::interp(~ var %btwn% positive_borders,
+      dplyr::filter_(lazyeval::interp(~ var > negative_border,
                                       var = as.name(variable_var))) 
   }  
   
@@ -136,8 +133,7 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id, ..., plot = FALS
     has_signif_negative_cluster(plate, nrow(negative_drops), nrow(positive_drops))
   
   return(list(
-    'negative_borders' = negative_borders %>% border_to_str,
-    'positive_borders' = positive_borders %>% border_to_str,
+    'negative_border'  = as.integer(negative_border),
     'filled_border'    = filled_border,
     'significant_negative_cluster' = signif_negative_cluster,
     'comment'          = msg
@@ -169,7 +165,7 @@ classify_droplets.ppnp_assay <- function(plate) {
   well_clusters_info <-
     vapply(wells_success(plate),
            function(x) classify_droplets_single(plate, x),
-           vector(mode = "list", length = 5)) %>%
+           vector(mode = "list", length = 4)) %>%
     lol_to_df %>%
     magrittr::set_names(lapply(names(.), function(x) meta_var_name(plate, x)))
 
@@ -202,12 +198,8 @@ mark_clusters <- function(plate, wells) {
   data_env <- environment()
   lapply(wells,
     function(well_id){
-      get_borders <- function(border_type) {
-        well_info(plate, well_id, border_type) %>% str_to_border
-      }
       filled_border <- well_info(plate, well_id, 'filled_border')
-      negative_borders <- get_borders(meta_var_name(plate, 'negative_borders'))
-      positive_borders <- get_borders(meta_var_name(plate, 'positive_borders'))
+      negative_border <- well_info(plate, well_id, meta_var_name(plate, 'negative_border'))
       
       # I'm not doing this using dplyr (mutate) because it's much slower
       # this code is a bit ugly but it's much faster to keep overwriting
@@ -216,8 +208,8 @@ mark_clusters <- function(plate, wells) {
         data[['well']] == well_id &
         (data[['cluster']] %in% CLUSTERS_UNANALYZED)
       filled_idx <- classifiable_idx & data[[positive_var]] >= filled_border
-      negative_idx <- filled_idx & data[[variable_var]] %btwn% negative_borders
-      positive_idx <- filled_idx & data[[variable_var]] %btwn% positive_borders
+      negative_idx <- filled_idx & data[[variable_var]] <= negative_border
+      positive_idx <- filled_idx & data[[variable_var]] > negative_border
       
       data[classifiable_idx, 'cluster'] <- CLUSTER_RAIN
       data[negative_idx, 'cluster'] <- CLUSTER_NEGATIVE
