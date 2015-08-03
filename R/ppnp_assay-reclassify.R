@@ -130,13 +130,10 @@ reclassify_droplets.ppnp_assay <- function(plate) {
   well_clusters_info <-
     vapply(wells_to_reclassify,
            function(x) reclassify_droplets_single(plate, x, consensus_border_ratio = consensus_border_ratio),
-           numeric(1))
-  well_clusters_info %<>%
-    as.data.frame %>%
-    magrittr::set_names(meta_var_name(plate, "negative_border"))
-  well_clusters_info[["well"]] <- rownames(well_clusters_info)
+           integer(1)) %>%
+    named_vec_to_df(meta_var_name(plate, "negative_border"))
   
-  # add metadata (comment/hasMTclust) to each well
+  # add metadata to each well
   plate_meta(plate) %<>%
     merge_dfs_overwrite_col(well_clusters_info)  
   

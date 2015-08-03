@@ -11,7 +11,6 @@
 # Returns:
 #   list:
 #     success: TRUE if the well had a successful run, FALSE otherwise
-#     comment: the reason the well was deemed unsuccessful, or NA for successful wells
 #
 # Algorithm:
 #   The goal here is to see if there is anything that is clearly wrong with the
@@ -54,14 +53,12 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
 
   # if this well doesn't actually have data (or is an invalid well) return NA
   if (nrow(well_data) == 0) {
-    return(list(success = NA, comment = NA))
+    return(NA)
   }
   
   # First heuristic check: make sure there are enough droplets
   if (nrow(well_data) < params(plate, 'REMOVE_FAILURES', 'TOTAL_DROPS_T')) {
-    success <- FALSE
-    msg <- sprintf("Not enough drops generated (%s)", nrow(well_data))
-    return(list(success = success, comment = msg))
+    return(FALSE)
   }
   
   set.seed(SEED)
@@ -74,31 +71,22 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
   
   # Check if the two cluster centers are very close to each other
   if (diff(centers[[1]], centers[[2]]) < diff(centers[[smaller_center_idx]])) {
-    success <- FALSE
-    msg <- sprintf("There seems to be mostly empty drops (centers of clusters: %s)",
-                   paste0(centers[[1]] %>% format, ", ", centers[[2]] %>% format))
-    return(list(success = success, comment = msg))
+    return(FALSE)
   }
   
   smaller_lambda <- kmeans$size[[smaller_center_idx]] / sum(kmeans$size)
   
   # Make sure we found a significant empty cluster
   if (smaller_lambda < params(plate, 'REMOVE_FAILURES', 'NORMAL_LAMBDA_LOW_T')) {
-    success <- FALSE
-    msg <- paste0("Could not find significant empty cluster (lambda of lower cluster: ",
-                  signif(smaller_lambda, 4), ")")
-    return(list(success = success, comment = msg))
+    return(FALSE)
   }  
   
   # Make sure not too many drops are empty
   if (smaller_lambda > params(plate, 'REMOVE_FAILURES', 'NORMAL_LAMBDA_HIGH_T')) {
-    success <- FALSE
-    msg <- paste0("There are too many empty drops (lambda of lower cluster: ",
-                  signif(smaller_lambda, 4), ")")
-    return(list(success = success, comment = msg))
+    return(FALSE)
   }
   
-  return(list(success = TRUE, comment = NA))
+  return(TRUE)
 }
 
 #' Remove failed wells
@@ -123,14 +111,17 @@ remove_failures.ddpcr_plate <- function(plate) {
   # ---
 
   well_success_map <-
-    vapply(wells_used(plate),            # check every well if it failed
-           function(x) is_well_success(plate, x),
-           list(logical(1), character(1))) %>%
-    lol_to_df
+    vapply(
+      wells_used(plate), # check every well if it failed
+      function(x) is_well_success(plate, x),
+      logical(1)
+    ) %>%
+    named_vec_to_df("success")
 
   meta <-
-    merge_dfs_overwrite_col(plate_meta(plate), well_success_map,
-                            c("success", "comment")) %>%
+    merge_dfs_overwrite_col(plate_meta(plate),
+                            well_success_map,
+                            "success") %>%
     arrange_meta
 
   CLUSTER_FAILED <- plate %>% cluster('FAILED')

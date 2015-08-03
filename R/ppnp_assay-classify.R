@@ -16,7 +16,6 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id, ..., plot = FALS
   stopifnot(plate %>% inherits("ppnp_assay"))
   
   signif_negative_cluster <- FALSE
-  msg <- NA  
   well_data <- get_single_well(plate, well_id)
   
   variable_var <- variable_dim_var(plate)
@@ -49,8 +48,6 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id, ..., plot = FALS
         # discard rightmost extreme points
         maxima_idx %<>% head(-1)
         minima_idx %<>% head(-1)
-        msg <- sprintf("ignored small cluster of drops above the %s cluster",
-                       params(plate, 'GENERAL', 'POSITIVE_NAME'))
       } else {
         break
       }
@@ -135,8 +132,7 @@ classify_droplets_single.ppnp_assay <- function(plate, well_id, ..., plot = FALS
   return(list(
     'negative_border'  = as.integer(negative_border),
     'filled_border'    = filled_border,
-    'significant_negative_cluster' = signif_negative_cluster,
-    'comment'          = msg
+    'significant_negative_cluster' = signif_negative_cluster
   ))
 }
 
@@ -155,7 +151,6 @@ classify_droplets.ppnp_assay <- function(plate) {
   # get a list containing, for each successful well:
   # - a dataframe with all the drops with their clusters
   # - whether or not there is a mutant drops cluster
-  # - any comment by the algorithm
   CURRENT_STEP <- plate %>% step('CLASSIFY')
   plate %>% check_step(CURRENT_STEP, TRUE)  
   step_begin("Classifying droplets")
@@ -165,11 +160,11 @@ classify_droplets.ppnp_assay <- function(plate) {
   well_clusters_info <-
     vapply(wells_success(plate),
            function(x) classify_droplets_single(plate, x),
-           vector(mode = "list", length = 4)) %>%
+           vector(mode = "list", length = 3)) %>%
     lol_to_df %>%
     magrittr::set_names(lapply(names(.), function(x) meta_var_name(plate, x)))
 
-  # add metadata (comment/hasMTclust) to each well
+  # add metadata to each well
   plate_meta(plate) %<>%
     merge_dfs_overwrite_col(well_clusters_info)
   

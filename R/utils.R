@@ -90,6 +90,15 @@ lol_to_df <- function(lol, name = "well") {
   lol
 }
 
+#' @keywords internal
+#' @export
+named_vec_to_df <- function(v, name, rowname = "well") {
+  v <- as.data.frame(v)
+  colnames(v) <- name
+  v[[rowname]] <- rownames(v)
+  v
+}
+
 #' Suppress all output from an expression. Works cross-platform.
 #' @param expr Expression to run.
 #' @param all If \code{TRUE} then suppress warnings and messages as well;
