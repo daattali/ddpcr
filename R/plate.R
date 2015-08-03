@@ -74,16 +74,15 @@ init_data <- function(plate) {
   x_var <- x_var(plate)
   y_var <- y_var(plate)
   
-  plate_data(plate) %<>%
-    magrittr::set_colnames(c("well", x_var, y_var)) %>%
-      dplyr::select_("well", x_var, y_var) %>%
-      dplyr::mutate_(.dots = setNames(
-        list(~ cluster(plate, 'UNDEFINED'),
-             lazyeval::interp(~ as.integer(var), var = as.name(x_var)),
-             lazyeval::interp(~ as.integer(var), var = as.name(y_var))
-        ),
-        c("cluster", x_var, y_var))) %>%
-      dplyr::arrange_(~ well)  # arrange by wells alphabetically 
+  new_plate_data <- plate_data(plate)
+  colnames(new_plate_data) <- c("well", x_var, y_var)
+  new_plate_data <- dplyr::select_(new_plate_data, "well", x_var, y_var)
+  new_plate_data[['cluster']] <- cluster(plate, 'UNDEFINED')
+  new_plate_data[[x_var]] <- as.integer(new_plate_data[[x_var]])
+  new_plate_data[[y_var]] <- as.integer(new_plate_data[[y_var]])
+  new_plate_data <- dplyr::arrange_(new_plate_data, ~ well)
+  plate_data(plate) <- new_plate_data
+  
   plate
 }
 

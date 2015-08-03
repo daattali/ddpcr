@@ -31,8 +31,8 @@ calculate_concentration <- function(plate) {
            function(x) calculate_concentration_single(plate, x),
            1L) %>%
     as.data.frame %>%
-    magrittr::set_colnames("concentration") %>%
-    dplyr::mutate_("well" = ~ row.names(.))
+    magrittr::set_colnames("concentration")
+  concentrations[['well']] <- row.names(concentrations)
   
   plate_meta(plate) %<>%
     merge_dfs_overwrite_col(concentrations, "concentration")

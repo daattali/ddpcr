@@ -83,10 +83,9 @@ cat0 <- function(...) {
 #' @keywords internal
 #' @export
 lol_to_df <- function(lol, name = "well") {
-  lol %<>%
-    t %>% as.data.frame %>%
-    dplyr::mutate_(.dots = setNames(list(~ row.names(.)), name)) %>%
-    move_front(name)
+  lol %<>% t %>% as.data.frame
+  lol[[name]] <- row.names(lol)
+  lol <- move_front(lol, name)
   lol[] <- lapply(lol, unlist)
   lol
 }
@@ -112,15 +111,6 @@ quiet <- function(expr, all = TRUE) {
   } else {
     capture.output(expr, file = file)
   }
-}
-
-#' Get the two values that are equidistant from a specific number
-#' @param x The middle number.
-#' @param y The amount to deviate from the middle.
-#' @keywords internal
-#' @export
-plus_minus <- function(x, y) {
-  x + y * c(-1, 1)
 }
 
 #' Overwrite a column in a data.frame based on a matching column in another df
@@ -178,18 +168,15 @@ merge_dfs_overwrite_col <- function(olddf, newdf, cols, bycol = "well") {
     colname_y <- sprintf("%s.y", colname)
     
     if (all(c(colname_x, colname_y) %in% colnames(result))) {
+      result[[colname_x]] <- ifelse(is.na(result[[colname_y]]),
+                                    result[[colname_x]],
+                                    result[[colname_y]])
       result %<>%
-        dplyr::mutate_(.dots = setNames(
-          list(lazyeval::interp(
-            ~ ifelse(is.na(coly), colx, coly),
-            colx = as.name(colname_x),
-            coly = as.name(colname_y))),
-          colname_x)) %>%
         dplyr::rename_(.dots = setNames(colname_x, colname)) %>%
         dplyr::select_(lazyeval::interp(~ -colname, colname = as.name(colname_y)))
     }
   }
-
+  
   result
 }
 
