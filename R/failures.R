@@ -29,13 +29,10 @@
 #       lower center.  If it is not, that usually indicates that both normal populations
 #       are really the same cluster)
 #     - The lower population cannot have too few drops (lambda < 0.3)
-#       (PARAMS$REMOVE_FAILURES$NORMAL_LAMBDA_LOW_T), as that means there is no
+#       (PARAMS$REMOVE_FAILURES$EMPTY_LAMBDA_LOW_T), as that means there is no
 #       empty cluster.  Likewise, there shouldn't be too many drops (lambda > 0.99)
-#       (PARAMS$REMOVE_FAILURES$NORMAL_LAMBDA_HIGH_T), as that means there are not
-#       enough drops with data
-#     - The standard deviation (sigma) of the lower population should be fairly
-#       small, below 200 (PARAMS$REMOVE_FAILURES$NORMAL_SIGMA_T), to ensure that
-#       the empty cluster is indeed very dense as it should be
+#       (PARAMS$REMOVE_FAILURES$EMPTY_LAMBDA_HIGH_T), as that means there are not
+#       enough drops with daTA
 #' Determine is a well was a success or failure
 #' @export
 #' @keywords internal
@@ -77,12 +74,12 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
   smaller_lambda <- kmeans$size[[smaller_center_idx]] / sum(kmeans$size)
   
   # Make sure we found a significant empty cluster
-  if (smaller_lambda < params(plate, 'REMOVE_FAILURES', 'NORMAL_LAMBDA_LOW_T')) {
+  if (smaller_lambda < params(plate, 'REMOVE_FAILURES', 'EMPTY_LAMBDA_LOW_T')) {
     return(FALSE)
   }  
   
   # Make sure not too many drops are empty
-  if (smaller_lambda > params(plate, 'REMOVE_FAILURES', 'NORMAL_LAMBDA_HIGH_T')) {
+  if (smaller_lambda > params(plate, 'REMOVE_FAILURES', 'EMPTY_LAMBDA_HIGH_T')) {
     return(FALSE)
   }
   

@@ -58,9 +58,6 @@ define_params.ppnp_assay <- function(plate) {
       'NEGATIVE_NAME'      = 'negative',
       'POSITIVE_DIMENSION' = NA   # Must be set by the child
     ),
-    'REMOVE_FAILURES' = list(
-      'FAST'   = TRUE
-    ),
     'CLASSIFY' = list(
       'CLUSTERS_BORDERS_NUM_SD'      = 3,
       'ADJUST_BW_MIN'                = 4,
