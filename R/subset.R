@@ -21,7 +21,7 @@
 #' notation is only supported for the \code{wells} parameter, but not for the
 #' \code{samples} parameter.
 #' 
-#' @param x The ddPCR plate to subset from
+#' @param x The ddPCR plate to subset from.
 #' @param wells Vector or range notation of wells to select (see Range Notation
 #' section for more information).
 #' @param samples Vector of sample names to select.

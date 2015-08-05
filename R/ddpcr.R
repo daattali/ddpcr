@@ -3,7 +3,10 @@
 
 #' ddPCR
 #' 
-#' Analyze ddPCR data
+#' Analysis and visualization of Digital Droplet PCR data.
+#' 
+#' \href{http://daattali.com/shiny/ddpcr/}{Use the tool online} or
+#' \href{https://github.com/daattali/ddpcr}{read the full documentation on GitHub}.
 #' 
 #' @docType package
 #' @importFrom magrittr %<>%

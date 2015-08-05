@@ -6,7 +6,31 @@
 \usage{
 remove_empty(plate)
 }
+\arguments{
+\item{plate}{A ddPCR plate.}
+}
+\value{
+A ddPCR plate with the empty droplets marked as empty. The plate's
+metadata will have a few new variables relating to the empty droplets.
+}
 \description{
-Remove empty droplets
+Find the empty droplets (double-negative droplets) in each well in a plate
+and assign these droplets into the \emph{EMPTY} cluster.\cr\cr
+\href{https://github.com/daattali/ddpcr#algorithm}{See the README online} for
+more information about the algorithm used to find empty droplets.
+}
+\details{
+This function is recommended to be run as part of an analysis pipeline (ie.
+within the \code{\link[ddpcr]{analyze}} function) rather than being called
+directly.
+}
+\note{
+This is an S3 generic, which means that different ddPCR plate types can
+implement this function differently.
+\href{https://github.com/daattali/ddpcr#extend}{See the README online} for
+more information on how to use custom ddPCR plate types.
+}
+\seealso{
+\code{\link[ddpcr]{analyze}}
 }
 

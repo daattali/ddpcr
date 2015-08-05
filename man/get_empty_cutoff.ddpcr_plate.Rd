@@ -2,12 +2,11 @@
 % Please edit documentation in R/empty.R
 \name{get_empty_cutoff.ddpcr_plate}
 \alias{get_empty_cutoff.ddpcr_plate}
-\title{Algorithm for determining the cutoff for empty droplets in a well}
+\title{Get the cutoff for empty droplets in a well}
 \usage{
 \method{get_empty_cutoff}{ddpcr_plate}(plate, well_id)
 }
 \description{
-Algorithm for determining the cutoff for empty droplets in a well
+Get the cutoff for empty droplets in a well
 }
-\keyword{internal}
 

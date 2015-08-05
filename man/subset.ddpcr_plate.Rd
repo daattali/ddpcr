@@ -7,7 +7,7 @@
 \method{subset}{ddpcr_plate}(x, wells, samples, ...)
 }
 \arguments{
-\item{x}{The ddPCR plate to subset from}
+\item{x}{The ddPCR plate to subset from.}
 
 \item{wells}{Vector or range notation of wells to select (see Range Notation
 section for more information).}

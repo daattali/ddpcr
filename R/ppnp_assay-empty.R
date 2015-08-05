@@ -3,7 +3,7 @@
 
 # for this assay, we know that we don't expect any drops on the bottom right,
 # so it's ok to only have an empty cutoff in the y dimension to save time
-get_empty_cutoff.ppnp_assay <- function(plate, well_id){
+get_empty_cutoff.ppnp_assay <- function(plate, well_id) {
   well_data <- get_single_well(plate, well_id, empty = TRUE)
   
   positive_var <- positive_dim_var(plate)

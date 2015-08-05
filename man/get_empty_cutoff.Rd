@@ -6,8 +6,12 @@
 \usage{
 get_empty_cutoff(plate, well_id)
 }
+\value{
+A list with 2 elements named \code{x} and \code{y} with the values
+being the cutoff in the corresponding axis.
+}
 \description{
-Get the cutoff for empty droplets in a well
+Calculate the cutoff thresholds that define which droplets are empty in a well.
 }
 \keyword{internal}
 

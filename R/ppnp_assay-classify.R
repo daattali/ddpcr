@@ -192,7 +192,7 @@ mark_clusters <- function(plate, wells) {
   data <- plate_data(plate)
   data_env <- environment()
   lapply(wells,
-    function(well_id){
+    function(well_id) {
       filled_border <- well_info(plate, well_id, 'filled_border')
       negative_border <- well_info(plate, well_id, meta_var_name(plate, 'negative_border'))
       

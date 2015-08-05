@@ -7,7 +7,6 @@
 \method{remove_empty}{ddpcr_plate}(plate)
 }
 \description{
-The algorithm for removing empty droplets from a plate
+Remove empty droplets
 }
-\keyword{internal}
 
