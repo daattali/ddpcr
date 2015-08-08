@@ -4,7 +4,7 @@
 #' Remove empty droplets
 #' 
 #' Find the empty droplets (double-negative droplets) in each well in a plate
-#' and assign these droplets into the \emph{EMPTY} cluster.\cr\cr
+#' and assign these droplets to the \emph{EMPTY} cluster. \cr\cr
 #' \href{https://github.com/daattali/ddpcr#algorithm}{See the README online} for
 #' more information about the algorithm used to find empty droplets.
 #' 
@@ -19,7 +19,7 @@
 #' @note This is an S3 generic, which means that different ddPCR plate types can
 #' implement this function differently. 
 #' \href{https://github.com/daattali/ddpcr#extend}{See the README online} for
-#' more information on how to use custom ddPCR plate types.
+#' more information on how to implement custom ddPCR plate types.
 #' @export
 remove_empty <- function(plate) {
   UseMethod("remove_empty")

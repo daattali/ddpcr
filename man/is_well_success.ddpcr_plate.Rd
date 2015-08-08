@@ -2,12 +2,11 @@
 % Please edit documentation in R/failures.R
 \name{is_well_success.ddpcr_plate}
 \alias{is_well_success.ddpcr_plate}
-\title{Algorithm for determining if a single well failed}
+\title{Determine if a well had a successful ddPCR run}
 \usage{
 \method{is_well_success}{ddpcr_plate}(plate, well_id)
 }
 \description{
-Algorithm for determining if a single well failed
+Determine if a well had a successful ddPCR run
 }
-\keyword{internal}
 

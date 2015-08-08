@@ -2,12 +2,11 @@
 % Please edit documentation in R/failures.R
 \name{remove_failures.ddpcr_plate}
 \alias{remove_failures.ddpcr_plate}
-\title{Removing failed wells}
+\title{Remove failed wells}
 \usage{
 \method{remove_failures}{ddpcr_plate}(plate)
 }
 \description{
-The algorithm for removing failed wells from a plate
+Remove failed wells
 }
-\keyword{internal}
 

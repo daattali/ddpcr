@@ -6,7 +6,33 @@
 \usage{
 remove_failures(plate)
 }
+\arguments{
+\item{plate}{A ddPCR plate.}
+}
+\value{
+A ddPCR plate with the droplets in failed wells marked as failed. The plate's
+metadata will have a new variable \code{success} which will be \code{FALSE}
+for any failed well and \code{TRUE} for all others.
+}
 \description{
-Remove failed wells
+Check if any wells have failed the ddPCR experiment by checking a series
+of quality control metrics.  If any well is deemed as a failure, all the droplets
+in that well will be assigned to the \emph{FAILED} cluster.\cr\cr
+\href{https://github.com/daattali/ddpcr#algorithm}{See the README online} for
+more information about the algorithm used to find failed wells.
+}
+\details{
+This function is recommended to be run as part of an analysis pipeline (ie.
+within the \code{\link[ddpcr]{analyze}} function) rather than being called
+directly.
+}
+\note{
+This is an S3 generic, which means that different ddPCR plate types can
+implement this function differently.
+\href{https://github.com/daattali/ddpcr#extend}{See the README online} for
+more information on how to implement custom ddPCR plate types.
+}
+\seealso{
+\code{\link[ddpcr]{analyze}}
 }
 

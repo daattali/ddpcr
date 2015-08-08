@@ -1,51 +1,91 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-# Determine if a well had a successful ddPCR run
-#
-# Args:
-#   .wellData: The dataframe containing all the droplets
-#   .well: The id of the well of interest
-#   .plot: If true, plot the result (used mainly for development/debugging)
-#
-# Returns:
-#   list:
-#     success: TRUE if the well had a successful run, FALSE otherwise
-#
-# Algorithm:
-#   The goal here is to see if there is anything that is clearly wrong with the
-#   data in the well.  First, I ensure enough drops were loaded (BioRad claims 
-#   20k, we see 12k-17k usually) - less than 5000 (PARAMS$REMOVE_FAILURES$TOTAL_DROPS_T)
-#   is considered a failed run. Next I make a few basic sanity checks about the 
-#   general look of the data in clusters.
-#   If we were to normalize all HEX and FAM values to be between 0-1, we'd expect to
-#   always have a very large cluster of empty drops near (0,0), a cluster of
-#   wild-type drops near (1,1), and possibly a cluster of mutant drops neat (0,1).
-#   Using these assumptions on the data, we make the following three heuristic
-#   checks after fitting a mixture of 2 normal distributions in the FAM values
-#   of all the drops:
-#     - The centers (mu's) of the two populations need to be far enough (this
-#       if checked by seeing if the larger center is at least twice the value of the
-#       lower center.  If it is not, that usually indicates that both normal populations
-#       are really the same cluster)
-#     - The lower population cannot have too few drops (lambda < 0.3)
-#       (PARAMS$REMOVE_FAILURES$EMPTY_LAMBDA_LOW_T), as that means there is no
-#       empty cluster.  Likewise, there shouldn't be too many drops (lambda > 0.99)
-#       (PARAMS$REMOVE_FAILURES$EMPTY_LAMBDA_HIGH_T), as that means there are not
-#       enough drops with daTA
-#' Determine is a well was a success or failure
+#' Remove failed wells
+#' 
+#' Check if any wells have failed the ddPCR experiment by checking a series
+#' of quality control metrics.  If any well is deemed as a failure, all the droplets
+#' in that well will be assigned to the \emph{FAILED} cluster.\cr\cr
+#' \href{https://github.com/daattali/ddpcr#algorithm}{See the README online} for
+#' more information about the algorithm used to find failed wells.
+#' 
+#' This function is recommended to be run as part of an analysis pipeline (ie.
+#' within the \code{\link[ddpcr]{analyze}} function) rather than being called
+#' directly.
+#' 
+#' @param plate A ddPCR plate.
+#' @return A ddPCR plate with the droplets in failed wells marked as failed. The plate's
+#' metadata will have a new variable \code{success} which will be \code{FALSE}
+#' for any failed well and \code{TRUE} for all others.
+#' @seealso \code{\link[ddpcr]{analyze}}
+#' @note This is an S3 generic, which means that different ddPCR plate types can
+#' implement this function differently. 
+#' \href{https://github.com/daattali/ddpcr#extend}{See the README online} for
+#' more information on how to implement custom ddPCR plate types.
+#' @export
+remove_failures <- function(plate) {
+  UseMethod("remove_failures")
+}
+
+#' Remove failed wells
+#' @export
+remove_failures.ddpcr_plate <- function(plate) {
+  CURRENT_STEP <- plate %>% step('REMOVE_FAILURES')
+  plate %>% check_step(CURRENT_STEP, TRUE)
+  step_begin("Identifying failed wells")
+  
+  data <- plate_data(plate)
+  
+  # ---
+  
+  # check every well to see if it failed
+  well_success_map <-
+    vapply(
+      wells_used(plate),
+      function(x) is_well_success(plate, x),
+      logical(1)
+    ) %>%
+    named_vec_to_df("success")
+  
+  # add the success/failed status of each well to the plate's metadata
+  meta <-
+    merge_dfs_overwrite_col(plate_meta(plate),
+                            well_success_map,
+                            "success") %>%
+    arrange_meta
+  
+  # set the cluster to failed for every droplet in a failed well
+  CLUSTER_FAILED <- plate %>% cluster('FAILED')
+  failed_wells <-
+    well_success_map %>%
+    dplyr::filter_(~ !success) %>%
+    .[['well']]
+  failed_idx <- 
+    (data[['well']] %in% failed_wells) & (data[['cluster']] <= CLUSTER_FAILED)
+  data[failed_idx, 'cluster'] <- CLUSTER_FAILED  
+  
+  # ---
+  
+  plate_meta(plate) <- meta
+  plate_data(plate) <- data
+  status(plate) <- CURRENT_STEP
+  step_end()
+  
+  plate
+}
+
+#' Determine if a well had a successful ddPCR run
+#' @return \code{FALSE} if there are obvious quality problems with the well that
+#' suggest the ddPCR run failed; \code{TRUE} otherwise.
 #' @export
 #' @keywords internal
 is_well_success <- function(plate, well_id) {
   UseMethod("is_well_success")
 }
 
-#' Algorithm for determining if a single well failed
-#' 
+#' Determine if a well had a successful ddPCR run
 #' @export
-#' @keywords internal
 is_well_success.ddpcr_plate <- function(plate, well_id) {
-  
   well_data <- get_single_well(plate, well_id, empty = TRUE)
 
   # if this well doesn't actually have data (or is an invalid well) return NA
@@ -60,10 +100,14 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
   
   set.seed(SEED)
   
-  # Use kmeans to fit two clusters into the 2D data
+  # fit two clusters into the 2D data
   kmeans <- kmeans(well_data, 2)
+  
+  # extract the centers of the two clusters as a 'point2d' object
   centers <- kmeans$centers %>% t %>% as.data.frame %>% lapply(point2d)
+  # calculate the distance from each cluster center to the origin
   distances <- lapply(centers, diff) %>% unlist
+  # determine which cluster is closer to the origin
   smaller_center_idx <- distances %>% which.min
   
   # Check if the two cluster centers are very close to each other
@@ -71,6 +115,7 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
     return(FALSE)
   }
   
+  # lambda = fraction of drops that are in the cluster
   smaller_lambda <- kmeans$size[[smaller_center_idx]] / sum(kmeans$size)
   
   # Make sure we found a significant empty cluster
@@ -84,58 +129,4 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
   }
   
   return(TRUE)
-}
-
-#' Remove failed wells
-#' @export
-remove_failures <- function(plate) {
-  UseMethod("remove_failures")
-}
-
-#' Removing failed wells
-#' 
-#' The algorithm for removing failed wells from a plate
-#' 
-#' @export
-#' @keywords internal
-remove_failures.ddpcr_plate <- function(plate) {
-  CURRENT_STEP <- plate %>% step('REMOVE_FAILURES')
-  plate %>% check_step(CURRENT_STEP, TRUE)
-  step_begin("Identifying failed wells")
-  
-  data <- plate_data(plate)
-  
-  # ---
-
-  well_success_map <-
-    vapply(
-      wells_used(plate), # check every well if it failed
-      function(x) is_well_success(plate, x),
-      logical(1)
-    ) %>%
-    named_vec_to_df("success")
-
-  meta <-
-    merge_dfs_overwrite_col(plate_meta(plate),
-                            well_success_map,
-                            "success") %>%
-    arrange_meta
-
-  CLUSTER_FAILED <- plate %>% cluster('FAILED')
-  failed_wells <-
-    well_success_map %>%
-    dplyr::filter_(~ !success) %>%
-    .[['well']]
-  failed_idx <- 
-    (data[['well']] %in% failed_wells) & (data[['cluster']] <= CLUSTER_FAILED)
-  data[failed_idx, 'cluster'] <- CLUSTER_FAILED  
-    
-  # ---
-  
-  plate_meta(plate) <- meta
-  plate_data(plate) <- data
-  status(plate) <- CURRENT_STEP
-  step_end()
-
-  plate
 }
