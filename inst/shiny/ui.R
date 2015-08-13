@@ -10,8 +10,8 @@ source(file.path("ui", "helpers.R"))
 tagList(
   useShinyjs(),
   tags$head(
-    includeScript(file.path("www", 'ddpcr.js')),
-    includeCSS(file.path("www", 'style.css'))
+    tags$script(src = "ddpcr.js"),
+    tags$link(href = "style.css", rel = "stylesheet")
   ),
   div(id = "loading-content", h1("Loading...")),
   
