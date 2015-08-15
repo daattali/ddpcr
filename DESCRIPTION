@@ -10,17 +10,18 @@ Depends:
     R (>= 3.1.0)
 Imports:
     dplyr (>= 0.4.0),
-    DT (>= 0.1),
     ggplot2 (>= 1.0.0),
     lazyeval (>= 0.1.10),
     magrittr (>= 1.5),
     mixtools (>= 1.0.2),
-    shiny (>= 0.11.0),
-    shinyjs (>= 0.0.6.4),
-    readr (>= 0.1.0)
+    plyr (>= 1.8.1),
+    readr (>= 0.1.0),
+    shiny (>= 0.11.0)
 Suggests:
+    DT (>= 0.1),
     knitr (>= 1.7),
-    testthat (>= 0.9.1)
+    testthat (>= 0.9.1),
+    shinyjs (>= 0.0.6.4)
 License: file LICENSE
 LazyData: true
 VignetteBuilder: knitr

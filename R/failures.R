@@ -28,6 +28,7 @@ remove_failures <- function(plate) {
 }
 
 #' Remove failed wells
+#' @inheritParams remove_failures
 #' @export
 remove_failures.ddpcr_plate <- function(plate) {
   CURRENT_STEP <- plate %>% step('REMOVE_FAILURES')
@@ -85,6 +86,7 @@ is_well_success <- function(plate, well_id) {
 
 #' Determine if a well had a successful ddPCR run
 #' @export
+#' @keywords internal
 is_well_success.ddpcr_plate <- function(plate, well_id) {
   well_data <- get_single_well(plate, well_id, empty = TRUE)
 

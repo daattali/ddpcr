@@ -11,6 +11,12 @@
 #
 # Returns:
 #   Dataframe containing only droplet data for the given well
+
+#' Get droplet data from a well
+#' 
+#' @param plate 
+#' @keywords internal
+#' @export
 get_single_well <- function(plate, well_id,
                             empty = FALSE, outliers = FALSE, clusters = FALSE) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
@@ -87,6 +93,7 @@ lol_to_df <- function(lol, name = "well") {
   lol[[name]] <- row.names(lol)
   lol <- move_front(lol, name)
   lol[] <- lapply(lol, unlist)
+  row.names(lol) <- NULL
   lol
 }
 
@@ -95,7 +102,7 @@ lol_to_df <- function(lol, name = "well") {
 named_vec_to_df <- function(v, name, rowname = "well") {
   v <- as.data.frame(v)
   colnames(v) <- name
-  v[[rowname]] <- rownames(v)
+  v[[rowname]] <- row.names(v)
   v
 }
 

@@ -9,6 +9,11 @@ positive_dim(plate)
 
 positive_dim(plate) <- value
 }
+\arguments{
+\item{plate}{A ddPCR plate.}
+
+\item{value}{The dimension to set as the positive dimension ("X" or "Y")}
+}
 \description{
 Get or set the dimension (X or Y) that has a high intensity in all non-empty
 drops in a \code{PPNP_ASSAY}.

@@ -72,6 +72,7 @@ get_outlier_cutoff.ddpcr_plate <- function(plate) {
 # Returns:
 #   Dataframe with outliers removed
 #' Remove outlier droplets
+#' @param plate A ddPCR plate.
 #' @export
 remove_outliers <- function(plate) {
   UseMethod("remove_outliers")
@@ -80,9 +81,8 @@ remove_outliers <- function(plate) {
 #' Remove outlier droplets
 #' 
 #' The algorithm for removing outlier droplets from a plate
-#' 
+#' @inheritParams remove_outliers
 #' @export
-#' @keywords internal
 remove_outliers.ddpcr_plate <- function(plate) {
   CURRENT_STEP <- plate %>% step('REMOVE_OUTLIERS')
   plate %>% check_step(CURRENT_STEP, TRUE)

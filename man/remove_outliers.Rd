@@ -6,6 +6,9 @@
 \usage{
 remove_outliers(plate)
 }
+\arguments{
+\item{plate}{A ddPCR plate.}
+}
 \description{
 Remove outlier droplets
 }

@@ -6,8 +6,10 @@
 \usage{
 \method{remove_outliers}{ddpcr_plate}(plate)
 }
+\arguments{
+\item{plate}{A ddPCR plate.}
+}
 \description{
 The algorithm for removing outlier droplets from a plate
 }
-\keyword{internal}
 

@@ -83,6 +83,8 @@ define_params.ppnp_assay <- function(plate) {
 #' 
 #' Get or set the dimension (X or Y) that has a high intensity in all non-empty
 #' drops in a \code{PPNP_ASSAY}.
+#' @param plate A ddPCR plate.
+#' @param value The dimension to set as the positive dimension ("X" or "Y")
 #' @seealso
 #' \code{\link[ddpcr]{PPNP_ASSAy}},
 #' \code{\link[ddpcr]{variable_dim}}
@@ -104,6 +106,7 @@ positive_dim <- function(plate) {
 `positive_dim<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("ppnp_assay"))
   value %<>% toupper
+  stopifnot(value == "X" || value == "Y")
   params(plate, 'GENERAL', 'POSITIVE_DIMENSION') <- value
   plate
 }

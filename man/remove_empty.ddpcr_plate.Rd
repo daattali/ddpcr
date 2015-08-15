@@ -6,6 +6,9 @@
 \usage{
 \method{remove_empty}{ddpcr_plate}(plate)
 }
+\arguments{
+\item{plate}{A ddPCR plate.}
+}
 \description{
 Remove empty droplets
 }

@@ -26,6 +26,7 @@ remove_empty <- function(plate) {
 }
 
 #' Remove empty droplets
+#' @inheritParams remove_empty
 #' @export
 remove_empty.ddpcr_plate <- function(plate) {
   CURRENT_STEP <- plate %>% step('REMOVE_EMPTY')
@@ -126,6 +127,7 @@ get_empty_cutoff <- function(plate, well_id) {
 
 #' Get the cutoff for empty droplets in a well
 #' @export
+#' @keywords internal
 get_empty_cutoff.ddpcr_plate <- function(plate, well_id) {
   well_data <- get_single_well(plate, well_id, empty = TRUE)
   
