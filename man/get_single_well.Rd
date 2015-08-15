@@ -8,7 +8,19 @@ get_single_well(plate, well_id, empty = FALSE, outliers = FALSE,
   clusters = FALSE)
 }
 \arguments{
-\item{plate}{}
+\item{plate}{A ddPCR plate.}
+
+\item{well_id}{A well ID.}
+
+\item{empty}{Whether or not to include empty droplets.}
+
+\item{outliers}{Whether or not to include outlier droplets.}
+
+\item{clusters}{Whether or not to include cluster information.}
+}
+\value{
+A dataframe with the fluorescence value of all droplets in the given
+well.
 }
 \description{
 Get droplet data from a well

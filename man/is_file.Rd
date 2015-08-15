@@ -6,6 +6,9 @@
 \usage{
 is_file(path)
 }
+\arguments{
+\item{path}{A file path to test}
+}
 \description{
 Determine if a given path is a valid file
 }

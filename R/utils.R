@@ -14,7 +14,13 @@
 
 #' Get droplet data from a well
 #' 
-#' @param plate 
+#' @param plate A ddPCR plate.
+#' @param well_id A well ID.
+#' @param empty Whether or not to include empty droplets.
+#' @param outliers Whether or not to include outlier droplets.
+#' @param clusters Whether or not to include cluster information.
+#' @return A dataframe with the fluorescence value of all droplets in the given
+#' well.
 #' @keywords internal
 #' @export
 get_single_well <- function(plate, well_id,
@@ -78,7 +84,11 @@ cat0 <- function(...) {
   x >= min(rng) & x <= max(rng)
 }
 
-#' Convert a list of lists outputted from vapply to dataframe
+#' Convert a list of lists returned from vapply to a dataframe
+#'
+#' When running a \code{vapply} function and each element returns a list with
+#' multiple values, the return value is a list of lists.  This function can be
+#' used to convert that return value into a data.frame.
 #' @param lol List of lists that is a result of a vapply
 #' @param name Column name to use for the name of each list
 #' @examples 
@@ -86,6 +96,7 @@ cat0 <- function(...) {
 #'        function(x) list(low = x, up = toupper(x)),
 #'        list(character(1), character(1))) %>%
 #'   lol_to_df("key")
+#' @seealso \code{\link[ddpcr]{named_vec_to_df}}
 #' @keywords internal
 #' @export
 lol_to_df <- function(lol, name = "well") {
@@ -97,6 +108,23 @@ lol_to_df <- function(lol, name = "well") {
   lol
 }
 
+#' Convert a named vector returned from vapply to a dataframe
+#' 
+#' When running a \code{vapply} function and each element returns a single value,
+#' the return value is a named vector.  This function can be used to convert
+#' that return value into a data.frame. Similar to \code{\link[ddpcr]{lol_to_df}},
+#' but because the output format from \code{vapply} is different depending on
+#' whether a single value or multiple values are returned, a different function
+#' needs to be used.
+#' @param v Named vector that is a result of a vapply
+#' @param name Column name to use for the name of each element
+#' @param rowname Column name to use for the values of the rownames
+#' @examples 
+#' vapply(c("a", "b", "c"),
+#'        toupper,
+#'        character(1)) %>%
+#'   named_vec_to_df("capital", "letter")
+#' @seealso \code{\link[ddpcr]{lol_to_df}}
 #' @keywords internal
 #' @export
 named_vec_to_df <- function(v, name, rowname = "well") {
@@ -198,6 +226,8 @@ merge_dfs_overwrite_col <- function(olddf, newdf, cols, bycol = "well") {
 
 #' Get the indices of the local maxima in a list of numbers
 #' @param x Vector of numbers.
+#' @return A vector containing the indices of the elements that are local maxima
+#' in the given input.
 #' @examples 
 #' local_maxima(c(1, 5, 3, 2, 4, 3))
 #' @keywords internal
@@ -215,6 +245,8 @@ local_maxima <- function(x) {
 
 #' Get the indices of the local minima in a list of numbers
 #' @param x Vector of numbers.
+#' @return A vector containing the indices of the elements that are local minima
+#' in the given input.
 #' @examples 
 #' local_minima(c(1, 5, 3, 2, 4, 3))
 #' @keywords internal
@@ -224,6 +256,7 @@ local_minima <- function(x) {
 }
 
 #' Determine if a given path is a valid directory
+#' @param path A file path to test
 #' @keywords internal
 #' @export
 is_dir <- function(path) {
@@ -239,6 +272,7 @@ is_dir <- function(path) {
 }
 
 #' Determine if a given path is a valid file
+#' @param path A file path to test
 #' @keywords internal
 #' @export
 is_file <- function(path) {
@@ -254,7 +288,8 @@ is_file <- function(path) {
 }
 
 #' Representation of a 2D point
-#' @param x 2-element numeric vector.
+#' @param x A 2-element numeric vector.
+#' @return An object of class \code{point2d} with the given coordinates.
 #' @examples 
 #' point2d(c(10, 20))
 #' @keywords internal

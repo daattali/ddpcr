@@ -7,31 +7,31 @@ test_that("subset works", {
   expect_identical(plate %>% subset %>% wells_used,
                    plate %>% wells_used)
   expect_identical(plate %>% subset(NULL) %>% wells_used,
-                   character(0))
+                   plate %>% wells_used)
   expect_identical(plate %>% subset("D08:D10") %>% wells_used,
-                   character(0))
+                   plate %>% wells_used)
   expect_identical(plate %>% subset("C01") %>% wells_used,
                    "C01")
-  expect_identical(plate %>% subset(c("C01", "C09")) %>% wells_used,
-                   c("C01", "C09"))
-  expect_identical(plate %>% subset(c("C01", "C09")) %>% wells_used,
-                   c("C01", "C09"))
-  expect_identical(plate %>% subset("C01, C09") %>% wells_used,
-                   c("C01", "C09"))
-  expect_identical(plate %>% subset("C01:C09") %>% wells_used,
-                   c("C01", "C06", "C09"))
-  expect_identical(plate %>% subset("C01:C09, B01") %>% wells_used,
-                   c("B01", "C01", "C06", "C09"))
+  expect_identical(plate %>% subset(c("C01", "C08")) %>% wells_used,
+                   c("C01", "C08"))
+  expect_identical(plate %>% subset(c("C01", "C08")) %>% wells_used,
+                   c("C01", "C08"))
+  expect_identical(plate %>% subset("C01, C08") %>% wells_used,
+                   c("C01", "C08"))
+  expect_identical(plate %>% subset("C01:C08") %>% wells_used,
+                   c("C01", "C06", "C08"))
+  expect_identical(plate %>% subset("C01:C08, B01") %>% wells_used,
+                   c("B01", "C01", "C06", "C08"))
   expect_identical(plate %>% subset("B01:C03") %>% wells_used,
                    c("B01", "C01"))
   expect_identical(plate %>% subset("B01:C06") %>% wells_used,
                    c("B01", "B06", "C01", "C06"))
-  expect_identical(plate %>% subset("B01, B06:C09") %>% wells_used,
-                   c("B01", "B06", "C06", "C09"))
-  expect_identical(plate %>% subset("B01, B06:C06, C09") %>% wells_used,
-                   c("B01", "B06", "C06", "C09"))
-  expect_identical(plate %>% subset("B01:B06, C01:C06, C09") %>% wells_used,
-                   c("B01", "B06", "C01", "C06", "C09"))
+  expect_identical(plate %>% subset("B01, B06:C08") %>% wells_used,
+                   c("B01", "B06", "C06", "C08"))
+  expect_identical(plate %>% subset("B01, B06:C06, C08") %>% wells_used,
+                   c("B01", "B06", "C06", "C08"))
+  expect_identical(plate %>% subset("B01:B06, C01:C06, C08") %>% wells_used,
+                   c("B01", "B06", "C01", "C06", "C08"))
   expect_identical(plate %>% subset(samples = "#1") %>% wells_used,
                    c("B01"))
   expect_identical(plate %>% subset(samples = c("#1", "#3")) %>% wells_used,

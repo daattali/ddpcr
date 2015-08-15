@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{lol_to_df}
 \alias{lol_to_df}
-\title{Convert a list of lists outputted from vapply to dataframe}
+\title{Convert a list of lists returned from vapply to a dataframe}
 \usage{
 lol_to_df(lol, name = "well")
 }
@@ -12,13 +12,18 @@ lol_to_df(lol, name = "well")
 \item{name}{Column name to use for the name of each list}
 }
 \description{
-Convert a list of lists outputted from vapply to dataframe
+When running a \code{vapply} function and each element returns a list with
+multiple values, the return value is a list of lists.  This function can be
+used to convert that return value into a data.frame.
 }
 \examples{
 vapply(c("a", "b", "c"),
        function(x) list(low = x, up = toupper(x)),
        list(character(1), character(1))) \%>\%
   lol_to_df("key")
+}
+\seealso{
+\code{\link[ddpcr]{named_vec_to_df}}
 }
 \keyword{internal}
 

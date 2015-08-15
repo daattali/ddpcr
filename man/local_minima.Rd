@@ -9,6 +9,10 @@ local_minima(x)
 \arguments{
 \item{x}{Vector of numbers.}
 }
+\value{
+A vector containing the indices of the elements that are local minima
+in the given input.
+}
 \description{
 Get the indices of the local minima in a list of numbers
 }

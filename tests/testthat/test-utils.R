@@ -117,3 +117,17 @@ test_that("lol_to_df works", {
     as.data.frame
   expect_identical(actual, expected)
 })
+
+test_that("named_vec_to_df works", {
+  actual <-
+    vapply(c("a", "b", "c"),
+           toupper,
+           character(1)) %>%
+    named_vec_to_df("capital", "letter")
+  expected <-
+    dplyr::data_frame(capital = factor(c("A", "B", "C")),
+                      letter = c("a", "b", "c")) %>%    
+    as.data.frame %>%
+    magrittr::set_rownames(c("a", "b", "c"))
+  expect_identical(actual, expected)
+})

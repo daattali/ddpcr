@@ -7,7 +7,10 @@
 point2d(x)
 }
 \arguments{
-\item{x}{2-element numeric vector.}
+\item{x}{A 2-element numeric vector.}
+}
+\value{
+An object of class \code{point2d} with the given coordinates.
 }
 \description{
 Representation of a 2D point

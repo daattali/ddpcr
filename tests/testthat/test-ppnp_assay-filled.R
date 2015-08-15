@@ -21,7 +21,4 @@ test_that("get_filled_drops works", {
   
   expect_identical(get_filled_drops(plate, "B06"),
                    readr::read_csv(file.path(dir, "B06_filled.CSV")))
-  
-  expect_identical(get_filled_drops(plate, "C09"),
-                   readr::read_csv(file.path(dir, "C09_filled.CSV")))
 })

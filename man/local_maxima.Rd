@@ -9,6 +9,10 @@ local_maxima(x)
 \arguments{
 \item{x}{Vector of numbers.}
 }
+\value{
+A vector containing the indices of the elements that are local maxima
+in the given input.
+}
 \description{
 Get the indices of the local maxima in a list of numbers
 }
