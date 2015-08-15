@@ -2,12 +2,12 @@
 % Please edit documentation in R/outliers.R
 \name{get_outlier_cutoff.ddpcr_plate}
 \alias{get_outlier_cutoff.ddpcr_plate}
-\title{Algorithm for determining the cutoff for outliers}
+\title{Get the cutoff for outliers}
 \usage{
 \method{get_outlier_cutoff}{ddpcr_plate}(plate)
 }
 \description{
-Algorithm for determining the cutoff for outliers
+Get the cutoff for outliers
 }
 \keyword{internal}
 

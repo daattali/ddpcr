@@ -6,6 +6,9 @@
 \usage{
 \method{remove_failures}{ddpcr_plate}(plate)
 }
+\arguments{
+\item{plate}{A ddPCR plate.}
+}
 \description{
 Remove failed wells
 }

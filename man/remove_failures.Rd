@@ -6,6 +6,9 @@
 \usage{
 remove_failures(plate)
 }
+\arguments{
+\item{plate}{A ddPCR plate.}
+}
 \value{
 A ddPCR plate with the droplets in failed wells marked as failed. The plate's
 metadata will have a new variable \code{success} which will be \code{FALSE}

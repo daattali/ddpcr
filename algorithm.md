@@ -31,3 +31,15 @@ of all the drops:
     empty cluster.  Likewise, there shouldn't be too many drops (lambda > 0.99)
     (PARAMS$REMOVE_FAILURES$EMPTY_LAMBDA_HIGH_T), as that means there are not
     enough drops with daTA
+    
+
+## outliers:
+
+The idea borrows from outlier detection in normal populations (looking for
+points that are further than k*IQR from the 1st/3rd quartiles), but since
+our data is highly skewed and non-normal, I use a small tweak.
+For each dimension ([FAM, HEX]): get the 1% (PARAMS$OUTLIERS$TOP_PERCENT) of
+drops that have the highest value in that dimension.  Calculate the IQR of the
+values only within these drops. Mark the outlier cutoff as the 3rd quantile
+plus 5 (PARAMS$OUTLIERS$CUTOFF_IQR) IQR
+Get the cutoff for outliers

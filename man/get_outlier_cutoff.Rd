@@ -6,6 +6,10 @@
 \usage{
 get_outlier_cutoff(plate)
 }
+\value{
+A named list with two elements, giving the cutoff for outliers in
+each dimension.
+}
 \description{
 Get the cutoff for outliers
 }

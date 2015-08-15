@@ -1,86 +1,32 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-# Determines the cutoffs for outliers on the plate.
-# Note this function is currently only being used on the whole plate and
-# thus determines outliers on a plate-level, but it can also be used to find
-# outliers in each well by passing only data from a single well
-#
-# Args:
-#   .wellData: The dataframe containing all the droplets
-#
-# Returns:
-#   list:
-#     HEX: the HEX value of the outlier cutoff
-#     FAM: the FAM value of the outlier cutoff
-#
-# Algorithm:
-#   The idea borrows from outlier detection in normal populations (looking for
-#   points that are further than k*IQR from the 1st/3rd quartiles), but since
-#   our data is highly skewed and non-normal, I use a small tweak.
-#   For each dimension ([FAM, HEX]): get the 1% (PARAMS$OUTLIERS$TOP_PERCENT) of
-#   drops that have the highest value in that dimension.  Calculate the IQR of the
-#   values only within these drops. Mark the outlier cutoff as the 3rd quantile
-#   plus 5 (PARAMS$OUTLIERS$CUTOFF_IQR) IQR
-#' Get the cutoff for outliers
-#' 
-#' @export
-#' @keywords internal
-get_outlier_cutoff <- function(plate) {
-  UseMethod("get_outlier_cutoff")
-}
-
-#' Algorithm for determining the cutoff for outliers
-#' 
-#' @export
-#' @keywords internal
-get_outlier_cutoff.ddpcr_plate <- function(plate) {
-  data <-
-    plate_data(plate) %>%
-    dplyr::filter_(~ well %in% wells_success(plate))
-  
-  x_var <- x_var(plate)
-  y_var <- y_var(plate)
-  top_y <- 
-    sort(data[[y_var]], decreasing = TRUE) %>%
-    head(nrow(data) / 100 * params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT'))
-  q_y <- quantile(top_y, c(.25, .75))
-  cutoff_y <-
-    (diff(q_y) * params(plate, 'REMOVE_OUTLIERS', 'CUTOFF_IQR') + q_y[2]) %>%
-    as.numeric
-  
-  top_x <- 
-    sort(data[[x_var]], decreasing = TRUE) %>%
-    head(nrow(data) / 100 * params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT'))
-  q_x <- quantile(top_x, c(.25, .75))
-  cutoff_x <-
-    (diff(q_x) * params(plate, 'REMOVE_OUTLIERS', 'CUTOFF_IQR') + q_x[2]) %>%
-    as.numeric
-  
-  result <- list()
-  result[[x_var]] <- cutoff_x
-  result[[y_var]] <- cutoff_y
-  
-  result
-}
-
-# Removes outlier drops from a plate
-#
-# Args:
-#   .wellData: The dataframe containing all the droplets
-#
-# Returns:
-#   Dataframe with outliers removed
 #' Remove outlier droplets
+#' 
+#' Identify droplets that have an abnormally high fluorescence intensity as
+#' outliers. Any such droplets will be assigned to the \emph{OUTLIER} cluster.\cr\cr
+#' \href{https://github.com/daattali/ddpcr#algorithm}{See the README online} for
+#' more information about the algorithm used to find outlier droplets.
+#' 
+#' This function is recommended to be run as part of an analysis pipeline (ie.
+#' within the \code{\link[ddpcr]{analyze}} function) rather than being called
+#' directly.
+#' 
 #' @param plate A ddPCR plate.
+#' @return A ddPCR plate with outlier droplets marked as outliers. The plate's
+#' metadata will have a new variable \code{drops_outlier} which will count the
+#' number of outlier droplets in each well.
+#' @seealso \code{\link[ddpcr]{analyze}}
+#' @note This is an S3 generic, which means that different ddPCR plate types can
+#' implement this function differently. 
+#' \href{https://github.com/daattali/ddpcr#extend}{See the README online} for
+#' more information on how to implement custom ddPCR plate types.
 #' @export
 remove_outliers <- function(plate) {
   UseMethod("remove_outliers")
 }
 
 #' Remove outlier droplets
-#' 
-#' The algorithm for removing outlier droplets from a plate
 #' @inheritParams remove_outliers
 #' @export
 remove_outliers.ddpcr_plate <- function(plate) {
@@ -91,16 +37,20 @@ remove_outliers.ddpcr_plate <- function(plate) {
   data <- plate_data(plate)
   
   # ---
-
+  
+  # get the cutoff for outliers for the whole plate in each dimension
   outlier_cutoff <- plate %>% get_outlier_cutoff
   cutoff_x <- outlier_cutoff[[x_var(plate)]]
   cutoff_y <- outlier_cutoff[[y_var(plate)]]
-
+  
+  # assign the OUTLIER cluster to any drops that have a fluorescence value
+  # above the cutoff
   CLUSTER_OUTLIER <- plate %>% cluster('OUTLIER')
   outlier_idx <-
     (data[[y_var(plate)]] > cutoff_y | data[[x_var(plate)]] > cutoff_x)
   data[outlier_idx, 'cluster'] <- CLUSTER_OUTLIER  
   
+  # count how many outlier drops are in each well and add it to the metadata
   drops_outlies_df <- dplyr::data_frame(
     "well" = plate %>% wells_used,
     "drops_outlier" = 0L)  
@@ -119,6 +69,53 @@ remove_outliers.ddpcr_plate <- function(plate) {
   plate_meta(plate) <- meta
   status(plate) <- CURRENT_STEP
   step_end()
-
+  
   plate
+}
+
+#' Get the cutoff for outliers
+#' @return A named list with two elements, giving the cutoff for outliers in
+#' each dimension.
+#' @export
+#' @keywords internal
+get_outlier_cutoff <- function(plate) {
+  UseMethod("get_outlier_cutoff")
+}
+
+#' Get the cutoff for outliers
+#' @export
+#' @keywords internal
+get_outlier_cutoff.ddpcr_plate <- function(plate) {
+  data <-
+    plate_data(plate) %>%
+    dplyr::filter_(~ well %in% wells_success(plate))
+  
+  x_var <- x_var(plate)
+  y_var <- y_var(plate)
+
+  # get the top 1% of values in the Y dimension
+  top_y <- 
+    sort(data[[y_var]], decreasing = TRUE) %>%
+    head(nrow(data) / 100 * params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT'))
+  # define the cutoff as the third quantile of the aforementioned top 1%
+  # plus 5 IQR
+  q_y <- quantile(top_y, c(.25, .75))
+  cutoff_y <-
+    (diff(q_y) * params(plate, 'REMOVE_OUTLIERS', 'CUTOFF_IQR') + q_y[2]) %>%
+    as.numeric
+  
+  # repeat above with the X dimension
+  top_x <- 
+    sort(data[[x_var]], decreasing = TRUE) %>%
+    head(nrow(data) / 100 * params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT'))
+  q_x <- quantile(top_x, c(.25, .75))
+  cutoff_x <-
+    (diff(q_x) * params(plate, 'REMOVE_OUTLIERS', 'CUTOFF_IQR') + q_x[2]) %>%
+    as.numeric
+  
+  result <- list()
+  result[[x_var]] <- cutoff_x
+  result[[y_var]] <- cutoff_y
+  
+  result
 }

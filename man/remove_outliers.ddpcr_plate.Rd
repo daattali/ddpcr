@@ -10,6 +10,6 @@
 \item{plate}{A ddPCR plate.}
 }
 \description{
-The algorithm for removing outlier droplets from a plate
+Remove outlier droplets
 }
 

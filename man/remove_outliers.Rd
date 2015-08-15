@@ -9,7 +9,29 @@ remove_outliers(plate)
 \arguments{
 \item{plate}{A ddPCR plate.}
 }
+\value{
+A ddPCR plate with outlier droplets marked as outliers. The plate's
+metadata will have a new variable \code{drops_outlier} which will count the
+number of outlier droplets in each well.
+}
 \description{
-Remove outlier droplets
+Identify droplets that have an abnormally high fluorescence intensity as
+outliers. Any such droplets will be assigned to the \emph{OUTLIER} cluster.\cr\cr
+\href{https://github.com/daattali/ddpcr#algorithm}{See the README online} for
+more information about the algorithm used to find outlier droplets.
+}
+\details{
+This function is recommended to be run as part of an analysis pipeline (ie.
+within the \code{\link[ddpcr]{analyze}} function) rather than being called
+directly.
+}
+\note{
+This is an S3 generic, which means that different ddPCR plate types can
+implement this function differently.
+\href{https://github.com/daattali/ddpcr#extend}{See the README online} for
+more information on how to implement custom ddPCR plate types.
+}
+\seealso{
+\code{\link[ddpcr]{analyze}}
 }
 
