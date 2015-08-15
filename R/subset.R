@@ -95,7 +95,7 @@ is_range <- function(x) {
   length(x) == 1 && grepl("[,:]", x)
 }
 
-#' Convert a list of ranges to a vector of its individual componenets
+#' Convert a list of ranges to a vector of its individual components
 #' @examples
 #' range_list_to_vec("A01")
 #' range_list_to_vec("A01:A04")

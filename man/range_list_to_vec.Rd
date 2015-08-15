@@ -2,12 +2,12 @@
 % Please edit documentation in R/subset.R
 \name{range_list_to_vec}
 \alias{range_list_to_vec}
-\title{Convert a list of ranges to a vector of its individual componenets}
+\title{Convert a list of ranges to a vector of its individual components}
 \usage{
 range_list_to_vec(rangel)
 }
 \description{
-Convert a list of ranges to a vector of its individual componenets
+Convert a list of ranges to a vector of its individual components
 }
 \examples{
 range_list_to_vec("A01")

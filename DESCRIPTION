@@ -21,7 +21,7 @@ Suggests:
     DT (>= 0.1),
     knitr (>= 1.7),
     testthat (>= 0.9.1),
-    shinyjs (>= 0.0.6.4)
+    shinyjs (>= 0.1.0)
 License: file LICENSE
 LazyData: true
 VignetteBuilder: knitr
