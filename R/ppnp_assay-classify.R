@@ -189,31 +189,30 @@ mark_clusters <- function(plate, wells) {
   CLUSTER_NEGATIVE <- plate %>% cluster('NEGATIVE')
   CLUSTERS_UNANALYZED <- unanalyzed_clusters(plate, 'RAIN')
   
-  data <- plate_data(plate)
-  data_env <- environment()
-  lapply(wells,
-    function(well_id) {
+  data <-
+    plate_data(plate) %>%
+    dplyr::group_by(well) %>%
+    dplyr::do({
+      well_data <- .
+      well_id = well_data[['well']][1]
+      if (!well_id %in% wells) {
+        return(well_data)
+      }
+      
       filled_border <- well_info(plate, well_id, 'filled_border')
       negative_border <- well_info(plate, well_id, meta_var_name(plate, 'negative_border'))
       
-      # I'm not doing this using dplyr (mutate) because it's much slower
-      # this code is a bit ugly but it's much faster to keep overwriting
-      # the data rather than create many small dataframes to merge
-      classifiable_idx <-
-        data[['well']] == well_id &
-        (data[['cluster']] %in% CLUSTERS_UNANALYZED)
-      filled_idx <- classifiable_idx & data[[positive_var]] >= filled_border
-      negative_idx <- filled_idx & data[[variable_var]] <= negative_border
-      positive_idx <- filled_idx & data[[variable_var]] > negative_border
+      classifiable_idx <- well_data[['cluster']] %in% CLUSTERS_UNANALYZED
+      filled_idx <- classifiable_idx & well_data[[positive_var]] >= filled_border
+      negative_idx <- filled_idx & well_data[[variable_var]] <= negative_border
+      positive_idx <- filled_idx & well_data[[variable_var]] > negative_border
       
-      data[classifiable_idx, 'cluster'] <- CLUSTER_RAIN
-      data[negative_idx, 'cluster'] <- CLUSTER_NEGATIVE
-      data[positive_idx, 'cluster'] <- CLUSTER_POSITIVE
-      assign("data", data, envir = data_env)
-      
-      NULL
-    }
-  ) %>% invisible
+      well_data[classifiable_idx, 'cluster'] <- CLUSTER_RAIN
+      well_data[negative_idx, 'cluster'] <- CLUSTER_NEGATIVE
+      well_data[positive_idx, 'cluster'] <- CLUSTER_POSITIVE
+      well_data
+    }) %>%
+    dplyr::ungroup()
   
   plate_data(plate) <- data
   plate

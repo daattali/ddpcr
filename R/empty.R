@@ -45,42 +45,35 @@ remove_empty.ddpcr_plate <- function(plate) {
     lol_to_df
   
   # set the cluster to EMPTY for every empty droplet in every well
-  data <- plate_data(plate)
-  data_env <- environment()
   x_var <- x_var(plate)
   y_var <- y_var(plate)
   CLUSTERS_UNANALYZED <- unanalyzed_clusters(plate, 'EMPTY')
-  # Using an lapply for side effects rather than its return value for
-  # performance reasons - we're doing a lot of large dataframe manipulations
-  # and it's much faster to keep overwriting the same dataframe rather than
-  # create many small dataframes, return them all, and then merge the original
-  # data using those.
-  # To try to make this less frowned upon, instead of using `<<-` to overwrite
-  # the data, we use `assign` by capturing the current environment.
-  lapply(
-    empty_cutoff_map[['well']],
-    function(well_id) {
+  data <-
+    plate_data(plate) %>%
+    dplyr::group_by(well) %>%
+    dplyr::do({
+      well_data <- .
+      well_id = well_data[['well']][1]
+      if (!well_id %in% empty_cutoff_map[['well']]) {
+        return(well_data)
+      }
+      
+      # find the cutoffs for this well and mark all droplets below as empty
       cutoffs <- empty_cutoff_map %>% dplyr::filter_(~ well == well_id)
       cutoff_x <- cutoffs[['x']]
       cutoff_y <- cutoffs[['y']]
       
-      # not doing this using dplyr::mutate because it's much slower
-      empty_idx <-
-        data[['well']] == well_id &
-        (data[['cluster']] %in% CLUSTERS_UNANALYZED)
+      empty_idx <- well_data[['cluster']] %in% CLUSTERS_UNANALYZED
       if (!is.na(cutoff_x)) {
-        empty_idx <- empty_idx & data[[x_var]] < cutoff_x
+        empty_idx <- empty_idx & well_data[[x_var]] < cutoff_x
       }
       if (!is.na(cutoff_y)) {
-        empty_idx <- empty_idx & data[[y_var]] < cutoff_y
+        empty_idx <- empty_idx & well_data[[y_var]] < cutoff_y
       }
-      
-      data[empty_idx, 'cluster'] <- plate %>% cluster('EMPTY')
-      assign("data", data, envir = data_env)
-      
-      NULL
-    }
-  ) %>% invisible
+      well_data[empty_idx, 'cluster'] <- plate %>% cluster('EMPTY')
+      well_data
+    }) %>%
+    dplyr::ungroup()
   
   # calculate a few metadata variables
   meta <-
@@ -141,11 +134,11 @@ get_empty_cutoff.ddpcr_plate <- function(plate, well_id) {
   smaller_comp_y <- mixmdl_y$mu %>% which.min
   cutoff_y <-
     ( mixmdl_y$mu[smaller_comp_y] +
-      params(plate, 'REMOVE_EMPTY', 'CUTOFF_SD') * mixmdl_y$sigma[smaller_comp_y]
+        params(plate, 'REMOVE_EMPTY', 'CUTOFF_SD') * mixmdl_y$sigma[smaller_comp_y]
     ) %>%
     ceiling %>%
     as.integer
-
+  
   # repeat the above along the X dimension
   set.seed(SEED)
   quiet(
@@ -154,7 +147,7 @@ get_empty_cutoff.ddpcr_plate <- function(plate, well_id) {
   smaller_comp_x <- mixmdl_x$mu %>% which.min
   cutoff_x <-
     ( mixmdl_x$mu[smaller_comp_x] +
-      params(plate, 'REMOVE_EMPTY', 'CUTOFF_SD') * mixmdl_x$sigma[smaller_comp_x]
+        params(plate, 'REMOVE_EMPTY', 'CUTOFF_SD') * mixmdl_x$sigma[smaller_comp_x]
     ) %>%
     ceiling %>%
     as.integer  
