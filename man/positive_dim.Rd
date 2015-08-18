@@ -15,8 +15,9 @@ positive_dim(plate) <- value
 \item{value}{The dimension to set as the positive dimension ("X" or "Y")}
 }
 \description{
-Get or set the dimension (X or Y) that has a high intensity in all non-empty
-drops in a \code{PNPP_EXPERIMENT}.
+Get or set the positive dimension (X or Y), which is defined as the dimension
+that has a high fluorescence intensity in all non-empty drops in a
+\code{pnpp_experiment} plate.
 }
 \examples{
 dir <- system.file("sample_data", "small", package = "ddpcr")

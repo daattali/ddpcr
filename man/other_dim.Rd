@@ -4,7 +4,7 @@
 \alias{other_dim}
 \title{Given an axis (X or Y), return the other}
 \usage{
-other_dim(dim)
+other_dim(dim = c("X", "Y"))
 }
 \description{
 Given an axis (X or Y), return the other

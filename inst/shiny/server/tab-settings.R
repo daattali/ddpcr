@@ -7,7 +7,7 @@ observeEvent(dataValues$plate, {
   updateTextInput(session, "settingsName", value = dataValues$plate %>% name)
   updateTextInput(session, "settingsXvar", value = dataValues$plate %>% x_var)
   updateTextInput(session, "settingsYvar", value = dataValues$plate %>% y_var)
-  if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
+  if (type(dataValues$plate) == plate_types$custom_thresholds) {
     updateTextInput(session, "settingsXThreshold", value = dataValues$plate %>% x_threshold)
     updateTextInput(session, "settingsYThreshold", value = dataValues$plate %>% y_threshold)
   }
@@ -31,7 +31,7 @@ observeEvent(input$updateBasicSettings, {
     x_var(dataValues$plate) <- input$settingsXvar
     y_var(dataValues$plate) <- input$settingsYvar
     
-    if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
+    if (type(dataValues$plate) == plate_types$custom_thresholds) {
       x_threshold(dataValues$plate) <- input$settingsXThreshold
       y_threshold(dataValues$plate) <- input$settingsYThreshold
     }

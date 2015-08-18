@@ -22,6 +22,7 @@ more information on plate types.
 dir <- system.file("sample_data", "small", package = "ddpcr")
 plate <- new_plate(dir, type = plate_types$fam_positive_pnpp)
 type(plate)
+plate \%>\% analyze \%>\% plot
 }
 }
 \seealso{

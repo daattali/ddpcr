@@ -25,6 +25,7 @@
 #' \code{\link[ddpcr]{plate_types}}
 #' \code{\link[ddpcr]{fam_positive_pnpp}}
 #' \code{\link[ddpcr]{hex_positive_pnpp}}
+#' \code{\link[ddpcr]{pnpp_experiment}}
 #' @name wildtype_mutant_pnpp
 #' @usage plate_types$wildtype_mutant_pnpp
 #' @examples 
@@ -37,13 +38,13 @@ NULL
 
 plate_types[['wildtype_mutant_pnpp']] <- "wildtype_mutant_pnpp"
 
-#' Parent plate type
+#' Parent plate type of wildtype/mutant PNPP
 #' @inheritParams parent_plate_type
 parent_plate_type.wildtype_mutant_pnpp <- function(plate) {
   "pnpp_experiment"
 }
 
-#' Define plate type parameters
+#' Define plate type parameters for wildtype/mutant PNPP
 #' @inheritParams define_params
 define_params.wildtype_mutant_pnpp <- function(plate) {
   params <- NextMethod("define_params")
@@ -83,7 +84,7 @@ wells_wildtype <- function(plate) {
 #' Get mutant wells
 #' 
 #' After a ddPCR plate of type \code{wildtype_mutant_pnpp} has been analyzed,
-#' get the wells that were deemed as mutant
+#' get the wells that were deemed as mutant.
 #' @param plate A ddPCR plate.
 #' @return Character vector with well IDs of mutant wells
 #' @seealso \code{\link[ddpcr]{wildtype_mutant_pnpp}}

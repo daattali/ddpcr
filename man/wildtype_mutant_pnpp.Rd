@@ -37,5 +37,6 @@ type(plate)
 \code{\link[ddpcr]{plate_types}}
 \code{\link[ddpcr]{fam_positive_pnpp}}
 \code{\link[ddpcr]{hex_positive_pnpp}}
+\code{\link[ddpcr]{pnpp_experiment}}
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/type-wildtype_mutant_pnpp.R
 \name{parent_plate_type.wildtype_mutant_pnpp}
 \alias{parent_plate_type.wildtype_mutant_pnpp}
-\title{Parent plate type}
+\title{Parent plate type of wildtype/mutant PNPP}
 \usage{
 \method{parent_plate_type}{wildtype_mutant_pnpp}(plate)
 }
@@ -10,6 +10,6 @@
 \item{plate}{A ddPCR plate}
 }
 \description{
-Parent plate type
+Parent plate type of wildtype/mutant PNPP
 }
 

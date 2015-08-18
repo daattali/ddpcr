@@ -83,7 +83,7 @@ tabPanel(
                   checkboxInput("plotParam_superimpose", "Superimpose all data in one panel", FALSE),
                   checkboxInput("plotParam_show_full_plate", "Show full plate", FALSE),
                   div(
-                    `data-ddpcr-type` = CROSSHAIR_THRESHOLDS,
+                    `data-ddpcr-type` = plate_types$custom_thresholds,
                     checkboxInput("plotParam_show_thresholds", "Show threshold borders", TRUE),
                     selectInput("plotParam_col_thresholds", "Threshold borders colour",
                                 allCols, "black")

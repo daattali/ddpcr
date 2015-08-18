@@ -10,8 +10,9 @@ variable_dim(plate)
 variable_dim(plate) <- value
 }
 \description{
-Get or set the dimension (X or Y) that can have both high and low intensities
-in the non-empty drops in a \code{plate_types$pnpp_experiment}.
+Get or set the variable dimension (X or Y), which is defined as the dimension
+that can have both high and low fluorescence intensities in the non-empty
+drops in a \code{pnpp_experiment} plate.
 }
 \examples{
 dir <- system.file("sample_data", "small", package = "ddpcr")

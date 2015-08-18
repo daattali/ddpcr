@@ -20,10 +20,11 @@ DEFAULT_PLATE_META <-
 #' @seealso \code{\link[ddpcr]{new_plate}}
 #' \code{\link[ddpcr]{fam_positive_pnpp}}
 #' \code{\link[ddpcr]{hex_positive_pnpp}}
-#' \code{\link[ddpcr]{crosshair_thresholds}}
+#' \code{\link[ddpcr]{custom_thresholds}}
 #' \code{\link[ddpcr]{pnpp_experiment}}
 #' \code{\link[ddpcr]{wildtype_mutant_pnpp}}
 #' \code{\link[ddpcr]{ddpcr_plate}}
+#' \code{\link[ddpcr]{type}}
 #' @format NULL 
 #' @usage NULL
 #' @export

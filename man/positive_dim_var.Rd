@@ -2,13 +2,12 @@
 % Please edit documentation in R/type-pnpp_experiment.R
 \name{positive_dim_var}
 \alias{positive_dim_var}
-\title{Name of variable of positive dimension in PNPP experiment}
+\title{Name of dye in positive dimension in PNPP experiment}
 \usage{
 positive_dim_var(plate)
 }
 \description{
-Get the name of the variable that is along the dimension where all filled
-drops should be positive.
+Get the name of the dye that is along the positive dimension.
 }
 \seealso{
 \code{\link[ddpcr]{pnpp_experiment}},

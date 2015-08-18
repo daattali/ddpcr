@@ -14,7 +14,7 @@ Character vector with well IDs of mutant wells
 }
 \description{
 After a ddPCR plate of type \code{wildtype_mutant_pnpp} has been analyzed,
-get the wells that were deemed as mutant
+get the wells that were deemed as mutant.
 }
 \examples{
 \dontrun{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/type-wildtype_mutant_pnpp.R
 \name{define_params.wildtype_mutant_pnpp}
 \alias{define_params.wildtype_mutant_pnpp}
-\title{Define plate type parameters}
+\title{Define plate type parameters for wildtype/mutant PNPP}
 \usage{
 \method{define_params}{wildtype_mutant_pnpp}(plate)
 }
@@ -10,6 +10,6 @@
 \item{plate}{A ddPCR plate}
 }
 \description{
-Define plate type parameters
+Define plate type parameters for wildtype/mutant PNPP
 }
 

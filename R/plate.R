@@ -1,39 +1,108 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-empty_plate <- function() {
-  list(
-    plate_data = NULL,
-    plate_meta = NULL,
-    name = NULL,
-    status = NULL,
-    params = NULL,
-    clusters = NULL,
-    steps = NULL
-  )
-}
+# This file contains core ddPCR plate functions. All these functions are exported
+# and should be used by users.
 
-setup_new_plate <- function(type) {
-  plate <- empty_plate()  # Start with a new empty plate
-  setup_plate(plate, type)
-}
-
-setup_plate <- function(plate, type) {
-  plate <- set_plate_type(plate, type)  # Set the type (class) of this plate
-  plate <- set_default_params(plate)
+#' Create a new ddPCR plate
+#' 
+#' Any ddPCR analysis must start with creating a ddPCR plate object. Use this
+#' function to read ddPCR data into R and create a plate object that can then
+#' be analyzed.
+#' 
+#' \href{https://github.com/daattali/ddpcr#extend}{See the README} for more
+#' information on plate types.
+#' 
+#' @param dir The directory where the ddPCR droplet data files, and potentially
+#' the plate results file, exist.
+#' @param type A ddPCR plate type (see \code{\link[ddpcr]{plate_types}})
+#' @param data_files If \code{dir} is not provided, you can provide a vector of
+#' file paths to the ddPCR droplet data files.
+#' @param meta_file If \code{dir} is not provided, you can provide a file path
+#' to the ddPCR results file.
+#' @param name Name of the dataset. If not provided, the name will be guessed
+#' based on the filenames.
+#' @param params List of parameters to set for the plate. Only advanced users
+#' should consider using this feature.
+#' @return A new ddPCR plate object with droplet data loaded that is ready
+#' to be analyzed.
+#' 
+#' @section Providing ddPCR data:
+#' The first step to using the \code{ddpcr} package is to get the ddPCR data into
+#' R. This package uses as input the data files that are exported by QuantaSoft.
+#' For a dataset with 20 wells, QuantaSoft will create 20 well files (each ending
+#' with "_Amplitude.csv") and one results file. The well files are essential for
+#' analysis since they contain the actual droplet data, and the results file
+#' is optional because the only information used from it is the sample names.
+#' 
+#' The easiest way to use your ddPCR data with this package is to Export the data
+#' from QuantaSoft into some directory, and providing that directory as the 
+#' \code{dir} argument.  This way, this package will automatically find all the
+#' data files as well as the results file.  Alternatively, you can provide the
+#' data files (well files) manually as a list of filenames using the \code{data_files}
+#' argument. If you use the \code{data_files} argument instead of \code{dir}, you
+#' can also optionally provide the results file as the \code{meta_file} argument.
+#' If no results file is provided then the Wells will not be mapped to their sample
+#' names.
+#' 
+#' @section Plate parameters:
+#' Every plate has a set of default parameters that are used in the analysis.
+#' You can see all the parameters of a plate with the \code{\link[ddpcr]{params}}
+#' function. If you want to provide different values for some parameters when
+#' initializing a plate, you can do that with the \code{params} argument. This
+#' is considered an advanced feature.
+#'
+#' For example, if you inspect the parameters of any ddPCR plate, you will see that
+#' by defalt the X variable (dye along the X axis when plotting) is HEX. If you
+#' want to create a new plate that uses a VIC dye instead, you could do so like this:
+#' \preformatted{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir, params = list('GENERAL' = list('X_VAR' = 'VIC')))
+#' plate %>% params %>% str
+#' } 
+#' 
+#' Most numeric parameters that are used in the algorithms of the analysis steps
+#' can be modified in a similar fashion, which can be used to fine-tune the 
+#' analysis of a plate if you require different parameters.
+#' 
+#' @seealso \code{\link[ddpcr]{plate_types}}
+#' \code{\link[ddpcr]{type}}
+#' \code{\link[ddpcr]{reset}}
+#' \code{\link[ddpcr]{analyze}}
+#' \code{\link[ddpcr]{plot.ddpcr_plate}}
+#' @export
+new_plate <- function(dir, type, data_files, meta_file, name, params) {
+  plate <- setup_new_plate(type)
+  plate <- read_plate(plate, dir, data_files, meta_file)
+  
+  # If a name was given, use it instead of the automatically inferred name
+  if (!missing(name)) {
+    name(plate) <- name
+  }
+  
+  if (!missing(params)) {
+    params(plate) %<>% modifyList(params)
+  }
+  
+  plate <- init_plate(plate)
+  
   plate
 }
 
-#' @export
-type <- function(plate, all = FALSE) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  if (all) {
-    class(plate)
-  } else {
-    class(plate)[1]
-  }
-}
-
+#' Reset a plate
+#' 
+#' Reset a ddPCR plate object back to its original state. After resetting a plate,
+#' all the analysis progress will be lost, but the original droplet data and
+#' plate metadata will be kept. You can reset a plate either to restart the analysis,
+#' or to reset it to use a different plate type.
+#' 
+#' @param plate A ddPCR plate
+#' @param type A ddPCR plate type (see \code{\link[ddpcr]{plate_types}})
+#' @param keep_type If \code{TRUE} then use keep the same plate type as \code{plate}
+#' @param keep_params If \code{TRUE} then keep the same plate parameters of \code{plate}
+#' @return A new unanalyzed ddPCR plate 
+#' @seealso \code{\link[ddpcr]{plate_types}}
+#' \code{\link[ddpcr]{new_plate}}
 #' @export
 reset <- function(plate, type, params,
                   keep_type = FALSE, keep_params = FALSE) {
@@ -54,133 +123,13 @@ reset <- function(plate, type, params,
   plate
 }
 
-init_plate <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  step_begin(sprintf("Initializing plate of type `%s`", type(plate)))
-  
-  plate %<>%
-    set_default_clusters %>%
-    set_default_steps %>%
-    init_data %>%
-    init_meta
-  
-  status(plate) <- step(plate, 'INITIALIZE')
-  step_end()
-  
-  plate
-}
-
-init_data <- function(plate) {
-  x_var <- x_var(plate)
-  y_var <- y_var(plate)
-  
-  new_plate_data <- plate_data(plate)
-  colnames(new_plate_data) <- c("well", x_var, y_var)
-  new_plate_data <- dplyr::select_(new_plate_data, "well", x_var, y_var)
-  new_plate_data[['cluster']] <- cluster(plate, 'UNDEFINED')
-  new_plate_data[[x_var]] <- as.integer(new_plate_data[[x_var]])
-  new_plate_data[[y_var]] <- as.integer(new_plate_data[[y_var]])
-  new_plate_data <- dplyr::arrange_(new_plate_data, ~ well)
-  plate_data(plate) <- new_plate_data
-  
-  plate
-}
-
-init_meta <- function(plate) {
-  plate_data <- plate_data(plate)
-  plate_meta <- plate_meta(plate)
-  
-  # read the meta data file (we only care about the well -> sample mapping)
-  if (is.null(plate_meta)) {
-    plate_meta <- DEFAULT_PLATE_META
-  } else {
-    meta_cols_keep <- c("well", "sample")
-    tryCatch({
-      plate_meta %<>%
-        dplyr::select_(~ one_of(meta_cols_keep)) %>%
-        unique %>%
-        merge_dfs_overwrite_col(DEFAULT_PLATE_META, ., "sample", "well")
-    },
-    error = function(err) {
-      err_msg("the metadata file is invalid")
-    })
-  }
-  
-  # populate the metadata with some initial variables
-  wells_used <- plate_data[['well']] %>% unique
-  plate_meta[['used']] <- plate_meta[['well']] %in% wells_used
-  plate_meta[['sample']][!plate_meta[['used']]] <- NA
-  plate_meta <-
-    plate_data %>%
-    dplyr::group_by_("well") %>%
-    dplyr::summarise_("drops" = ~ n()) %>%
-    dplyr::left_join(plate_meta, ., by = "well") %>%
-    arrange_meta
-  
-  plate_meta(plate) <- plate_meta
-  plate
-}
-
-#' @seealso \code{\link[ddpcr]{plate_types}}
-#' @export
-new_plate <- function(dir, type, data_files, meta_file, name, params) {
-  plate <- setup_new_plate(type)
-  plate <- read_plate(plate, dir, data_files, meta_file)  # Read the data files into the plate
-
-  # If a name was given, use it instead of the automatically extracted
-  if (!missing(name)) {
-    name(plate) <- name
-  }
-  
-  if (!missing(params)) {
-    params(plate) %<>% modifyList(params)
-  }
-  
-  plate <- init_plate(plate)
-  
-  plate
-}
-
-# Set the type of plate. Supports multi-level inheritance
-# All types are by default ddpcr_plate, but users can define new plate types
-# that inherit from another one (which means they will use the same params/
-# methods)
-set_plate_type <- function(plate, type) {
-  if (!missing(type) && is.null(type) && class(plate) != "list") {
-    return(plate)
-  }
-  
-  if (missing(type) || is.null(type) || !nzchar(type)) {
-    type <- NULL
-  }  
-
-  # Add the given type to the classlist (initially the class will be "list"
-  # because that's the mode of a plate - we want to exclude that one)
-  new_class <- type
-  if (class(plate)[1] != "list") {
-    new_class <- c(class(plate), new_class)
-  }
-  class(plate) <- new_class
-  
-  # Recursively add the plate type of the parent
-  set_plate_type(plate,
-                 structure(plate, class = type) %>% parent_plate_type)
-}
-
-# Each plate type can define a "parent" plate type
-# ddpcr_plate is the last parent of any plate type and has no parent itself
-#' Parent plate type
-#' @param plate A ddPCR plate
-parent_plate_type <- function(plate) {
-  UseMethod("parent_plate_type")
-}
-parent_plate_type.ddpcr_plate <- function(plate) {
-  NULL
-}
-parent_plate_type.default <- function(plate) {
-  "ddpcr_plate"
-}
-
+#' Reset plate parameters to their defaults
+#' 
+#' Use this function to reset a ddPCR plate's parameters back to their default
+#' values.
+#' @param plate A ddPCR plate.
+#' @return The plate with the parameters set to the plate type's default values.
+#' @seealso \code{\link[ddpcr]{params}}
 #' @export
 set_default_params <- function(plate) {
   if (!is_empty_plate(plate)) {
@@ -193,101 +142,6 @@ set_default_params <- function(plate) {
   plate
 }
 
-# Each plate type can define its own parameters
-#' Parent plate type
-#' @param plate A ddPCR plate
-define_params <- function(plate) {
-  UseMethod("define_params")
-}
-define_params.ddpcr_plate <- function(plate) {
-  # Each parameter has a somewhat descriptive name of what it is used for, and
-  # all parameters used by a single step in the pipeline are in a list together
-  PARAMS_GENERAL <- list()
-  PARAMS_GENERAL['X_VAR'] <- "HEX"
-  PARAMS_GENERAL['Y_VAR'] <- "FAM"
-  PARAMS_GENERAL['DROPLET_VOLUME'] <- 0.91e-3
-  PARAMS_GENERAL['RANDOM_SEED'] <- 8
-  PARAMS_REMOVE_OUTLIERS <- list()
-  PARAMS_REMOVE_OUTLIERS['TOP_PERCENT'] <- 1
-  PARAMS_REMOVE_OUTLIERS['CUTOFF_IQR'] <- 5
-  PARAMS_REMOVE_FAILURES <- list()
-  PARAMS_REMOVE_FAILURES['TOTAL_DROPS_T'] <- 5000
-  PARAMS_REMOVE_FAILURES['EMPTY_LAMBDA_LOW_T'] <- 0.3
-  PARAMS_REMOVE_FAILURES['EMPTY_LAMBDA_HIGH_T'] <- 0.99
-  PARAMS_REMOVE_EMPTY <- list()
-  PARAMS_REMOVE_EMPTY['CUTOFF_SD'] <- 7
-  DEFAULT_PARAMS <- list(
-    'GENERAL'           = PARAMS_GENERAL,
-    'REMOVE_FAILURES'   = PARAMS_REMOVE_FAILURES,
-    'REMOVE_OUTLIERS'   = PARAMS_REMOVE_OUTLIERS,
-    'REMOVE_EMPTY'      = PARAMS_REMOVE_EMPTY
-  )
-  DEFAULT_PARAMS
-}
-
-set_default_clusters <- function(plate) {
-  clusters(plate) <- define_clusters(plate)
-  plate
-}
-
-define_clusters <- function(plate) {
-  UseMethod("define_clusters")
-}
-#' @export
-clusters <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  plate[['clusters']]
-}
-
-`clusters<-` <- function(plate, value) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  plate[['clusters']] <- value
-  plate
-}
-
-
-set_default_steps <- function(plate) {
-  steps(plate) <- define_steps(plate)
-  plate
-}
-
-define_steps <- function(plate) {
-  UseMethod("define_steps")
-}
-#' @export
-steps <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  plate[['steps']]
-}
-`steps<-` <- function(plate, value) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  plate[['steps']] <- value
-  plate
-}
-has_step <- function(plate, step) {
-  plate %>%
-    steps %>%
-    names %>%
-    {which(. == step)} %>%
-    length %>%
-    magrittr::equals(1)
-}
-
-#' @export
-plate_meta <- function(plate, only_used = FALSE) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
-  if (only_used) {
-    plate[['plate_meta']] %>% dplyr::filter_(quote(used))
-  } else {  
-    plate[['plate_meta']]
-  }
-}
-`plate_meta<-` <- function(plate, value) {
-  plate[['plate_meta']] <- value
-  plate
-}
-
 #' @export
 well_info <- function(plate, well_id, var) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
@@ -297,79 +151,12 @@ well_info <- function(plate, well_id, var) {
     .[[var]]
 }
 
-arrange_meta <- function(plate) {
-  if ("success" %in% colnames(plate)) {
-    plate %>% dplyr::arrange_(~ desc(used), ~ desc(success), ~ row, ~ col)  
-  } else {
-    plate %>% dplyr::arrange_(~ desc(used), ~ row, ~ col)
-  }
-}
 
-#' @export
-plate_data <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  plate[['plate_data']]
-}
-`plate_data<-` <- function(plate, value) {
-  plate[['plate_data']] <- value
-  plate
-}
 
-#' @export
-status <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  plate[['status']]
-}
-`status<-` <- function(plate, value) {
-  plate[['status']] <- value
-  plate
-}
-is_empty_plate <- function(plate) {
-  is.null(status(plate))
-}
 
-#' @export
-name <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  plate[['name']]
-}
-#' @export
-`name<-` <- function(plate, value) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  plate[['name']] <- value
-  plate
-}
 
-#' @export
-params <- function(plate, major, minor) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
-  res <- plate[['params']]
-  if (!missing(major)) {
-    res <- res[[major]]
-    if (!missing(minor)) {
-      res <- res[[minor]]
-    }
-  }
-  
-  res
-}
 
-#' @export
-`params<-` <- function(plate, major, minor, value) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
-  replace <- 'params'
-  if (!missing(major)) {
-    replace <- c(replace, major)
-    if (!missing(minor)) {
-      replace <- c(replace, minor)
-    }
-  }
 
-  plate[[replace]] <- value
-  plate
-}
 
 #' @export
 wells_used <- function(plate) {
@@ -401,43 +188,12 @@ wells_failed <- function(plate) {
   
   if (!(plate %>% has_step('REMOVE_FAILURES')) ||
       plate %>% status < step(plate, 'REMOVE_FAILURES')) {
-    return(c())
+    return()
   }  
   plate %>%
     plate_meta %>%
     dplyr::filter_(~ !success) %>%
     .[['well']]
-}
-
-#' @export
-x_var <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  params(plate, 'GENERAL', 'X_VAR')
-}
-#' @export
-y_var <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  params(plate, 'GENERAL', 'Y_VAR')
-}
-#' @export
-`x_var<-` <- function(plate, value) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
-  value %<>% make.names
-  plate_data(plate) %<>%
-    dplyr::rename_(.dots = setNames(x_var(plate), value))
-  params(plate, 'GENERAL', 'X_VAR') <- value
-  plate
-}
-#' @export
-`y_var<-` <- function(plate, value) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
-  value %<>% make.names
-  plate_data(plate) %<>%
-    dplyr::rename_(.dots = setNames(y_var(plate), value))
-  params(plate, 'GENERAL', 'Y_VAR') <- value
-  plate
 }
 
 #' @export
@@ -450,10 +206,6 @@ analyze <- function(plate, restart = FALSE) {
   plate %<>% next_step(n = steps_left)
   message("Analysis complete")
   plate
-}
-
-analysis_complete <- function(plate) {
-  status(plate) == length(steps(plate))
 }
 
 #' @export
@@ -480,40 +232,4 @@ next_step <- function(plate, n = 1) {
   plate <- do.call(next_step_fxn, list(plate))
   
   next_step(plate, n - 1)
-}
-
-step_begin <- function(text) {
-  .globals$set("step_tstart", proc.time())
-  message(text, "... ", appendLF = FALSE)
-}
-step_end <- function(time) {
-  message(sprintf("DONE (%s seconds)",
-                  round(proc.time() - .globals$get("step_tstart"))[1]))
-}
-
-#' @export
-print.ddpcr_plate <- function(x, ...) {
-  if (is_empty_plate(x)) {
-    cat0("Empty ddPCR plate")
-    return()
-  }
-  
-  cat0("ddpcr plate\n-----------\n")
-  cat0("Dataset name: ", x %>% name, "\n")
-  cat0("Plate type: ", x %>% type(TRUE) %>% paste(collapse = ", "), "\n")
-  cat0("Data summary: ", 
-       x %>% wells_used %>% length, " wells; ",
-       x %>% plate_data %>% nrow %>% prettyNum(big.mark = ","), " drops\n")  
-  if (analysis_complete(x)) {
-    cat0("Analysis completed\n")
-  } else {
-    cat0("Completed analysis steps: ",
-         step_name(x, seq(1, status(x))) %>% paste(collapse = ", "),
-         "\n"
-    )
-    cat0("Remaining analysis steps: ",
-         step_name(x, seq(status(x) + 1, length(steps(x)))) %>% paste(collapse = ", "),
-         "\n"
-    )
-  }
 }

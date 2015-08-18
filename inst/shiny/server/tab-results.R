@@ -33,7 +33,7 @@ observeEvent(dataValues$plate, {
   # hide/show the droplet options only for droplets that exist in this plate type
   hide(selector = "[data-ddpcr-type]")
   show(selector = sprintf("[data-ddpcr-type~=%s]", dataValues$plate %>% type))
-  if (type(dataValues$plate) == CROSSHAIR_THRESHOLDS) {
+  if (type(dataValues$plate) == plate_types$custom_thresholds) {
     updateSelectInput(session, "plotParamDropShow-empty", selected = "TRUE")
   }  
 })

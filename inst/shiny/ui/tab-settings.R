@@ -27,11 +27,11 @@ tabPanel(
             selectInput(
               "settingsPlateType",
               div("Droplet clusters",
-                  helpPopup("Select <strong>(FAM+) / (FAM+HEX+)</strong> or <strong>(HEX+) / (FAM+HEX+)</strong> if your data has a main cluster of double-positive droplets (considered wild type) and a secondary cluster of FAM+ or HEX+ droplets (considered mutant).<br/><br/>Select <strong>Manually set crosshair thresholds</strong> if your data does not fit these models and you want to simply cluster the droplets into 4 quadrants.")
+                  helpPopup("Select <strong>(FAM+) / (FAM+HEX+)</strong> or <strong>(HEX+) / (FAM+HEX+)</strong> if your data has a main cluster of double-positive droplets (considered wild type) and a secondary cluster of FAM+ or HEX+ droplets (considered mutant).<br/><br/>Select <strong>Custom thresholds</strong> if your data does not fit these models and you want to simply cluster the droplets into 4 quadrants.")
               ),
               c("(FAM+) / (FAM+HEX+)" = plate_types$fam_positive_pnpp,
                 "(HEX+) / (FAM+HEX+)" = plate_types$hex_positive_pnpp,
-                "Manually set crosshair thresholds" = CROSSHAIR_THRESHOLDS)
+                "Custom thresholds" = plate_types$custom_thresholds)
             )
           )
         ),
@@ -49,7 +49,7 @@ tabPanel(
           )
         ),
         conditionalPanel(
-          sprintf("input.settingsPlateType == '%s'", CROSSHAIR_THRESHOLDS),
+          sprintf("input.settingsPlateType == '%s'", plate_types$custom_thresholds),
           fixedRow(
             column(6,
               numericInput("settingsXThreshold", "X threshold", 5000, min = 0, step = 100)

@@ -23,18 +23,19 @@
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
 #' plate <- new_plate(dir, type = plate_types$fam_positive_pnpp)
 #' type(plate)
+#' plate %>% analyze %>% plot
 #' } 
 NULL
 
 plate_types[['fam_positive_pnpp']] <- "fam_positive_pnpp"
 
-#' Parent plate type
+#' Parent plate type of FAM-positive PNPP 
 #' @inheritParams parent_plate_type
 parent_plate_type.fam_positive_pnpp <- function(plate) {
   "wildtype_mutant_pnpp"
 }
 
-#' Define plate type parameters
+#' Define plate type parameters for FAM-positive PNPP 
 #' @inheritParams define_params
 define_params.fam_positive_pnpp <- function(plate) {
   params <- NextMethod("define_params")

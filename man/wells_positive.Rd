@@ -2,29 +2,29 @@
 % Please edit documentation in R/type-pnpp_experiment.R
 \name{wells_positive}
 \alias{wells_positive}
-\title{Get wells containing mostly positive droplets in a PNPP experiment}
+\title{Get positive wells}
 \usage{
 wells_positive(x)
 }
 \arguments{
-\item{x}{A ddPCR plate of type pnpp_experiment}
+\item{plate}{A ddPCR plate.}
 }
 \value{
-Vector of wells with mostly positive drops.
+Character vector with well IDs of positive wells
 }
 \description{
-In a PNPP experiment, the two main non-empty clusters of drops are the negative
-and positive clusters. The positive cluster appears in every well, while the
-negative cluster is not necessarily in every well. \code{wells_positive}
-returns a list of wells that have mostly positive drops.
+After a ddPCR plate of type \code{pnpp_experiment} has been analyzed,
+get the wells that were deemed as having mostly positive droplets.
 }
 \examples{
-file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
-plate <- load_plate(file)
-plate \%>\% wells_positive
+\dontrun{
+dir <- system.file("sample_data", "small", package = "ddpcr")
+plate <- new_plate(dir, type = plate_types$pnpp_experiment) \%>\% analyze
+wells_positive(plate)
+}
 }
 \seealso{
-\code{\link[ddpcr]{pnpp_experiment}},
+\code{\link[ddpcr]{pnpp_experiment}}
 \code{\link[ddpcr]{wells_negative}}
 }
 

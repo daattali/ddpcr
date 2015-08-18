@@ -1,16 +1,9 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-# Retrieve droplet data for a single well.
-#
-# Args:
-#   .wellData: The dataframe containing all the droplets
-#   .well: The id of the well of interest
-#   .full: If true, get all droplets, including the empty ones
-#   .clusters: If true, return information about which cluster each drop belongs to
-#
-# Returns:
-#   Dataframe containing only droplet data for the given well
+# This file contains many helper functions. None of them are explicitly exported,
+# but some are "internal exports" to allow people to use them if they want to
+# create their own plate types.
 
 #' Get droplet data from a well
 #' 

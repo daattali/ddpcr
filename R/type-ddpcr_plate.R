@@ -25,7 +25,72 @@
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
 #' plate <- new_plate(dir, type = plate_types$ddpcr_plate)
 #' type(plate)
+#' plate %>% analyze %>% plot
 #' } 
 NULL
 
 plate_types[['ddpcr_plate']] <- "ddpcr_plate"
+
+#' Parent plate type of default plates
+#' @inheritParams parent_plate_type
+parent_plate_type.ddpcr_plate <- function(plate) {
+  # this is the default plate type -- there is no parent
+  NULL
+}
+
+#' Parent plate type of any plate
+#' @inheritParams parent_plate_type
+parent_plate_type.default <- function(plate) {
+  # if a plate doesn't have an explicit type, its parent is the default type
+  "ddpcr_plate"
+}
+
+#' Define plate type parameters for default plates
+#' @inheritParams define_params
+define_params.ddpcr_plate <- function(plate) {
+  # Each parameter has a somewhat descriptive name of what it is used for, and
+  # all parameters used by a single step in the pipeline are in a list together
+  PARAMS_GENERAL <- list()
+  PARAMS_GENERAL['X_VAR'] <- "HEX"
+  PARAMS_GENERAL['Y_VAR'] <- "FAM"
+  PARAMS_GENERAL['DROPLET_VOLUME'] <- 0.91e-3
+  PARAMS_GENERAL['RANDOM_SEED'] <- 8
+  PARAMS_REMOVE_OUTLIERS <- list()
+  PARAMS_REMOVE_OUTLIERS['TOP_PERCENT'] <- 1
+  PARAMS_REMOVE_OUTLIERS['CUTOFF_IQR'] <- 5
+  PARAMS_REMOVE_FAILURES <- list()
+  PARAMS_REMOVE_FAILURES['TOTAL_DROPS_T'] <- 5000
+  PARAMS_REMOVE_FAILURES['EMPTY_LAMBDA_LOW_T'] <- 0.3
+  PARAMS_REMOVE_FAILURES['EMPTY_LAMBDA_HIGH_T'] <- 0.99
+  PARAMS_REMOVE_EMPTY <- list()
+  PARAMS_REMOVE_EMPTY['CUTOFF_SD'] <- 7
+  DEFAULT_PARAMS <- list(
+    'GENERAL'           = PARAMS_GENERAL,
+    'REMOVE_FAILURES'   = PARAMS_REMOVE_FAILURES,
+    'REMOVE_OUTLIERS'   = PARAMS_REMOVE_OUTLIERS,
+    'REMOVE_EMPTY'      = PARAMS_REMOVE_EMPTY
+  )
+  DEFAULT_PARAMS
+}
+
+#' Define droplet clusters for default plates
+#' @inheritParams define_clusters
+define_clusters.ddpcr_plate <- function(plate) {
+  c(
+    'UNDEFINED',
+    'FAILED',
+    'OUTLIER',
+    'EMPTY'
+  )
+}
+
+#' Define analysis steps for default plates
+#' @inheritParams define_steps
+define_steps.ddpcr_plate <- function(plate) {
+  list(
+    'INITIALIZE' = 'init_plate',
+    'REMOVE_FAILURES' = 'remove_failures',
+    'REMOVE_OUTLIERS' = 'remove_outliers',
+    'REMOVE_EMPTY' = 'remove_empty'
+  )
+}

@@ -8,9 +8,9 @@ meta_var_name(plate, var)
 }
 \description{
 A default PNPP experiment uses the names "positive" and "negative" for its two
-non-empty clusters. If they are changed, then any variable in the metadata
-will be renamed to use these names. \code{meta_var_name} translated a
-default metadata variable name to the correct one.
+non-empty clusters. If they are changed (for example, to "wildtype" and "mutant"),
+then any variable in the metadata will be renamed to use these names.
+\code{meta_var_name} translates a default metadata variable name to the correct one.
 }
 \examples{
 dir <- system.file("sample_data", "small", package = "ddpcr")

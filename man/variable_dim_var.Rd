@@ -2,13 +2,12 @@
 % Please edit documentation in R/type-pnpp_experiment.R
 \name{variable_dim_var}
 \alias{variable_dim_var}
-\title{Name of variable of variable dimension in PNPP experiment}
+\title{Name of dye in variable dimension in PNPP experiment}
 \usage{
 variable_dim_var(plate)
 }
 \description{
-Get the name of the variable that is along the dimension where the droplets
-will cluster into two groups.
+Get the name of the dye that is along the variable dimension.
 }
 \seealso{
 \code{\link[ddpcr]{pnpp_experiment}},

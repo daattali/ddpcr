@@ -2,7 +2,7 @@
 % Please edit documentation in R/type-fam_positive_pnpp.R
 \name{define_params.fam_positive_pnpp}
 \alias{define_params.fam_positive_pnpp}
-\title{Define plate type parameters}
+\title{Define plate type parameters for FAM-positive PNPP}
 \usage{
 \method{define_params}{fam_positive_pnpp}(plate)
 }
@@ -10,6 +10,6 @@
 \item{plate}{A ddPCR plate}
 }
 \description{
-Define plate type parameters
+Define plate type parameters for FAM-positive PNPP
 }
 

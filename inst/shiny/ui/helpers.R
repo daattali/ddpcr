@@ -50,7 +50,7 @@ plotDropsParams <- list(
   ),
   "empty" = list(
     name = "Empty droplets",
-    type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp, CROSSHAIR_THRESHOLDS, "ddpcr_plate"),
+    type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp, plate_types$custom_thresholds, "ddpcr_plate"),
     show = FALSE,
     col = "Default",
     alpha = 0.1
@@ -78,21 +78,21 @@ plotDropsParams <- list(
   ),
   "x_positive" = list(
     name = "X+Y- droplets",
-    type = c(CROSSHAIR_THRESHOLDS),
+    type = c(plate_types$custom_thresholds),
     show = TRUE,
     col = "green3",
     alpha = 0.1
   ),
   "y_positive" = list(
     name = "X-Y+ droplets",
-    type = c(CROSSHAIR_THRESHOLDS),
+    type = c(plate_types$custom_thresholds),
     show = TRUE,
     col = "blue",
     alpha = 0.1
   ),
   "both_positive" = list(
     name = "X+Y+ droplets",
-    type = c(CROSSHAIR_THRESHOLDS),
+    type = c(plate_types$custom_thresholds),
     show = TRUE,
     col = "orange",
     alpha = 0.1

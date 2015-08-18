@@ -2,7 +2,7 @@
 % Please edit documentation in R/type-fam_positive_pnpp.R
 \name{parent_plate_type.fam_positive_pnpp}
 \alias{parent_plate_type.fam_positive_pnpp}
-\title{Parent plate type}
+\title{Parent plate type of FAM-positive PNPP}
 \usage{
 \method{parent_plate_type}{fam_positive_pnpp}(plate)
 }
@@ -10,6 +10,6 @@
 \item{plate}{A ddPCR plate}
 }
 \description{
-Parent plate type
+Parent plate type of FAM-positive PNPP
 }
 
