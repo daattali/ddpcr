@@ -1,13 +1,13 @@
-context("type-ppnp_assay")
+context("type-pnpp_experiment")
 
 .dir <- system.file("sample_data", "small", package = "ddpcr")
-.plate <- new_plate(dir = .dir, type = PPNP_ASSAY)
+.plate <- new_plate(dir = .dir, type = plate_types$pnpp_experiment)
 get_plate <- function() {
   .plate
 }
 
 test_that("the right type is set", {
-  expect_is(get_plate(), "ppnp_assay")
+  expect_is(get_plate(), "pnpp_experiment")
   expect_is(get_plate(), "ddpcr_plate")
 })
 
@@ -70,7 +70,7 @@ test_that("meta_var_name works", {
 })
 
 test_that("wells_positive and wells_negative work", {
-  file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
+  file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
   plate <- load_plate(file)
   expect_identical(plate %>% wells_positive, c("B01", "C01"))
   expect_identical(plate %>% wells_negative, c("B06", "C09"))

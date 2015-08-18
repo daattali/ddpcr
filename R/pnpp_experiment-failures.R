@@ -1,4 +1,4 @@
-is_well_success.ppnp_assay <- function(plate, well_id) {
+is_well_success.pnpp_experiment <- function(plate, well_id) {
   well_data <- get_single_well(plate, well_id, empty = TRUE)
   
   # if this well doesn't actually have data (or is an invalid well) return NA
@@ -11,7 +11,7 @@ is_well_success.ppnp_assay <- function(plate, well_id) {
     return(FALSE)
   }
   
-  set.seed(SEED)
+  set.seed(params(plate, 'GENERAL', 'RANDOM_SEED'))
   
   x_var <- x_var(plate)
   y_var <- y_var(plate)

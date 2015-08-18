@@ -1,9 +1,9 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-#' Get border of filled droplets in PPNP assay
+#' Get border of filled droplets in PNPP experiment
 #' 
-#' In a PPNP assay, the rain droplets are the non-empty drops that don't have a
+#' In a PNPP experiment, the rain droplets are the non-empty drops that don't have a
 #' high enough intensity in the positive dimension to be considered as filled
 #' with high quality sample DNA. Only droplets considered as filled are
 #' candidates for the \code{negative} and \code{positive} clusters.
@@ -14,21 +14,21 @@
 #' @param well_id Get border of filled droplets for this well.
 #' @return Thresholds of filled drops in the positive dimension.
 #' @examples 
-#' file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
+#' file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
 #' plate <- load_plate(file)
 #' get_filled_border(plate, "B06")
 #' get_filled_border(plate, "C09")
-#' @seealso \code{\link[ddpcr]{PPNP_ASSAy}},
+#' @seealso \code{\link[ddpcr]{plate_types$pnpp_experiment}},
 #' @seealso \code{\link[ddpcr]{positive_dim}},
 #' @seealso \code{\link[ddpcr]{get_filled_drops}}
 #' @keywords internal
 #' @export
 get_filled_border <- function(plate, well_id) {
-  stopifnot(plate %>% inherits("ppnp_assay"))
+  stopifnot(plate %>% inherits("pnpp_experiment"))
   
   well_data <- get_single_well(plate, well_id)
   
-  set.seed(SEED)
+  set.seed(params(plate, 'GENERAL', 'RANDOM_SEED'))
   
   # Fit two normal distributions in the positive dimension of all non-empty
   # drops. The higher population will model the filled droplets, and we define
@@ -47,9 +47,9 @@ get_filled_border <- function(plate, well_id) {
   filled_border
 }
 
-#' Get filled droplets in PPNP assay
+#' Get filled droplets in PNPP experiment
 #' 
-#' In a PPNP assay, the rain droplets are the non-empty drops that don't have a
+#' In a PNPP experiment, the rain droplets are the non-empty drops that don't have a
 #' high enough intensity in the positive dimension to be considered as filled
 #' with high quality sample DNA. Only droplets considered as filled are
 #' candidates for the \code{negative} and \code{positive} clusters.
@@ -62,11 +62,11 @@ get_filled_border <- function(plate, well_id) {
 #' \code{\link[ddpcr]{get_filled_drops}} is called to calculate the border.
 #' @return Dataframe with all filled droplets in the given well.
 #' @examples 
-#' file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
+#' file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
 #' plate <- load_plate(file)
 #' get_filled_drops(plate, "B06")
 #' get_filled_drops(plate, "B06", get_filled_border(plate, "B06"))
-#' @seealso \code{\link[ddpcr]{PPNP_ASSAy}},
+#' @seealso \code{\link[ddpcr]{plate_types$pnpp_experiment}},
 #' @seealso \code{\link[ddpcr]{positive_dim}},
 #' @seealso \code{\link[ddpcr]{get_filled_drops}}
 #' @keywords internal

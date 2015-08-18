@@ -19,7 +19,7 @@ setup_new_plate <- function(type) {
 }
 
 setup_plate <- function(plate, type) {
-  plate <- set_plate_type(plate, type)  # Set the type (class) of this assay
+  plate <- set_plate_type(plate, type)  # Set the type (class) of this plate
   plate <- set_default_params(plate)
   plate
 }
@@ -121,6 +121,7 @@ init_meta <- function(plate) {
   plate
 }
 
+#' @seealso \code{\link[ddpcr]{plate_types}}
 #' @export
 new_plate <- function(dir, type, data_files, meta_file, name, params) {
   plate <- setup_new_plate(type)
@@ -141,7 +142,7 @@ new_plate <- function(dir, type, data_files, meta_file, name, params) {
 }
 
 # Set the type of plate. Supports multi-level inheritance
-# All types are by default ddpcr_plate, but users can define new assay types
+# All types are by default ddpcr_plate, but users can define new plate types
 # that inherit from another one (which means they will use the same params/
 # methods)
 set_plate_type <- function(plate, type) {
@@ -168,6 +169,8 @@ set_plate_type <- function(plate, type) {
 
 # Each plate type can define a "parent" plate type
 # ddpcr_plate is the last parent of any plate type and has no parent itself
+#' Parent plate type
+#' @param plate A ddPCR plate
 parent_plate_type <- function(plate) {
   UseMethod("parent_plate_type")
 }
@@ -191,6 +194,8 @@ set_default_params <- function(plate) {
 }
 
 # Each plate type can define its own parameters
+#' Parent plate type
+#' @param plate A ddPCR plate
 define_params <- function(plate) {
   UseMethod("define_params")
 }
@@ -201,6 +206,7 @@ define_params.ddpcr_plate <- function(plate) {
   PARAMS_GENERAL['X_VAR'] <- "HEX"
   PARAMS_GENERAL['Y_VAR'] <- "FAM"
   PARAMS_GENERAL['DROPLET_VOLUME'] <- 0.91e-3
+  PARAMS_GENERAL['RANDOM_SEED'] <- 8
   PARAMS_REMOVE_OUTLIERS <- list()
   PARAMS_REMOVE_OUTLIERS['TOP_PERCENT'] <- 1
   PARAMS_REMOVE_OUTLIERS['CUTOFF_IQR'] <- 5

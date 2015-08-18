@@ -62,7 +62,7 @@ output$saveDropletsBtn <- downloadHandler(
 output$clustersMapping <- renderUI({
   lapply(seq_along(clusters(dataValues$plate)), function(x) {
     cluster_name <- tolower(cluster_name(dataValues$plate, x))
-    if (inherits(dataValues$plate, PPNP_ASSAY)) {
+    if (inherits(dataValues$plate, plate_types$pnpp_experiment)) {
       cluster_name <- meta_var_name(dataValues$plate, cluster_name)
     }
     div(x, "=", cluster_name)

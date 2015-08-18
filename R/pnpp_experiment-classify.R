@@ -7,13 +7,13 @@ classify_droplets_single <- function(plate, well_id, ...) {
 }
 
 #' @export
-classify_droplets_single.ppnp_assay <- function(plate, well_id, ..., plot = FALSE) {
+classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot = FALSE) {
   # For a given well, merge the empty drops with the rain/mutant/wildtype drops
   # to result in a data frame containing all drops in a well marked with a cluster.
   #
   # Args:
   #   plot: If true, plot the result (used mainly for development/debugging
-  stopifnot(plate %>% inherits("ppnp_assay"))
+  stopifnot(plate %>% inherits("pnpp_experiment"))
   
   signif_negative_cluster <- FALSE
   well_data <- get_single_well(plate, well_id)
@@ -142,7 +142,7 @@ classify_droplets <- function(plate) {
 }
 
 #' @export
-classify_droplets.ppnp_assay <- function(plate) {
+classify_droplets.pnpp_experiment <- function(plate) {
   # Mark all drops in a plate with their corresponding clusters, including
   # undefined clusters for failed wells
   #

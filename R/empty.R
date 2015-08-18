@@ -5,7 +5,7 @@
 #' 
 #' Find the empty droplets (double-negative droplets) in each well in a plate
 #' and assign these droplets to the \emph{EMPTY} cluster. \cr\cr
-#' \href{https://github.com/daattali/ddpcr#algorithm}{See the README online} for
+#' \href{https://github.com/daattali/ddpcr#algorithm}{See the README} for
 #' more information about the algorithm used to find empty droplets.
 #' 
 #' This function is recommended to be run as part of an analysis pipeline (ie.
@@ -18,7 +18,7 @@
 #' @seealso \code{\link[ddpcr]{analyze}}
 #' @note This is an S3 generic, which means that different ddPCR plate types can
 #' implement this function differently. 
-#' \href{https://github.com/daattali/ddpcr#extend}{See the README online} for
+#' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
 #' more information on how to implement custom ddPCR plate types.
 #' @export
 remove_empty <- function(plate) {
@@ -28,6 +28,7 @@ remove_empty <- function(plate) {
 #' Remove empty droplets
 #' @inheritParams remove_empty
 #' @export
+#' @keywords internal
 remove_empty.ddpcr_plate <- function(plate) {
   CURRENT_STEP <- plate %>% step('REMOVE_EMPTY')
   plate %>% check_step(CURRENT_STEP, TRUE)
@@ -125,7 +126,7 @@ get_empty_cutoff.ddpcr_plate <- function(plate, well_id) {
   well_data <- get_single_well(plate, well_id, empty = TRUE)
   
   # fit two normal distributions in the data along the Y dimension
-  set.seed(SEED)
+  set.seed(params(plate, 'GENERAL', 'RANDOM_SEED'))
   quiet(
     mixmdl_y <- mixtools::normalmixEM(well_data[[y_var(plate)]], k = 2)
   )
@@ -140,7 +141,7 @@ get_empty_cutoff.ddpcr_plate <- function(plate, well_id) {
     as.integer
   
   # repeat the above along the X dimension
-  set.seed(SEED)
+  set.seed(params(plate, 'GENERAL', 'RANDOM_SEED'))
   quiet(
     mixmdl_x <- mixtools::normalmixEM(well_data[[x_var(plate)]], k = 2)
   )

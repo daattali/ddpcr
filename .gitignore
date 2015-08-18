@@ -4,3 +4,4 @@
 *.Rproj
 data/
 inst/doc
+inst/shiny/datasets/

@@ -1,7 +1,7 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-#' PPNP assay
+#' PNPP experiment
 #' 
 #' "Positive-Positive;Negative-Positive assay" type. Use this assay when
 #' your ddPCR data has 3 main clusters: one cluster near the bottom left that
@@ -15,18 +15,18 @@
 #' 
 #' @examples 
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' new_plate(dir = dir, type = PPNP_ASSAY)
-#' new_plate(dir = dir, type = FAM_POSITIVE_PPNP)
+#' new_plate(dir = dir, type = plate_types$pnpp_experiment)
+#' new_plate(dir = dir, type = plate_types$fam_positive_pnpp)
 #' @seealso
 #' \code{\link[ddpcr]{new_plate}},
 #' \code{\link[ddpcr]{positive_dim}},
 #' \code{\link[ddpcr]{wells_positive}},
 #' \code{\link[ddpcr]{wells_negative}}
 #' @export
-PPNP_ASSAY <- "ppnp_assay"
+PNPP_EXPERIMENT <- "pnpp_experiment"
 
 #' @export
-define_clusters.ppnp_assay <- function(plate) {
+define_clusters.pnpp_experiment <- function(plate) {
   clusters <- NextMethod("define_clusters")
   
   clusters %>%
@@ -38,7 +38,7 @@ define_clusters.ppnp_assay <- function(plate) {
 }
 
 #' @export
-define_steps.ppnp_assay <- function(plate) {
+define_steps.pnpp_experiment <- function(plate) {
   steps <- NextMethod("define_steps")
   
   steps %>%
@@ -49,7 +49,7 @@ define_steps.ppnp_assay <- function(plate) {
 }
 
 #' @export
-define_params.ppnp_assay <- function(plate) {
+define_params.pnpp_experiment <- function(plate) {
   params <- NextMethod("define_params")
   
   new_params <- list(
@@ -79,48 +79,50 @@ define_params.ppnp_assay <- function(plate) {
   params
 }
 
-#' Positive dimension in a PPNP assay
+#' Positive dimension in a PNPP experiment
 #' 
 #' Get or set the dimension (X or Y) that has a high intensity in all non-empty
-#' drops in a \code{PPNP_ASSAY}.
+#' drops in a \code{PNPP_EXPERIMENT}.
 #' @param plate A ddPCR plate.
 #' @param value The dimension to set as the positive dimension ("X" or "Y")
 #' @seealso
-#' \code{\link[ddpcr]{PPNP_ASSAy}},
+#' \code{\link[ddpcr]{pnpp_experiment}},
 #' \code{\link[ddpcr]{variable_dim}}
 #' @examples 
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir = dir, type = PPNP_ASSAY)
+#' plate <- new_plate(dir = dir, type = plate_types$pnpp_experiment)
 #' positive_dim(plate) <- "Y"
 #' @name positive_dim
 NULL
 
 #' @rdname positive_dim
 #' @export
+#' @keywords internal
 positive_dim <- function(plate) {
-  stopifnot(plate %>% inherits("ppnp_assay"))
+  stopifnot(plate %>% inherits("pnpp_experiment"))
   params(plate, 'GENERAL', 'POSITIVE_DIMENSION') %>% toupper
 }
 #' @rdname positive_dim
 #' @export
+#' @keywords internal
 `positive_dim<-` <- function(plate, value) {
-  stopifnot(plate %>% inherits("ppnp_assay"))
+  stopifnot(plate %>% inherits("pnpp_experiment"))
   value %<>% toupper
   stopifnot(value == "X" || value == "Y")
   params(plate, 'GENERAL', 'POSITIVE_DIMENSION') <- value
   plate
 }
 
-#' Variable dimension in a PPNP assay
+#' Variable dimension in a PNPP experiment
 #' 
 #' Get or set the dimension (X or Y) that can have both high and low intensities
-#' in the non-empty drops in a \code{PPNP_ASSAY}.
+#' in the non-empty drops in a \code{plate_types$pnpp_experiment}.
 #' @seealso
-#' \code{\link[ddpcr]{PPNP_ASSAy}},
+#' \code{\link[ddpcr]{pnpp_experiment}},
 #' \code{\link[ddpcr]{positive_dim}}
 #' @examples 
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir = dir, type = PPNP_ASSAY)
+#' plate <- new_plate(dir = dir, type = plate_types$pnpp_experiment)
 #' variable_dim(plate) <- "Y"
 #' variable_dim(plate)
 #' positive_dim(plate)
@@ -132,46 +134,46 @@ NULL
 #' @keywords internal
 #' @export
 variable_dim <- function(plate) {
-  stopifnot(plate %>% inherits("ppnp_assay"))
+  stopifnot(plate %>% inherits("pnpp_experiment"))
   params(plate, 'GENERAL', 'POSITIVE_DIMENSION') %>% toupper %>% other_dim
 }
 #' @rdname variable_dim
 #' @keywords internal
 #' @export
 `variable_dim<-` <- function(plate, value) {
-  stopifnot(plate %>% inherits("ppnp_assay"))
+  stopifnot(plate %>% inherits("pnpp_experiment"))
   value %<>% toupper
   params(plate, 'GENERAL', 'POSITIVE_DIMENSION') <- value %>% other_dim
   plate
 }
 
-#' Name of variable of positive dimension in PPNP assay
+#' Name of variable of positive dimension in PNPP experiment
 #' 
 #' Get the name of the variable that is along the dimension where all filled 
 #' drops should be positive.
 #' @seealso
-#' \code{\link[ddpcr]{PPNP_ASSAy}},
+#' \code{\link[ddpcr]{pnpp_experiment}},
 #' \code{\link[ddpcr]{positive_dim}}
 #' @keywords internal
 #' @export
 positive_dim_var <- function(plate) {
-  stopifnot(plate %>% inherits("ppnp_assay"))
+  stopifnot(plate %>% inherits("pnpp_experiment"))
   plate %>%
     positive_dim %>%
     {params(plate, 'GENERAL', sprintf('%s_VAR', .))}
 }
 
-#' Name of variable of variable dimension in PPNP assay
+#' Name of variable of variable dimension in PNPP experiment
 #' 
 #' Get the name of the variable that is along the dimension where the droplets
 #' will cluster into two groups.
 #' @seealso
-#' \code{\link[ddpcr]{PPNP_ASSAy}},
+#' \code{\link[ddpcr]{pnpp_experiment}},
 #' \code{\link[ddpcr]{variable_dim}}
 #' @keywords internal
 #' @export
 variable_dim_var <- function(plate) {
-  stopifnot(plate %>% inherits("ppnp_assay"))
+  stopifnot(plate %>% inherits("pnpp_experiment"))
   plate %>%
     variable_dim %>%
     {params(plate, 'GENERAL', sprintf('%s_VAR', .))}  
@@ -187,45 +189,45 @@ other_dim <- function(dim) {
   ifelse(dim %>% toupper == "X", "Y", "X")
 }
 
-#' Name of variable in PPNP assay metadata
+#' Name of variable in PNPP experiment metadata
 #' 
-#' A default PPNP assay uses the names "positive" and "negative" for its two
+#' A default PNPP experiment uses the names "positive" and "negative" for its two
 #' non-empty clusters. If they are changed, then any variable in the metadata
 #' will be renamed to use these names. \code{meta_var_name} translated a
 #' default metadata variable name to the correct one.
-#' @seealso \code{\link[ddpcr]{PPNP_ASSAy}}
+#' @seealso \code{\link[ddpcr]{pnpp_experiment}}
 #' @examples 
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir = dir, type = PPNP_ASSAY)
+#' plate <- new_plate(dir = dir, type = plate_types$pnpp_experiment)
 #' params(plate, 'GENERAL', 'NEGATIVE_NAME') <- "mutant"
 #' meta_var_name(plate, 'num_negative_drops')
 #' @keywords internal
 #' @export
 meta_var_name <- function(plate, var) {
-  stopifnot(plate %>% inherits("ppnp_assay"))
+  stopifnot(plate %>% inherits("pnpp_experiment"))
   var %>%
     gsub("negative", params(plate, 'GENERAL', 'NEGATIVE_NAME'), .) %>%
     gsub("positive", params(plate, 'GENERAL', 'POSITIVE_NAME'), .)
 }
 
-#' Get wells containing mostly positive droplets in a PPNP assay
+#' Get wells containing mostly positive droplets in a PNPP experiment
 #' 
-#' In a PPNP assay, the two main non-empty clusters of drops are the negative
+#' In a PNPP experiment, the two main non-empty clusters of drops are the negative
 #' and positive clusters. The positive cluster appears in every well, while the
 #' negative cluster is not necessarily in every well. \code{wells_positive}
 #' returns a list of wells that have mostly positive drops.
 #' @seealso
-#' \code{\link[ddpcr]{PPNP_ASSAy}},
+#' \code{\link[ddpcr]{pnpp_experiment}},
 #' \code{\link[ddpcr]{wells_negative}}
-#' @param x A ddPCR plate of type PPNP_ASSAY
+#' @param x A ddPCR plate of type pnpp_experiment
 #' @return Vector of wells with mostly positive drops.
 #' @examples 
-#' file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
+#' file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
 #' plate <- load_plate(file)
 #' plate %>% wells_positive
 #' @export
 wells_positive <- function(x) {
-  stopifnot(x %>% inherits("ppnp_assay"))
+  stopifnot(x %>% inherits("pnpp_experiment"))
   
   if (status(x) < step(x, 'CLASSIFY')) {
     return(c())
@@ -240,24 +242,24 @@ wells_positive <- function(x) {
     .[['well']]
 }
 
-#' Get wells containing many negative droplets in a PPNP assay
+#' Get wells containing many negative droplets in a PNPP experiment
 #' 
-#' In a PPNP assay, the two main non-empty clusters of drops are the negative
+#' In a PNPP experiment, the two main non-empty clusters of drops are the negative
 #' and positive clusters. The positive cluster appears in every well, while the
 #' negative cluster is not necessarily in every well. \code{wells_negative}
 #' returns a list of wells that have a significant number of negative drops.
 #' @seealso
-#' \code{\link[ddpcr]{PPNP_ASSAy}},
+#' \code{\link[ddpcr]{pnpp_experiment}},
 #' \code{\link[ddpcr]{wells_positive}}
-#' @param x A ddPCR plate of type PPNP_ASSAY
+#' @param x A ddPCR plate of type pnpp_experiment
 #' @return Vector of wells with significant number of negative drops.
 #' @examples 
-#' file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
+#' file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
 #' plate <- load_plate(file)
 #' plate %>% wells_negative
 #' @export
 wells_negative <- function(x) {
-  stopifnot(x %>% inherits("ppnp_assay"))
+  stopifnot(x %>% inherits("pnpp_experiment"))
   
   if (status(x) < step(x, 'CLASSIFY')) {
     return(c())

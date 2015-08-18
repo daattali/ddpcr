@@ -1,4 +1,4 @@
-context("ppnp_assay-calculate_neg_freq")
+context("pnpp_experiment-calculate_neg_freq")
 
 test_that("calc_negative_freq_simple works", {
   expect_equal(calc_negative_freq_simple(5, 45), 10)
@@ -16,7 +16,7 @@ test_that("calculate_neg_freq_single works", {
 })
 
 test_that("calculate_negative_freqs works", {
-  file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
+  file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
   plate <- load_plate(file)
   neg_freqs <-
     plate %>%

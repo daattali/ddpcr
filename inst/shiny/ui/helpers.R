@@ -36,42 +36,42 @@ withBusyIndicator <- function(button) {
 plotDropsParams <- list(
   "failed" = list(
     name = "Droplets in<br/>failed wells",
-    type = c(HEX_POSITIVE_PPNP, FAM_POSITIVE_PPNP, "ddpcr_plate"),
+    type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp, "ddpcr_plate"),
     show = TRUE,
     col = "Default",
     alpha = 0.1
   ),
   "outlier" = list(
     name = "Outlier droplets",
-    type = c(HEX_POSITIVE_PPNP, FAM_POSITIVE_PPNP, "ddpcr_plate"),
+    type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp, "ddpcr_plate"),
     show = FALSE,
     col = "orange",
     alpha = 1
   ),
   "empty" = list(
     name = "Empty droplets",
-    type = c(HEX_POSITIVE_PPNP, FAM_POSITIVE_PPNP, CROSSHAIR_THRESHOLDS, "ddpcr_plate"),
+    type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp, CROSSHAIR_THRESHOLDS, "ddpcr_plate"),
     show = FALSE,
     col = "Default",
     alpha = 0.1
   ),
   "rain" = list(
     name = "Rain droplets",
-    type = c(HEX_POSITIVE_PPNP, FAM_POSITIVE_PPNP),
+    type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp),
     show = TRUE,
     col = "black",
     alpha = 0.1
   ),
   "positive" = list(
     name = "Wild type droplets",
-    type = c(HEX_POSITIVE_PPNP, FAM_POSITIVE_PPNP),
+    type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp),
     show = TRUE,
     col = "green3",
     alpha = 0.1
   ),
   "negative" = list(
     name = "Mutant droplets",
-    type = c(HEX_POSITIVE_PPNP, FAM_POSITIVE_PPNP),
+    type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp),
     show = TRUE,
     col = "purple3",
     alpha = 0.1

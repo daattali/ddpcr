@@ -1,14 +1,27 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-# for this assay, we know that we don't expect any drops on the bottom right,
+#' Remove empty droplets
+#' @inheritParams remove_empty
+#' @export
+#' @keywords internal
+remove_empty.pnpp_experiment <- function(plate) {
+  # make sure the POSITIVE_DIM parameter is set (either the user manually set
+  # it, or by using a subtype that has a default)
+  if (is.na(positive_dim(plate))) {
+    err_msg("You cannot analyze a `pnpp_experiment` without setting the `positive_dim` parameter.")
+  }
+  NextMethod("remove_empty")
+}
+
+# for this plate type, we know that we don't expect any drops on the bottom right,
 # so it's ok to only have an empty cutoff in the y dimension to save time
-get_empty_cutoff.ppnp_assay <- function(plate, well_id) {
+get_empty_cutoff.pnpp_experiment <- function(plate, well_id) {
   well_data <- get_single_well(plate, well_id, empty = TRUE)
   
   positive_var <- positive_dim_var(plate)
   
-  set.seed(SEED)
+  set.seed(params(plate, 'GENERAL', 'RANDOM_SEED'))
 
   # fit two normal distributions in the data along the y dimension
   quiet(

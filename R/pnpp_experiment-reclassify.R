@@ -7,7 +7,7 @@ reclassify_droplets_single <- function(plate, well_id, ...) {
 }
 
 #' @export
-reclassify_droplets_single.ppnp_assay <- function(plate, well_id, ..., consensus_border_ratio) {
+reclassify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., consensus_border_ratio) {
   
   well_data <- get_single_well(plate, well_id, clusters = TRUE)
   variable_var <- variable_dim_var(plate)
@@ -30,7 +30,7 @@ reclassify_droplets <- function(plate) {
 }
   
 #' @export
-reclassify_droplets.ppnp_assay <- function(plate) {
+reclassify_droplets.pnpp_experiment <- function(plate) {
   # Reclassify mutant drops in wells with low mutant frequency.  The initial
   # classification was done more naively, but after analyzing all the wells,
   # we can now use the high mutant frequency wells as a reference and try to

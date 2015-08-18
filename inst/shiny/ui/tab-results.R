@@ -65,7 +65,7 @@ tabPanel(
                     uiOutput("plotParamSamplesSelect")
                   ),
                   div(
-                    `data-ddpcr-type` = paste(HEX_POSITIVE_PPNP, "ddpcr_plate", FAM_POSITIVE_PPNP, collapse = " "),
+                    `data-ddpcr-type` = paste(plate_types$hex_positive_pnpp, "ddpcr_plate", plate_types$fam_positive_pnpp, collapse = " "),
                     checkboxInput("plotParam_show_failed_wells", "Include failed wells", TRUE)
                   ),
                   checkboxInput("plotParam_show_drops", "Show droplets", TRUE)
@@ -89,7 +89,7 @@ tabPanel(
                                 allCols, "black")
                   ),
                   div(
-                    `data-ddpcr-type` = paste(HEX_POSITIVE_PPNP, FAM_POSITIVE_PPNP, collapse = " "),
+                    `data-ddpcr-type` = paste(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp, collapse = " "),
                     checkboxInput("plotParam_show_mutant_freq", "Show mutant frequency", TRUE),
                     numericInput("plotParam_text_size_mutant_freq", "Mutant frequency text size", 4, 0, 100)
                   )
@@ -208,7 +208,7 @@ tabPanel(
                 column(
                   6,
                   div(
-                    `data-ddpcr-type` = paste(HEX_POSITIVE_PPNP, FAM_POSITIVE_PPNP, collapse = " "),
+                    `data-ddpcr-type` = paste(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp, collapse = " "),
                     checkboxInput("plotParam_show_low_high_mut_freq",
                                   "Different colours for wells with high vs low mutant frequency",
                                   TRUE),

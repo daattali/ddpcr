@@ -6,7 +6,7 @@
 #' Check if any wells have failed the ddPCR experiment by checking a series
 #' of quality control metrics.  If any well is deemed as a failure, all the droplets
 #' in that well will be assigned to the \emph{FAILED} cluster.\cr\cr
-#' \href{https://github.com/daattali/ddpcr#algorithm}{See the README online} for
+#' \href{https://github.com/daattali/ddpcr#algorithm}{See the README} for
 #' more information about the algorithm used to find failed wells.
 #' 
 #' This function is recommended to be run as part of an analysis pipeline (ie.
@@ -20,7 +20,7 @@
 #' @seealso \code{\link[ddpcr]{analyze}}
 #' @note This is an S3 generic, which means that different ddPCR plate types can
 #' implement this function differently. 
-#' \href{https://github.com/daattali/ddpcr#extend}{See the README online} for
+#' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
 #' more information on how to implement custom ddPCR plate types.
 #' @export
 remove_failures <- function(plate) {
@@ -30,6 +30,7 @@ remove_failures <- function(plate) {
 #' Remove failed wells
 #' @inheritParams remove_failures
 #' @export
+#' @keywords internal
 remove_failures.ddpcr_plate <- function(plate) {
   CURRENT_STEP <- plate %>% step('REMOVE_FAILURES')
   plate %>% check_step(CURRENT_STEP, TRUE)
@@ -100,7 +101,7 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
     return(FALSE)
   }
   
-  set.seed(SEED)
+  set.seed(params(plate, 'GENERAL', 'RANDOM_SEED'))
   
   # fit two clusters into the 2D data
   kmeans <- kmeans(well_data, 2)

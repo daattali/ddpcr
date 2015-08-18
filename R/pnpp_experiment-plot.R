@@ -1,10 +1,10 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-#' Plot a ddPCR plate of type PPNP assay
+#' Plot a ddPCR plate of type PNPP experiment
 #' 
 #' Same plot as \code{\link[ddpcr]{plot.ddpcr_plate}} but with a few extra
-#' features that are specific to PPNP assays. The main additions are that
+#' features that are specific to PNPP experiments The main additions are that
 #' the negative frequency of each well can be written in each well, and well
 #' background colours can be used to differentiate between wells with a
 #' significant negative cluster vs wells with mostly positive drops. Take a look
@@ -37,11 +37,11 @@
 #' @return A ggplot2 plot object.
 #' @seealso
 #' \code{\link[ddpcr]{plot.ddpcr_plate}},
-#' \code{\link[ddpcr]{PPNP_ASSAY}}
+#' \code{\link[ddpcr]{plate_types$pnpp_experiment}}
 #' @examples 
 #' \dontrun{
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = PPNP_ASSAY)
+#' plate <- new_plate(dir, type = plate_types$pnpp_experiment)
 #' positive_dim(plate) <- "Y"
 #' plot(plate)
 #' plate <- plate %>% analyze
@@ -49,7 +49,7 @@
 #' plot(plate, "B01:C06", col_drops_rain = "blue")
 #' }
 #' @export
-plot.ppnp_assay <- function(
+plot.pnpp_experiment <- function(
   x,
   wells, samples,
   ...,

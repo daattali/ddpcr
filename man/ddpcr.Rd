@@ -9,7 +9,7 @@
 Analysis and visualization of Digital Droplet PCR data.
 }
 \details{
-\href{http://daattali.com/shiny/ddpcr/}{Use the tool online} or
+\href{http://daattali.com/shiny/ddpcr/}{Use the web tool} or
 \href{https://github.com/daattali/ddpcr}{read the full documentation on GitHub}.
 }
 

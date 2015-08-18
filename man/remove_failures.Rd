@@ -18,7 +18,7 @@ for any failed well and \code{TRUE} for all others.
 Check if any wells have failed the ddPCR experiment by checking a series
 of quality control metrics.  If any well is deemed as a failure, all the droplets
 in that well will be assigned to the \emph{FAILED} cluster.\cr\cr
-\href{https://github.com/daattali/ddpcr#algorithm}{See the README online} for
+\href{https://github.com/daattali/ddpcr#algorithm}{See the README} for
 more information about the algorithm used to find failed wells.
 }
 \details{
@@ -29,7 +29,7 @@ directly.
 \note{
 This is an S3 generic, which means that different ddPCR plate types can
 implement this function differently.
-\href{https://github.com/daattali/ddpcr#extend}{See the README online} for
+\href{https://github.com/daattali/ddpcr#extend}{See the README} for
 more information on how to implement custom ddPCR plate types.
 }
 \seealso{

@@ -19,7 +19,7 @@ observeEvent(input$uploadFilesBtn, {
     dataValues$plate <-
       new_plate(data_files = dataFiles$datapath,
                 meta_file = metaFile$datapath,
-                type = FAM_POSITIVE_PPNP)
+                type = plate_types$fam_positive_pnpp)
     
     output$datasetChosen <- reactive({ TRUE })
     show("datasetNextMsg")

@@ -1,7 +1,7 @@
-context("ppnp_assay-filled")
+context("pnpp_experiment-filled")
 
 test_that("get_filled_border works", {
-  file <- system.file("sample_data", "small", "analyzed_ppnp.rds", package = "ddpcr")
+  file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
   plate <- load_plate(file)
   
   border_B06 <- get_filled_border(plate, "B06")
@@ -13,7 +13,7 @@ test_that("get_filled_border works", {
 
 test_that("get_filled_drops works", {
   dir <- system.file("sample_data", "small", package = "ddpcr")
-  plate <- load_plate(file.path(dir, "analyzed_ppnp.rds"))
+  plate <- load_plate(file.path(dir, "analyzed_pnpp.rds"))
   
   border_B06 <- get_filled_border(plate, "B06")
   expect_identical(get_filled_drops(plate, "B06"),
