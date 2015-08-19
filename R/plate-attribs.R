@@ -31,11 +31,35 @@ type <- function(plate, all = FALSE) {
   }
 }
 
+#' Plate data (droplets data)
+#' 
+#' The main piece of information in every ddPCR plate is the droplets data,
+#' which contains the fluorescence intensities for every single droplet in
+#' every well. After a ddPCR plate gets analyzed, this data also includes the
+#' assigned cluster for each droplet. The plate data may be useful programatically,
+#' but it's not very useful to a human, so if you want to visualize the plate data
+#' you should instead plot it using \code{\link[ddpcr]{plot.ddpcr_plate}}.
+#' @param plate A ddPCR plate
+#' @return A dataframe containing all the droplets in the plate, along with
+#' the assigned cluster of each droplet.
+#' @seealso \code{\link[ddpcr]{plate_meta}}
+#' \code{\link[ddpcr]{plot.ddpcr_plate}}
 #' @export
 plate_data <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   plate[['plate_data']]
 }
+
+#' Overwrite the plate data
+#' 
+#' When creating custom analysis steps for new plate types, it is often necessary
+#' to set the plate data with new data, especially when assigning new clusters
+#' to the plate droplets.
+#' @param plate A ddPCR plate
+#' @param value New plate data
+#' @seealso \code{\link[ddpcr]{plate_data}}
+#' @export
+#' @keywords internal
 `plate_data<-` <- function(plate, value) {
   plate[['plate_data']] <- value
   plate

@@ -16,6 +16,14 @@ The plate with the parameters set to the plate type's default values.
 Use this function to reset a ddPCR plate's parameters back to their default
 values.
 }
+\examples{
+\dontrun{
+dir <- system.file("sample_data", "small", package = "ddpcr")
+plate <- new_plate(dir, type = plate_types$custom_thresholds)
+x_var(plate) <- "VIC"
+plate <- set_default_params(plate)
+}
+}
 \seealso{
 \code{\link[ddpcr]{params}}
 }

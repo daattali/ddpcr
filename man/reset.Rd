@@ -24,6 +24,13 @@ all the analysis progress will be lost, but the original droplet data and
 plate metadata will be kept. You can reset a plate either to restart the analysis,
 or to reset it to use a different plate type.
 }
+\examples{
+\dontrun{
+dir <- system.file("sample_data", "small", package = "ddpcr")
+plate <- new_plate(dir, type = plate_types$custom_thresholds)
+plate <- reset(plate, type=plate_types$fam_positive_pnpp)
+}
+}
 \seealso{
 \code{\link[ddpcr]{plate_types}}
 \code{\link[ddpcr]{new_plate}}

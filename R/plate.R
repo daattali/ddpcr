@@ -70,6 +70,11 @@
 #' \code{\link[ddpcr]{reset}}
 #' \code{\link[ddpcr]{analyze}}
 #' \code{\link[ddpcr]{plot.ddpcr_plate}}
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir)
+#' } 
 #' @export
 new_plate <- function(dir, type, data_files, meta_file, name, params) {
   plate <- setup_new_plate(type)
@@ -103,6 +108,12 @@ new_plate <- function(dir, type, data_files, meta_file, name, params) {
 #' @return A new unanalyzed ddPCR plate 
 #' @seealso \code{\link[ddpcr]{plate_types}}
 #' \code{\link[ddpcr]{new_plate}}
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- reset(plate, type=plate_types$fam_positive_pnpp)
+#' } 
 #' @export
 reset <- function(plate, type, params,
                   keep_type = FALSE, keep_params = FALSE) {
@@ -130,6 +141,13 @@ reset <- function(plate, type, params,
 #' @param plate A ddPCR plate.
 #' @return The plate with the parameters set to the plate type's default values.
 #' @seealso \code{\link[ddpcr]{params}}
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' x_var(plate) <- "VIC"
+#' plate <- set_default_params(plate)
+#' } 
 #' @export
 set_default_params <- function(plate) {
   if (!is_empty_plate(plate)) {
@@ -142,22 +160,49 @@ set_default_params <- function(plate) {
   plate
 }
 
+#' Get metadata info of a well
+#' 
+#' Each ddPCR plate has associated metadata that stores infromation for every well.
+#' Use this function to retrieve any metadata information for a single well or
+#' for a list of wells.
+#' 
+#' @param plate A ddPCR plate
+#' @param well_ids A character vecotr of well IDs denoting the wells to get information
+#' for
+#' @param var The metadata variable to get (to see a list of all possible metadata
+#' variables, use \code{names(plate_meta(plate))})
+#' @return A character vector with the wanted metadata variable value for each
+#' well.
+#' @seealso \code{\link[ddpcr]{plate_meta}}
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' well_info(plate, "B01", "drops")
+#' } 
 #' @export
-well_info <- function(plate, well_id, var) {
+well_info <- function(plate, well_ids, var) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
   plate_meta(plate) %>%
-    dplyr::filter_(~ well %in% well_id) %>%
+    dplyr::filter_(~ well %in% well_ids) %>%
     .[[var]]
 }
 
-
-
-
-
-
-
-
+#' Wells used in a ddPCR plate
+#' 
+#' Get a list of the wells that have any data in a ddPCR plate.
+#' @param plate A ddPCR plate
+#' @return List of wells that have any data in the given plate.
+#' @seealso \code{\link[ddpcr]{subset.ddpcr_plate}}
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' wells_used(plate)
+#' plate <- subset(plate, "B01:C06")
+#' wells_used(plate)
+#' } 
 #' @export
 wells_used <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
@@ -168,34 +213,35 @@ wells_used <- function(plate) {
     .[['well']]
 }
 
-#' @export
-wells_success <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
-  if (!(plate %>% has_step('REMOVE_FAILURES')) ||
-      plate %>% status < step(plate, 'REMOVE_FAILURES')) {
-    return(plate %>% plate_meta %>% .[['well']])
-  }
-  plate %>%
-    plate_meta %>%
-    dplyr::filter_(~ success) %>%
-    .[['well']]
-}
-
-#' @export
-wells_failed <- function(plate) {
-  stopifnot(plate %>% inherits("ddpcr_plate"))
-  
-  if (!(plate %>% has_step('REMOVE_FAILURES')) ||
-      plate %>% status < step(plate, 'REMOVE_FAILURES')) {
-    return()
-  }  
-  plate %>%
-    plate_meta %>%
-    dplyr::filter_(~ !success) %>%
-    .[['well']]
-}
-
+#' Run analysis on a ddPCR plate
+#'
+#' Every ddPCR plate has a set of defined steps that are taken in order, that
+#' together constitute "analyzing" the plate.  Calling the \code{analyze} function
+#' will perform all the analysis steps, which may take several minutes. Running
+#' the analysis will classify the droplets in the plate into clusters (available
+#' via \code{\link[ddpcr]{plate_data}}) and will add variables to the plate
+#' metadata (available via \code{\link[ddpcr]{plate_meta}}).
+#' 
+#' This function will run an analysis to completion. If you want to run each
+#' step one at a time, use \code{\link[ddpcr]{next_step}}. 
+#' 
+#' @param plate A ddPCR plate
+#' @param restart If \code{TRUE}, then run the analysis from the beginning;
+#' othrewise, continue from the last step that was performed.
+#' @return The analyzed ddPCR plate
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- analyze(plate)
+#' } 
+#' @seealso
+#' \code{\link[ddpcr]{next_step}}
+#' \code{\link[ddpcr]{plot.ddpcr_plate}}
+#' \code{\link[ddpcr]{new_plate}}
+#' \code{\link[ddpcr]{steps}}
+#' \code{\link[ddpcr]{plate_data}}
+#' \code{\link[ddpcr]{plate_meta}}
 #' @export
 analyze <- function(plate, restart = FALSE) {
   if (restart) {
@@ -208,6 +254,28 @@ analyze <- function(plate, restart = FALSE) {
   plate
 }
 
+
+#' Run the next step in an analysis
+#'
+#' Every ddPCR plate has a set of defined steps that are taken in order, that
+#' together constitute "analyzing" the plate.  Calling the \code{next_step} function
+#' will run the next step in the analysis, which may take several minutes. If you
+#' want to run all the remaining steps, use \code{\link[ddpcr]{analyze}}.
+#' 
+#' @param plate A ddPCR plate
+#' @param n The number of steps to run
+#' @return The ddPCR plate after running the next step
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- next_step(plate)
+#' } 
+#' @seealso \code{\link[ddpcr]{plot.ddpcr_plate}}
+#' \code{\link[ddpcr]{analyze}}
+#' \code{\link[ddpcr]{steps}}
+#' \code{\link[ddpcr]{plate_data}}
+#' \code{\link[ddpcr]{plate_meta}}
 #' @export
 next_step <- function(plate, n = 1) {
   if (n == 0) {

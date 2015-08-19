@@ -78,6 +78,12 @@ Most numeric parameters that are used in the algorithms of the analysis steps
 can be modified in a similar fashion, which can be used to fine-tune the
 analysis of a plate if you require different parameters.
 }
+\examples{
+\dontrun{
+dir <- system.file("sample_data", "small", package = "ddpcr")
+plate <- new_plate(dir)
+}
+}
 \seealso{
 \code{\link[ddpcr]{plate_types}}
 \code{\link[ddpcr]{type}}

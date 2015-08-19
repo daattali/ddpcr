@@ -133,3 +133,49 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
   
   return(TRUE)
 }
+
+#' Get successful/failed wells
+#' 
+#' Get a list of wells that had successful or failed ddPCR runs. One of the analysis steps
+#' for ddPCR plates includes identifying failed wells, which are wells where
+#' the ddPCR run was not successful and did not produce useful droplet data.
+#' @param plate A ddPCR plate
+#' @return List of wells that had a successful/failed ddPCR run.
+#' @seealso \code{\link[ddpcr]{remove_failures}}
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate %>% analyze %>% wells_success
+#' } 
+#' @name wells_success
+NULL
+
+#' @rdname wells_success
+#' @export
+wells_success <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  
+  if (!(plate %>% has_step('REMOVE_FAILURES')) ||
+      plate %>% status < step(plate, 'REMOVE_FAILURES')) {
+    return(plate %>% plate_meta %>% .[['well']])
+  }
+  plate %>%
+    plate_meta %>%
+    dplyr::filter_(~ success) %>%
+    .[['well']]
+}
+#' @rdname wells_success
+#' @export
+wells_failed <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  
+  if (!(plate %>% has_step('REMOVE_FAILURES')) ||
+      plate %>% status < step(plate, 'REMOVE_FAILURES')) {
+    return()
+  }  
+  plate %>%
+    plate_meta %>%
+    dplyr::filter_(~ !success) %>%
+    .[['well']]
+}
