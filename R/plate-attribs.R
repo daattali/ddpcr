@@ -65,23 +65,75 @@ plate_data <- function(plate) {
   plate
 }
 
+#' Plate status
+#' 
+#' The status of a plate corresponds to the number of analysis steps that have
+#' taken place. A plate that has been initialized but has not yet been analyzed
+#' at all has status 1.\cr\cr
+#' If you add custom analysis steps to a new plate type, you should make sure
+#' to update the status of the plate after each step. You can use 
+#' \code{\link[ddpcr]{check_step}} to ensure that the plate is at an appropriate
+#' status before beginning each step.
+#' @seealso \code{\link[ddpcr]{steps}}
+#' \code{\link[ddpcr]{check_step}}
+#' @name status
+NULL
+
+#' @rdname status
 #' @export
+#' @keywords internal
 status <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   plate[['status']]
 }
+#' @rdname status
+#' @export
+#' @keywords internal
 `status<-` <- function(plate, value) {
   plate[['status']] <- value
   plate
 }
+
+#' Is a plate empty?
+#' 
+#' A plate is considered empty if it has not yet been fully initialized, and thus
+#' its status is 0.
+#' @seealso \code{\link[ddpcr]{status}}
+#' @export
+#' @keywords internal
 is_empty_plate <- function(plate) {
   is.null(status(plate))
 }
+
+#' Is the analysis complete?
+#' 
+#' Check if a ddPCR plate has been fully analyzed or if there are remaining steps.
+#' 
+#' @param plate A ddPCR plate
+#' @return \code{TRUE} if the plate's analysis has been fully carried out;
+#' \code{FALSE} otherwise. 
+#' @seealso \code{\link[ddpcr]{status}}
+#' \code{\link[ddpcr]{analyze}}
 #' @export
 analysis_complete <- function(plate) {
   status(plate) == length(steps(plate))
 }
 
+#' Plate metadata 
+#'
+#' The metadata is a collection of variables that describe each well in the plate.
+#' The metadata of an unanalyzed plate only contains basic information about each
+#' well, such as the sample name, whether the well was used, and the number of 
+#' droplets in the well. Analyzing a plate adds many more variables to the metadata,
+#' such as the number of empty droplets, the number of outliers, the template 
+#' concentration, and more.
+#' 
+#' @param plate A ddPCR plate
+#' @param only_used If \code{TRUE}, only return metadata for wells that are
+#' used in this plate (wells that have any data)
+#' @return A dataframe containing the plate metadata
+#' @seealso \code{\link[ddpcr]{plate_data}}
+#' \code{\link[ddpcr]{plot.ddpcr_plate}}
 #' @export
 plate_meta <- function(plate, only_used = FALSE) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
@@ -92,10 +144,20 @@ plate_meta <- function(plate, only_used = FALSE) {
     plate[['plate_meta']]
   }
 }
+#' Overwrite the plate metadata
+#' 
+#' When creating custom analysis steps for new plate types, it is often necessary
+#' to add/change variables in the plate metadata.
+#' @param plate A ddPCR plate
+#' @param value New plate metadata
+#' @seealso \code{\link[ddpcr]{plate_meta}}
+#' @export
+#' @keywords internal
 `plate_meta<-` <- function(plate, value) {
   plate[['plate_meta']] <- value
   plate
 }
+# Arrange the metadata such that the more general variables are near the beginning
 arrange_meta <- function(plate) {
   if ("success" %in% colnames(plate)) {
     plate %>% dplyr::arrange_(~ desc(used), ~ desc(success), ~ row, ~ col)  
