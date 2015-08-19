@@ -49,7 +49,7 @@ In other words, the built-in automatic gating will work when there are three clu
 
 If your experiment matches the criteria for a **PNPP** experiment (either a **(FAM+)/(FAM+HEX+)** or a **(HEX+)/(FAM+HEX+)** experiment), then after calculating empty droplets the program will analyze the rest of the droplets and assign each droplet one of the following three clustes: FAM+ (or HEX+), FAM+HEX+, or rain. Here is the result of analyzing a single well from a **(FAM+)/(FAM+HEX+)** experiment:
 
-[![Analyze result](vignettes/figures/ppnp-simple-result.png)](vignettes/figures/ppnp-simple-result.png)
+[![Analyze result](vignettes/figures/pnpp-simple-result.png)](vignettes/figures/pnpp-simple-result.png)
 
 If your ddPCR experiment is not a **PNPPP** type, you can still use this tool for the rest of the analysis, exploration, and plotting, but it will not benefit from the automatic gating. However, `ddpcr` is built to be easily extensible, which means that you can add your own experiment "type". Custom experiment types need to define their own method for gating the droplets in a well, and then they can be used in the same way as the built-in experiment types.
 
@@ -85,7 +85,7 @@ dir <- system.file("sample_data", "small", package = "ddpcr")
 
 # example 1: manually set thresholds
 plate1 <-
-  new_plate(dir, type = CROSSHAIR_THRESHOLDS) %>%
+  new_plate(dir, type = plate_types$custom_thresholds) %>%
   subset("B01,B06") %>%
   set_thresholds(c(5000, 7500)) %>%
   analyze
@@ -93,11 +93,11 @@ plot(plate1, show_grid_labels = TRUE, alpha_drops = 0.3,
        title = "Manually set gating thresholds\nworks with any data")
 
 # example 2: automatic gating
-new_plate(dir, type = FAM_POSITIVE_PPNP) %>%
+new_plate(dir, type = plate_types$fam_positive_pnpp) %>%
   subset("B01:B06") %>%
   analyze %>%
   plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, alpha_drops = 0.3,
-       title = "Automatic gating\nworks with PPNP experiments")
+       title = "Automatic gating\nworks with PNPP experiments")
 ```
 
 <img src="vignettes/README-quickstart-1.png" title="" alt="" width="50%" /><img src="vignettes/README-quickstart-2.png" title="" alt="" width="50%" />
@@ -134,13 +134,13 @@ We can explore the data we loaded even before doing any analysis
 
 ``` r
 plate
-#> ddpcr plate
-#> -----------
-#> Dataset name: small
-#> Plate type: ddpcr_plate
-#> Data summary: 5 wells; 75,706 drops
-#> Completed analysis steps: INITIALIZE
-#> Remaining analysis steps: REMOVE_FAILURES, REMOVE_OUTLIERS, REMOVE_EMPTY
+#>                     ddpcr plate
+#>                    -------------
+#>             Dataset name : small
+#>             Data summary : 5 wells; 75,706 drops
+#>               Plate type : ddpcr_plate
+#> Completed analysis steps : INITIALIZE
+#> Remaining analysis steps : REMOVE_FAILURES, REMOVE_OUTLIERS, REMOVE_EMPTY
 ```
 
 Among other things, this tells us how many wells and total droplets we have in the data, and what steps of the analysis are remaining. All the information that gets shown when you print a ddpcr plate object is also available through other functions that are dedicated to show one piece of information. For example
@@ -251,12 +251,12 @@ We can explore the plate again, now that it has been analyzed.
 
 ``` r
 plate
-#> ddpcr plate
-#> -----------
-#> Dataset name: small
-#> Plate type: ddpcr_plate
-#> Data summary: 4 wells; 60,905 drops
-#> Analysis completed
+#>         ddpcr plate
+#>        -------------
+#> Dataset name : small
+#> Data summary : 4 wells; 60,905 drops
+#>   Plate type : ddpcr_plate
+#>       Status : Analysis completed
 ```
 
 We now get a message that says the analysis is complete (earlier it said what steps are remaining). We can also look at the droplets data
@@ -346,24 +346,25 @@ from_file <- load_plate("myplate")
 identical(plate, from_file)
 #> [1] TRUE
 rm(from_file)
+unlink("myplate.rds")
 ```
 
 ### Plate parameters
 
-Every ddPCR plate object has adjustable parameters associated to it. There are general parameters that apply to the plate as a whole, and each step has its own set of parameters that are used in that step. You can see all the parameters of a plate using the `params()` function
+Every ddPCR plate object has adjustable parameters associated with it. There are general parameters that apply to the plate as a whole, and each analysis step has its own set of parameters that are used for the algorithm in that step. You can see all the parameters of a plate using the `params()` function
 
 ``` r
 plate %>% params %>% str
 #> List of 4
-#>  $ GENERAL        :List of 3
+#>  $ GENERAL        :List of 4
 #>   ..$ X_VAR         : chr "HEX"
 #>   ..$ Y_VAR         : chr "FAM"
 #>   ..$ DROPLET_VOLUME: num 0.00091
-#>  $ REMOVE_FAILURES:List of 4
-#>   ..$ TOTAL_DROPS_T       : num 5000
-#>   ..$ NORMAL_LAMBDA_LOW_T : num 0.3
-#>   ..$ NORMAL_LAMBDA_HIGH_T: num 0.99
-#>   ..$ NORMAL_SIGMA_T      : num 200
+#>   ..$ RANDOM_SEED   : num 8
+#>  $ REMOVE_FAILURES:List of 3
+#>   ..$ TOTAL_DROPS_T      : num 5000
+#>   ..$ EMPTY_LAMBDA_LOW_T : num 0.3
+#>   ..$ EMPTY_LAMBDA_HIGH_T: num 0.99
 #>  $ REMOVE_OUTLIERS:List of 2
 #>   ..$ TOP_PERCENT: num 1
 #>   ..$ CUTOFF_IQR : num 5
@@ -378,14 +379,11 @@ plate %>% params("REMOVE_FAILURES")
 #> $TOTAL_DROPS_T
 #> [1] 5000
 #> 
-#> $NORMAL_LAMBDA_LOW_T
+#> $EMPTY_LAMBDA_LOW_T
 #> [1] 0.3
 #> 
-#> $NORMAL_LAMBDA_HIGH_T
+#> $EMPTY_LAMBDA_HIGH_T
 #> [1] 0.99
-#> 
-#> $NORMAL_SIGMA_T
-#> [1] 200
 ```
 
 You can also view or edit specific parameters. When identifying failed wells, one of the conditions for a successful run is to have at least 5000 droplets in the well (Bio-Rad claims that every well has 20000 droplets). If you know that your particular experiment had much less droplets than usual and as a result `ddpcr` thinks that all the wells are failures, you can change the setting
@@ -427,21 +425,21 @@ plate <- analyze(plate, restart = TRUE)
 Analysing any ddPCR plate with manual droplet gating
 ----------------------------------------------------
 
-The previous walkthrough shows the results of a basic analysis when using the default plate type. If you want to also perform a simple 4-quadrant gating like the one available in QuantaSoft, you need to set the type of the plate object to `CROSSHAIR_THRESHOLDS`. This can either be done when initializing a new plate or by reseting an existing plate object.
+The previous walkthrough shows the results of a basic analysis when using the default plate type. If you want to also perform a simple 4-quadrant gating like the one available in QuantaSoft, you need to set the type of the plate object to `plate_types$custom_thresholds`. This can either be done when initializing a new plate or by reseting an existing plate object.
 
 ``` r
-plate_manual <- reset(plate, type = CROSSHAIR_THRESHOLDS)
-plate_manual2 <- new_plate(dir, type = CROSSHAIR_THRESHOLDS) %>% subset("B01:C06")
+plate_manual <- reset(plate, type = plate_types$custom_thresholds)
+plate_manual2 <- new_plate(dir, type = plate_types$custom_thresholds) %>% subset("B01:C06")
 identical(plate_manual, plate_manual2)
 #> [1] TRUE
 plate_manual
-#> ddpcr plate
-#> -----------
-#> Dataset name: small
-#> Plate type: crosshair_thresholds, ddpcr_plate
-#> Data summary: 4 wells; 60,905 drops
-#> Completed analysis steps: INITIALIZE
-#> Remaining analysis steps: REMOVE_OUTLIERS, CLASSIFY
+#>                     ddpcr plate
+#>                    -------------
+#>             Dataset name : small
+#>             Data summary : 4 wells; 60,905 drops
+#>               Plate type : custom_thresholds, ddpcr_plate
+#> Completed analysis steps : INITIALIZE
+#> Remaining analysis steps : REMOVE_OUTLIERS, CLASSIFY
 rm(plate_manual2)
 ```
 
@@ -502,9 +500,9 @@ If you have a *PNPP* experiment (*(FAM+)/(FAM+HEX+)* or *(HEX+)/(FAM+HEX+)*) the
 The first step is to define the type of plate. Again, this can be done wither by resetting an existing plate and specifying a different type, or by specifying a type when initializing a plate.
 
 ``` r
-plate_pnpp <- new_plate(dir, type = PPNP_ASSAY)
+plate_pnpp <- new_plate(dir, type = plate_types$pnpp_experiment)
 #> Reading data files into plate... DONE (0 seconds)
-#> Initializing plate of type `ppnp_assay`... DONE (0 seconds)
+#> Initializing plate of type `pnpp_experiment`... DONE (0 seconds)
 ```
 
 This time the plate is not being subset, so we will retain all 5 wells in the raw data.
@@ -611,14 +609,14 @@ By default, the reclassification step takes place if there are at least 4 wells 
 params(plate_pnpp, 'RECLASSIFY', 'MIN_WELLS_NEGATIVE_CLUSTER') <- 2
 ```
 
-As a reminder, `params(plate_ppnp) %>% str` will list all the available parameters.
+As a reminder, `params(plate_pnpp) %>% str` will list all the available parameters.
 
 Now if we re-analyze the plate, the two wells with mostly *positive* droplets will be reanalyzed using the gate information from the other wells, which should not change much but it could be a little more accurate.
 
 ``` r
 plate_pnpp %>% analyze(restart = TRUE) %>% plot(text_size_negative_freq = 8)
 #> Restarting analysis
-#> Initializing plate of type `ppnp_assay`... DONE (0 seconds)
+#> Initializing plate of type `pnpp_experiment`... DONE (0 seconds)
 #> Identifying failed wells... DONE (0 seconds)
 #> Identifying outlier droplets... DONE (0 seconds)
 #> Identifying empty droplets... DONE (0 seconds)
@@ -670,6 +668,7 @@ ddpcr:::init_plate
 #>     init_meta
 #>   
 #>   status(plate) <- step(plate, 'INITIALIZE')
+#>   plate[['version']] <- as.character(packageVersion("ddpcr"))
 #>   step_end()
 #>   
 #>   plate

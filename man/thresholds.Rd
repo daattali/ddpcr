@@ -16,8 +16,6 @@ set_thresholds(plate, value)
 \item{plate}{A ddPCR plate.}
 
 \item{value}{The new thresholds as a 2-element numeric vector}
-
-\item{value}{The new thresholds as a 2-element numeric vector}
 }
 \value{
 The current thresholds

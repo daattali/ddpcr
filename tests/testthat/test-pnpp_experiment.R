@@ -34,9 +34,6 @@ test_that("positive_dim and variable_dim work", {
   positive_dim(plate) <- "X"
   expect_identical(positive_dim(plate), "X")
   expect_identical(variable_dim(plate), "Y")
-  variable_dim(plate) <- "x"
-  expect_identical(positive_dim(plate), "Y")
-  expect_identical(variable_dim(plate), "X")
 })
 
 test_that("positive_dim_var and variable_dim_var work", {
@@ -50,10 +47,10 @@ test_that("positive_dim_var and variable_dim_var work", {
 })
 
 test_that("other_dim works", {
-  expect_identical(other_dim("x"), other_dim("X"))
-  expect_identical(other_dim("y"), other_dim("Y"))
-  expect_identical(other_dim("x"), "Y")
-  expect_identical(other_dim("y"), "X")
+  expect_identical(other_dim("X"), "Y")
+  expect_identical(other_dim("Y"), "X")
+  expect_error(other_dim("x"))
+  expect_error(other_dim("Z"))
 })
 
 test_that("meta_var_name works", {
@@ -73,5 +70,5 @@ test_that("wells_positive and wells_negative work", {
   file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
   plate <- load_plate(file)
   expect_identical(plate %>% wells_positive, c("B01", "C01"))
-  expect_identical(plate %>% wells_negative, c("B06", "C09"))
+  expect_identical(plate %>% wells_negative, c("B06", "C08"))
 })

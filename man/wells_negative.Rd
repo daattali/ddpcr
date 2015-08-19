@@ -4,7 +4,7 @@
 \alias{wells_negative}
 \title{Get negative wells}
 \usage{
-wells_negative(x)
+wells_negative(plate)
 }
 \arguments{
 \item{plate}{A ddPCR plate.}

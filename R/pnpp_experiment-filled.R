@@ -17,8 +17,8 @@
 #' file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
 #' plate <- load_plate(file)
 #' get_filled_border(plate, "B06")
-#' get_filled_border(plate, "C09")
-#' @seealso \code{\link[ddpcr]{plate_types$pnpp_experiment}},
+#' get_filled_border(plate, "C08")
+#' @seealso \code{\link[ddpcr]{pnpp_experiment}},
 #' @seealso \code{\link[ddpcr]{positive_dim}},
 #' @seealso \code{\link[ddpcr]{get_filled_drops}}
 #' @keywords internal
@@ -66,7 +66,7 @@ get_filled_border <- function(plate, well_id) {
 #' plate <- load_plate(file)
 #' get_filled_drops(plate, "B06")
 #' get_filled_drops(plate, "B06", get_filled_border(plate, "B06"))
-#' @seealso \code{\link[ddpcr]{plate_types$pnpp_experiment}},
+#' @seealso \code{\link[ddpcr]{pnpp_experiment}},
 #' @seealso \code{\link[ddpcr]{positive_dim}},
 #' @seealso \code{\link[ddpcr]{get_filled_drops}}
 #' @keywords internal

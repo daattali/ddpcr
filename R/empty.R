@@ -31,7 +31,7 @@ remove_empty <- function(plate) {
 #' @keywords internal
 remove_empty.ddpcr_plate <- function(plate) {
   CURRENT_STEP <- plate %>% step('REMOVE_EMPTY')
-  plate %>% check_step(CURRENT_STEP, TRUE)
+  plate %>% check_step(CURRENT_STEP)
   step_begin("Identifying empty droplets")
   
   # ---
@@ -51,7 +51,7 @@ remove_empty.ddpcr_plate <- function(plate) {
   CLUSTERS_UNANALYZED <- unanalyzed_clusters(plate, 'EMPTY')
   data <-
     plate_data(plate) %>%
-    dplyr::group_by(well) %>%
+    dplyr::group_by_("well") %>%
     dplyr::do({
       well_data <- .
       well_id = well_data[['well']][1]

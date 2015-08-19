@@ -19,7 +19,6 @@
 #' @seealso
 #' \code{\link[ddpcr]{plate_types}}
 #' @name ddpcr_plate
-#' @usage plate_types$ddpcr_plate
 #' @examples 
 #' \dontrun{
 #' dir <- system.file("sample_data", "small", package = "ddpcr")

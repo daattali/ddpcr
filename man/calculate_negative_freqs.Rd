@@ -20,7 +20,7 @@ plate \%>\% calculate_negative_freqs \%>\%
   well_info(wells_success(plate), "negative_freq")
 }
 \seealso{
-\code{\link[ddpcr]{plate_types$pnpp_experiment}}
+\code{\link[ddpcr]{pnpp_experiment}}
 }
 \keyword{internal}
 

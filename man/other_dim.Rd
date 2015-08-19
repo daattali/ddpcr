@@ -11,7 +11,7 @@ Given an axis (X or Y), return the other
 }
 \examples{
 other_dim("X")
-other_dim("y")
+other_dim("Y")
 }
 \keyword{internal}
 

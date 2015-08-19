@@ -12,6 +12,14 @@ supported. If no plate type is specified, the default type is
 For full details on the differences between plate types or to learn how to
 add a new plate type, \href{https://github.com/daattali/ddpcr}{see the package README}.
 }
+\examples{
+\dontrun{
+dir <- system.file("sample_data", "small", package = "ddpcr")
+new_plate(dir, type = plate_types$ddpcr_plate)
+new_plate(dir, type = plate_types$custom_thresholds)
+new_plate(dir, type = plate_types$fam_positive_pnpp)
+}
+}
 \seealso{
 \code{\link[ddpcr]{new_plate}}
 \code{\link[ddpcr]{fam_positive_pnpp}}

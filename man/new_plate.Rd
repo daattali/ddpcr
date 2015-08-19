@@ -90,5 +90,6 @@ plate <- new_plate(dir)
 \code{\link[ddpcr]{reset}}
 \code{\link[ddpcr]{analyze}}
 \code{\link[ddpcr]{plot.ddpcr_plate}}
+\code{\link[ddpcr]{params}}
 }
 

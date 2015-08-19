@@ -13,7 +13,7 @@
 \item{x}{A ddPCR plate.}
 
 \item{wells}{Only plot selected wells. Supports range notation, see
-\code{\link[ddpcr]{subset}}.}
+\code{\link[ddpcr]{subset.ddpcr_plate}}.}
 
 \item{samples}{Only plot selected samples.}
 
@@ -52,6 +52,6 @@ plate \%>\% set_thresholds(c(5500, 8000)) \%>\% analyze \%>\% plot
 }
 \seealso{
 \code{\link[ddpcr]{plot.ddpcr_plate}},
-\code{\link[ddpcr]{plate_types$custom_thresholds}}
+\code{\link[ddpcr]{custom_thresholds}}
 }
 

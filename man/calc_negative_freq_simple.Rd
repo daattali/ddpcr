@@ -21,7 +21,7 @@ Calculate negative frequency based on number of drops
 calc_negative_freq_simple(5, 45)
 }
 \seealso{
-\code{\link[ddpcr]{plate_types$pnpp_experiment}}
+\code{\link[ddpcr]{pnpp_experiment}}
 }
 \keyword{internal}
 

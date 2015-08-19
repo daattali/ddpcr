@@ -33,7 +33,7 @@ remove_failures <- function(plate) {
 #' @keywords internal
 remove_failures.ddpcr_plate <- function(plate) {
   CURRENT_STEP <- plate %>% step('REMOVE_FAILURES')
-  plate %>% check_step(CURRENT_STEP, TRUE)
+  plate %>% check_step(CURRENT_STEP)
   step_begin("Identifying failed wells")
   
   data <- plate_data(plate)
@@ -145,8 +145,9 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
 #' @examples 
 #' \dontrun{
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
-#' plate %>% analyze %>% wells_success
+#' plate <- new_plate(dir) %>% analyze
+#' plate %>% wells_success
+#' plate %>% wells_failed
 #' } 
 #' @name wells_success
 NULL

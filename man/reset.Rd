@@ -11,6 +11,9 @@ reset(plate, type, params, keep_type = FALSE, keep_params = FALSE)
 
 \item{type}{A ddPCR plate type (see \code{\link[ddpcr]{plate_types}})}
 
+\item{params}{List of parameters to set for the plate. Only advanced users
+should consider using this feature. See \code{\link[ddpcr]{new_plate}} for usage.}
+
 \item{keep_type}{If \code{TRUE} then use keep the same plate type as \code{plate}}
 
 \item{keep_params}{If \code{TRUE} then keep the same plate parameters of \code{plate}}

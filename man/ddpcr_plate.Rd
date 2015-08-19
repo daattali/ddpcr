@@ -3,9 +3,6 @@
 \name{ddpcr_plate}
 \alias{ddpcr_plate}
 \title{Plate type: ddPCR plate}
-\usage{
-plate_types$ddpcr_plate
-}
 \description{
 The default plate type that all other plates inherit from. If you initialize
 a ddPCR plate without specifying a plate type, \code{ddpcr_plate} will be the

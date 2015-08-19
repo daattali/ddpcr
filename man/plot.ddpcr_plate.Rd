@@ -21,7 +21,7 @@
 \item{x}{A ddPCR plate.}
 
 \item{wells}{Only plot selected wells. Supports range notation, see
-\code{\link[ddpcr]{subset}}.}
+\code{\link[ddpcr]{subset.ddpcr_plate}}.}
 
 \item{samples}{Only plot selected samples.}
 

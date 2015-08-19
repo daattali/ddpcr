@@ -21,6 +21,13 @@ assigned cluster for each droplet. The plate data may be useful programatically,
 but it's not very useful to a human, so if you want to visualize the plate data
 you should instead plot it using \code{\link[ddpcr]{plot.ddpcr_plate}}.
 }
+\examples{
+\dontrun{
+dir <- system.file("sample_data", "small", package = "ddpcr")
+plate <- new_plate(dir)
+plate_data(plate)
+}
+}
 \seealso{
 \code{\link[ddpcr]{plate_meta}}
 \code{\link[ddpcr]{plot.ddpcr_plate}}

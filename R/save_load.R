@@ -9,7 +9,7 @@
 #' you want to save the droplets data or the metadata of a plate, then first
 #' retrieve the data using \code{\link[ddpcr]{plate_data}} or
 #' \code{\link[ddpcr]{plate_meta}} and save it with 
-#' \code{\link[base]{write.csv}}.
+#' \code{\link[utils]{write.csv}}.
 #' 
 #' @param plate Plate object to save.
 #' @param file Name of the file where the plate will be saved.

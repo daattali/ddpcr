@@ -3,9 +3,6 @@
 \name{wildtype_mutant_pnpp}
 \alias{wildtype_mutant_pnpp}
 \title{Plate type: wildtype/mutant PNPP}
-\usage{
-plate_types$wildtype_mutant_pnpp
-}
 \description{
 A plate of type \code{wildtype_mutant_pnpp} is a subtype of
 \code{\link[ddpcr]{pnpp_experiment}} that assumes the double-positive cluster

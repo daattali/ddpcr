@@ -3,9 +3,6 @@
 \name{hex_positive_pnpp}
 \alias{hex_positive_pnpp}
 \title{Plate type: HEX-positive PNPP}
-\usage{
-plate_types$hex_positive_pnpp
-}
 \description{
 A ddPCR plate of type \code{hex_positive_pnpp}, which can also be expressed as
 (HEX+)/(FAM+HEX+), is a subtype of both \code{\link[ddpcr]{pnpp_experiment}}

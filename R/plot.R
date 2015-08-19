@@ -11,7 +11,7 @@
 #' 
 #' @param x A ddPCR plate.
 #' @param wells Only plot selected wells. Supports range notation, see
-#' \code{\link[ddpcr]{subset}}.
+#' \code{\link[ddpcr]{subset.ddpcr_plate}}.
 #' @param samples Only plot selected samples.
 #' @param superimpose If \code{TRUE}, show all wells superimposed in one plot;
 #' otherwise, show wells in a grid.

@@ -27,5 +27,12 @@ DEFAULT_PLATE_META <-
 #' \code{\link[ddpcr]{type}}
 #' @format NULL 
 #' @usage NULL
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' new_plate(dir, type = plate_types$ddpcr_plate)
+#' new_plate(dir, type = plate_types$custom_thresholds)
+#' new_plate(dir, type = plate_types$fam_positive_pnpp)
+#' }
 #' @export
 plate_types <- list()

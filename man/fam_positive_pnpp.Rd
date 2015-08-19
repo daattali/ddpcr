@@ -3,9 +3,6 @@
 \name{fam_positive_pnpp}
 \alias{fam_positive_pnpp}
 \title{Plate type: FAM-positive PNPP}
-\usage{
-plate_types$fam_positive_pnpp
-}
 \description{
 A ddPCR plate of type \code{fam_positive_pnpp}, which can also be expressed as
 (FAM+)/(FAM+HEX+), is a subtype of both \code{\link[ddpcr]{pnpp_experiment}}

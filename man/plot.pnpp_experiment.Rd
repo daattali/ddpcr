@@ -16,7 +16,7 @@
 \item{x}{A ddPCR plate.}
 
 \item{wells}{Only plot selected wells. Supports range notation, see
-\code{\link[ddpcr]{subset}}.}
+\code{\link[ddpcr]{subset.ddpcr_plate}}.}
 
 \item{samples}{Only plot selected samples.}
 
@@ -88,6 +88,6 @@ plot(plate, "B01:C06", col_drops_rain = "blue")
 }
 \seealso{
 \code{\link[ddpcr]{plot.ddpcr_plate}},
-\code{\link[ddpcr]{plate_types$pnpp_experiment}}
+\code{\link[ddpcr]{pnpp_experiment}}
 }
 

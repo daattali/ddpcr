@@ -17,7 +17,6 @@
 #' \code{\link[ddpcr]{wildtype_mutant_pnpp}}
 #' \code{\link[ddpcr]{fam_positive_pnpp}}
 #' @name hex_positive_pnpp
-#' @usage plate_types$hex_positive_pnpp
 #' @examples 
 #' \dontrun{
 #' dir <- system.file("sample_data", "small", package = "ddpcr")

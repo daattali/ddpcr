@@ -14,8 +14,14 @@ remove_empty.pnpp_experiment <- function(plate) {
   NextMethod("remove_empty")
 }
 
-# for this plate type, we know that we don't expect any drops on the bottom right,
-# so it's ok to only have an empty cutoff in the y dimension to save time
+#' Get the cutoff for empty droplets in a well
+#' 
+#' Very similar to the \code{get_empty_cutoff} method of the base plate type,
+#' except for this plate type we know that we don't expect any droplets in one
+#' of the corners, so we can save time by only having an empty cutoff in one
+#' dimension.
+#' @export
+#' @keywords internal
 get_empty_cutoff.pnpp_experiment <- function(plate, well_id) {
   well_data <- get_single_well(plate, well_id, empty = TRUE)
   

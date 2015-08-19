@@ -70,6 +70,7 @@
 #' \code{\link[ddpcr]{reset}}
 #' \code{\link[ddpcr]{analyze}}
 #' \code{\link[ddpcr]{plot.ddpcr_plate}}
+#' \code{\link[ddpcr]{params}}
 #' @examples 
 #' \dontrun{
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
@@ -103,6 +104,8 @@ new_plate <- function(dir, type, data_files, meta_file, name, params) {
 #' 
 #' @param plate A ddPCR plate
 #' @param type A ddPCR plate type (see \code{\link[ddpcr]{plate_types}})
+#' @param params List of parameters to set for the plate. Only advanced users
+#' should consider using this feature. See \code{\link[ddpcr]{new_plate}} for usage.
 #' @param keep_type If \code{TRUE} then use keep the same plate type as \code{plate}
 #' @param keep_params If \code{TRUE} then keep the same plate parameters of \code{plate}
 #' @return A new unanalyzed ddPCR plate 

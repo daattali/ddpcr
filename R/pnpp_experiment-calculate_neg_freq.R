@@ -5,7 +5,7 @@
 #' @param negative_drops Number of negative drops.
 #' @param positive_drops Number of positive drops.
 #' @return Fraction of drops that are negative.
-#' @seealso \code{\link[ddpcr]{plate_types$pnpp_experiment}}
+#' @seealso \code{\link[ddpcr]{pnpp_experiment}}
 #' @examples 
 #' calc_negative_freq_simple(5, 45)
 #' @keywords internal
@@ -21,7 +21,7 @@ calc_negative_freq_simple <- function(negative_drops, positive_drops) {
 #' @param well_id A well ID
 #' @return list with 3 elemnts: number of negative drops, number of positive
 #' drops, and fraction of negative drops.
-#' @seealso \code{\link[ddpcr]{plate_types$pnpp_experiment}}
+#' @seealso \code{\link[ddpcr]{pnpp_experiment}}
 #' @examples 
 #' file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
 #' plate <- load_plate(file)
@@ -45,7 +45,7 @@ calculate_neg_freq_single <- function(plate, well_id) {
 #' The resulting plate has the same droplet data but an updated metadata with
 #' the number of negative/positive droplets and the negative frequency.
 #' @param plate A ddPCR plate
-#' @seealso \code{\link[ddpcr]{plate_types$pnpp_experiment}}
+#' @seealso \code{\link[ddpcr]{pnpp_experiment}}
 #' @examples 
 #' file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
 #' plate <- load_plate(file)

@@ -24,7 +24,6 @@
 #' \code{\link[ddpcr]{y_threshold}}
 #' \code{\link[ddpcr]{thresholds}}
 #' @name custom_thresholds
-#' @usage plate_types$custom_thresholds
 #' @examples 
 #' \dontrun{
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
@@ -153,6 +152,8 @@ y_threshold <- function(plate) {
 #' that divide the four droplet quadrants.
 #' @name thresholds
 #' @param plate A ddPCR plate.
+#' @param value The new thresholds as a 2-element numeric vector
+#' @return The current thresholds
 #' @seealso 
 #' \code{\link[ddpcr]{custom_thresholds}}
 #' \code{\link[ddpcr]{x_threshold}}
@@ -168,14 +169,12 @@ y_threshold <- function(plate) {
 NULL
 
 #' @rdname thresholds
-#' @return The current thresholds
 #' @export
 thresholds <- function(plate) {
   stopifnot(plate %>% inherits("custom_thresholds"))
   point2d(c(plate %>% x_threshold, plate %>% y_threshold))
 }
 #' @rdname thresholds
-#' @param value The new thresholds as a 2-element numeric vector
 #' @export
 `thresholds<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("custom_thresholds"))
@@ -185,7 +184,6 @@ thresholds <- function(plate) {
   plate
 }
 #' @rdname thresholds
-#' @param value The new thresholds as a 2-element numeric vector
 #' @export
 set_thresholds <- function(plate, value) {
   `thresholds<-`(plate, value)
@@ -195,7 +193,7 @@ classify_thresholds <- function(plate) {
   stopifnot(plate %>% inherits("custom_thresholds"))
   
   CURRENT_STEP <- plate %>% step('CLASSIFY')
-  plate %>% check_step(CURRENT_STEP, TRUE)  
+  plate %>% check_step(CURRENT_STEP)  
   step_begin("Classifying droplets")
   
   x_threshold <- plate %>% x_threshold
@@ -267,7 +265,7 @@ classify_thresholds <- function(plate) {
 #' @return A ggplot2 plot object.
 #' @seealso
 #' \code{\link[ddpcr]{plot.ddpcr_plate}},
-#' \code{\link[ddpcr]{plate_types$custom_thresholds}}
+#' \code{\link[ddpcr]{custom_thresholds}}
 #' @examples 
 #' \dontrun{
 #' dir <- system.file("sample_data", "small", package = "ddpcr")

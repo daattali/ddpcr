@@ -21,7 +21,7 @@ analysis state.  The file can be read back later using
 you want to save the droplets data or the metadata of a plate, then first
 retrieve the data using \code{\link[ddpcr]{plate_data}} or
 \code{\link[ddpcr]{plate_meta}} and save it with
-\code{\link[base]{write.csv}}.
+\code{\link[utils]{write.csv}}.
 }
 \examples{
 dir <- system.file("sample_data", "small", package = "ddpcr")

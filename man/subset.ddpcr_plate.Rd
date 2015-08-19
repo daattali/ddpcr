@@ -45,15 +45,15 @@ dir <- system.file("sample_data", "small", package = "ddpcr")
 plate <- new_plate(dir)
 plate \%>\% wells_used
 plate \%>\% subset("C01") \%>\% wells_used
-plate \%>\% subset(c("C01", "C09")) \%>\% wells_used
-plate \%>\% subset("C01, C09") \%>\% wells_used
-plate \%>\% subset("C01:C09") \%>\% wells_used
-plate \%>\% subset("C01:C09, B01") \%>\% wells_used
+plate \%>\% subset(c("C01", "C08")) \%>\% wells_used
+plate \%>\% subset("C01, C08") \%>\% wells_used
+plate \%>\% subset("C01:C08") \%>\% wells_used
+plate \%>\% subset("C01:C08, B01") \%>\% wells_used
 plate \%>\% subset("B01:C03") \%>\% wells_used
 plate \%>\% subset("B01:C06") \%>\% wells_used
-plate \%>\% subset("B01, B06:C09") \%>\% wells_used
-plate \%>\% subset("B01, B06:C06, C09") \%>\% wells_used
-plate \%>\% subset("B01:B06, C01:C06, C09") \%>\% wells_used
+plate \%>\% subset("B01, B06:C08") \%>\% wells_used
+plate \%>\% subset("B01, B06:C06, C08") \%>\% wells_used
+plate \%>\% subset("B01:B06, C01:C06, C08") \%>\% wells_used
 plate \%>\% subset(samples = "#1") \%>\% wells_used
 plate \%>\% subset(samples = c("#1", "#3")) \%>\% wells_used
 }

@@ -32,7 +32,7 @@ get_filled_drops(plate, "B06")
 get_filled_drops(plate, "B06", get_filled_border(plate, "B06"))
 }
 \seealso{
-\code{\link[ddpcr]{plate_types$pnpp_experiment}},
+\code{\link[ddpcr]{pnpp_experiment}},
 
 \code{\link[ddpcr]{positive_dim}},
 

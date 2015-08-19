@@ -24,7 +24,7 @@ plate <- load_plate(file)
 plate \%>\% calculate_neg_freq_single("B06")
 }
 \seealso{
-\code{\link[ddpcr]{plate_types$pnpp_experiment}}
+\code{\link[ddpcr]{pnpp_experiment}}
 }
 \keyword{internal}
 

@@ -37,7 +37,7 @@
 #' @return A ggplot2 plot object.
 #' @seealso
 #' \code{\link[ddpcr]{plot.ddpcr_plate}},
-#' \code{\link[ddpcr]{plate_types$pnpp_experiment}}
+#' \code{\link[ddpcr]{pnpp_experiment}}
 #' @examples 
 #' \dontrun{
 #' dir <- system.file("sample_data", "small", package = "ddpcr")

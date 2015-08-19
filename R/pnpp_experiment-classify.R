@@ -152,7 +152,7 @@ classify_droplets.pnpp_experiment <- function(plate) {
   # - a dataframe with all the drops with their clusters
   # - whether or not there is a mutant drops cluster
   CURRENT_STEP <- plate %>% step('CLASSIFY')
-  plate %>% check_step(CURRENT_STEP, TRUE)  
+  plate %>% check_step(CURRENT_STEP)  
   step_begin("Classifying droplets")
   
   # ---
@@ -191,7 +191,7 @@ mark_clusters <- function(plate, wells) {
   
   data <-
     plate_data(plate) %>%
-    dplyr::group_by(well) %>%
+    dplyr::group_by_("well") %>%
     dplyr::do({
       well_data <- .
       well_id = well_data[['well']][1]

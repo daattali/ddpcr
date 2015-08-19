@@ -44,6 +44,12 @@ type <- function(plate, all = FALSE) {
 #' the assigned cluster of each droplet.
 #' @seealso \code{\link[ddpcr]{plate_meta}}
 #' \code{\link[ddpcr]{plot.ddpcr_plate}}
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir)
+#' plate_data(plate)
+#' } 
 #' @export
 plate_data <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
@@ -134,6 +140,13 @@ analysis_complete <- function(plate) {
 #' @return A dataframe containing the plate metadata
 #' @seealso \code{\link[ddpcr]{plate_data}}
 #' \code{\link[ddpcr]{plot.ddpcr_plate}}
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir)
+#' plate %>% plate_meta(only_used = TRUE)
+#' plate %>% analyze %>% plate_meta(only_used = TRUE)
+#' } 
 #' @export
 plate_meta <- function(plate, only_used = FALSE) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
@@ -166,11 +179,30 @@ arrange_meta <- function(plate) {
   }
 }
 
+#' Plate name
+#' 
+#' Get or set the name of a dataset.
+#' @param plate A ddpcrPlate
+#' @param value New name
+#' @return Plate name
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir)
+#' name(plate)
+#' name(plate) <- "foo"
+#' name(plate)
+#' }
+#' @name name
+NULL
+
+#' @rdname name
 #' @export
 name <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   plate[['name']]
 }
+#' @rdname name
 #' @export
 `name<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
@@ -178,30 +210,75 @@ name <- function(plate) {
   plate
 }
 
+#' Plate parameters
+#' 
+#' Every ddPCR plate object has adjustable parameters associated with it.
+#' Each parameter belongs to a category of paramaters, and has a unique name.
+#' For example, there are general parameters (category 'GENERAL') that apply to
+#' the plate as a whole, and each analysis step has its own set of parameters
+#' that are used for the algorithm in that step.\cr\cr
+#' You can either view all parameters of a plate by not providing any arguments,
+#' view all parameters in a category by providing the category, or view the value
+#' of a specific parameter by providing both the category and the parameter name.\cr\cr
+#' 
+#' Setting new parameter values should only be done by advanced users.
+#' Note that if you change any parameters, you need to re-run the analysis for
+#' the parameter changes to take effect.
+#' Tip: it can be easier to visually inspect the parameters by wrapping the
+#' return value in a \code{str()}.
+#' 
+#' Warning: Do not directly set the GENERAL-X_vAR or GENERAL-Y_VAR parameters.
+#' Instead, use \code{\link[ddpcr]{x_var}} or \code{\link[ddpcr]{y_var}}
+#' @param plate A ddPCR plate
+#' @param category Category of parameters
+#' @param name Parameter name
+#' @param value New parameter value
+#' @return If no category is provided, return all parameters. If a category is provided,
+#' return all parameters in that category. If both a category and a name are provided,
+#' return the value of the specific parameter.
+#' @seealso \code{\link[ddpcr]{x_var}}
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir)
+#' 
+#' # retrieving plate parameters
+#' str(params(plate))
+#' str(params(plate, 'GENERAL'))
+#' params(plate, 'GENERAL', 'RANDOM_SEED')
+#' 
+#' # setting plate parameters
+#' params(plate, 'GENERAL', 'RANDOM_SEED') <- 10
+#' str(params(plate, 'GENERAL'))
+#' }
+#' @name params
+NULL
+
+#' @rdname params
 #' @export
-params <- function(plate, major, minor) {
+params <- function(plate, category, name) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
   res <- plate[['params']]
-  if (!missing(major)) {
-    res <- res[[major]]
-    if (!missing(minor)) {
-      res <- res[[minor]]
+  if (!missing(category)) {
+    res <- res[[category]]
+    if (!missing(name)) {
+      res <- res[[name]]
     }
   }
   
   res
 }
-
+#' @rdname params
 #' @export
-`params<-` <- function(plate, major, minor, value) {
+`params<-` <- function(plate, category, name, value) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
   replace <- 'params'
-  if (!missing(major)) {
-    replace <- c(replace, major)
-    if (!missing(minor)) {
-      replace <- c(replace, minor)
+  if (!missing(category)) {
+    replace <- c(replace, category)
+    if (!missing(name)) {
+      replace <- c(replace, name)
     }
   }
   
@@ -233,12 +310,18 @@ clusters <- function(plate) {
   plate[['clusters']] <- value
   plate
 }
-
-
-
-
-
-
+#' Get cluster ID by name
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir)
+#' # see what cluster names exist and their order
+#' clusters(plate)
+#' cluster(plate, 'FAILED')
+#' cluster(plate, 'EMPTY')
+#' }
+#' @export
+#' @keywords internal
 cluster <- function(plate, cluster) {
   res <- plate %>% clusters %>% {which(. == cluster)}
   if (res %>% length != 1) {
@@ -246,6 +329,17 @@ cluster <- function(plate, cluster) {
   }
   res
 }
+#' Get cluster name by ID
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir)
+#' # see what cluster names exist and their order
+#' clusters(plate)
+#' cluster_name(plate, 2)
+#' cluster_name(plate, 4)
+#' }
+#' @keywords internal
 #' @export
 cluster_name <- function(plate, cluster) {
   cluster %>% as.integer
@@ -255,6 +349,29 @@ cluster_name <- function(plate, cluster) {
   plate %>% clusters %>% .[cluster]
 }
 
+#' Get unanalyzed cluseter IDs
+#' 
+#' Get the clusters that have not been considered yet in the analysis. This means
+#' the UNDEFINED cluster (since all droplets begin as UNDEFINED) and also all
+#' clusters that are defined later than the current cluster. The latter is to
+#' ensure that when re-running an analysis step, droplets that were analyzed
+#' in a later step will still be considered for analysis.
+#' 
+#' @param plate A ddPCR plate
+#' @param current The current cluster ID, which is used to know what clusters
+#' come after
+#' @return All clusters that have not yet been analyzed
+#' @seealso \code{\link[ddpcr]{cluster}}
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir)
+#' unanalyzed_clusters(plate, 3)
+#' unanalyzed_clusters(plate, cluster(plate, "OUTLIER"))
+#' plate %>% unanalyzed_clusters(cluster(plate, "OUTLIER")) %>% cluster_name(plate, .)
+#' }
+#' @export
+#' @keywords internal
 unanalyzed_clusters <- function(plate, current) {
   res <- plate %>% cluster('UNDEFINED')
   if (!missing(current)) {
@@ -267,20 +384,47 @@ unanalyzed_clusters <- function(plate, current) {
   res
 }
 
-
-
-
-
+#' Analysis steps of a ddPCR plate
+#' 
+#' Every ddPCR plate type has an ordered set of steps that are run to analyze
+#' the data. You can run all the steps with \code{\link[ddpcr]{analyze}} or
+#' run the analysis step by step with \code{\link[ddpcr]{next_step}}. The order
+#' of the steps in the list is the order in which they are run on the dataset.
+#' @param plate a ddPCR plate.
+#' @return A named character vector, where every name is the human-readable
+#' name of an analysis step, and every value is the name of the function
+#' used to perform the step.
+#' @seealso \code{\link[ddpcr]{analyze}}
+#' \code{\link[ddpcr]{next_step}}
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' new_plate(dir) %>% steps
+#' new_plate(dir, plate_types$fam_positive_pnpp) %>% steps
+#' }
 #' @export
 steps <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   plate[['steps']]
 }
+# Set the steps of a plate to a given set of steps. This is an internal
+# function because the user should never directly call this function.
 `steps<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   plate[['steps']] <- value
   plate
 }
+#' Get step ID by step name
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir)
+#' # see what step names exist and their order
+#' steps(plate)
+#' step(plate, 'REMOVE_OUTLIERS')
+#' }
+#' @export
+#' @keywords internal
 step <- function(plate, step) {
   res <- plate %>% steps %>% names %>% {which(. == step)}
   if (res %>% length != 1) {
@@ -288,6 +432,17 @@ step <- function(plate, step) {
   }
   res
 }
+#' Get step name by ID
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir)
+#' # see what step names exist and their order
+#' steps(plate)
+#' step_name(plate, 2)
+#' }
+#' @keywords internal
+#' @export
 step_name <- function(plate, step) {
   step %<>% as.integer
   if (step < 1 || step > plate %>% steps %>% length) {
@@ -295,13 +450,42 @@ step_name <- function(plate, step) {
   }
   plate %>% steps %>% names %>% .[step]
 }
-check_step <- function(plate, step, must_exist = FALSE) {
-  exists <- plate %>% status >= step - 1
-  if (must_exist && !exists) {
+#' Ensure the plate's status is at the right step
+#' 
+#' Before beginning a step, you can check to make sure the plate is currently
+#' at most one step behind the current step. If the plate is more than one step
+#' behind, an error will be thrown, so that the user will know they need to
+#' run the previous steps.
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir)
+#' status(plate) # current step
+#' check_step(plate, 2) # are we ready to start step 2?
+#' check_step(plate, 3) # are we ready to start step 3?
+#' plate <- next_step(plate)
+#' status(plate)
+#' check_step(plate, 3) # now are we ready to start step 3?  
+#' }
+#' @export
+#' @keywords internal
+check_step <- function(plate, step) {
+  exists <- (plate %>% status) >= step - 1
+  if (!exists) {
     err_msg("analysis is not at the required step")
   }
-  exists
 }
+#' Does a ddPCR plate have a step with this name?
+#' @param plate A ddPCR plate
+#' @param step A step name
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir)
+#' steps(plate)
+#' has_step(plate, 'REMOVE_FAILURES')
+#' has_step(plate, 'NO_SUCH_STEP')
+#' }
 has_step <- function(plate, step) {
   plate %>%
     steps %>%
@@ -311,16 +495,43 @@ has_step <- function(plate, step) {
     magrittr::equals(1)
 }
 
+#' Get or set the X/Y variable (dye name)
+#' 
+#' By default, the dye visualized along the X axis is HEX and the dye visualized
+#' along the Y axis is FAM. You can use these functions to get or set these values
+#' if your plate uses different dyes.
+#' 
+#' The X/Y variables are simply parameters in the plate, which can also be accessed
+#' or changed using \code{\link[ddpcr]{params}}. You should use these functions
+#' to change the X/Y variable rather than changing the parameters directly.
+#' @param plate A ddPCR plate
+#' @param value New dye name
+#' @return Dye name
+#' @seealso \code{\link[ddpcr]{params}}
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' plate <- new_plate(dir)
+#' x_var(plate)
+#' x_var(plate) <- "VIC"
+#' x_var(plate)
+#' }
+#' @name x_var
+NULL
+
+#' @rdname x_var
 #' @export
 x_var <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   params(plate, 'GENERAL', 'X_VAR')
 }
+#' @rdname x_var
 #' @export
 y_var <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   params(plate, 'GENERAL', 'Y_VAR')
 }
+#' @rdname x_var
 #' @export
 `x_var<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
@@ -331,6 +542,7 @@ y_var <- function(plate) {
   params(plate, 'GENERAL', 'X_VAR') <- value
   plate
 }
+#' @rdname x_var
 #' @export
 `y_var<-` <- function(plate, value) {
   stopifnot(plate %>% inherits("ddpcr_plate"))

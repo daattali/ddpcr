@@ -35,7 +35,6 @@
 #' \code{\link[ddpcr]{wells_positive}}
 #' \code{\link[ddpcr]{wells_negative}}
 #' @name pnpp_experiment
-#' @usage plate_types$pnpp_experiment
 #' @examples 
 #' \dontrun{
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
@@ -174,7 +173,7 @@ variable_dim <- function(plate) {
 #' Given an axis (X or Y), return the other
 #' @examples 
 #' other_dim("X")
-#' other_dim("y")
+#' other_dim("Y")
 #' @export
 #' @keywords internal
 other_dim <- function(dim = c("X", "Y")) {
@@ -228,18 +227,18 @@ variable_dim_var <- function(plate) {
 #' wells_positive(plate)
 #' }
 #' @export
-wells_positive <- function(x) {
-  stopifnot(x %>% inherits("pnpp_experiment"))
+wells_positive <- function(plate) {
+  stopifnot(plate %>% inherits("pnpp_experiment"))
   
-  if (status(x) < step(x, 'CLASSIFY')) {
+  if (status(plate) < step(plate, 'CLASSIFY')) {
     return()
   }
   
-  x %>%
+  plate %>%
     plate_meta %>%
     dplyr::filter_(lazyeval::interp(
       ~ !var,
-      var = as.name(meta_var_name(x, "significant_negative_cluster"))
+      var = as.name(meta_var_name(plate, "significant_negative_cluster"))
     )) %>%
     .[['well']]
 }
@@ -260,16 +259,16 @@ wells_positive <- function(x) {
 #' wells_negative(plate)
 #' }
 #' @export
-wells_negative <- function(x) {
-  stopifnot(x %>% inherits("pnpp_experiment"))
+wells_negative <- function(plate) {
+  stopifnot(plate %>% inherits("pnpp_experiment"))
   
-  if (status(x) < step(x, 'CLASSIFY')) {
+  if (status(plate) < step(plate, 'CLASSIFY')) {
     return(c())
   }  
   
-  x %>%
+  plate %>%
     plate_meta %>%
-    dplyr::filter_(as.name(meta_var_name(x, "significant_negative_cluster"))) %>%
+    dplyr::filter_(as.name(meta_var_name(plate, "significant_negative_cluster"))) %>%
     .[['well']]
 }
 

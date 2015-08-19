@@ -3,9 +3,6 @@
 \name{pnpp_experiment}
 \alias{pnpp_experiment}
 \title{Plate type: PNPP experiment}
-\usage{
-plate_types$pnpp_experiment
-}
 \description{
 PNPP stands for "Positive-Negative;Negative-Positive", which is a reflection
 of the clusters of non-empty droplets in the wells. Use this plate type when

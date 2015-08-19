@@ -3,9 +3,6 @@
 \name{custom_thresholds}
 \alias{custom_thresholds}
 \title{Plate type: custom thresholds}
-\usage{
-plate_types$custom_thresholds
-}
 \description{
 The \code{custom_thresholds} plate type is used when you want to gate ddPCR
 droplet data into four quadrants according to HEX and FAM values that you
