@@ -27,6 +27,7 @@
 #' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
 #' more information on how to implement custom ddPCR plate types.
 #' @export
+#' @keywords internal
 classify_droplets <- function(plate) {
   UseMethod("classify_droplets")
 }

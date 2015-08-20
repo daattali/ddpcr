@@ -18,7 +18,7 @@ The ddPCR plate after running the next step
 Every ddPCR plate has a set of defined steps that are taken in order, that
 together constitute "analyzing" the plate.  Calling the \code{next_step} function
 will run the next step in the analysis, which may take several minutes. If you
-want to run all the remaining steps, use \code{\link[ddpcr]{analyze}}.
+want to run all the remaining steps at once, use \code{\link[ddpcr]{analyze}} instead.
 }
 \examples{
 \dontrun{

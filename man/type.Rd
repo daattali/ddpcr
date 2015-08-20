@@ -28,4 +28,7 @@ type(plate)
 type(plate, TRUE)
 }
 }
+\seealso{
+\code{\link[ddpcr]{plate_types}}
+}
 

@@ -14,6 +14,7 @@
 #' @param all If \code{FALSE}, show only the most specific plate type; otherwise,
 #' show all inherited (implicit) types as well.
 #' @return A character vector with the plate type(s).
+#' @seealso \code{\link[ddpcr]{plate_types}}
 #' @examples 
 #' \dontrun{
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
@@ -213,7 +214,7 @@ name <- function(plate) {
 #' Plate parameters
 #' 
 #' Every ddPCR plate object has adjustable parameters associated with it.
-#' Each parameter belongs to a category of paramaters, and has a unique name.
+#' Each parameter belongs to a category of parameters, and has a unique name.
 #' For example, there are general parameters (category 'GENERAL') that apply to
 #' the plate as a whole, and each analysis step has its own set of parameters
 #' that are used for the algorithm in that step.\cr\cr
@@ -222,13 +223,14 @@ name <- function(plate) {
 #' of a specific parameter by providing both the category and the parameter name.\cr\cr
 #' 
 #' Setting new parameter values should only be done by advanced users.
-#' Note that if you change any parameters, you need to re-run the analysis for
-#' the parameter changes to take effect.
+#' Note that if you change any parameters, you need to re-run the analysis in order
+#' for the parameter changes to take effect.
+#' 
 #' Tip: it can be easier to visually inspect the parameters by wrapping the
 #' return value in a \code{str()}.
 #' 
-#' Warning: Do not directly set the GENERAL-X_vAR or GENERAL-Y_VAR parameters.
-#' Instead, use \code{\link[ddpcr]{x_var}} or \code{\link[ddpcr]{y_var}}
+#' Warning: Do not directly set the GENERAL-X_VAR or GENERAL-Y_VAR parameters.
+#' Instead, use \code{\link[ddpcr]{x_var}} or \code{\link[ddpcr]{y_var}}.
 #' @param plate A ddPCR plate
 #' @param category Category of parameters
 #' @param name Parameter name
@@ -297,6 +299,12 @@ params <- function(plate, category, name) {
 #' @param plate a ddPCR plate.
 #' @return A character vector with the names of the clusters supported by the
 #' plate type.
+#' @examples 
+#' \dontrun{
+#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' new_plate(dir) %>% clusters
+#' new_plate(dir, plate_types$fam_positive_pnpp) %>% clusters
+#' }
 #' @export
 clusters <- function(plate) {
   stopifnot(plate %>% inherits("ddpcr_plate"))

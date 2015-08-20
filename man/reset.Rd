@@ -24,8 +24,8 @@ A new unanalyzed ddPCR plate
 \description{
 Reset a ddPCR plate object back to its original state. After resetting a plate,
 all the analysis progress will be lost, but the original droplet data and
-plate metadata will be kept. You can reset a plate either to restart the analysis,
-or to reset it to use a different plate type.
+plate metadata will be kept. Two common reasons to reset a plate are either
+to restart the analysis, or to re-analyze the plate as a different plate type.
 }
 \examples{
 \dontrun{

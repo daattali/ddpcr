@@ -1,5 +1,7 @@
 ### code
 
+- lots of links to github readme#extend - make sure that exists
+
 - add tests
 
 - add vignette about algorithm and about adding new types

@@ -25,7 +25,7 @@ return the value of the specific parameter.
 }
 \description{
 Every ddPCR plate object has adjustable parameters associated with it.
-Each parameter belongs to a category of paramaters, and has a unique name.
+Each parameter belongs to a category of parameters, and has a unique name.
 For example, there are general parameters (category 'GENERAL') that apply to
 the plate as a whole, and each analysis step has its own set of parameters
 that are used for the algorithm in that step.\cr\cr
@@ -35,13 +35,14 @@ of a specific parameter by providing both the category and the parameter name.\c
 }
 \details{
 Setting new parameter values should only be done by advanced users.
-Note that if you change any parameters, you need to re-run the analysis for
-the parameter changes to take effect.
+Note that if you change any parameters, you need to re-run the analysis in order
+for the parameter changes to take effect.
+
 Tip: it can be easier to visually inspect the parameters by wrapping the
 return value in a \code{str()}.
 
-Warning: Do not directly set the GENERAL-X_vAR or GENERAL-Y_VAR parameters.
-Instead, use \code{\link[ddpcr]{x_var}} or \code{\link[ddpcr]{y_var}}
+Warning: Do not directly set the GENERAL-X_VAR or GENERAL-Y_VAR parameters.
+Instead, use \code{\link[ddpcr]{x_var}} or \code{\link[ddpcr]{y_var}}.
 }
 \examples{
 \dontrun{

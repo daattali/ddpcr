@@ -147,7 +147,7 @@ If you do need to provide a more customized plot function, it can be
 a good idea to use the output from this plot function as a basis and only
 add the code that is necessary to append to the plot.  See
 \code{\link[ddpcr]{plot.custom_thresholds}} as an example of how to
-extend this plot function.B
+extend this plot function.
 }
 \examples{
 \dontrun{

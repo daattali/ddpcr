@@ -3,7 +3,7 @@
 
 #' Plate type: PNPP experiment
 #' 
-#' PNPP stands for "Positive-Negative;Negative-Positive", which is a reflection
+#' PNPP stands for "Positive-Negative;Positive-Positive", which is a reflection
 #' of the clusters of non-empty droplets in the wells. Use this plate type when
 #' your ddPCR data has three main clusters: double-negative (FAM-HEX-; empty droplets),
 #' double-positive (FAM+HEX+; represent the "PP" in PNPP), and singly-positive
@@ -20,8 +20,9 @@
 #' 
 #' The positive dimension must be set in order to use a \code{pnpp_experiment}.
 #' It is not recommended to use this type directly; instead you should use one
-#' of the subtypes. If you do use this type directly, you must set the positive
-#' dimension with \code{\link[ddpcr]{positive_dim}}.
+#' of the subtypes (\code{\link[ddpcr]{fam_positive_pnpp}} or
+#' \code{\link[ddpcr]{hex_positive_pnpp}}). If you do use this type directly,
+#' you must set the positive dimension with \code{\link[ddpcr]{positive_dim}}.
 #' 
 #' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
 #' more information on plate types.

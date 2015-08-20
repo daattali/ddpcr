@@ -7,8 +7,8 @@
 new_plate(dir, type, data_files, meta_file, name, params)
 }
 \arguments{
-\item{dir}{The directory where the ddPCR droplet data files, and potentially
-the plate results file, exist.}
+\item{dir}{The directory containing the ddPCR droplet data files, and potentially
+the plate results file}
 
 \item{type}{A ddPCR plate type (see \code{\link[ddpcr]{plate_types}})}
 
@@ -29,7 +29,7 @@ A new ddPCR plate object with droplet data loaded that is ready
 to be analyzed.
 }
 \description{
-Any ddPCR analysis must start with creating a ddPCR plate object. Use this
+Any ddPCR analysis must start by creating a ddPCR plate object. Use this
 function to read ddPCR data into R and create a plate object that can then
 be analyzed.
 }
@@ -44,7 +44,8 @@ R. This package uses as input the data files that are exported by QuantaSoft.
 For a dataset with 20 wells, QuantaSoft will create 20 well files (each ending
 with "_Amplitude.csv") and one results file. The well files are essential for
 analysis since they contain the actual droplet data, and the results file
-is optional because the only information used from it is the sample names.
+is optional because the only information used from it is the mapping from
+well IDs to sample names.
 
 The easiest way to use your ddPCR data with this package is to Export the data
 from QuantaSoft into some directory, and providing that directory as the
@@ -53,7 +54,7 @@ data files as well as the results file.  Alternatively, you can provide the
 data files (well files) manually as a list of filenames using the \code{data_files}
 argument. If you use the \code{data_files} argument instead of \code{dir}, you
 can also optionally provide the results file as the \code{meta_file} argument.
-If no results file is provided then the Wells will not be mapped to their sample
+If no results file is provided then the wells will not be mapped to their sample
 names.
 }
 
@@ -66,16 +67,16 @@ initializing a plate, you can do that with the \code{params} argument. This
 is considered an advanced feature.
 
 For example, if you inspect the parameters of any ddPCR plate, you will see that
-by defalt the X variable (dye along the X axis when plotting) is HEX. If you
-want to create a new plate that uses a VIC dye instead, you could do so like this:
+by defalt the random seed used by default is 8. If you want to create
+a new plate that uses a different random seed, you could do so like this:
 \preformatted{
 dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir, params = list('GENERAL' = list('X_VAR' = 'VIC')))
-plate %>% params %>% str
+plate <- new_plate(dir, params = list('GENERAL' = list('RANDOM_SEED' = 10)))
+plate %>% p
 }
 
 Most numeric parameters that are used in the algorithms of the analysis steps
-can be modified in a similar fashion, which can be used to fine-tune the
+can be modified in a similar fashion. This can be used to fine-tune the
 analysis of a plate if you require different parameters.
 }
 \examples{

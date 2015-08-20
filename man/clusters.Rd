@@ -21,4 +21,11 @@ can be assigned to.
 \href{https://github.com/daattali/ddpcr#extend}{See the README} for
 more information on plate types.
 }
+\examples{
+\dontrun{
+dir <- system.file("sample_data", "small", package = "ddpcr")
+new_plate(dir) \%>\% clusters
+new_plate(dir, plate_types$fam_positive_pnpp) \%>\% clusters
+}
+}
 

@@ -6,15 +6,15 @@
 
 #' Create a new ddPCR plate
 #' 
-#' Any ddPCR analysis must start with creating a ddPCR plate object. Use this
+#' Any ddPCR analysis must start by creating a ddPCR plate object. Use this
 #' function to read ddPCR data into R and create a plate object that can then
 #' be analyzed.
 #' 
 #' \href{https://github.com/daattali/ddpcr#extend}{See the README} for more
 #' information on plate types.
 #' 
-#' @param dir The directory where the ddPCR droplet data files, and potentially
-#' the plate results file, exist.
+#' @param dir The directory containing the ddPCR droplet data files, and potentially
+#' the plate results file
 #' @param type A ddPCR plate type (see \code{\link[ddpcr]{plate_types}})
 #' @param data_files If \code{dir} is not provided, you can provide a vector of
 #' file paths to the ddPCR droplet data files.
@@ -33,7 +33,8 @@
 #' For a dataset with 20 wells, QuantaSoft will create 20 well files (each ending
 #' with "_Amplitude.csv") and one results file. The well files are essential for
 #' analysis since they contain the actual droplet data, and the results file
-#' is optional because the only information used from it is the sample names.
+#' is optional because the only information used from it is the mapping from
+#' well IDs to sample names.
 #' 
 #' The easiest way to use your ddPCR data with this package is to Export the data
 #' from QuantaSoft into some directory, and providing that directory as the 
@@ -42,7 +43,7 @@
 #' data files (well files) manually as a list of filenames using the \code{data_files}
 #' argument. If you use the \code{data_files} argument instead of \code{dir}, you
 #' can also optionally provide the results file as the \code{meta_file} argument.
-#' If no results file is provided then the Wells will not be mapped to their sample
+#' If no results file is provided then the wells will not be mapped to their sample
 #' names.
 #' 
 #' @section Plate parameters:
@@ -53,16 +54,16 @@
 #' is considered an advanced feature.
 #'
 #' For example, if you inspect the parameters of any ddPCR plate, you will see that
-#' by defalt the X variable (dye along the X axis when plotting) is HEX. If you
-#' want to create a new plate that uses a VIC dye instead, you could do so like this:
+#' by defalt the random seed used by default is 8. If you want to create
+#' a new plate that uses a different random seed, you could do so like this:
 #' \preformatted{
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, params = list('GENERAL' = list('X_VAR' = 'VIC')))
-#' plate %>% params %>% str
+#' plate <- new_plate(dir, params = list('GENERAL' = list('RANDOM_SEED' = 10)))
+#' plate %>% p
 #' } 
 #' 
 #' Most numeric parameters that are used in the algorithms of the analysis steps
-#' can be modified in a similar fashion, which can be used to fine-tune the 
+#' can be modified in a similar fashion. This can be used to fine-tune the 
 #' analysis of a plate if you require different parameters.
 #' 
 #' @seealso \code{\link[ddpcr]{plate_types}}
@@ -99,8 +100,8 @@ new_plate <- function(dir, type, data_files, meta_file, name, params) {
 #' 
 #' Reset a ddPCR plate object back to its original state. After resetting a plate,
 #' all the analysis progress will be lost, but the original droplet data and
-#' plate metadata will be kept. You can reset a plate either to restart the analysis,
-#' or to reset it to use a different plate type.
+#' plate metadata will be kept. Two common reasons to reset a plate are either
+#' to restart the analysis, or to re-analyze the plate as a different plate type.
 #' 
 #' @param plate A ddPCR plate
 #' @param type A ddPCR plate type (see \code{\link[ddpcr]{plate_types}})
@@ -263,7 +264,7 @@ analyze <- function(plate, restart = FALSE) {
 #' Every ddPCR plate has a set of defined steps that are taken in order, that
 #' together constitute "analyzing" the plate.  Calling the \code{next_step} function
 #' will run the next step in the analysis, which may take several minutes. If you
-#' want to run all the remaining steps, use \code{\link[ddpcr]{analyze}}.
+#' want to run all the remaining steps at once, use \code{\link[ddpcr]{analyze}} instead.
 #' 
 #' @param plate A ddPCR plate
 #' @param n The number of steps to run
