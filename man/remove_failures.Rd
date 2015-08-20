@@ -2,7 +2,7 @@
 % Please edit documentation in R/failures.R
 \name{remove_failures}
 \alias{remove_failures}
-\title{Remove failed wells}
+\title{Analysis step: Remove failed wells}
 \usage{
 remove_failures(plate)
 }
@@ -34,5 +34,7 @@ more information on how to implement custom ddPCR plate types.
 }
 \seealso{
 \code{\link[ddpcr]{analyze}}
+\code{\link[ddpcr]{is_well_success}}
 }
+\keyword{internal}
 

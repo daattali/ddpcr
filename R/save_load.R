@@ -41,7 +41,7 @@ save_plate <- function(plate, file) {
   
   invisible(plate)
 }
-#' Load a ddPCR plate
+#' Load a previously saved ddPCR plate
 #' 
 #' Reloads a plate that has been saved with \code{\link[ddpcr]{save_plate}}.
 #'  

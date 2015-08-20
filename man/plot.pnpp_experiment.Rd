@@ -90,4 +90,5 @@ plot(plate, "B01:C06", col_drops_rain = "blue")
 \code{\link[ddpcr]{plot.ddpcr_plate}},
 \code{\link[ddpcr]{pnpp_experiment}}
 }
+\keyword{internal}
 

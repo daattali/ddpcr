@@ -2,7 +2,7 @@
 % Please edit documentation in R/save_load.R
 \name{load_plate}
 \alias{load_plate}
-\title{Load a ddPCR plate}
+\title{Load a previously saved ddPCR plate}
 \usage{
 load_plate(file)
 }

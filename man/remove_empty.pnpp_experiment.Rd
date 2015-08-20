@@ -2,7 +2,7 @@
 % Please edit documentation in R/pnpp_experiment-empty.R
 \name{remove_empty.pnpp_experiment}
 \alias{remove_empty.pnpp_experiment}
-\title{Remove empty droplets}
+\title{Analysis step: Remove empty droplets}
 \usage{
 \method{remove_empty}{pnpp_experiment}(plate)
 }
@@ -10,7 +10,7 @@
 \item{plate}{A ddPCR plate.}
 }
 \description{
-Remove empty droplets
+Analysis step: Remove empty droplets
 }
 \keyword{internal}
 

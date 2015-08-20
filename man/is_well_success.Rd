@@ -11,7 +11,7 @@ is_well_success(plate, well_id)
 suggest the ddPCR run failed; \code{TRUE} otherwise.
 }
 \description{
-Determine if a well had a successful ddPCR run
+This function runs the actual algorithm for determining which wells failed.
 }
 \keyword{internal}
 

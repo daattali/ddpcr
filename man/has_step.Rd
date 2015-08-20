@@ -23,4 +23,5 @@ has_step(plate, 'REMOVE_FAILURES')
 has_step(plate, 'NO_SUCH_STEP')
 }
 }
+\keyword{internal}
 

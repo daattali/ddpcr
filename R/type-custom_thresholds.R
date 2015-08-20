@@ -23,6 +23,9 @@
 #' \code{\link[ddpcr]{x_threshold}}
 #' \code{\link[ddpcr]{y_threshold}}
 #' \code{\link[ddpcr]{thresholds}}
+#' \code{\link[ddpcr]{analyze}} 
+#' \code{\link[ddpcr]{remove_outliers}}
+#' \code{\link[ddpcr]{classify_thresholds}}
 #' @name custom_thresholds
 #' @examples 
 #' \dontrun{
@@ -37,6 +40,7 @@ plate_types[['custom_thresholds']] <- "custom_thresholds"
 
 #' Define plate type parameters for custom thresholds plates
 #' @inheritParams define_params
+#' @keywords internal
 define_params.custom_thresholds <- function(plate) {
   params <- NextMethod("define_params")
   
@@ -53,6 +57,7 @@ define_params.custom_thresholds <- function(plate) {
 
 #' Define droplet clusters for custom thresholds plates
 #' @inheritParams define_clusters
+#' @keywords internal
 define_clusters.custom_thresholds <- function(plate) {
   c(
     'UNDEFINED',
@@ -66,6 +71,7 @@ define_clusters.custom_thresholds <- function(plate) {
 
 #' Define analysis steps for custom thresholds plates
 #' @inheritParams define_steps
+#' @keywords internal
 define_steps.custom_thresholds <- function(plate) {
   list(
     'INITIALIZE'      = 'init_plate',
@@ -189,6 +195,25 @@ set_thresholds <- function(plate, value) {
   `thresholds<-`(plate, value)
 }
 
+#' Analysis step: Classify droplets
+#' 
+#' The main analysis step for ddPCR plates of type \code{custom_thresholds}.
+#' Assign each droplet into one of four quadrants based on the thresholds.\cr\cr
+#' \href{https://github.com/daattali/ddpcr#algorithm}{See the README} for
+#' more information.
+#' 
+#' This function is recommended to be run as part of an analysis pipeline (ie.
+#' within the \code{\link[ddpcr]{analyze}} function) rather than being called
+#' directly.
+#' @param plate A ddPCR plate
+#' @return A ddPCR plate with all the droplets assigned to a quadrant. The plate's
+#' metadata will have a few new variables relating to the number of droplets
+#' in each quadrant.
+#' @seealso \code{\link[ddpcr]{custom_thresholds}}
+#' \code{\link[ddpcr]{analyze}}
+#' \code{\link[ddpcr]{thresholds}}
+#' @export
+#' @keywords internal
 classify_thresholds <- function(plate) {
   stopifnot(plate %>% inherits("custom_thresholds"))
   
@@ -203,6 +228,7 @@ classify_thresholds <- function(plate) {
   y_var <- y_var(plate)
   CLUSTERS_UNANALYZED <- unanalyzed_clusters(plate, 'EMPTY')
   
+  # get the indices of all droplets that are in each quadrant
   unanalyzed_idx <- data[['cluster']] %in% CLUSTERS_UNANALYZED
   ypos_idx <-
     unanalyzed_idx &
@@ -218,6 +244,7 @@ classify_thresholds <- function(plate) {
     data[[x_var]] < x_threshold &
     data[[y_var]] < y_threshold
 
+  # assign each droplet to its quadrant
   data[ypos_idx, 'cluster'] <- plate %>% cluster('Y_POSITIVE')
   data[bothpos_idx, 'cluster'] <- plate %>% cluster('BOTH_POSITIVE')
   data[xpos_idx, 'cluster'] <- plate %>% cluster('X_POSITIVE')

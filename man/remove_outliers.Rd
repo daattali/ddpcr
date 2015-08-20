@@ -2,7 +2,7 @@
 % Please edit documentation in R/outliers.R
 \name{remove_outliers}
 \alias{remove_outliers}
-\title{Remove outlier droplets}
+\title{Analysis Step: Remove outlier droplets}
 \usage{
 remove_outliers(plate)
 }
@@ -33,5 +33,7 @@ more information on how to implement custom ddPCR plate types.
 }
 \seealso{
 \code{\link[ddpcr]{analyze}}
+\code{\link[ddpcr]{get_outlier_cutoff}}
 }
+\keyword{internal}
 

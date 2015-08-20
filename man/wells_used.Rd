@@ -2,7 +2,7 @@
 % Please edit documentation in R/plate.R
 \name{wells_used}
 \alias{wells_used}
-\title{Wells used in a ddPCR plate}
+\title{Get wells used in a ddPCR plate}
 \usage{
 wells_used(plate)
 }

@@ -2,8 +2,6 @@
 
 - add tests
 
-- add documentation to functions
-
 - add vignette about algorithm and about adding new types
 
 ### stats

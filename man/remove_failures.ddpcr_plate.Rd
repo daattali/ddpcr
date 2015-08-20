@@ -2,7 +2,7 @@
 % Please edit documentation in R/failures.R
 \name{remove_failures.ddpcr_plate}
 \alias{remove_failures.ddpcr_plate}
-\title{Remove failed wells}
+\title{Analysis step: Remove failed wells}
 \usage{
 \method{remove_failures}{ddpcr_plate}(plate)
 }
@@ -10,7 +10,7 @@
 \item{plate}{A ddPCR plate.}
 }
 \description{
-Remove failed wells
+Analysis step: Remove failed wells
 }
 \keyword{internal}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/outliers.R
 \name{remove_outliers.ddpcr_plate}
 \alias{remove_outliers.ddpcr_plate}
-\title{Remove outlier droplets}
+\title{Analysis Step: Remove outlier droplets}
 \usage{
 \method{remove_outliers}{ddpcr_plate}(plate)
 }
@@ -10,7 +10,7 @@
 \item{plate}{A ddPCR plate.}
 }
 \description{
-Remove outlier droplets
+Analysis Step: Remove outlier droplets
 }
 \keyword{internal}
 

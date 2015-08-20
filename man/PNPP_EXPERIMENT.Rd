@@ -43,5 +43,11 @@ type(plate)
 \code{\link[ddpcr]{positive_dim}}
 \code{\link[ddpcr]{wells_positive}}
 \code{\link[ddpcr]{wells_negative}}
+\code{\link[ddpcr]{analyze}}
+\code{\link[ddpcr]{remove_failures}}
+\code{\link[ddpcr]{remove_outliers}}
+\code{\link[ddpcr]{remove_empty}}
+\code{\link[ddpcr]{classify_droplets}}
+\code{\link[ddpcr]{reclassify_droplets}}
 }
 

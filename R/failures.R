@@ -1,7 +1,7 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-#' Remove failed wells
+#' Analysis step: Remove failed wells
 #' 
 #' Check if any wells have failed the ddPCR experiment by checking a series
 #' of quality control metrics.  If any well is deemed as a failure, all the droplets
@@ -18,16 +18,18 @@
 #' metadata will have a new variable \code{success} which will be \code{FALSE}
 #' for any failed well and \code{TRUE} for all others.
 #' @seealso \code{\link[ddpcr]{analyze}}
+#' \code{\link[ddpcr]{is_well_success}}
 #' @note This is an S3 generic, which means that different ddPCR plate types can
 #' implement this function differently. 
 #' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
 #' more information on how to implement custom ddPCR plate types.
 #' @export
+#' @keywords internal
 remove_failures <- function(plate) {
   UseMethod("remove_failures")
 }
 
-#' Remove failed wells
+#' Analysis step: Remove failed wells
 #' @inheritParams remove_failures
 #' @export
 #' @keywords internal
@@ -77,6 +79,8 @@ remove_failures.ddpcr_plate <- function(plate) {
 }
 
 #' Determine if a well had a successful ddPCR run
+#' 
+#' This function runs the actual algorithm for determining which wells failed.
 #' @return \code{FALSE} if there are obvious quality problems with the well that
 #' suggest the ddPCR run failed; \code{TRUE} otherwise.
 #' @export

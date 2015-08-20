@@ -1,7 +1,7 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-#' Remove empty droplets
+#' Analysis step: Remove empty droplets
 #' @inheritParams remove_empty
 #' @export
 #' @keywords internal

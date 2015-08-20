@@ -2,7 +2,7 @@
 % Please edit documentation in R/empty.R
 \name{remove_empty}
 \alias{remove_empty}
-\title{Remove empty droplets}
+\title{Analysis step: Remove empty droplets}
 \usage{
 remove_empty(plate)
 }
@@ -32,5 +32,7 @@ more information on how to implement custom ddPCR plate types.
 }
 \seealso{
 \code{\link[ddpcr]{analyze}}
+\code{\link[ddpcr]{get_empty_cutoff}}
 }
+\keyword{internal}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/empty.R
 \name{remove_empty.ddpcr_plate}
 \alias{remove_empty.ddpcr_plate}
-\title{Remove empty droplets}
+\title{Analysis step: Remove empty droplets}
 \usage{
 \method{remove_empty}{ddpcr_plate}(plate)
 }
@@ -10,7 +10,7 @@
 \item{plate}{A ddPCR plate.}
 }
 \description{
-Remove empty droplets
+Analysis step: Remove empty droplets
 }
 \keyword{internal}
 

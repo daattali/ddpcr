@@ -1,7 +1,7 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-#' Remove empty droplets
+#' Analysis step: Remove empty droplets
 #' 
 #' Find the empty droplets (double-negative droplets) in each well in a plate
 #' and assign these droplets to the \emph{EMPTY} cluster. \cr\cr
@@ -16,16 +16,18 @@
 #' @return A ddPCR plate with the empty droplets marked as empty. The plate's
 #' metadata will have a few new variables relating to the empty droplets.
 #' @seealso \code{\link[ddpcr]{analyze}}
+#' \code{\link[ddpcr]{get_empty_cutoff}}
 #' @note This is an S3 generic, which means that different ddPCR plate types can
 #' implement this function differently. 
 #' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
 #' more information on how to implement custom ddPCR plate types.
 #' @export
+#' @keywords internal
 remove_empty <- function(plate) {
   UseMethod("remove_empty")
 }
 
-#' Remove empty droplets
+#' Analysis step: Remove empty droplets
 #' @inheritParams remove_empty
 #' @export
 #' @keywords internal

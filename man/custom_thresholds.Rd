@@ -33,5 +33,8 @@ plate \%>\% analyze \%>\% plot
 \code{\link[ddpcr]{x_threshold}}
 \code{\link[ddpcr]{y_threshold}}
 \code{\link[ddpcr]{thresholds}}
+\code{\link[ddpcr]{analyze}}
+\code{\link[ddpcr]{remove_outliers}}
+\code{\link[ddpcr]{classify_thresholds}}
 }
 

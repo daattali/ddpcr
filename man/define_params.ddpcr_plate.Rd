@@ -12,4 +12,5 @@
 \description{
 Define plate type parameters for default plates
 }
+\keyword{internal}
 

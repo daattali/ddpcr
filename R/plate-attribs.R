@@ -486,6 +486,8 @@ check_step <- function(plate, step) {
 #' has_step(plate, 'REMOVE_FAILURES')
 #' has_step(plate, 'NO_SUCH_STEP')
 #' }
+#' @keywords internal
+#' @export
 has_step <- function(plate, step) {
   plate %>%
     steps %>%
@@ -495,7 +497,7 @@ has_step <- function(plate, step) {
     magrittr::equals(1)
 }
 
-#' Get or set the X/Y variable (dye name)
+#' Get/set the X/Y variable (dye name)
 #' 
 #' By default, the dye visualized along the X axis is HEX and the dye visualized
 #' along the Y axis is FAM. You can use these functions to get or set these values

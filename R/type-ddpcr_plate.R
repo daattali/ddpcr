@@ -18,6 +18,9 @@
 #' 
 #' @seealso
 #' \code{\link[ddpcr]{plate_types}}
+#' \code{\link[ddpcr]{remove_failures}}
+#' \code{\link[ddpcr]{remove_outliers}}
+#' \code{\link[ddpcr]{remove_empty}}
 #' @name ddpcr_plate
 #' @examples 
 #' \dontrun{
@@ -32,6 +35,7 @@ plate_types[['ddpcr_plate']] <- "ddpcr_plate"
 
 #' Parent plate type of default plates
 #' @inheritParams parent_plate_type
+#' @keywords internal
 parent_plate_type.ddpcr_plate <- function(plate) {
   # this is the default plate type -- there is no parent
   NULL
@@ -39,6 +43,7 @@ parent_plate_type.ddpcr_plate <- function(plate) {
 
 #' Parent plate type of any plate
 #' @inheritParams parent_plate_type
+#' @keywords internal
 parent_plate_type.default <- function(plate) {
   # if a plate doesn't have an explicit type, its parent is the default type
   "ddpcr_plate"
@@ -46,6 +51,7 @@ parent_plate_type.default <- function(plate) {
 
 #' Define plate type parameters for default plates
 #' @inheritParams define_params
+#' @keywords internal
 define_params.ddpcr_plate <- function(plate) {
   # Each parameter has a somewhat descriptive name of what it is used for, and
   # all parameters used by a single step in the pipeline are in a list together
@@ -74,6 +80,7 @@ define_params.ddpcr_plate <- function(plate) {
 
 #' Define droplet clusters for default plates
 #' @inheritParams define_clusters
+#' @keywords internal
 define_clusters.ddpcr_plate <- function(plate) {
   c(
     'UNDEFINED',
@@ -85,6 +92,7 @@ define_clusters.ddpcr_plate <- function(plate) {
 
 #' Define analysis steps for default plates
 #' @inheritParams define_steps
+#' @keywords internal
 define_steps.ddpcr_plate <- function(plate) {
   list(
     'INITIALIZE' = 'init_plate',

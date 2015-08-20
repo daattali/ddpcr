@@ -49,6 +49,7 @@
 #' plot(plate, "B01:C06", col_drops_rain = "blue")
 #' }
 #' @export
+#' @keywords internal
 plot.pnpp_experiment <- function(
   x,
   wells, samples,

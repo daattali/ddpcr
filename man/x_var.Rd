@@ -5,7 +5,7 @@
 \alias{x_var<-}
 \alias{y_var}
 \alias{y_var<-}
-\title{Get or set the X/Y variable (dye name)}
+\title{Get/set the X/Y variable (dye name)}
 \usage{
 x_var(plate)
 

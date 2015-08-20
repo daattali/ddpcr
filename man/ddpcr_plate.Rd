@@ -28,5 +28,8 @@ plate \%>\% analyze \%>\% plot
 }
 \seealso{
 \code{\link[ddpcr]{plate_types}}
+\code{\link[ddpcr]{remove_failures}}
+\code{\link[ddpcr]{remove_outliers}}
+\code{\link[ddpcr]{remove_empty}}
 }
 

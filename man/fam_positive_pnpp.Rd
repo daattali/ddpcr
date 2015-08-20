@@ -26,5 +26,11 @@ plate \%>\% analyze \%>\% plot
 \code{\link[ddpcr]{plate_types}}
 \code{\link[ddpcr]{wildtype_mutant_pnpp}}
 \code{\link[ddpcr]{hex_positive_pnpp}}
+\code{\link[ddpcr]{analyze}}
+\code{\link[ddpcr]{remove_failures}}
+\code{\link[ddpcr]{remove_outliers}}
+\code{\link[ddpcr]{remove_empty}}
+\code{\link[ddpcr]{classify_droplets}}
+\code{\link[ddpcr]{reclassify_droplets}}
 }
 

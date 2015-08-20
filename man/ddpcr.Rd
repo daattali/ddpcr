@@ -4,7 +4,7 @@
 \name{ddpcr}
 \alias{ddpcr}
 \alias{ddpcr-package}
-\title{ddPCR}
+\title{ddPCR Package}
 \description{
 Analysis and visualization of Digital Droplet PCR data.
 }

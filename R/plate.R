@@ -192,7 +192,7 @@ well_info <- function(plate, well_ids, var) {
     .[[var]]
 }
 
-#' Wells used in a ddPCR plate
+#' Get wells used in a ddPCR plate
 #' 
 #' Get a list of the wells that have any data in a ddPCR plate.
 #' @param plate A ddPCR plate

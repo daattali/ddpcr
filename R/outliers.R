@@ -1,7 +1,7 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-#' Remove outlier droplets
+#' Analysis Step: Remove outlier droplets
 #' 
 #' Identify droplets that have an abnormally high fluorescence intensity as
 #' outliers. Any such droplets will be assigned to the \emph{OUTLIER} cluster.\cr\cr
@@ -17,16 +17,18 @@
 #' metadata will have a new variable \code{drops_outlier} which will count the
 #' number of outlier droplets in each well.
 #' @seealso \code{\link[ddpcr]{analyze}}
+#' \code{\link[ddpcr]{get_outlier_cutoff}}
 #' @note This is an S3 generic, which means that different ddPCR plate types can
 #' implement this function differently. 
 #' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
 #' more information on how to implement custom ddPCR plate types.
 #' @export
+#' @keywords internal
 remove_outliers <- function(plate) {
   UseMethod("remove_outliers")
 }
 
-#' Remove outlier droplets
+#' Analysis Step: Remove outlier droplets
 #' @inheritParams remove_outliers
 #' @export
 #' @keywords internal

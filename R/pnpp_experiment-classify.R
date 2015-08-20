@@ -1,25 +1,96 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
+#' Analysis step: Classify droplets
+#' 
+#' The main analysis step for ddPCR plates of type \code{pnpp_experiment}.
+#' Classify each droplet as either rain, ++, or +-. Also calculate the frequency
+#' of negative droplets, and attempt to detemine if each well has a statistically
+#' significant number of such droplets.\cr\cr
+#' \href{https://github.com/daattali/ddpcr#algorithm}{See the README} for
+#' more information about the algorithm used.
+#' 
+#' This function is recommended to be run as part of an analysis pipeline (ie.
+#' within the \code{\link[ddpcr]{analyze}} function) rather than being called
+#' directly.
+#' 
+#' @param plate A ddPCR plate.
+#' @return A ddPCR plate with all droplets assigned to a cluster. The plate's
+#' metadata will have several new variables.
+#' @seealso \code{\link[ddpcr]{analyze}}
+#' \code{\link[ddpcr]{classify_droplets_single}}
+#' \code{\link[ddpcr]{mark_clusters}}
+#' \code{\link[ddpcr]{has_signif_negative_cluster}}
+#' 
+#' @note This is an S3 generic, which means that different ddPCR plate types can
+#' implement this function differently. 
+#' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
+#' more information on how to implement custom ddPCR plate types.
+#' @export
+classify_droplets <- function(plate) {
+  UseMethod("classify_droplets")
+}
+
+#' Analysis step: Classify droplets
+#' @inheritParams classify_droplets
+#' @export
+#' @keywords internal
+classify_droplets.pnpp_experiment <- function(plate) {
+  CURRENT_STEP <- plate %>% step('CLASSIFY')
+  plate %>% check_step(CURRENT_STEP)  
+  step_begin("Classifying droplets")
+  
+  # ---
+  
+  # get droplet classifications in each well
+  well_clusters_info <-
+    vapply(wells_success(plate),
+           function(x) classify_droplets_single(plate, x),
+           vector(mode = "list", length = 3)) %>%
+    lol_to_df %>%
+    magrittr::set_names(lapply(names(.), function(x) meta_var_name(plate, x)))
+  
+  # add metadata to each well
+  plate_meta(plate) %<>%
+    merge_dfs_overwrite_col(well_clusters_info)
+  
+  # mark the droplets with their assigned cluster in the plate and calculate frequencies
+  plate %<>%
+    mark_clusters(plate %>% wells_success) %>%
+    calculate_negative_freqs
+  
+  # ---
+  
+  status(plate) <- CURRENT_STEP
+  step_end()
+  
+  plate
+}
+
+#' Classify droplets in a well 
+#' 
+#' This function runs the actual algorithm for classifying droplets in a single
+#' well. 
+#' @keywords internal
 #' @export
 classify_droplets_single <- function(plate, well_id, ...) {
   UseMethod("classify_droplets_single")
 }
 
+#' Classify droplets in a well 
+#' 
+#' If you want to see details about how a well was classified, you can set
+#' \code{plot = TRUE} to plot the results.
 #' @export
+#' @keywords internal
 classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot = FALSE) {
-  # For a given well, merge the empty drops with the rain/mutant/wildtype drops
-  # to result in a data frame containing all drops in a well marked with a cluster.
-  #
-  # Args:
-  #   plot: If true, plot the result (used mainly for development/debugging
   stopifnot(plate %>% inherits("pnpp_experiment"))
   
   signif_negative_cluster <- FALSE
   well_data <- get_single_well(plate, well_id)
-  
   variable_var <- variable_dim_var(plate)
-  
+
+  # get the filled borders (threshold under which all droplets are considered rain)
   filled_border <- get_filled_border(plate, well_id)
   filled <- get_filled_drops(plate, well_id, filled_border)
   
@@ -83,7 +154,7 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
     minimas <- dens_smooth$x[minima_idx]
     negative_border <- minimas[which(minimas > left_peak) %>% min]
   }
-
+  
   negative_drops <- filled %>%
     dplyr::filter_(lazyeval::interp(~ var <= negative_border,
                                     var = as.name(variable_var)))    
@@ -124,7 +195,7 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
     abline(v = dens_smooth$x[maxima_idx], col = "grey")
     abline(v = negative_border_tight, col = "red")
   }
-
+  
   # detemine if the well has a statistically significant negative cluster 
   signif_negative_cluster <-
     has_signif_negative_cluster(plate, nrow(negative_drops), nrow(positive_drops))
@@ -136,50 +207,15 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
   ))
 }
 
+#' Mark the clusters of droplets only in certain wells to their assigned cluster
+#' 
+#' This function simply looks at all droplets of certain wells and marks the
+#' cluster of each droplet according to the gates that are already calculated.
+#' This function is called once after \code{\link[ddpcr]{classify_droplets_single}}
+#' determines the gates for every well, and it's called again when reclassifying
+#' wells gives us more accurate information.
 #' @export
-classify_droplets <- function(plate) {
-  UseMethod("classify_droplets")
-}
-
-#' @export
-classify_droplets.pnpp_experiment <- function(plate) {
-  # Mark all drops in a plate with their corresponding clusters, including
-  # undefined clusters for failed wells
-  #
-  # Side effects:
-  
-  # get a list containing, for each successful well:
-  # - a dataframe with all the drops with their clusters
-  # - whether or not there is a mutant drops cluster
-  CURRENT_STEP <- plate %>% step('CLASSIFY')
-  plate %>% check_step(CURRENT_STEP)  
-  step_begin("Classifying droplets")
-  
-  # ---
-
-  well_clusters_info <-
-    vapply(wells_success(plate),
-           function(x) classify_droplets_single(plate, x),
-           vector(mode = "list", length = 3)) %>%
-    lol_to_df %>%
-    magrittr::set_names(lapply(names(.), function(x) meta_var_name(plate, x)))
-
-  # add metadata to each well
-  plate_meta(plate) %<>%
-    merge_dfs_overwrite_col(well_clusters_info)
-  
-  plate %<>%
-    mark_clusters(plate %>% wells_success) %>%
-    calculate_negative_freqs
-  
-  # ---
-  
-  status(plate) <- CURRENT_STEP
-  step_end()
-  
-  plate
-}
-
+#' @keywords internal
 mark_clusters <- function(plate, wells) {
   positive_var <- positive_dim_var(plate)
   variable_var <- variable_dim_var(plate)
@@ -189,6 +225,9 @@ mark_clusters <- function(plate, wells) {
   CLUSTER_NEGATIVE <- plate %>% cluster('NEGATIVE')
   CLUSTERS_UNANALYZED <- unanalyzed_clusters(plate, 'RAIN')
   
+  # for every well in the list of wells we're interested in classifying,
+  # get the filled border and the negative border, and based on that classify
+  # all droplets as rain, positive, or negative
   data <-
     plate_data(plate) %>%
     dplyr::group_by_("well") %>%
@@ -218,22 +257,31 @@ mark_clusters <- function(plate, wells) {
   plate
 }
 
-# Classify a well as having a significant negative cluster (eg. a mutant well)
-# or not using a binomial test.
-# We can call a well as mutant if it is statistically significantly more then
-# 1% with a p-val < 0.01. For example, if there are 500 total drops and 7
-# mutant drops, then the mutant frequency is 1.4%, but is it statistically
-# significantly more than 1%?
-# P(x >= 7)
-#   = 1 - P(x <= 7) + P(x = 7)
-#   = 1 - pbinom(7, 500, .01) + dbinom(7, 500, .01)
-#   = 0.237
-#   > 0.01
-# So not statistically significantly enough, so we say it's a wildtype well.
-# But if there are 5000 drops and 70 mutant drops (same 1.4% frequency but
-# with higher absolute numbers), then
-# P(x >= 70) = 1 - pbinom(70, 5000, .01) + dbinom(70, 5000, .01) = 0.004
-# So this is indeed significant, and this well would be deemed mutant.
+#' Does a well have a statistically significant number of negative droplets?
+#' 
+#' Classify a well as having a significant negative cluster (eg. a mutant well)
+#' or not using a binomial test.\cr\cr
+#' We can call a well as mutant if it is statistically significantly more than
+#' 1% with a p-val < 0.01. For example, if there are 500 total drops and 7
+#' mutant drops, then the mutant frequency is 1.4%, but is it statistically
+#' significantly more than 1%?
+#' P(x >= 7)
+#'   = 1 - P(x <= 7) + P(x = 7)
+#'   = 1 - pbinom(7, 500, .01) + dbinom(7, 500, .01)
+#'   = 0.237
+#'   > 0.01
+#' So not statistically significantly enough, so we say it's a wildtype well.
+#' But if there are 5000 drops and 70 mutant drops (same 1.4% frequency but
+#' with higher absolute numbers), then
+#' P(x >= 70) = 1 - pbinom(70, 5000, .01) + dbinom(70, 5000, .01) = 0.004
+#' So this is indeed significant, and this well would be deemed mutant.
+#' @param plate A ddPCR plate
+#' @param neg Number of negative (or mutant) drops
+#' @param pos Number of positive (or wildtype) drops
+#' @return \code{TRUE} if the number of negative drops is statistically
+#' significant, \code{FALSE} otherwise.
+#' @export
+#' @keywords internal
 has_signif_negative_cluster <- function(plate, neg, pos) {
   freq_threshold <- params(plate, 'CLASSIFY', 'SIGNIFICANT_NEGATIVE_FREQ')
   pval <- params(plate, 'CLASSIFY', 'SIGNIFICANT_P_VALUE')

@@ -16,6 +16,12 @@
 #' \code{\link[ddpcr]{plate_types}}
 #' \code{\link[ddpcr]{wildtype_mutant_pnpp}}
 #' \code{\link[ddpcr]{hex_positive_pnpp}}
+#' \code{\link[ddpcr]{analyze}}
+#' \code{\link[ddpcr]{remove_failures}}
+#' \code{\link[ddpcr]{remove_outliers}}
+#' \code{\link[ddpcr]{remove_empty}}
+#' \code{\link[ddpcr]{classify_droplets}}
+#' \code{\link[ddpcr]{reclassify_droplets}}
 #' @name fam_positive_pnpp
 #' @examples 
 #' \dontrun{
@@ -30,12 +36,14 @@ plate_types[['fam_positive_pnpp']] <- "fam_positive_pnpp"
 
 #' Parent plate type of FAM-positive PNPP 
 #' @inheritParams parent_plate_type
+#' @keywords internal
 parent_plate_type.fam_positive_pnpp <- function(plate) {
   "wildtype_mutant_pnpp"
 }
 
 #' Define plate type parameters for FAM-positive PNPP 
 #' @inheritParams define_params
+#' @keywords internal
 define_params.fam_positive_pnpp <- function(plate) {
   params <- NextMethod("define_params")
   

@@ -12,4 +12,5 @@
 \description{
 Define analysis steps for custom thresholds plates
 }
+\keyword{internal}
 

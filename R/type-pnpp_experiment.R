@@ -34,6 +34,12 @@
 #' \code{\link[ddpcr]{positive_dim}}
 #' \code{\link[ddpcr]{wells_positive}}
 #' \code{\link[ddpcr]{wells_negative}}
+#' \code{\link[ddpcr]{analyze}}
+#' \code{\link[ddpcr]{remove_failures}}
+#' \code{\link[ddpcr]{remove_outliers}}
+#' \code{\link[ddpcr]{remove_empty}}
+#' \code{\link[ddpcr]{classify_droplets}}
+#' \code{\link[ddpcr]{reclassify_droplets}}
 #' @name pnpp_experiment
 #' @examples 
 #' \dontrun{
@@ -47,6 +53,7 @@ plate_types[['pnpp_experiment']] <- "pnpp_experiment"
 
 #' Define plate type parameters for PNPP experiments
 #' @inheritParams define_params
+#' @keywords internal
 define_params.pnpp_experiment <- function(plate) {
   params <- NextMethod("define_params")
   
@@ -79,6 +86,7 @@ define_params.pnpp_experiment <- function(plate) {
 
 #' Define droplet clusters for PNPP experiments
 #' @inheritParams define_clusters
+#' @keywords internal
 define_clusters.pnpp_experiment <- function(plate) {
   clusters <- NextMethod("define_clusters")
   
@@ -91,6 +99,7 @@ define_clusters.pnpp_experiment <- function(plate) {
 
 #' Define analysis steps for PNPP experiments
 #' @inheritParams define_steps
+#' @keywords internal
 define_steps.pnpp_experiment <- function(plate) {
   steps <- NextMethod("define_steps")
   

@@ -1,4 +1,10 @@
-
+#' Determine if a well had a successful ddPCR run
+#' 
+#' Very similar to the \code{is_well_success} method of the base plate type,
+#' except for this plate type we know where we expect to see droplets so we 
+#' can save time by using QC metrics more specific to this plate type.
+#' @export
+#' @keywords internal
 is_well_success.pnpp_experiment <- function(plate, well_id) {
   well_data <- get_single_well(plate, well_id, empty = TRUE)
   
@@ -14,7 +20,6 @@ is_well_success.pnpp_experiment <- function(plate, well_id) {
   
   set.seed(params(plate, 'GENERAL', 'RANDOM_SEED'))
   
-  x_var <- x_var(plate)
   y_var <- y_var(plate)
   
   kmeans_y <- kmeans(well_data[[y_var]], 2, nstart = 5)
