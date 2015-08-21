@@ -28,7 +28,7 @@ new_plate(dir, plate_types$fam_positive_pnpp) \%>\% steps
 }
 }
 \seealso{
-\code{\link[ddpcr]{analyze}}
+\code{\link[ddpcr]{analyze}}\cr
 \code{\link[ddpcr]{next_step}}
 }
 

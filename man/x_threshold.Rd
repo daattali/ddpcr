@@ -31,8 +31,8 @@ plot(plate)
 }
 }
 \seealso{
-\code{\link[ddpcr]{custom_thresholds}}
-\code{\link[ddpcr]{y_threshold}}
+\code{\link[ddpcr]{custom_thresholds}}\cr
+\code{\link[ddpcr]{y_threshold}}\cr
 \code{\link[ddpcr]{thresholds}}
 }
 

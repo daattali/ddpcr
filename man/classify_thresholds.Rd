@@ -26,8 +26,8 @@ within the \code{\link[ddpcr]{analyze}} function) rather than being called
 directly.
 }
 \seealso{
-\code{\link[ddpcr]{custom_thresholds}}
-\code{\link[ddpcr]{analyze}}
+\code{\link[ddpcr]{custom_thresholds}}\cr
+\code{\link[ddpcr]{analyze}}\cr
 \code{\link[ddpcr]{thresholds}}
 }
 \keyword{internal}

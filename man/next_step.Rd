@@ -28,10 +28,10 @@ plate <- next_step(plate)
 }
 }
 \seealso{
-\code{\link[ddpcr]{plot.ddpcr_plate}}
-\code{\link[ddpcr]{analyze}}
-\code{\link[ddpcr]{steps}}
-\code{\link[ddpcr]{plate_data}}
+\code{\link[ddpcr]{plot.ddpcr_plate}}\cr
+\code{\link[ddpcr]{analyze}}\cr
+\code{\link[ddpcr]{steps}}\cr
+\code{\link[ddpcr]{plate_data}}\cr
 \code{\link[ddpcr]{plate_meta}}
 }
 

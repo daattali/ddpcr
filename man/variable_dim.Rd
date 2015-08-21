@@ -22,7 +22,7 @@ variable_dim(plate)
 positive_dim(plate)
 }
 \seealso{
-\code{\link[ddpcr]{pnpp_experiment}},
+\code{\link[ddpcr]{pnpp_experiment}}\cr
 \code{\link[ddpcr]{positive_dim}}
 }
 \keyword{internal}

@@ -17,7 +17,7 @@
 #' @return A ddPCR plate with the droplets in failed wells marked as failed. The plate's
 #' metadata will have a new variable \code{success} which will be \code{FALSE}
 #' for any failed well and \code{TRUE} for all others.
-#' @seealso \code{\link[ddpcr]{analyze}}
+#' @seealso \code{\link[ddpcr]{analyze}}\cr
 #' \code{\link[ddpcr]{is_well_success}}
 #' @note This is an S3 generic, which means that different ddPCR plate types can
 #' implement this function differently. 

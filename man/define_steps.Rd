@@ -23,11 +23,11 @@ a named list of the analysis steps. When defining this function, you can use
 the parent type if you want to simply add new steps without defining all of them.
 }
 \seealso{
-\code{\link[ddpcr]{steps}}
-\code{\link[ddpcr]{step_begin}}
-\code{\link[ddpcr]{step_end}}
-\code{\link[ddpcr]{parent_plate_type}}
-\code{\link[ddpcr]{define_clusters}}
+\code{\link[ddpcr]{steps}}\cr
+\code{\link[ddpcr]{step_begin}}\cr
+\code{\link[ddpcr]{step_end}}\cr
+\code{\link[ddpcr]{parent_plate_type}}\cr
+\code{\link[ddpcr]{define_clusters}}\cr
 \code{\link[ddpcr]{define_params}}
 }
 \keyword{internal}

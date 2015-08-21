@@ -25,9 +25,9 @@ parameters will be used by default.
 information on plate types.
 }
 \seealso{
-\code{\link[ddpcr]{type}}
-\code{\link[ddpcr]{define_params}}
-\code{\link[ddpcr]{define_clusters}}
+\code{\link[ddpcr]{type}}\cr
+\code{\link[ddpcr]{define_params}}\cr
+\code{\link[ddpcr]{define_clusters}}\cr
 \code{\link[ddpcr]{define_steps}}
 }
 \keyword{internal}

@@ -33,9 +33,9 @@ implement this function differently.
 more information on how to implement custom ddPCR plate types.
 }
 \seealso{
-\code{\link[ddpcr]{analyze}}
-\code{\link[ddpcr]{classify_droplets_single}}
-\code{\link[ddpcr]{mark_clusters}}
+\code{\link[ddpcr]{analyze}}\cr
+\code{\link[ddpcr]{classify_droplets_single}}\cr
+\code{\link[ddpcr]{mark_clusters}}\cr
 \code{\link[ddpcr]{has_signif_negative_cluster}}
 }
 \keyword{internal}

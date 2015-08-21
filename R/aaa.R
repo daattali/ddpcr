@@ -17,13 +17,13 @@ DEFAULT_PLATE_META <-
 #' \code{ddpcr_plate}.\cr\cr
 #' For full details on the differences between plate types or to learn how to
 #' add a new plate type, \href{https://github.com/daattali/ddpcr}{see the package README}.
-#' @seealso \code{\link[ddpcr]{new_plate}}
-#' \code{\link[ddpcr]{fam_positive_pnpp}}
-#' \code{\link[ddpcr]{hex_positive_pnpp}}
-#' \code{\link[ddpcr]{custom_thresholds}}
-#' \code{\link[ddpcr]{pnpp_experiment}}
-#' \code{\link[ddpcr]{wildtype_mutant_pnpp}}
-#' \code{\link[ddpcr]{ddpcr_plate}}
+#' @seealso \code{\link[ddpcr]{new_plate}}\cr
+#' \code{\link[ddpcr]{fam_positive_pnpp}}\cr
+#' \code{\link[ddpcr]{hex_positive_pnpp}}\cr
+#' \code{\link[ddpcr]{custom_thresholds}}\cr
+#' \code{\link[ddpcr]{pnpp_experiment}}\cr
+#' \code{\link[ddpcr]{wildtype_mutant_pnpp}}\cr
+#' \code{\link[ddpcr]{ddpcr_plate}}\cr
 #' \code{\link[ddpcr]{type}}
 #' @format NULL 
 #' @usage NULL

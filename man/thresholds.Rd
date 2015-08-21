@@ -34,8 +34,8 @@ set_thresholds(plate, c(5500, 8000))
 }
 }
 \seealso{
-\code{\link[ddpcr]{custom_thresholds}}
-\code{\link[ddpcr]{x_threshold}}
+\code{\link[ddpcr]{custom_thresholds}}\cr
+\code{\link[ddpcr]{x_threshold}}\cr
 \code{\link[ddpcr]{y_threshold}}
 }
 

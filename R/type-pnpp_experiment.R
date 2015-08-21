@@ -24,22 +24,30 @@
 #' \code{\link[ddpcr]{hex_positive_pnpp}}). If you do use this type directly,
 #' you must set the positive dimension with \code{\link[ddpcr]{positive_dim}}.
 #' 
+#' Plates with this type have the following analysis steps: \code{INITIALIZE},
+#' \code{REMOVE_FAILURES}, \code{REMOVE_OUTLIERS}, \code{REMOVE_EMPTY},
+#' \code{CLASSIFY}, \code{RECLASSIFY}.
+#' 
+#' Plates with this type have the following droplet clusters:
+#' \code{UNDEFINED}, \code{FAILED}, \code{OUTLIER}, \code{EMPTY} (double-negative),
+#' \code{RAIN}, \code{POSITIVE}, \code{NEGATIVE}.
+#' 
 #' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
 #' more information on plate types.
 #' 
 #' @seealso
-#' \code{\link[ddpcr]{plate_types}}
-#' \code{\link[ddpcr]{fam_positive_pnpp}}
-#' \code{\link[ddpcr]{hex_positive_pnpp}}
-#' \code{\link[ddpcr]{wildtype_mutant_pnpp}}
-#' \code{\link[ddpcr]{positive_dim}}
-#' \code{\link[ddpcr]{wells_positive}}
-#' \code{\link[ddpcr]{wells_negative}}
-#' \code{\link[ddpcr]{analyze}}
-#' \code{\link[ddpcr]{remove_failures}}
-#' \code{\link[ddpcr]{remove_outliers}}
-#' \code{\link[ddpcr]{remove_empty}}
-#' \code{\link[ddpcr]{classify_droplets}}
+#' \code{\link[ddpcr]{plate_types}}\cr
+#' \code{\link[ddpcr]{fam_positive_pnpp}}\cr
+#' \code{\link[ddpcr]{hex_positive_pnpp}}\cr
+#' \code{\link[ddpcr]{wildtype_mutant_pnpp}}\cr
+#' \code{\link[ddpcr]{positive_dim}}\cr
+#' \code{\link[ddpcr]{wells_positive}}\cr
+#' \code{\link[ddpcr]{wells_negative}}\cr
+#' \code{\link[ddpcr]{analyze}}\cr
+#' \code{\link[ddpcr]{remove_failures}}\cr
+#' \code{\link[ddpcr]{remove_outliers}}\cr
+#' \code{\link[ddpcr]{remove_empty}}\cr
+#' \code{\link[ddpcr]{classify_droplets}}\cr
 #' \code{\link[ddpcr]{reclassify_droplets}}
 #' @name pnpp_experiment
 #' @examples 
@@ -119,7 +127,7 @@ define_steps.pnpp_experiment <- function(plate) {
 #' @param plate A ddPCR plate.
 #' @param value The dimension to set as the positive dimension ("X" or "Y")
 #' @seealso
-#' \code{\link[ddpcr]{pnpp_experiment}},
+#' \code{\link[ddpcr]{pnpp_experiment}}\cr
 #' \code{\link[ddpcr]{variable_dim}}
 #' @examples 
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
@@ -151,7 +159,7 @@ positive_dim <- function(plate) {
 #' that can have both high and low fluorescence intensities in the non-empty
 #' drops in a \code{pnpp_experiment} plate.
 #' @seealso
-#' \code{\link[ddpcr]{pnpp_experiment}},
+#' \code{\link[ddpcr]{pnpp_experiment}}\cr
 #' \code{\link[ddpcr]{positive_dim}}
 #' @examples 
 #' dir <- system.file("sample_data", "small", package = "ddpcr")
@@ -195,7 +203,7 @@ other_dim <- function(dim = c("X", "Y")) {
 #' 
 #' Get the name of the dye that is along the positive dimension.
 #' @seealso
-#' \code{\link[ddpcr]{pnpp_experiment}},
+#' \code{\link[ddpcr]{pnpp_experiment}}\cr
 #' \code{\link[ddpcr]{positive_dim}}
 #' @export
 #' @keywords internal
@@ -210,7 +218,7 @@ positive_dim_var <- function(plate) {
 #' 
 #' Get the name of the dye that is along the variable dimension.
 #' @seealso
-#' \code{\link[ddpcr]{pnpp_experiment}},
+#' \code{\link[ddpcr]{pnpp_experiment}}\cr
 #' \code{\link[ddpcr]{variable_dim}}
 #' @keywords internal
 #' @export
@@ -228,7 +236,7 @@ variable_dim_var <- function(plate) {
 #' @param plate A ddPCR plate.
 #' @return Character vector with well IDs of positive wells
 #' @seealso
-#' \code{\link[ddpcr]{pnpp_experiment}}
+#' \code{\link[ddpcr]{pnpp_experiment}}\cr
 #' \code{\link[ddpcr]{wells_negative}}
 #' @examples 
 #' \dontrun{
@@ -260,7 +268,7 @@ wells_positive <- function(plate) {
 #' @param plate A ddPCR plate.
 #' @return Character vector with well IDs of negative wells
 #' @seealso
-#' \code{\link[ddpcr]{pnpp_experiment}}
+#' \code{\link[ddpcr]{pnpp_experiment}}\cr
 #' \code{\link[ddpcr]{wells_positive}}
 #' @examples 
 #' \dontrun{

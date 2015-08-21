@@ -15,7 +15,7 @@
 #' @param plate A ddPCR plate.
 #' @return A ddPCR plate with the empty droplets marked as empty. The plate's
 #' metadata will have a few new variables relating to the empty droplets.
-#' @seealso \code{\link[ddpcr]{analyze}}
+#' @seealso \code{\link[ddpcr]{analyze}}\cr
 #' \code{\link[ddpcr]{get_empty_cutoff}}
 #' @note This is an S3 generic, which means that different ddPCR plate types can
 #' implement this function differently. 

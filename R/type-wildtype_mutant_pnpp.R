@@ -11,26 +11,28 @@
 #' It is not recommended to use this type directly; instead you should use one
 #' of the subtypes.
 #'
-#' Plates with this type inherit the analysis steps from \code{pnpp_experiment}
-#' and also have the following: \code{CLASSIFY}, \code{RECLASSIFY}
+#' Plates with this type have the following analysis steps: \code{INITIALIZE},
+#' \code{REMOVE_FAILURES}, \code{REMOVE_OUTLIERS}, \code{REMOVE_EMPTY},
+#' \code{CLASSIFY}, \code{RECLASSIFY}.
 #' 
-#' Plates with this type inherit the droplet clusters from \code{pnpp_experiment}
-#' and also have the following: \code{UNDEFINED},
-#' \code{FAILED}, \code{OUTLIER}, \code{RAIN}, \code{POSITIVE}, \code{NEGATIVE}. 
+#' Plates with this type have the following droplet clusters:
+#' \code{UNDEFINED}, \code{FAILED}, \code{OUTLIER}, \code{EMPTY} (double-negative),
+#' \code{RAIN} (not empty but not wildtype nor negative), \code{POSITIVE} (wildtype),
+#' \code{NEGATIVE} (mutant).
 #' 
 #' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
 #' more information on plate types.
 #' 
 #' @seealso
-#' \code{\link[ddpcr]{plate_types}}
-#' \code{\link[ddpcr]{fam_positive_pnpp}}
-#' \code{\link[ddpcr]{hex_positive_pnpp}}
-#' \code{\link[ddpcr]{pnpp_experiment}}
-#' \code{\link[ddpcr]{analyze}}
-#' \code{\link[ddpcr]{remove_failures}}
-#' \code{\link[ddpcr]{remove_outliers}}
-#' \code{\link[ddpcr]{remove_empty}}
-#' \code{\link[ddpcr]{classify_droplets}}
+#' \code{\link[ddpcr]{plate_types}}\cr
+#' \code{\link[ddpcr]{fam_positive_pnpp}}\cr
+#' \code{\link[ddpcr]{hex_positive_pnpp}}\cr
+#' \code{\link[ddpcr]{pnpp_experiment}}\cr
+#' \code{\link[ddpcr]{analyze}}\cr
+#' \code{\link[ddpcr]{remove_failures}}\cr
+#' \code{\link[ddpcr]{remove_outliers}}\cr
+#' \code{\link[ddpcr]{remove_empty}}\cr
+#' \code{\link[ddpcr]{classify_droplets}}\cr
 #' \code{\link[ddpcr]{reclassify_droplets}}
 #' @name wildtype_mutant_pnpp
 #' @examples 
@@ -74,7 +76,7 @@ define_params.wildtype_mutant_pnpp <- function(plate) {
 #' @param plate A ddPCR plate.
 #' @return Character vector with well IDs of wildtype wells
 #' @seealso
-#' \code{\link[ddpcr]{wildtype_mutant_pnpp}}
+#' \code{\link[ddpcr]{wildtype_mutant_pnpp}}\cr
 #' \code{\link[ddpcr]{wells_mutant}}
 #' @examples 
 #' \dontrun{
@@ -94,7 +96,7 @@ wells_wildtype <- function(plate) {
 #' get the wells that were deemed as mutant.
 #' @param plate A ddPCR plate.
 #' @return Character vector with well IDs of mutant wells
-#' @seealso \code{\link[ddpcr]{wildtype_mutant_pnpp}}
+#' @seealso \code{\link[ddpcr]{wildtype_mutant_pnpp}}\cr
 #' \code{\link[ddpcr]{wells_wildtype}}
 #' @examples 
 #' \dontrun{
@@ -137,8 +139,8 @@ wells_mutant <- function(plate) {
 #' @param ... Parameters to pass to \code{\link[ddpcr]{plot.pnpp_experiment}}.
 #' @return A ggplot2 plot object.
 #' @seealso
-#' \code{\link[ddpcr]{plot.ddpcr_plate}},
-#' \code{\link[ddpcr]{plot.pnpp_experiment}},
+#' \code{\link[ddpcr]{plot.ddpcr_plate}}\cr
+#' \code{\link[ddpcr]{plot.pnpp_experiment}}\cr
 #' \code{\link[ddpcr]{wildtype_mutant_pnpp}}
 #' @examples 
 #' \dontrun{

@@ -10,7 +10,7 @@ variable_dim_var(plate)
 Get the name of the dye that is along the variable dimension.
 }
 \seealso{
-\code{\link[ddpcr]{pnpp_experiment}},
+\code{\link[ddpcr]{pnpp_experiment}}\cr
 \code{\link[ddpcr]{variable_dim}}
 }
 \keyword{internal}

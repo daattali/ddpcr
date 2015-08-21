@@ -35,7 +35,7 @@ plate <- reset(plate, type=plate_types$fam_positive_pnpp)
 }
 }
 \seealso{
-\code{\link[ddpcr]{plate_types}}
+\code{\link[ddpcr]{plate_types}}\cr
 \code{\link[ddpcr]{new_plate}}
 }
 

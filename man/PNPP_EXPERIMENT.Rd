@@ -26,6 +26,14 @@ of the subtypes (\code{\link[ddpcr]{fam_positive_pnpp}} or
 \code{\link[ddpcr]{hex_positive_pnpp}}). If you do use this type directly,
 you must set the positive dimension with \code{\link[ddpcr]{positive_dim}}.
 
+Plates with this type have the following analysis steps: \code{INITIALIZE},
+\code{REMOVE_FAILURES}, \code{REMOVE_OUTLIERS}, \code{REMOVE_EMPTY},
+\code{CLASSIFY}, \code{RECLASSIFY}.
+
+Plates with this type have the following droplet clusters:
+\code{UNDEFINED}, \code{FAILED}, \code{OUTLIER}, \code{EMPTY} (double-negative),
+\code{RAIN}, \code{POSITIVE}, \code{NEGATIVE}.
+
 \href{https://github.com/daattali/ddpcr#extend}{See the README} for
 more information on plate types.
 }
@@ -37,18 +45,18 @@ type(plate)
 }
 }
 \seealso{
-\code{\link[ddpcr]{plate_types}}
-\code{\link[ddpcr]{fam_positive_pnpp}}
-\code{\link[ddpcr]{hex_positive_pnpp}}
-\code{\link[ddpcr]{wildtype_mutant_pnpp}}
-\code{\link[ddpcr]{positive_dim}}
-\code{\link[ddpcr]{wells_positive}}
-\code{\link[ddpcr]{wells_negative}}
-\code{\link[ddpcr]{analyze}}
-\code{\link[ddpcr]{remove_failures}}
-\code{\link[ddpcr]{remove_outliers}}
-\code{\link[ddpcr]{remove_empty}}
-\code{\link[ddpcr]{classify_droplets}}
+\code{\link[ddpcr]{plate_types}}\cr
+\code{\link[ddpcr]{fam_positive_pnpp}}\cr
+\code{\link[ddpcr]{hex_positive_pnpp}}\cr
+\code{\link[ddpcr]{wildtype_mutant_pnpp}}\cr
+\code{\link[ddpcr]{positive_dim}}\cr
+\code{\link[ddpcr]{wells_positive}}\cr
+\code{\link[ddpcr]{wells_negative}}\cr
+\code{\link[ddpcr]{analyze}}\cr
+\code{\link[ddpcr]{remove_failures}}\cr
+\code{\link[ddpcr]{remove_outliers}}\cr
+\code{\link[ddpcr]{remove_empty}}\cr
+\code{\link[ddpcr]{classify_droplets}}\cr
 \code{\link[ddpcr]{reclassify_droplets}}
 }
 

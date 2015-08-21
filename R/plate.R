@@ -66,11 +66,11 @@
 #' can be modified in a similar fashion. This can be used to fine-tune the 
 #' analysis of a plate if you require different parameters.
 #' 
-#' @seealso \code{\link[ddpcr]{plate_types}}
-#' \code{\link[ddpcr]{type}}
-#' \code{\link[ddpcr]{reset}}
-#' \code{\link[ddpcr]{analyze}}
-#' \code{\link[ddpcr]{plot.ddpcr_plate}}
+#' @seealso \code{\link[ddpcr]{plate_types}}\cr
+#' \code{\link[ddpcr]{type}}\cr
+#' \code{\link[ddpcr]{reset}}\cr
+#' \code{\link[ddpcr]{analyze}}\cr
+#' \code{\link[ddpcr]{plot.ddpcr_plate}}\cr
 #' \code{\link[ddpcr]{params}}
 #' @examples 
 #' \dontrun{
@@ -110,7 +110,7 @@ new_plate <- function(dir, type, data_files, meta_file, name, params) {
 #' @param keep_type If \code{TRUE} then use keep the same plate type as \code{plate}
 #' @param keep_params If \code{TRUE} then keep the same plate parameters of \code{plate}
 #' @return A new unanalyzed ddPCR plate 
-#' @seealso \code{\link[ddpcr]{plate_types}}
+#' @seealso \code{\link[ddpcr]{plate_types}}\cr
 #' \code{\link[ddpcr]{new_plate}}
 #' @examples 
 #' \dontrun{
@@ -240,11 +240,11 @@ wells_used <- function(plate) {
 #' plate <- analyze(plate)
 #' } 
 #' @seealso
-#' \code{\link[ddpcr]{next_step}}
-#' \code{\link[ddpcr]{plot.ddpcr_plate}}
-#' \code{\link[ddpcr]{new_plate}}
-#' \code{\link[ddpcr]{steps}}
-#' \code{\link[ddpcr]{plate_data}}
+#' \code{\link[ddpcr]{next_step}}\cr
+#' \code{\link[ddpcr]{plot.ddpcr_plate}}\cr
+#' \code{\link[ddpcr]{new_plate}}\cr
+#' \code{\link[ddpcr]{steps}}\cr
+#' \code{\link[ddpcr]{plate_data}}\cr
 #' \code{\link[ddpcr]{plate_meta}}
 #' @export
 analyze <- function(plate, restart = FALSE) {
@@ -275,10 +275,10 @@ analyze <- function(plate, restart = FALSE) {
 #' plate <- new_plate(dir, type = plate_types$custom_thresholds)
 #' plate <- next_step(plate)
 #' } 
-#' @seealso \code{\link[ddpcr]{plot.ddpcr_plate}}
-#' \code{\link[ddpcr]{analyze}}
-#' \code{\link[ddpcr]{steps}}
-#' \code{\link[ddpcr]{plate_data}}
+#' @seealso \code{\link[ddpcr]{plot.ddpcr_plate}}\cr
+#' \code{\link[ddpcr]{analyze}}\cr
+#' \code{\link[ddpcr]{steps}}\cr
+#' \code{\link[ddpcr]{plate_data}}\cr
 #' \code{\link[ddpcr]{plate_meta}}
 #' @export
 next_step <- function(plate, n = 1) {

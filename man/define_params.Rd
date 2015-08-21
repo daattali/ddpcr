@@ -24,9 +24,9 @@ all the parameters.
 \seealso{
 \code{\link[ddpcr]{params}}
 
-\code{\link[ddpcr]{params}}
-\code{\link[ddpcr]{parent_plate_type}}
-\code{\link[ddpcr]{define_clusters}}
+\code{\link[ddpcr]{params}}\cr
+\code{\link[ddpcr]{parent_plate_type}}\cr
+\code{\link[ddpcr]{define_clusters}}\cr
 \code{\link[ddpcr]{define_steps}}
 }
 \keyword{internal}

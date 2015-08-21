@@ -24,7 +24,7 @@ wells_positive(plate)
 }
 }
 \seealso{
-\code{\link[ddpcr]{pnpp_experiment}}
+\code{\link[ddpcr]{pnpp_experiment}}\cr
 \code{\link[ddpcr]{wells_negative}}
 }
 

@@ -27,8 +27,8 @@ implement this function differently.
 more information on how to implement custom ddPCR plate types.
 }
 \seealso{
-\code{\link[ddpcr]{analyze}}
-\code{\link[ddpcr]{reclassify_droplets_single}}
+\code{\link[ddpcr]{analyze}}\cr
+\code{\link[ddpcr]{reclassify_droplets_single}}\cr
 \code{\link[ddpcr]{mark_clusters}}
 }
 \keyword{internal}

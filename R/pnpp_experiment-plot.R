@@ -36,7 +36,7 @@
 #' @param ... Parameters to pass to \code{\link[ddpcr]{plot.ddpcr_plate}}.
 #' @return A ggplot2 plot object.
 #' @seealso
-#' \code{\link[ddpcr]{plot.ddpcr_plate}},
+#' \code{\link[ddpcr]{plot.ddpcr_plate}}\cr
 #' \code{\link[ddpcr]{pnpp_experiment}}
 #' @examples 
 #' \dontrun{

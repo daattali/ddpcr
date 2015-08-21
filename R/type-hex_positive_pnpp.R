@@ -9,18 +9,27 @@
 #' has three main clusters of droplets: double-negative (empty droplets),
 #' FAM+HEX+ (wildtype droplets) and HEX+FAM- (mutant droplets). 
 #' 
+#' Plates with this type have the following analysis steps: \code{INITIALIZE},
+#' \code{REMOVE_FAILURES}, \code{REMOVE_OUTLIERS}, \code{REMOVE_EMPTY},
+#' \code{CLASSIFY}, \code{RECLASSIFY}.
+#' 
+#' Plates with this type have the following droplet clusters:
+#' \code{UNDEFINED}, \code{FAILED}, \code{OUTLIER}, \code{EMPTY} (double-negative),
+#' \code{RAIN} (not empty but not wildtype nor negative), \code{POSITIVE} (wildtype),
+#' \code{NEGATIVE} (mutant).
+#' 
 #' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
 #' more information on plate types.
 #' 
 #' @seealso
-#' \code{\link[ddpcr]{plate_types}}
-#' \code{\link[ddpcr]{wildtype_mutant_pnpp}}
-#' \code{\link[ddpcr]{fam_positive_pnpp}}
-#' \code{\link[ddpcr]{analyze}}
-#' \code{\link[ddpcr]{remove_failures}}
-#' \code{\link[ddpcr]{remove_outliers}}
-#' \code{\link[ddpcr]{remove_empty}}
-#' \code{\link[ddpcr]{classify_droplets}}
+#' \code{\link[ddpcr]{plate_types}}\cr
+#' \code{\link[ddpcr]{wildtype_mutant_pnpp}}\cr
+#' \code{\link[ddpcr]{fam_positive_pnpp}}\cr
+#' \code{\link[ddpcr]{analyze}}\cr
+#' \code{\link[ddpcr]{remove_failures}}\cr
+#' \code{\link[ddpcr]{remove_outliers}}\cr
+#' \code{\link[ddpcr]{remove_empty}}\cr
+#' \code{\link[ddpcr]{classify_droplets}}\cr
 #' \code{\link[ddpcr]{reclassify_droplets}}
 #' @name hex_positive_pnpp
 #' @examples 

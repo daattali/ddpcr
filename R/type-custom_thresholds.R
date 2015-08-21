@@ -19,12 +19,12 @@
 #' more information on plate types.
 #' 
 #' @seealso
-#' \code{\link[ddpcr]{plate_types}}
-#' \code{\link[ddpcr]{x_threshold}}
-#' \code{\link[ddpcr]{y_threshold}}
-#' \code{\link[ddpcr]{thresholds}}
-#' \code{\link[ddpcr]{analyze}} 
-#' \code{\link[ddpcr]{remove_outliers}}
+#' \code{\link[ddpcr]{plate_types}}\cr
+#' \code{\link[ddpcr]{x_threshold}}\cr
+#' \code{\link[ddpcr]{y_threshold}}\cr
+#' \code{\link[ddpcr]{thresholds}}\cr
+#' \code{\link[ddpcr]{analyze}} \cr
+#' \code{\link[ddpcr]{remove_outliers}}\cr
 #' \code{\link[ddpcr]{classify_thresholds}}
 #' @name custom_thresholds
 #' @examples 
@@ -87,8 +87,8 @@ define_steps.custom_thresholds <- function(plate) {
 #' @name x_threshold
 #' @param plate A ddPCR plate.
 #' @seealso 
-#' \code{\link[ddpcr]{custom_thresholds}}
-#' \code{\link[ddpcr]{y_threshold}}
+#' \code{\link[ddpcr]{custom_thresholds}}\cr
+#' \code{\link[ddpcr]{y_threshold}}\cr
 #' \code{\link[ddpcr]{thresholds}}
 #' @examples 
 #' \dontrun{
@@ -123,8 +123,8 @@ x_threshold <- function(plate) {
 #' @name y_threshold
 #' @param plate A ddPCR plate.
 #' @seealso 
-#' \code{\link[ddpcr]{custom_thresholds}}
-#' \code{\link[ddpcr]{x_threshold}}
+#' \code{\link[ddpcr]{custom_thresholds}}\cr
+#' \code{\link[ddpcr]{x_threshold}}\cr
 #' \code{\link[ddpcr]{thresholds}}
 #' @examples 
 #' \dontrun{
@@ -161,8 +161,8 @@ y_threshold <- function(plate) {
 #' @param value The new thresholds as a 2-element numeric vector
 #' @return The current thresholds
 #' @seealso 
-#' \code{\link[ddpcr]{custom_thresholds}}
-#' \code{\link[ddpcr]{x_threshold}}
+#' \code{\link[ddpcr]{custom_thresholds}}\cr
+#' \code{\link[ddpcr]{x_threshold}}\cr
 #' \code{\link[ddpcr]{y_threshold}}
 #' @examples 
 #' \dontrun{
@@ -209,8 +209,8 @@ set_thresholds <- function(plate, value) {
 #' @return A ddPCR plate with all the droplets assigned to a quadrant. The plate's
 #' metadata will have a few new variables relating to the number of droplets
 #' in each quadrant.
-#' @seealso \code{\link[ddpcr]{custom_thresholds}}
-#' \code{\link[ddpcr]{analyze}}
+#' @seealso \code{\link[ddpcr]{custom_thresholds}}\cr
+#' \code{\link[ddpcr]{analyze}}\cr
 #' \code{\link[ddpcr]{thresholds}}
 #' @export
 #' @keywords internal
@@ -291,7 +291,7 @@ classify_thresholds <- function(plate) {
 #' @param ... Parameters to pass to \code{\link[ddpcr]{plot.ddpcr_plate}}.
 #' @return A ggplot2 plot object.
 #' @seealso
-#' \code{\link[ddpcr]{plot.ddpcr_plate}},
+#' \code{\link[ddpcr]{plot.ddpcr_plate}}\cr
 #' \code{\link[ddpcr]{custom_thresholds}}
 #' @examples 
 #' \dontrun{

@@ -51,7 +51,7 @@ plate \%>\% set_thresholds(c(5500, 8000)) \%>\% analyze \%>\% plot
 }
 }
 \seealso{
-\code{\link[ddpcr]{plot.ddpcr_plate}},
+\code{\link[ddpcr]{plot.ddpcr_plate}}\cr
 \code{\link[ddpcr]{custom_thresholds}}
 }
 

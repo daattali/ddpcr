@@ -29,7 +29,7 @@ plate_data(plate)
 }
 }
 \seealso{
-\code{\link[ddpcr]{plate_meta}}
+\code{\link[ddpcr]{plate_meta}}\cr
 \code{\link[ddpcr]{plot.ddpcr_plate}}
 }
 

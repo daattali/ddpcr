@@ -19,7 +19,7 @@ to update the status of the plate after each step. You can use
 status before beginning each step.
 }
 \seealso{
-\code{\link[ddpcr]{steps}}
+\code{\link[ddpcr]{steps}}\cr
 \code{\link[ddpcr]{check_step}}
 }
 \keyword{internal}

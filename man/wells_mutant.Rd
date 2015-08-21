@@ -24,7 +24,7 @@ wells_mutant(plate)
 }
 }
 \seealso{
-\code{\link[ddpcr]{wildtype_mutant_pnpp}}
+\code{\link[ddpcr]{wildtype_mutant_pnpp}}\cr
 \code{\link[ddpcr]{wells_wildtype}}
 }
 

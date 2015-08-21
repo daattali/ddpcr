@@ -17,9 +17,9 @@
 #' @param plate A ddPCR plate.
 #' @return A ddPCR plate with all droplets assigned to a cluster. The plate's
 #' metadata will have several new variables.
-#' @seealso \code{\link[ddpcr]{analyze}}
-#' \code{\link[ddpcr]{classify_droplets_single}}
-#' \code{\link[ddpcr]{mark_clusters}}
+#' @seealso \code{\link[ddpcr]{analyze}}\cr
+#' \code{\link[ddpcr]{classify_droplets_single}}\cr
+#' \code{\link[ddpcr]{mark_clusters}}\cr
 #' \code{\link[ddpcr]{has_signif_negative_cluster}}
 #' 
 #' @note This is an S3 generic, which means that different ddPCR plate types can

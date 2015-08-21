@@ -43,7 +43,7 @@ type <- function(plate, all = FALSE) {
 #' @param plate A ddPCR plate
 #' @return A dataframe containing all the droplets in the plate, along with
 #' the assigned cluster of each droplet.
-#' @seealso \code{\link[ddpcr]{plate_meta}}
+#' @seealso \code{\link[ddpcr]{plate_meta}}\cr
 #' \code{\link[ddpcr]{plot.ddpcr_plate}}
 #' @examples 
 #' \dontrun{
@@ -81,7 +81,7 @@ plate_data <- function(plate) {
 #' to update the status of the plate after each step. You can use 
 #' \code{\link[ddpcr]{check_step}} to ensure that the plate is at an appropriate
 #' status before beginning each step.
-#' @seealso \code{\link[ddpcr]{steps}}
+#' @seealso \code{\link[ddpcr]{steps}}\cr
 #' \code{\link[ddpcr]{check_step}}
 #' @name status
 NULL
@@ -119,7 +119,7 @@ is_empty_plate <- function(plate) {
 #' @param plate A ddPCR plate
 #' @return \code{TRUE} if the plate's analysis has been fully carried out;
 #' \code{FALSE} otherwise. 
-#' @seealso \code{\link[ddpcr]{status}}
+#' @seealso \code{\link[ddpcr]{status}}\cr
 #' \code{\link[ddpcr]{analyze}}
 #' @export
 analysis_complete <- function(plate) {
@@ -402,7 +402,7 @@ unanalyzed_clusters <- function(plate, current) {
 #' @return A named character vector, where every name is the human-readable
 #' name of an analysis step, and every value is the name of the function
 #' used to perform the step.
-#' @seealso \code{\link[ddpcr]{analyze}}
+#' @seealso \code{\link[ddpcr]{analyze}}\cr
 #' \code{\link[ddpcr]{next_step}}
 #' @examples 
 #' \dontrun{

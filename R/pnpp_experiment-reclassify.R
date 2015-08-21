@@ -14,8 +14,8 @@
 #' This function is recommended to be run as part of an analysis pipeline (ie.
 #' within the \code{\link[ddpcr]{analyze}} function) rather than being called
 #' directly.
-#' @seealso \code{\link[ddpcr]{analyze}}
-#' \code{\link[ddpcr]{reclassify_droplets_single}}
+#' @seealso \code{\link[ddpcr]{analyze}}\cr
+#' \code{\link[ddpcr]{reclassify_droplets_single}}\cr
 #' \code{\link[ddpcr]{mark_clusters}}
 #' 
 #' @note This is an S3 generic, which means that different ddPCR plate types can

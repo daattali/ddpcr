@@ -18,9 +18,9 @@
 #' plate <- load_plate(file)
 #' get_filled_border(plate, "B06")
 #' get_filled_border(plate, "C08")
-#' @seealso \code{\link[ddpcr]{pnpp_experiment}},
-#' @seealso \code{\link[ddpcr]{positive_dim}},
-#' @seealso \code{\link[ddpcr]{get_filled_drops}}
+#' @seealso \code{\link[ddpcr]{pnpp_experiment}}\cr
+#' \code{\link[ddpcr]{positive_dim}}\cr
+#'\code{\link[ddpcr]{get_filled_drops}}
 #' @keywords internal
 #' @export
 get_filled_border <- function(plate, well_id) {
@@ -66,9 +66,9 @@ get_filled_border <- function(plate, well_id) {
 #' plate <- load_plate(file)
 #' get_filled_drops(plate, "B06")
 #' get_filled_drops(plate, "B06", get_filled_border(plate, "B06"))
-#' @seealso \code{\link[ddpcr]{pnpp_experiment}},
-#' @seealso \code{\link[ddpcr]{positive_dim}},
-#' @seealso \code{\link[ddpcr]{get_filled_drops}}
+#' @seealso \code{\link[ddpcr]{pnpp_experiment}}\cr
+#' \code{\link[ddpcr]{positive_dim}}\cr
+#' \code{\link[ddpcr]{get_filled_drops}}
 #' @keywords internal
 #' @export
 get_filled_drops <- function(plate, well_id, border) {

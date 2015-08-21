@@ -17,7 +17,7 @@ analysis_complete(plate)
 Check if a ddPCR plate has been fully analyzed or if there are remaining steps.
 }
 \seealso{
-\code{\link[ddpcr]{status}}
+\code{\link[ddpcr]{status}}\cr
 \code{\link[ddpcr]{analyze}}
 }
 

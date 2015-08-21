@@ -86,11 +86,11 @@ plate <- new_plate(dir)
 }
 }
 \seealso{
-\code{\link[ddpcr]{plate_types}}
-\code{\link[ddpcr]{type}}
-\code{\link[ddpcr]{reset}}
-\code{\link[ddpcr]{analyze}}
-\code{\link[ddpcr]{plot.ddpcr_plate}}
+\code{\link[ddpcr]{plate_types}}\cr
+\code{\link[ddpcr]{type}}\cr
+\code{\link[ddpcr]{reset}}\cr
+\code{\link[ddpcr]{analyze}}\cr
+\code{\link[ddpcr]{plot.ddpcr_plate}}\cr
 \code{\link[ddpcr]{params}}
 }
 

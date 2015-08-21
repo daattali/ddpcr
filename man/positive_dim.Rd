@@ -25,7 +25,7 @@ plate <- new_plate(dir = dir, type = plate_types$pnpp_experiment)
 positive_dim(plate) <- "Y"
 }
 \seealso{
-\code{\link[ddpcr]{pnpp_experiment}},
+\code{\link[ddpcr]{pnpp_experiment}}\cr
 \code{\link[ddpcr]{variable_dim}}
 }
 \keyword{internal}

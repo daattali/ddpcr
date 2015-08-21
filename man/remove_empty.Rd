@@ -31,7 +31,7 @@ implement this function differently.
 more information on how to implement custom ddPCR plate types.
 }
 \seealso{
-\code{\link[ddpcr]{analyze}}
+\code{\link[ddpcr]{analyze}}\cr
 \code{\link[ddpcr]{get_empty_cutoff}}
 }
 \keyword{internal}

@@ -10,7 +10,7 @@ positive_dim_var(plate)
 Get the name of the dye that is along the positive dimension.
 }
 \seealso{
-\code{\link[ddpcr]{pnpp_experiment}},
+\code{\link[ddpcr]{pnpp_experiment}}\cr
 \code{\link[ddpcr]{positive_dim}}
 }
 \keyword{internal}

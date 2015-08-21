@@ -29,12 +29,12 @@ plate \%>\% analyze \%>\% plot
 }
 }
 \seealso{
-\code{\link[ddpcr]{plate_types}}
-\code{\link[ddpcr]{x_threshold}}
-\code{\link[ddpcr]{y_threshold}}
-\code{\link[ddpcr]{thresholds}}
-\code{\link[ddpcr]{analyze}}
-\code{\link[ddpcr]{remove_outliers}}
+\code{\link[ddpcr]{plate_types}}\cr
+\code{\link[ddpcr]{x_threshold}}\cr
+\code{\link[ddpcr]{y_threshold}}\cr
+\code{\link[ddpcr]{thresholds}}\cr
+\code{\link[ddpcr]{analyze}} \cr
+\code{\link[ddpcr]{remove_outliers}}\cr
 \code{\link[ddpcr]{classify_thresholds}}
 }
 

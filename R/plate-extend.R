@@ -17,9 +17,9 @@
 #' information on plate types.
 #' @param plate A ddPCR plate
 #' @return The parent type of the given plate.
-#' @seealso \code{\link[ddpcr]{type}}
-#' \code{\link[ddpcr]{define_params}}
-#' \code{\link[ddpcr]{define_clusters}}
+#' @seealso \code{\link[ddpcr]{type}}\cr
+#' \code{\link[ddpcr]{define_params}}\cr
+#' \code{\link[ddpcr]{define_clusters}}\cr
 #' \code{\link[ddpcr]{define_steps}}
 #' @export
 #' @keywords internal
@@ -40,9 +40,9 @@ parent_plate_type <- function(plate) {
 #' \code{\link[ddpcr]{params}}
 #' @param plate A ddPCR plate
 #' @return A list of default parameters for the plate type.
-#' @seealso \code{\link[ddpcr]{params}}
-#' \code{\link[ddpcr]{parent_plate_type}}
-#' \code{\link[ddpcr]{define_clusters}}
+#' @seealso \code{\link[ddpcr]{params}}\cr
+#' \code{\link[ddpcr]{parent_plate_type}}\cr
+#' \code{\link[ddpcr]{define_clusters}}\cr
 #' \code{\link[ddpcr]{define_steps}}
 #' @export
 #' @keywords internal
@@ -63,9 +63,9 @@ define_params <- function(plate) {
 #' \code{\link[ddpcr]{clusters}}
 #' @param plate A ddPCR plate
 #' @return A list of potential droplet clusters for the plate type.
-#' @seealso \code{\link[ddpcr]{clusters}}
-#' \code{\link[ddpcr]{parent_plate_type}}
-#' \code{\link[ddpcr]{define_params}}
+#' @seealso \code{\link[ddpcr]{clusters}}\cr
+#' \code{\link[ddpcr]{parent_plate_type}}\cr
+#' \code{\link[ddpcr]{define_params}}\cr
 #' \code{\link[ddpcr]{define_steps}}
 #' @export
 #' @keywords internal
@@ -85,11 +85,11 @@ define_clusters <- function(plate) {
 #' @return A named list of analysis steps in the order they should be run on a dataset.
 #' The name of each item in the list is the human-readable name of the step
 #' and the value of each item is the function to call to perform the step. 
-#' @seealso \code{\link[ddpcr]{steps}}
-#' \code{\link[ddpcr]{step_begin}}
-#' \code{\link[ddpcr]{step_end}}
-#' \code{\link[ddpcr]{parent_plate_type}}
-#' \code{\link[ddpcr]{define_clusters}}
+#' @seealso \code{\link[ddpcr]{steps}}\cr
+#' \code{\link[ddpcr]{step_begin}}\cr
+#' \code{\link[ddpcr]{step_end}}\cr
+#' \code{\link[ddpcr]{parent_plate_type}}\cr
+#' \code{\link[ddpcr]{define_clusters}}\cr
 #' \code{\link[ddpcr]{define_params}}
 #' @export
 #' @keywords internal

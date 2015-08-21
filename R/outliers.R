@@ -16,7 +16,7 @@
 #' @return A ddPCR plate with outlier droplets marked as outliers. The plate's
 #' metadata will have a new variable \code{drops_outlier} which will count the
 #' number of outlier droplets in each well.
-#' @seealso \code{\link[ddpcr]{analyze}}
+#' @seealso \code{\link[ddpcr]{analyze}}\cr
 #' \code{\link[ddpcr]{get_outlier_cutoff}}
 #' @note This is an S3 generic, which means that different ddPCR plate types can
 #' implement this function differently. 
