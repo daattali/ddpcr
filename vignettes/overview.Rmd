@@ -1,22 +1,19 @@
 ---
-output:
-  md_document:
-    variant: markdown_github
+title: "Package ddpcr"
+author: "Dean Attali"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Package ddpcr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
 ---
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r setopts, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "vignettes/README-"
-)
+  
+```{r setup, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(tidy = FALSE, comment = "#>")
 ```
 
 # ddpcr: Analysis and visualization of Digital Droplet PCR data in R and on the web
-
-[![Build Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
 
 This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. An interactive tool was also created and is available online to facilitate this analysis for anyone who is not comfortable with using R.
 
@@ -55,17 +52,17 @@ While this tool was originally developed to automatically gate data for a partic
 
 In other words, the built-in automatic gating will work when there are three clusters of droplets: (1) double-negative, (2) double-positive, and (3) either FAM+ or HEX+. These types of experiments will be referred to as **(FAM+)/(FAM+HEX+)** or  **(HEX+)/(FAM+HEX+)**. Both of these experiment types fall under the name of **PNPP experiments**; PNPP is short for PositiveNegative/PositivePositive, which is a reflection of the droplet clusters. Here is what a typical well from a PNPP experiment looks like:
 
-[![Supported experiment types](vignettes/figures/supported-exp-types.png)](vignettes/figures/supported-exp-types.png)
+[![Supported experiment types](../inst/img/supported-exp-types.png)](../inst/img/supported-exp-types.png)
 
 If your experiment matches the criteria for a **PNPP** experiment (either a **(FAM+)/(FAM+HEX+)** or a **(HEX+)/(FAM+HEX+)** experiment), then after calculating empty droplets the program will analyze the rest of the droplets and assign each droplet one of the following three clustes: FAM+ (or HEX+), FAM+HEX+, or rain. Here is the result of analyzing a single well from a **(FAM+)/(FAM+HEX+)** experiment:
 
-[![Analyze result](vignettes/figures/pnpp-simple-result.png)](vignettes/figures/pnpp-simple-result.png)
+[![Analyze result](../inst/img/pnpp-simple-result.png)](../inst/img/pnpp-simple-result.png)
 
 If your ddPCR experiment is not a **PNPPP** type, you can still use this tool for the rest of the analysis, exploration, and plotting, but it will not benefit from the automatic gating. However, `ddpcr` is built to be easily extensible, which means that you can add your own experiment "type". Custom experiment types need to define their own method for gating the droplets in a well, and then they can be used in the same way as the built-in experiment types.
 
 # Analysis using the interactive tool
 
-If you're not comfortable using R and would like to use a visual tool that requires no programming, you can [use the tool online](TODO). If you do know how to run R, using the interactive tool (built with [shiny](http://shiny.rstudio.com/))
+If you're not comfortable using R and would like to use a visual tool that requires no programming, you can [use the tool online](TODO). If you do know how to run R, using the interactive tool (built with [shiny](http://shiny.rstudio.com/)) is still a good option as it can be easier to analyze than using the command line.
 
 # Analysis using R
 
@@ -183,7 +180,7 @@ The `only_used` parameter is used so that we'll only get data about the 5 existi
 If you aren't interested in all the wells, you can use the `subset()` function to retain only certain wells. Alternatively, you can use the `data_files` argument of the `new_plate()` function to only load certain well files instead of a full directory.  
 The `subset()` function can take accept either a list of sample names, a list of wells, or a special *range notation*. The range notation is a convenient way to select many wells: use a colon (`:`) to specify a range of wells and a comma (`,`) to add another well or range. A range of wells is defined as all wells in the rectangular area between the two endpoints. For example, `B05:C06` corresponds to the four wells `B05, B06, C05, C06`.  The following diagram shows the result of subsetting with a range notation of `A01:H03, C05, E06, B07:C08` on a plate that initially contains all 96 wells.  
 
-[![Subset example](vignettes/figures/ex-subset.png)](vignettes/figures/ex-subset.png)
+[![Subset example](../inst/img/ex-subset.png)](../inst/img/ex-subset.png)
 
 Back to our data: we have 5 wells, let's keep 4 of them
 
@@ -251,9 +248,9 @@ Notice well `C06` is grayed out, which means that it is a failed well. By defaul
 
 You don't have to analyze a plate object before you can plot it - a ddPCR plate can be plotted at any time to show the data in it. If you plot a plate before analysing it, it'll show the raw data.
 
-### Plotting parameters
+### Plot parameters
 
-There are many plotting parameters to allow you to create extremely customizable plots. Among the many parameters, there are three special categories of parameters that affect the visibility of droplets: `show_drops_*` is used to show/hide certain droplets, `col_drops_*` is used to set the colour of droplets, and `alpha_drops_*` is used to set the transparency of droplets (0 = transparent, 1 = opaque). The `*` can be replaced by the name of any droplet cluster (the available clusters can be obtained with `clusters(plate)` as mentioned earlier). For example, to show the outlier droplets in blue you would need to add the parameters `show_drops_outlier = TRUE, col_drops_outlier = "blue"`.
+There are many plot parameters to allow you to create extremely customizable plots. Among the many parameters, there are three special categories of parameters that affect the visibility of droplets: `show_drops_*` is used to show/hide certain droplets, `col_drops_*` is used to set the colour of droplets, and `alpha_drops_*` is used to set the transparency of droplets (0 = transparent, 1 = opaque). The `*` can be replaced by the name of any droplet cluster (the available clusters can be obtained with `clusters(plate)` as mentioned earlier). For example, to show the outlier droplets in blue you would need to add the parameters `show_drops_outlier = TRUE, col_drops_outlier = "blue"`.
 
 The following two plots show examples of how to use some plot parameters.
 
@@ -459,8 +456,3 @@ This list contains all the steps of analyzing the given plate, with each item in
 ddpcr:::init_plate
 ```
 
-
-
-Adding your own type (separate vignette)
-TODO
-document shiny app    

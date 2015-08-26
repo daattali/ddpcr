@@ -1,15 +1,9 @@
-### code
-
 - lots of links to github readme#extend - make sure that exists
 
 - add tests
 
-- add vignette about algorithm and about adding new types
+- vignettes for extending ddpcr and about the algorithm
 
-### stats
+- shiny app about tab
 
 - matias (stats prof) - better stats for outlier detection?
-
-### shiny
-
-- about tab
