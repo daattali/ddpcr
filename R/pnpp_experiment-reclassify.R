@@ -41,10 +41,10 @@ reclassify_droplets.pnpp_experiment <- function(plate) {
   min_wells <- params(plate, 'RECLASSIFY', 'MIN_WELLS_NEGATIVE_CLUSTER')
   if (plate %>% wells_negative %>% length < min_wells ||
       plate %>% wells_positive %>% length == 0) {
-    message(paste0("Reclassifying droplets... aborted because there are not enough",
+    msg(paste0("Reclassifying droplets... skipped (not enough",
                    " wells with significant ",
                    params(plate, 'GENERAL', 'NEGATIVE_NAME'),
-                   " clusters"))
+                   " clusters)"))
     status(plate) <- CURRENT_STEP
     return(plate)
   }

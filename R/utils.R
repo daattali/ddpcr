@@ -60,11 +60,25 @@ warn_msg <- function(x) {
 }
 
 #' Concatenate strings with no space between them
-#' @param ... strings to concatenate
+#' @param ... Strings to concatenate
 #' @keywords internal
 #' @export
 cat0 <- function(...) {
   cat(..., sep = "")
+}
+
+#' Write a message to the user if the `ddpcr.verbose` option is on
+#' 
+#' Running a ddpcr analysis results in many messages being printed to the console.
+#' By default, these messages are on when the user is using R interactively
+#' and off otherwise. You can overwrite this setting with \code{options(ddpcr.verbose = FALSE)}. 
+#' @param ... Parameters to pass to \code{message()}
+#' @keywords internal
+#' @export
+msg <- function(...) {
+  if(isTRUE(getOption("ddpcr.verbose", default = interactive()))) {
+    message(...)
+  }
 }
 
 #' Determine if a numeric value is within a range

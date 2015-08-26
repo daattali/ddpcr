@@ -8,6 +8,9 @@ library(ddpcr)
 # allow uploading files up to 100MB
 options(shiny.maxRequestSize = 100*1024^2) 
 
+# show verbose ddpcr messages
+options(ddpcr.verbose = TRUE)
+
 source(file.path("server", "helpers.R"))
 
 shinyServer(function(input, output, session) {

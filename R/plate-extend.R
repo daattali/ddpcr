@@ -108,8 +108,9 @@ define_steps <- function(plate) {
 #' @keywords internal
 step_begin <- function(text) {
   .globals$set("step_tstart", proc.time())
-  message(text, "... ", appendLF = FALSE)
+  msg(text, "... ", appendLF = FALSE)
 }
+
 #' Inform the user that an analysis step finished
 #' 
 #' When an analysis step is done, it's recommended to call this function
@@ -121,6 +122,6 @@ step_begin <- function(text) {
 #' @export
 #' @keywords internal
 step_end <- function(time) {
-  message(sprintf("DONE (%s seconds)",
+  msg(sprintf("DONE (%s seconds)",
                   round(proc.time() - .globals$get("step_tstart"))[1]))
 }

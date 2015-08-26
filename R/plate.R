@@ -249,12 +249,12 @@ wells_used <- function(plate) {
 #' @export
 analyze <- function(plate, restart = FALSE) {
   if (restart) {
-    message("Restarting analysis")
+    msg("Restarting analysis")
     status(plate) <- 0
   }
   steps_left <- length(steps(plate)) - status(plate)
   plate %<>% next_step(n = steps_left)
-  message("Analysis complete")
+  msg("Analysis complete")
   plate
 }
 
@@ -287,7 +287,7 @@ next_step <- function(plate, n = 1) {
   }
   
   if (analysis_complete(plate)) {
-    message("Analysis complete")
+    msg("Analysis complete")
     return(plate)
   }
   

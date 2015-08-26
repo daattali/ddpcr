@@ -7,7 +7,7 @@
 cat0(...)
 }
 \arguments{
-\item{...}{strings to concatenate}
+\item{...}{Strings to concatenate}
 }
 \description{
 Concatenate strings with no space between them

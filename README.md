@@ -240,7 +240,9 @@ files in the directory and attempt to find a matching results file.
 
 You will see some messages appear - every time `ddpcr` runs an analysis
 step (initializing the plate is part of the analysis), it will output a
-message decribing what it's doing.
+message decribing what it's doing. You can turn off messages by
+disabling the verbose option with the command
+`options(ddpcr.verbose = FALSE)`.
 
 ### Pre-analysis exploration of the data
 
