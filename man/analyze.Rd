@@ -27,6 +27,11 @@ metadata (available via \code{\link[ddpcr]{plate_meta}}).
 This function will run an analysis to completion. If you want to run each
 step one at a time, use \code{\link[ddpcr]{next_step}}.
 }
+\note{
+Most analysis steps result in some progress messages being printed to
+the screen. You can turn off these messages by disabling the verbose option
+with the command \code{options(ddpcr.verbose = FALSE)}.
+}
 \examples{
 \dontrun{
 dir <- system.file("sample_data", "small", package = "ddpcr")

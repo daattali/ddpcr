@@ -133,31 +133,28 @@ type. Custom experiment types need to define their own method for gating
 the droplets in a well, and then they can be used in the same way as the
 built-in experiment types.
 
+> Note: throughout this document, *FAM* will be synonymous to *Y axis*
+> and *HEX* will be synonymous to *X axis*, as a reflection of the fact
+> that conventionally when visualizing the data the FAM intensity is
+> plotted on the Y axis and the HEX intensity is on the X axis.
+
 Analysis using the interactive tool
 ===================================
 
 If you're not comfortable using R and would like to use a visual tool
-that requires no programming, you can [use the tool online](TODO). If
-you do know how to run R, using the interactive tool (built with
-[shiny](http://shiny.rstudio.com/)) is still a good option as it can be
-easier to analyze than using the command line. If you do use the online
-tool, you should still skim through the rest of this document (you can
-ignore the actual code/commands) as it will explain some important
-concepts.
+that requires no programming, you can [use the tool online](TODO). You
+should still skim through the rest of this document (you can ignore the
+actual code/commands) as it will explain some important concepts.
 
 Analysis using R
 ================
 
-Enough talking, time for action!
+Enough talking, let's get our hands dirty.
 
 First, install `ddpcr`
 
+    install.packages("devtools")
     devtools::install_github("daattali/ddpcr")
-
-Note: throughout this document, *FAM* will be synonymous to *Y axis* and
-*HEX* will be synonymous to *X axis*, as a reflection of the fact that
-conventionally when visualizing the data the FAM intensity is plotted on
-the Y axis and the HEX intensity is on the X axis.
 
 Running the interactive tool through R
 --------------------------------------
@@ -175,7 +172,7 @@ your ddPCR data. One example shows an analysis where the gating
 thresholds are manually set, and the other example uses the automated
 analysis. Note how `ddpcr` is designed to play nicely with the [magrittr
 pipe](https://github.com/smbache/magrittr) `%>%` for easier pipeline
-workflows. Explanation will follow, these are just here as a spoiler.
+workflows. Explanation will follow, these are just here as a teaser.
 
     library(ddpcr)
     dir <- system.file("sample_data", "small", package = "ddpcr")
@@ -246,7 +243,15 @@ disabling the verbose option with the command
 
 ### Pre-analysis exploration of the data
 
-We can explore the data we loaded even before doing any analysis
+We can explore the data we loaded even before doing any analysis. The
+first and easiest thing to do is to plot the raw data.
+
+    plot(plate)
+
+![](vignettes/overview_files/figure-markdown_strict/plotraw-1.png)
+
+Another way to get a quick overview of the data is by simply printing
+the plate object.
 
     plate
 
@@ -302,20 +307,19 @@ We can see all the droplets data with `plate_data()`
     #> 10  B01 1294 1037       1
     #> ..  ...  ...  ...     ...
 
-This shows us the fluorescent intensities of each droplet, along with
-the current cluster assignment of each droplet. Right now all droplets
-are assigned to cluster 1 which corresponds to *undefined* since no
-analysis has taken place yet. You can see all the clusters that a
-droplet can belong to with the `clusters()` function
-
-    plate %>% clusters
-
-    #> [1] "UNDEFINED" "FAILED"    "OUTLIER"   "EMPTY"
-
-This tells us that any droplet in a `ddpcr_plate`-type experiment can be
-classified into those clusters. Any droplet is initially *UNDEFINED*,
-droplets in failed wells are marked as *FAILED*, and the other two names
-are self explanatory.
+> **Technical note**: This shows us the fluorescent intensities of each
+> droplet, along with the current cluster assignment of each droplet.
+> Right now all droplets are assigned to cluster 1 which corresponds to
+> *undefined* since no analysis has taken place yet. You can see all the
+> clusters that a droplet can belong to with the `clusters()` function
+>
+>     plate %>% clusters
+>     #> [1] "UNDEFINED" "FAILED"    "OUTLIER"   "EMPTY"
+>
+> This tells us that any droplet in a `ddpcr_plate`-type experiment can
+> be classified into those clusters. Any droplet is initially
+> *UNDEFINED*, droplets in failed wells are marked as *FAILED*, and the
+> other two names are self explanatory.
 
 We can see the results of the plate so far with `plate_meta()`
 
@@ -365,24 +369,31 @@ Back to our data: we have 5 wells, let's keep 4 of them
 ### Run analysis
 
 An analysis of a ddPCR plate consists of running the plate through a
-sequence of steps. If you care to know, you can see what all the steps
-for a particular experiment are
+sequence of steps. You can see the steps of an experiment by printing
+it.
 
-    plate %>% steps %>% names
+    plate
 
-    #> [1] "INITIALIZE"      "REMOVE_FAILURES" "REMOVE_OUTLIERS" "REMOVE_EMPTY"
+    #>                     ddpcr plate
+    #>                    -------------
+    #>             Dataset name : small
+    #>             Data summary : 4 wells; 60,905 drops
+    #>               Plate type : ddpcr_plate
+    #> Completed analysis steps : INITIALIZE
+    #> Remaining analysis steps : REMOVE_FAILURES, REMOVE_OUTLIERS, REMOVE_EMPTY
 
-These steps are the default steps that any ddpcr plate will go through
-by default if no type is specified. At this point all we did was load
-the data, so the initialization step was done and there are 3 remaining
-steps. You can either run through the steps one by one using
-`next_steps()` or run all remaining steps with `analyze()`.
+The last two lines show up what steps have been completed and what steps
+remain. These steps are the default steps that any ddpcr plate will go
+through by default if no type is specified. At this point all we did was
+load the data, so the initialization step was done and there are 3
+remaining steps. You can run all remaining steps with `analyze()`, or
+run through the steps one by one using `next_step()`.
 
     plate <- plate %>% analyze
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (0 seconds)
+    #> Identifying empty droplets... DONE (1 seconds)
     #> Analysis complete
 
     # equivalent to `plate %>% next_step(3)`
@@ -926,4 +937,3 @@ by running `ddpcr:::init_plate`.
     #>   plate
     #> }
     #> <environment: namespace:ddpcr>
-    

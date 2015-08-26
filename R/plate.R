@@ -246,6 +246,9 @@ wells_used <- function(plate) {
 #' \code{\link[ddpcr]{steps}}\cr
 #' \code{\link[ddpcr]{plate_data}}\cr
 #' \code{\link[ddpcr]{plate_meta}}
+#' @note Most analysis steps result in some progress messages being printed to
+#' the screen. You can turn off these messages by disabling the verbose option
+#' with the command \code{options(ddpcr.verbose = FALSE)}.
 #' @export
 analyze <- function(plate, restart = FALSE) {
   if (restart) {
