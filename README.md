@@ -1,7 +1,8 @@
 <!-- To create this README, I run devtools::build_vignettes(), then
 rmarkdown::render("vignettes/overview.Rmd", output_format = "md_document"),
-copy the contents of vignettes/overview.md here,
-fix the image path (remove the ".."),
+go to vignettes/overview.md
+fix the image path (replace "../inst" with "inst" and replace "overview_files" with "vignettes/overview_files")
+copy the contents of vignettes/overview.md here
 and add the TravisCI status -->
 
 ddpcr: Analysis and visualization of Digital Droplet PCR data in R and on the web
@@ -80,23 +81,22 @@ The main features include:
     well can be calculated.
 -   **Gating droplets** - if your experiment matches some criteria (more
     on that soon), then automatic gating can take place; otherwise, you
-    can gate the data manually just like on QuantaSoft.
+    can gate the data with custom thresholds just like on QuantaSoft.
 -   **Explore results** - the results from each well (\# of drops, \# of
-    outliers, \# of empty drops, concentration) can be explored as a
-    histogram or boxplot to see the distribution of all wells in
+    outliers, \# of empty drops, concentration, etc.) can be explored as
+    a histogram or boxplot to see the distribution of all wells in
     the plate.
--   **Plot** - you can plot the data in the plate with many
-    customizable features.
+-   **Plot** - you can plot the data in the plate with many customizable
+    parameters
 
 Supported experiment types
 --------------------------
 
 While this tool was originally developed to automatically gate data for
-a particular ddPCR assay (the paper for that experiment is in progress),
-any assay with similar characteristics can also use this tool to
-automatically gate the droplets. In order to benefit from the full
-automatic analysis, your ddPCR experiment needs to have these
-characteristics:
+a particular ddPCR assay (TODO reference to Roza's paper), any assay
+with similar characteristics can also use this tool to automatically
+gate the droplets. In order to benefit from the full automatic analysis,
+your ddPCR experiment needs to have these characteristics:
 
 -   The experiment is a duplex ddPCR experiment
 -   The majority of droplets are empty (double-negative)
@@ -125,13 +125,13 @@ analyzing a single well from a **(FAM+)/(FAM+HEX+)** experiment:
 [![Analyze
 result](inst/img/pnpp-simple-result.png)](inst/img/pnpp-simple-result.png)
 
-If your ddPCR experiment is not a **PNPPP** type, you can still use this
+If your ddPCR experiment is not a **PNPP** type, you can still use this
 tool for the rest of the analysis, exploration, and plotting, but it
 will not benefit from the automatic gating. However, `ddpcr` is built to
 be easily extensible, which means that you can add your own experiment
-"type". Custom experiment types need to define their own method for
-gating the droplets in a well, and then they can be used in the same way
-as the built-in experiment types.
+type. Custom experiment types need to define their own method for gating
+the droplets in a well, and then they can be used in the same way as the
+built-in experiment types.
 
 Analysis using the interactive tool
 ===================================
@@ -139,7 +139,11 @@ Analysis using the interactive tool
 If you're not comfortable using R and would like to use a visual tool
 that requires no programming, you can [use the tool online](TODO). If
 you do know how to run R, using the interactive tool (built with
-[shiny](http://shiny.rstudio.com/))
+[shiny](http://shiny.rstudio.com/)) is still a good option as it can be
+easier to analyze than using the command line. If you do use the online
+tool, you should still skim through the rest of this document (you can
+ignore the actual code/commands) as it will explain some important
+concepts.
 
 Analysis using R
 ================
@@ -192,7 +196,7 @@ workflows. Explanation will follow, these are just here as a spoiler.
       plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, alpha_drops = 0.3,
            title = "Automatic gating\nworks with PNPP experiments")
 
-<img src="overview_files/figure-markdown_strict/quickstart-1.png" title="" alt="" width="50%" /><img src="overview_files/figure-markdown_strict/quickstart-2.png" title="" alt="" width="50%" />
+<img src="vignettes/overview_files/figure-markdown_strict/quickstart-1.png" title="" alt="" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/quickstart-2.png" title="" alt="" width="50%" />
 
 Running a basic analysis - detailed walkthrough
 -----------------------------------------------
@@ -376,7 +380,7 @@ steps. You can either run through the steps one by one using
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (2 seconds)
+    #> Identifying empty droplets... DONE (0 seconds)
     #> Analysis complete
 
     # equivalent to `plate %>% next_step(3)`
@@ -459,7 +463,7 @@ function.
 
     plate %>% plot
 
-![](overview_files/figure-markdown_strict/plotsimple-1.png)
+![](vignettes/overview_files/figure-markdown_strict/plotsimple-1.png)
 
 Notice well `C06` is grayed out, which means that it is a failed well.
 By default, failed wells have a grey background, and empty and outlier
@@ -469,9 +473,9 @@ You don't have to analyze a plate object before you can plot it - a
 ddPCR plate can be plotted at any time to show the data in it. If you
 plot a plate before analysing it, it'll show the raw data.
 
-### Plotting parameters
+### Plot parameters
 
-There are many plotting parameters to allow you to create extremely
+There are many plot parameters to allow you to create extremely
 customizable plots. Among the many parameters, there are three special
 categories of parameters that affect the visibility of droplets:
 `show_drops_*` is used to show/hide certain droplets, `col_drops_*` is
@@ -491,7 +495,7 @@ parameters.
     plate %>% plot(wells = "B01,B06", superimpose = TRUE,
                    show_grid = TRUE, show_grid_labels = TRUE, title = "Superimpose")
 
-<img src="overview_files/figure-markdown_strict/plotparams-1.png" title="" alt="" width="50%" /><img src="overview_files/figure-markdown_strict/plotparams-2.png" title="" alt="" width="50%" />
+<img src="vignettes/overview_files/figure-markdown_strict/plotparams-1.png" title="" alt="" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/plotparams-2.png" title="" alt="" width="50%" />
 
 ### Save your data
 
@@ -604,7 +608,7 @@ the `restart = TRUE` parameter.
     #> Initializing plate of type `ddpcr_plate`... DONE (0 seconds)
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (1 seconds)
+    #> Identifying empty droplets... DONE (0 seconds)
     #> Analysis complete
 
 Analysing any ddPCR plate with manual droplet gating
@@ -640,7 +644,7 @@ the draw the thresholds
 
     plot(plate_manual, show_grid_labels = TRUE)
 
-![](overview_files/figure-markdown_strict/plotcrosshair-1.png)
+![](vignettes/overview_files/figure-markdown_strict/plotcrosshair-1.png)
 
 If you noticed, there's a droplet in well *C06* that has a HEX value of
 25000 and is probably an outlier, which is the cause of the weird scale.
@@ -678,7 +682,7 @@ NoW the plate is ready and we can plot it or look at its results
 
     plot(plate_manual)
 
-![](overview_files/figure-markdown_strict/crosshairresults-1.png)
+![](vignettes/overview_files/figure-markdown_strict/crosshairresults-1.png)
 
 By default, the droplets in each quadrant are a different colour. If you
 want to change the colour of some droplets, we can use the `col_drops_*`
@@ -750,9 +754,9 @@ Now we can analyze the plate
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (1 seconds)
+    #> Identifying empty droplets... DONE (0 seconds)
     #> Classifying droplets... DONE (0 seconds)
-    #> Reclassifying droplets... aborted because there are not enough wells with significant negative clusters
+    #> Reclassifying droplets... skipped (not enough wells with significant negative clusters)
     #> Analysis complete
 
 One of the key goals in running the analysis is to determine the number
@@ -817,7 +821,7 @@ Plotting the data is usually the best way to see the results
 
     plate_pnpp %>% plot(text_size_negative_freq = 8)
 
-![](overview_files/figure-markdown_strict/pnppplot-1.png)
+![](vignettes/overview_files/figure-markdown_strict/pnppplot-1.png)
 
 The *positive* droplets are green and the *negative* droplets are
 purple. The well colours themselves reflect the
@@ -862,18 +866,18 @@ accurate.
     #> Initializing plate of type `pnpp_experiment`... DONE (0 seconds)
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (1 seconds)
+    #> Identifying empty droplets... DONE (0 seconds)
     #> Classifying droplets... DONE (0 seconds)
     #> Reclassify droplets based on info in all wells... DONE (0 seconds)
     #> Analysis complete
 
-![](overview_files/figure-markdown_strict/pnppreclassifyplot-1.png)
+![](vignettes/overview_files/figure-markdown_strict/pnppreclassifyplot-1.png)
 
 Algorithms used in each step
 ----------------------------
 
 If you want to know how a step is performed, you can see the exact
-algorithm used in each step with the `steps()` function.
+algorithm used in each step by consulting the `steps()` function.
 
     plate_pnpp %>% steps
 
@@ -920,3 +924,4 @@ by running `ddpcr:::init_plate`.
     #>   plate
     #> }
     #> <environment: namespace:ddpcr>
+    

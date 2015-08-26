@@ -37,13 +37,13 @@ The main features include:
 - **Identify outlier droplets** - sometimes a few droplets can have an extremely high fluorescent intensity value that is probably erroneous, perhaps as a result of an error with the fluorescent reader. These droplets are identified and removed from the downstream analysis.
 - **Identify empty droplets** - droplets with very low fluorescent emissions are considered empty and are removed from the downstream analysis. Removing these droplets is beneficial for two reasons: 1. the size of the data is greatly reduced, which means the computations will be faster on the remaining droplets, and 2. the real signal of interest is in the non-empty droplets, and empty droplets can be regarded as noise.
 - **Calculating template concentration** - after knowing how many empty droplets are in each well, the template concentration in each well can be calculated.
-- **Gating droplets** - if your experiment matches some criteria (more on that soon), then automatic gating can take place; otherwise, you can gate the data manually just like on QuantaSoft.
-- **Explore results** - the results from each well (# of drops, # of outliers, # of empty drops, concentration) can be explored as a histogram or boxplot to see the distribution of all wells in the plate.
-- **Plot** - you can plot the data in the plate with many customizable features.
+- **Gating droplets** - if your experiment matches some criteria (more on that soon), then automatic gating can take place; otherwise, you can gate the data with custom thresholds just like on QuantaSoft.
+- **Explore results** - the results from each well (# of drops, # of outliers, # of empty drops, concentration, etc.) can be explored as a histogram or boxplot to see the distribution of all wells in the plate.
+- **Plot** - you can plot the data in the plate with many customizable parameters
 
 ## Supported experiment types
 
-While this tool was originally developed to automatically gate data for a particular ddPCR assay (the paper for that experiment is in progress), any assay with similar characteristics can also use this tool to automatically gate the droplets. In order to benefit from the full automatic analysis, your ddPCR experiment needs to have these characteristics:  
+While this tool was originally developed to automatically gate data for a particular ddPCR assay (TODO reference to Roza's paper), any assay with similar characteristics can also use this tool to automatically gate the droplets. In order to benefit from the full automatic analysis, your ddPCR experiment needs to have these characteristics:  
 
 - The experiment is a duplex ddPCR experiment
 - The majority of droplets are empty (double-negative)
@@ -58,11 +58,11 @@ If your experiment matches the criteria for a **PNPP** experiment (either a **(F
 
 [![Analyze result](../inst/img/pnpp-simple-result.png)](../inst/img/pnpp-simple-result.png)
 
-If your ddPCR experiment is not a **PNPPP** type, you can still use this tool for the rest of the analysis, exploration, and plotting, but it will not benefit from the automatic gating. However, `ddpcr` is built to be easily extensible, which means that you can add your own experiment "type". Custom experiment types need to define their own method for gating the droplets in a well, and then they can be used in the same way as the built-in experiment types.
+If your ddPCR experiment is not a **PNPP** type, you can still use this tool for the rest of the analysis, exploration, and plotting, but it will not benefit from the automatic gating. However, `ddpcr` is built to be easily extensible, which means that you can add your own experiment type. Custom experiment types need to define their own method for gating the droplets in a well, and then they can be used in the same way as the built-in experiment types.
 
 # Analysis using the interactive tool
 
-If you're not comfortable using R and would like to use a visual tool that requires no programming, you can [use the tool online](TODO). If you do know how to run R, using the interactive tool (built with [shiny](http://shiny.rstudio.com/)) is still a good option as it can be easier to analyze than using the command line.
+If you're not comfortable using R and would like to use a visual tool that requires no programming, you can [use the tool online](TODO). If you do know how to run R, using the interactive tool (built with [shiny](http://shiny.rstudio.com/)) is still a good option as it can be easier to analyze than using the command line. If you do use the online tool, you should still skim through the rest of this document (you can ignore the actual code/commands) as it will explain some important concepts.
 
 # Analysis using R
 
@@ -444,7 +444,7 @@ plate_pnpp %>% analyze(restart = TRUE) %>% plot(text_size_negative_freq = 8)
 
 ## Algorithms used in each step
 
-If you want to know how a step is performed, you can see the exact algorithm used in each step with the `steps()` function.
+If you want to know how a step is performed, you can see the exact algorithm used in each step by consulting the `steps()` function.
 
 ```{r exactsteps}
 plate_pnpp %>% steps
