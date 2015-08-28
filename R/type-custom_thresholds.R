@@ -15,7 +15,7 @@
 #' \code{X_POSITIVE} (bottom-right quadrant), \code{Y_POSITIVE} (top-left quadrant),
 #' \code{BOTH_POSITIVE} (top-right quadrant).
 #' 
-#' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
+#' \href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for
 #' more information on plate types.
 #' 
 #' @seealso
@@ -199,7 +199,7 @@ set_thresholds <- function(plate, value) {
 #' 
 #' The main analysis step for ddPCR plates of type \code{custom_thresholds}.
 #' Assign each droplet into one of four quadrants based on the thresholds.\cr\cr
-#' \href{https://github.com/daattali/ddpcr#algorithm}{See the README} for
+#' \href{https://github.com/daattali/ddpcr#advanced-topic-2-Algorithms-used-in-each-step}{See the README} for
 #' more information.
 #' 
 #' This function is recommended to be run as part of an analysis pipeline (ie.

@@ -5,7 +5,7 @@
 #' 
 #' Identify droplets that have an abnormally high fluorescence intensity as
 #' outliers. Any such droplets will be assigned to the \emph{OUTLIER} cluster.\cr\cr
-#' \href{https://github.com/daattali/ddpcr#algorithm}{See the README} for
+#' \href{https://github.com/daattali/ddpcr#advanced-topic-2-Algorithms-used-in-each-step}{See the README} for
 #' more information about the algorithm used to find outlier droplets.
 #' 
 #' This function is recommended to be run as part of an analysis pipeline (ie.
@@ -20,7 +20,7 @@
 #' \code{\link[ddpcr]{get_outlier_cutoff}}
 #' @note This is an S3 generic, which means that different ddPCR plate types can
 #' implement this function differently. 
-#' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
+#' \href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for
 #' more information on how to implement custom ddPCR plate types.
 #' @export
 #' @keywords internal

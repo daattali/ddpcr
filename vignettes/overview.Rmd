@@ -252,7 +252,7 @@ plate %>% plot
 
 Notice well `C06` is grayed out, which means that it is a failed well. By default, failed wells have a grey background, and empty and outlier droplets are excluded from the plot. 
 
-You don't have to analyze a plate object before you can plot it - a ddPCR plate can be plotted at any time to show the data in it. If you plot a plate before analysing it, it'll show the raw data.
+You don't have to analyze a plate object before you can plot it - a ddPCR plate can be plotted at any time to show the data in it. If you plot a plate before analyzing it, it'll show the raw data.
 
 ### Plot parameters
 
@@ -278,11 +278,130 @@ You can also save a ddPCR plate object using `plate_save()`. This will create a 
 plate %>% save_plate("myplate")
 from_file <- load_plate("myplate")
 identical(plate, from_file)
-rm(from_file)
 unlink("myplate.rds")
 ```
 
-### Plate parameters
+## Analysis of different plate types
+
+So far we only used the default plate type in thuse analysis, but droplet gating does not take place with the default type. While you can define your own plate types (more on that later), there are three built-in plate types you can use:
+
+1. **`plate_types$custom_thresholds`** - when you want to gate your droplets into four quadrants according to HEX and FAM values that you set  
+2. **`plate_types$fam_positive_pnpp`** - when you have a FAM-positive PNPP plate (FAM+)/(FAM+HEX+)  
+3. **`plate_types$fam_positive_pnpp`** - when you have a HEX-positive PNPP plate (HEX+)/(FAM+HEX+)
+
+The next two sections explain how to use these experiment types.
+
+### Gating droplets in any ddPCR plate with custom thresholds
+
+If you want to perform a simple 4-quadrant gating like the one available in QuantaSoft, you need to set the type of the plate object to `plate_types$custom_thresholds`. This can either be done when initializing a new plate or by reseting an existing plate object.
+
+```{r reset, message=FALSE}
+# two ways to create the desired plate
+plate_manual <- reset(plate, type = plate_types$custom_thresholds)
+plate_manual2 <- new_plate(dir, type = plate_types$custom_thresholds) %>% subset("B01:C06")
+
+# make sure the two methods above are identical
+identical(plate_manual, plate_manual2)
+
+plate_manual
+```
+
+It's usually a good idea to take a look at the raw data to decide where the draw the thresholds
+
+```{r plotcrosshair}
+plot(plate_manual, show_grid_labels = TRUE)
+```
+
+If you noticed, there's a droplet in well *C06* that has a HEX value of 25000 and is probably an outlier, which is the cause of the weird scale.  After analyzing the plate, it will be identified as an outlier and hidden automatically. Before running the analysis, we should set where the thresholds will be. By default, the thresholds are at (5000, 5000), which is very arbitrary. It looks like the x coordinate is fine, but the y border should move up to approximately 8000. Then run the analysis.
+
+```{r setthresholds}
+# what are the current thresholds?
+thresholds(plate_manual)
+# set the thresholds to (5000,8000)
+thresholds(plate_manual) <- c(5000, 8000)
+plate_manual <- analyze(plate_manual)
+```
+
+Now the plate is ready and we can plot it or look at its results
+
+```{r crosshairresults}
+plate_meta(plate_manual, only_used = TRUE)
+plot(plate_manual)
+```
+
+By default, the droplets in each quadrant are a different colour. If you want to change the colour of some droplets, we can use the `col_drops_*` parameter as before. Since now we're working with a different plate type, the names of the droplet clusters can be different, so we need to first know what they are
+
+```{r crosshairclusters}
+clusters(plate_manual)
+```
+
+Now if we want to change the colour of the double-positive droplets to red, we just add a parameter `col_drops_both_positive = "red"`.
+
+### Gating droplets in PNPP experiments automatically
+
+If you have a *PNPP* experiment (*(FAM+)/(FAM+HEX+)* or *(HEX+)/(FAM+HEX+)*), then `ddpcr` can perform a fully automatic analysis on the plate. The sample dataset used in this running example is from a *(FAM+)/(FAM+HEX+)* experiment, so we can take advantage of the automatic gating if we set the type to `plate_types$fam_positive_pnpp`.
+
+Let's create a new plate object of the desired type.
+
+```{r pnppdefine}
+plate_pnpp <- new_plate(dir, type = plate_types$fam_positive_pnpp)
+```
+
+If the data were *(HEX+)/(FAM+HEX+)*, we would have used `type = plate_types$hex_positive_pnpp` instead.
+
+#### Clusters of a PNPP experiment
+
+Before running the analysis, it's a good idea to know what are the possible cluster groupings that a droplet can belong to
+
+```{r pnppclusters}
+clusters(plate_pnpp)
+```
+
+The first 4 clusters we've seen before, as they are common to all plate types. Droplets in the *HEX+FAM+* cluster are considered *POSITIVE*, while dropets in the *FAM+* cluster are considered *NEGATIVE* since they are *HEX-*. Any droplets that are not empty but don't emit enough fluorescent intensity to be in the *POSITIVE* or *NEGATIVE* clusters are considered *RAIN*.
+
+> When using the `plate_types$fam_positive_pnpp` type, the positive droplets (FAM+HEX+) are called wildtype, and the negative droplets (FAM+HEX-) are called mutant. Why? This package was originally designed to analyze a specific assay where the FAM+HEX+ cluster represented droplets with a wildtype gene inside, while the FAM+HEX- cluster corresponded to droplets with a mutant gene. Talking about positive vs negative drops or positive vs negative wells sounds a bit weird, so it was decided to stick with mutant vs wildtype. Just remember: wildtype = double-positive droplets, mutant = singly-positive droplets.
+
+#### Analysis of a PNPP experiment
+
+Now we can analyze the plate
+
+```{r pnppanalyze}
+plate_pnpp <- analyze(plate_pnpp)
+```
+
+One of the key goals in running the analysis is to determine the number of *POSITIVE* (wildtype) and *NEGATIVE* (mutant) droplets in each well, and similarly the *mutant frequency* (if a well has 95 wildtype droplets and 5 mutant droplets, then the *mutant frequency* in the well is 5%).    
+You can see from the output that the two last steps are **classifying** and **reclassifying** the droplets, and that the reclassification didn't take place. The classification step identifies all the non-empty droplets as either rain, mutant, or wildtype by analyzing each well individually. Wells with a very low *mutant frequency* (ie there are very few mutant droplets) are much harder to gate accurately, which is the reason for the reclassification step. The reclassification step uses information from wells with high a *mutant frequency*, where the gates are more clearly defined, to adjust the gates in wells with a low *mutant frequency*. The reclassification step only takes place if there are enough wells with a high mutant frequency.
+
+#### Results of a PNPP experiment
+
+Take a look at the results
+
+```{r pnppmeta}
+plate_pnpp %>% plate_meta(only_used = TRUE)
+```
+
+Explanation of some of the variables:
+
+- **mutant_num** and **wildtype_num** - the number of mutant and wildtype droplets
+- **mutant_freq** - the frequency (0-1) of non-empty, non-rain droplets that are in the mutant cluster
+- **significant_mutant_cluster** - TRUE if the the well contains a statistically significant number of mutant droplets
+
+Plotting the data is usually the best way to see the results
+
+```{r pnppplot}
+plate_pnpp %>% plot(text_size_mutant_freq = 8)
+```
+
+The wildtype droplets are green and the mutant droplets are purple. The well colours themselves reflect the **significant_mutant_cluster** variable: wells that are mostly wildtype droplets are green, and wells with significant mutant clusters are purple. There are parameters to set all these colours, the transparency levels, and many more options.
+
+Similarly to how `wells_failed()` returns the failed wells, you can use the `wells_mutant()` and `wells_wildtype()` functions to extract the wells with a significant mutant cluster and those without.
+
+```{r pnppnegpos}
+plate_pnpp %>% wells_mutant
+plate_pnpp %>% wells_wildtype
+```
+
+## Advanced topic 1: Plate parameters
 
 Every ddPCR plate object has adjustable parameters associated with it. There are general parameters that apply to the plate as a whole, and each analysis step has its own set of parameters that are used for the algorithm in that step. You can see all the parameters of a plate using the `params()` function
 
@@ -321,134 +440,7 @@ plate <- analyze(plate)
 plate <- analyze(plate, restart = TRUE)
 ```
 
-## Analysing any ddPCR plate with manual droplet gating
-
-The previous walkthrough shows the results of a basic analysis when using the default plate type. If you want to also perform a simple 4-quadrant gating like the one available in QuantaSoft, you need to set the type of the plate object to `plate_types$custom_thresholds`. This can either be done when initializing a new plate or by reseting an existing plate object.
-
-```{r reset, message=FALSE}
-plate_manual <- reset(plate, type = plate_types$custom_thresholds)
-plate_manual2 <- new_plate(dir, type = plate_types$custom_thresholds) %>% subset("B01:C06")
-identical(plate_manual, plate_manual2)
-plate_manual
-rm(plate_manual2)
-```
-
-It's usually a good idea to take a look at the raw data to decide where the draw the thresholds
-
-```{r plotcrosshair}
-plot(plate_manual, show_grid_labels = TRUE)
-```
-
-If you noticed, there's a droplet in well *C06* that has a HEX value of 25000 and is probably an outlier, which is the cause of the weird scale.  After analyzing the plate, it will be identified as an outlier and hidden automatically. Before running the analysis, we should set where the thresholds will be. By default, the thresholds are at (5000, 5000), which is very arbitrary. It looks like the x coordinate is fine, but the y border should move up to approximately 8000. Then run the analysis.
-
-```{r setthresholds}
-thresholds(plate_manual)
-thresholds(plate_manual) <- c(5000, 8000)
-plate_manual <- analyze(plate_manual)
-```
-
-NoW the plate is ready and we can plot it or look at its results
-
-```{r crosshairresults}
-plate_meta(plate_manual, only_used = TRUE)
-plot(plate_manual)
-```
-
-By default, the droplets in each quadrant are a different colour. If you want to change the colour of some droplets, we can use the `col_drops_*` parameter as before. Since now we're working with a different plate type, the names of the droplet clusters can be different, so we need to first know what they are
-
-```{r crosshairclusters}
-clusters(plate_manual)
-```
-
-Now if we want to change the colour of the double-positive droplets to red, we just add a parameter `col_drops_both_positive = "red"`.
-
-## Analysing PNPP experiments with automated gating 
-
-If you have a *PNPP* experiment (*(FAM+)/(FAM+HEX+)* or *(HEX+)/(FAM+HEX+)*) then `ddpcr` can do a full automatic analysis on the plate. The sample dataset is from a *(FAM+)/(FAM+HEX+)* experiment, so we can take advantage of the automatic gating.
-
-The first step is to define the type of plate. Again, this can be done wither by resetting an existing plate and specifying a different type, or by specifying a type when initializing a plate.
-
-```{r pnppdefine}
-plate_pnpp <- new_plate(dir, type = plate_types$pnpp_experiment)
-```
-
-This time the plate is not being subset, so we will retain all 5 wells in the raw data.
-
-### Defining *(FAM+)/(FAM+HEX+)* vs *(HEX+)/(FAM+HEX+)* 
-
-Before being able to analyze the plate, we need to set one important parameter: the *positive dimension*. This parameter tells `ddpcr` whether this is a c or a *(HEX+)/(FAM+HEX+)* experiment. The possible values are "X" and "Y", which correspond to HEX+ and FAM+, respectively.
-
-```{r pnppsetdim}
-positive_dim(plate_pnpp) <- "Y"
-```
-
-### Clusters of a PNPP experiment
-
-Before running the analysis, you should know what are the possible cluster groupings that a droplet can belong to
-
-```{r pnppclusters}
-clusters(plate_pnpp)
-```
-
-The first 4 are common to all plate types and were seen in the previous examples. Droplets in the *HEX+FAM+* cluster are considered *POSITIVE*, while dropets in the *FAM+* cluster are considered *NEGATIVE* since they are *HEX-*. If this were a *(HEX+)/(FAM+HEX+)* instead and we had defined the *positive_dim* to be *HEX*, then the *NEGATIVE* cluster would refer to *HEX+*. Any droplets that are not empty but don't emit enough fluorescent intensity to be in the *POSITIVE* or *NEGATIVE* clusters are considered *RAIN*. 
-
-### Analysis of a PNPP experiment
-
-Now we can analyze the plate
-
-```{r pnppanalyze}
-plate_pnpp <- analyze(plate_pnpp)
-```
-
-One of the key goals in running the analysis is to determine the number of *POSITIVE* and *NEGATIVE* droplets in each well, and similarly the *negative frequency*. If a well has 95 *POSITIVE* droplets and 5 *NEGATIVE* droplets, then the *negative frequency* in the well is 5%.  
-You can see from the output that the two last steps are **classifying** and **reclassifying** the droplets, and that the reclassification didn't take place. The classification step identifies all the non-empty droplets as either *RAIN*, *POSITIVE*, or *NEGATIVE* by analyzing each well individually. Wells with a very small *negative frequency* (there are few droplets in the *NEGATIVE* cluster) are much harder to gate accurately, which is the reason for the reclassification step. The reclassification step uses information from wells with high a *negative frequency* to make, where the gates are more clearly defined, to adjust the gates in wells with a low *negative frequency*. The reclassification step only takes place if there are enough wells with a high negative frequency.
-
-### Results of a PNPP experiment
-
-Take a look at the results
-
-```{r pnppmeta}
-plate_pnpp %>% plate_meta(only_used = TRUE)
-```
-
-Explanation of some of the variables:
-
-- **negative_num** and **positive_num** - the number of droplets in the *negative* and *positive* clusters
-- **negative_freq** - the frequency (0-1) of non-empty, non-rain droplets that are *negative*
-- **significant_negative_cluster** - TRUE if the a contains a statistically significant number of *negative* droplets, FALSE if most droplets are *positive*
-
-Plotting the data is usually the best way to see the results
-
-```{r pnppplot}
-plate_pnpp %>% plot(text_size_negative_freq = 8)
-```
-
-The *positive* droplets are green and the *negative* droplets are purple. The well colours themselves reflect the **significant_negative_cluster** variable: wells that are mostly *positive* droplets are green, and wells with significant negative clusters are purple. There are parameters to set all these colours, the transparency levels, and many more options.
-
-Similarly to how `wells_failed()` returns the failed wells, you can use the `wells_negative()` and `wells_positive()` functions to extract the wells with a significant negative cluster and those without.
-
-```{r pnppnegpos}
-plate_pnpp %>% wells_negative
-plate_pnpp %>% wells_positive
-```
-
-#### Reclassification of wells with low negative frequency
-
-By default, the reclassification step takes place if there are at least 4 wells with a high enough negative frequency. If you look at the results or the plot of this dataset, you'll see that there are two such wells. You can change that number just like any other parameter, so we can lower it to 2
-
-```{r pnppreclassify}
-params(plate_pnpp, 'RECLASSIFY', 'MIN_WELLS_NEGATIVE_CLUSTER') <- 2
-```
-
-As a reminder, `params(plate_pnpp) %>% str` will list all the available parameters.
-
-Now if we re-analyze the plate, the two wells with mostly *positive* droplets will be reanalyzed using the gate information from the other wells, which should not change much but it could be a little more accurate.
-
-```{r pnppreclassifyplot}
-plate_pnpp %>% analyze(restart = TRUE) %>% plot(text_size_negative_freq = 8)
-```
-
-## Algorithms used in each step
+## Advanced topic 2: Algorithms used in each step
 
 If you want to know how a step is performed, you can see the exact algorithm used in each step by consulting the `steps()` function.
 
@@ -462,3 +454,8 @@ This list contains all the steps of analyzing the given plate, with each item in
 ddpcr:::init_plate
 ```
 
+TODO link to vignette
+
+## Advanced topic 3: Creating new plate types
+
+TODO link to vignette

@@ -10,7 +10,7 @@
 #' function to read ddPCR data into R and create a plate object that can then
 #' be analyzed.
 #' 
-#' \href{https://github.com/daattali/ddpcr#extend}{See the README} for more
+#' \href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for more
 #' information on plate types.
 #' 
 #' @param dir The directory containing the ddPCR droplet data files, and potentially

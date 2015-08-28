@@ -17,7 +17,7 @@ number of outlier droplets in each well.
 \description{
 Identify droplets that have an abnormally high fluorescence intensity as
 outliers. Any such droplets will be assigned to the \emph{OUTLIER} cluster.\cr\cr
-\href{https://github.com/daattali/ddpcr#algorithm}{See the README} for
+\href{https://github.com/daattali/ddpcr#advanced-topic-2-Algorithms-used-in-each-step}{See the README} for
 more information about the algorithm used to find outlier droplets.
 }
 \details{

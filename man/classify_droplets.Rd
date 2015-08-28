@@ -18,7 +18,7 @@ The main analysis step for ddPCR plates of type \code{pnpp_experiment}.
 Classify each droplet as either rain, ++, or +-. Also calculate the frequency
 of negative droplets, and attempt to detemine if each well has a statistically
 significant number of such droplets.\cr\cr
-\href{https://github.com/daattali/ddpcr#algorithm}{See the README} for
+\href{https://github.com/daattali/ddpcr#advanced-topic-2-Algorithms-used-in-each-step}{See the README} for
 more information about the algorithm used.
 }
 \details{

@@ -16,7 +16,7 @@ metadata will have a few new variables relating to the empty droplets.
 \description{
 Find the empty droplets (double-negative droplets) in each well in a plate
 and assign these droplets to the \emph{EMPTY} cluster. \cr\cr
-\href{https://github.com/daattali/ddpcr#algorithm}{See the README} for
+\href{https://github.com/daattali/ddpcr#advanced-topic-2-Algorithms-used-in-each-step}{See the README} for
 more information about the algorithm used to find empty droplets.
 }
 \details{

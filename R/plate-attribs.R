@@ -8,7 +8,7 @@
 #' Plate type
 #' 
 #' Get the type of a ddPCR plate. 
-#' \href{https://github.com/daattali/ddpcr#extend}{See the README} for more
+#' \href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for more
 #' information on plate types.
 #' @param plate A ddPCR plate
 #' @param all If \code{FALSE}, show only the most specific plate type; otherwise,
@@ -294,7 +294,7 @@ params <- function(plate, category, name) {
 #' Each ddPCR plate type has a specific set of potential clusters the droplets
 #' can be assigned to. 
 #' 
-#' \href{https://github.com/daattali/ddpcr#extend}{See the README} for
+#' \href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for
 #' more information on plate types.
 #' @param plate a ddPCR plate.
 #' @return A character vector with the names of the clusters supported by the
