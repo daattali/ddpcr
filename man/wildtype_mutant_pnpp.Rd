@@ -22,7 +22,7 @@ Plates with this type have the following droplet clusters:
 \code{RAIN} (not empty but not wildtype nor negative), \code{POSITIVE} (wildtype),
 \code{NEGATIVE} (mutant).
 
-\href{https://github.com/daattali/ddpcr#extend}{See the README} for
+\href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for
 more information on plate types.
 }
 \examples{

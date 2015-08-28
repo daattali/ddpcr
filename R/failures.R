@@ -6,7 +6,7 @@
 #' Check if any wells have failed the ddPCR experiment by checking a series
 #' of quality control metrics.  If any well is deemed as a failure, all the droplets
 #' in that well will be assigned to the \emph{FAILED} cluster.\cr\cr
-#' \href{https://github.com/daattali/ddpcr#advanced-topic-2-Algorithms-used-in-each-step}{See the README} for
+#' \href{https://github.com/daattali/ddpcr#advanced-topic-2-algorithms-used-in-each-step}{See the README} for
 #' more information about the algorithm used to find failed wells.
 #' 
 #' This function is recommended to be run as part of an analysis pipeline (ie.

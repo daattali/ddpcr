@@ -17,6 +17,8 @@ knitr::opts_chunk$set(tidy = FALSE, comment = "#>")
 
 This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. An interactive tool was also created and is available online to facilitate this analysis for anyone who is not comfortable with using R.
 
+This document provides an explanation of what the package does includes a tutorial on how to use. It should take about 20 minutes to go through this document. 
+
 # Background
 
 Droplet Digital PCR (ddPCR) is a technology provided by Bio-Rad for performing digital PCR. The basic workflow of ddPCR involves three main steps: partitioning sample DNA into 20,000 droplets, PCR amplifying the nucleic acid in each droplet, and finally passing the droplets through a reader that detects flurescent intensities in two different wavelengths corresponding to FAM and HEX dyes. As a result, the data obtained from a ddPCR experiment can be visualized as a 2D scatterplot (one dimension is FAM intensity and the other dimension is HEX intensity) with 20,000 points (each droplet represents a point).
@@ -83,7 +85,9 @@ Even if you do know R, using the interactive application can be easier and more 
 
 ## Quick start
 
-Here are two basic examples of how to use `ddpcr` to analyze and plot your ddPCR data. One example shows an analysis where the gating thresholds are manually set, and the other example uses the automated analysis. Note how `ddpcr` is designed to play nicely with the [magrittr pipe](https://github.com/smbache/magrittr) `%>%` for easier pipeline workflows. Explanation will follow, these are just here as a teaser.
+Here are two basic examples of how to use `ddpcr` to analyze and plot your ddPCR data. One example shows an analysis where the gating thresholds are manually set, and the other example uses the automated analysis. Explanation will follow, these are just here as a teaser.
+
+> Note how `ddpcr` is designed to play nicely with the [magrittr pipe](https://github.com/smbache/magrittr) `%>%` for easier pipeline workflows.
 
 ```{r quickstart, message = FALSE, fig.show='hold', out.width='50%', fig.retina=FALSE}
 library(ddpcr)
@@ -268,6 +272,8 @@ plate %>% plot(wells = "B01,B06", superimpose = TRUE,
                show_grid = TRUE, show_grid_labels = TRUE, title = "Superimpose")
 ```
 
+> To see all the available plot parameters, run `?plot.ddpcr_plate`.
+
 ### Save your data
 
 As was shown previously, you can use the `plate_meta()` function to retrieve a table with the results. If you want to save that table, you can use R's builtin `write.csv()` or `write.table()` functions.
@@ -337,6 +343,8 @@ clusters(plate_manual)
 
 Now if we want to change the colour of the double-positive droplets to red, we just add a parameter `col_drops_both_positive = "red"`.
 
+> To see all the available plot parameters for this plate type, run `?plot.custom_thresholds`. In addition, any plot parameter that is available for default plates can also be used here (all parameters listed under `?plot.ddpcr_plate`).
+
 ### Gating droplets in PNPP experiments automatically
 
 If you have a *PNPP* experiment (*(FAM+)/(FAM+HEX+)* or *(HEX+)/(FAM+HEX+)*), then `ddpcr` can perform a fully automatic analysis on the plate. The sample dataset used in this running example is from a *(FAM+)/(FAM+HEX+)* experiment, so we can take advantage of the automatic gating if we set the type to `plate_types$fam_positive_pnpp`.
@@ -392,6 +400,8 @@ Plotting the data is usually the best way to see the results
 plate_pnpp %>% plot(text_size_mutant_freq = 8)
 ```
 
+> To see all the available plot parameters for this plate type, run `?plot.pnpp_experiment`. In addition, any plot parameter that is available for default plates can also be used here (all parameters listed under `?plot.ddpcr_plate`).
+
 The wildtype droplets are green and the mutant droplets are purple. The well colours themselves reflect the **significant_mutant_cluster** variable: wells that are mostly wildtype droplets are green, and wells with significant mutant clusters are purple. There are parameters to set all these colours, the transparency levels, and many more options.
 
 Similarly to how `wells_failed()` returns the failed wells, you can use the `wells_mutant()` and `wells_wildtype()` functions to extract the wells with a significant mutant cluster and those without.
@@ -442,7 +452,7 @@ plate <- analyze(plate, restart = TRUE)
 
 ## Advanced topic 2: Algorithms used in each step
 
-If you want to know how a step is performed, you can see the exact algorithm used in each step by consulting the `steps()` function.
+If you want to know how a step is performed, you can see the exact algorithm (code) used in each step by consulting the `steps()` function.
 
 ```{r exactsteps}
 plate_pnpp %>% steps
@@ -454,8 +464,10 @@ This list contains all the steps of analyzing the given plate, with each item in
 ddpcr:::init_plate
 ```
 
-TODO link to vignette
+For more details about the algorithm, see [the "Algorithms" vignette](algorithm.Rmd).
 
 ## Advanced topic 3: Creating new plate types
 
-TODO link to vignette
+Each ddPCR plate has a plate type which determines what type of analysis to run on the data. `plate_types` contains a list of the built-in plate types that are supported, but you can also create your own plate type. Creating a new plate type can be used if you want to supply your own logic for any analysis step, or even if you simply want to have a type that sets different default parameters than the built-in ones.
+
+For more details about how to create new plate types, see [the "Extending ddpcr by adding new plate types" vignette](extend.Rmd).

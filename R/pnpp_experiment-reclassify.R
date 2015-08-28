@@ -8,7 +8,7 @@
 #' not very clearly defined. This function uses information taken from wells
 #' with a high negative frquency (where the gate is easily defined) to adjust
 #' the gates in the other wells.\cr\cr
-#' \href{https://github.com/daattali/ddpcr#advanced-topic-2-Algorithms-used-in-each-step}{See the README} for
+#' \href{https://github.com/daattali/ddpcr#advanced-topic-2-algorithms-used-in-each-step}{See the README} for
 #' more information about the algorithm used.
 #' 
 #' This function is recommended to be run as part of an analysis pipeline (ie.

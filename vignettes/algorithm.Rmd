@@ -1,3 +1,18 @@
+---
+title: "Algorithms in ddpcr analysis"
+author: "Dean Attali"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Algorithms in ddpcr analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+  
+```{r setup, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(tidy = FALSE, comment = "#>")
+```
+
 
 ## failure:
 

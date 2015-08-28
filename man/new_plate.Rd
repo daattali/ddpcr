@@ -34,7 +34,7 @@ function to read ddPCR data into R and create a plate object that can then
 be analyzed.
 }
 \details{
-\href{https://github.com/daattali/ddpcr#extend}{See the README} for more
+\href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for more
 information on plate types.
 }
 \section{Providing ddPCR data}{

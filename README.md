@@ -1,9 +1,12 @@
-<!-- To create this README, I run devtools::build_vignettes(), then
-rmarkdown::render("vignettes/overview.Rmd", output_format = "md_document"),
-go to vignettes/overview.md
-fix the image path (replace "../inst" with "inst" and replace "overview_files" with "vignettes/overview_files")
-copy the contents of vignettes/overview.md here
-and add the TravisCI status -->
+<!-- To create this README:
+- devtools::build_vignettes()
+- rmarkdown::render("vignettes/overview.Rmd", output_format = "md_document")
+- go to vignettes/overview.md
+- fix the image path (replace "../inst" with "inst"
+- replace "overview_files" with -"vignettes/overview_files")
+- fix links to other vignettes (*.rmd -> vignettes/*.rmd)
+- copy the contents of vignettes/overview.md here
+- add this bit of text and the badges to the beginning -->
 
 ddpcr: Analysis and visualization of Digital Droplet PCR data in R and on the web
 =================================================================================
@@ -15,6 +18,10 @@ This package provides an interface to explore, analyze, and visualize
 droplet digital PCR (ddPCR) data in R. An interactive tool was also
 created and is available online to facilitate this analysis for anyone
 who is not comfortable with using R.
+
+This document provides an explanation of what the package does includes
+a tutorial on how to use. It should take about 20 minutes to go through
+this document.
 
 Background
 ==========
@@ -62,17 +69,17 @@ The main features include:
 
 -   **Identify failed wells** - determining which wells in the plate
     seemed to have failed the ddPCR experiment, and thus these wells
-    will be excluded from all downstream analysis. No template
-    control (NTC) will be deemed as failures by this tool.
+    will be excluded from all downstream analysis. No template control
+    (NTC) will be deemed as failures by this tool.
 -   **Identify outlier droplets** - sometimes a few droplets can have an
     extremely high fluorescent intensity value that is probably
-    erroneous, perhaps as a result of an error with the
-    fluorescent reader. These droplets are identified and removed from
-    the downstream analysis.
+    erroneous, perhaps as a result of an error with the fluorescent
+    reader. These droplets are identified and removed from the
+    downstream analysis.
 -   **Identify empty droplets** - droplets with very low fluorescent
-    emissions are considered empty and are removed from the
-    downstream analysis. Removing these droplets is beneficial for two
-    reasons: 1. the size of the data is greatly reduced, which means the
+    emissions are considered empty and are removed from the downstream
+    analysis. Removing these droplets is beneficial for two reasons: 1.
+    the size of the data is greatly reduced, which means the
     computations will be faster on the remaining droplets, and 2. the
     real signal of interest is in the non-empty droplets, and empty
     droplets can be regarded as noise.
@@ -84,8 +91,8 @@ The main features include:
     can gate the data with custom thresholds just like on QuantaSoft.
 -   **Explore results** - the results from each well (\# of drops, \# of
     outliers, \# of empty drops, concentration, etc.) can be explored as
-    a histogram or boxplot to see the distribution of all wells in
-    the plate.
+    a histogram or boxplot to see the distribution of all wells in the
+    plate.
 -   **Plot** - you can plot the data in the plate with many customizable
     parameters
 
@@ -170,9 +177,11 @@ Quick start
 Here are two basic examples of how to use `ddpcr` to analyze and plot
 your ddPCR data. One example shows an analysis where the gating
 thresholds are manually set, and the other example uses the automated
-analysis. Note how `ddpcr` is designed to play nicely with the [magrittr
-pipe](https://github.com/smbache/magrittr) `%>%` for easier pipeline
-workflows. Explanation will follow, these are just here as a teaser.
+analysis. Explanation will follow, these are just here as a teaser.
+
+> Note how `ddpcr` is designed to play nicely with the [magrittr
+> pipe](https://github.com/smbache/magrittr) `%>%` for easier pipeline
+> workflows.
 
     library(ddpcr)
     dir <- system.file("sample_data", "small", package = "ddpcr")
@@ -215,8 +224,8 @@ QuantaSoft, then QuantaSoft will export the following files:
     well A01 will be saved in *2015-05-20\_mouse\_A01\_Aamplitude.csv*
 -   1 results file: a small file named *2015-05-20\_mouse.csv* will be
     generated with some information about the plate, including the name
-    of the sample in each well (assuming you named the
-    samples previously)
+    of the sample in each well (assuming you named the samples
+    previously)
 
 The well files are the only required input to `ddpcr`, and since ddPCR
 plates contain 96 wells, you can upload anywhere from 1 to 96 well
@@ -294,19 +303,18 @@ We can see all the droplets data with `plate_data()`
 
     #> Source: local data frame [75,706 x 4]
     #> 
-    #>     well   HEX   FAM cluster
-    #>    (chr) (int) (int)   (int)
-    #> 1    B01  1374  1013       1
-    #> 2    B01  1411  1018       1
-    #> 3    B01  1428  1024       1
-    #> 4    B01  1313  1026       1
-    #> 5    B01  1362  1027       1
-    #> 6    B01  1290  1028       1
-    #> 7    B01  1319  1030       1
-    #> 8    B01  1492  1032       1
-    #> 9    B01  1312  1036       1
-    #> 10   B01  1294  1037       1
-    #> ..   ...   ...   ...     ...
+    #>    well  HEX  FAM cluster
+    #> 1   B01 1374 1013       1
+    #> 2   B01 1411 1018       1
+    #> 3   B01 1428 1024       1
+    #> 4   B01 1313 1026       1
+    #> 5   B01 1362 1027       1
+    #> 6   B01 1290 1028       1
+    #> 7   B01 1319 1030       1
+    #> 8   B01 1492 1032       1
+    #> 9   B01 1312 1036       1
+    #> 10  B01 1294 1037       1
+    #> ..  ...  ...  ...     ...
 
 > **Technical note**: This shows us the fluorescent intensities of each
 > droplet, along with the current cluster assignment of each droplet.
@@ -427,19 +435,18 @@ what steps are remaining). We can also look at the droplets data
 
     #> Source: local data frame [60,905 x 4]
     #> 
-    #>     well   HEX   FAM cluster
-    #>    (chr) (int) (int)   (int)
-    #> 1    B01  1374  1013       4
-    #> 2    B01  1411  1018       4
-    #> 3    B01  1428  1024       4
-    #> 4    B01  1313  1026       4
-    #> 5    B01  1362  1027       4
-    #> 6    B01  1290  1028       4
-    #> 7    B01  1319  1030       4
-    #> 8    B01  1492  1032       4
-    #> 9    B01  1312  1036       4
-    #> 10   B01  1294  1037       4
-    #> ..   ...   ...   ...     ...
+    #>    well  HEX  FAM cluster
+    #> 1   B01 1374 1013       4
+    #> 2   B01 1411 1018       4
+    #> 3   B01 1428 1024       4
+    #> 4   B01 1313 1026       4
+    #> 5   B01 1362 1027       4
+    #> 6   B01 1290 1028       4
+    #> 7   B01 1319 1030       4
+    #> 8   B01 1492 1032       4
+    #> 9   B01 1312 1036       4
+    #> 10  B01 1294 1037       4
+    #> ..  ...  ...  ...     ...
 
 This isn't very informative since it shows the cluster assignment for
 each droplet, which is not easy for a human to digest. Instead, this
@@ -511,6 +518,8 @@ parameters.
                    show_grid = TRUE, show_grid_labels = TRUE, title = "Superimpose")
 
 <img src="vignettes/overview_files/figure-markdown_strict/plotparams-1.png" title="" alt="" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/plotparams-2.png" title="" alt="" width="50%" />
+
+> To see all the available plot parameters, run `?plot.ddpcr_plate`.
 
 ### Save your data
 
@@ -637,6 +646,11 @@ first know what they are
 Now if we want to change the colour of the double-positive droplets to
 red, we just add a parameter `col_drops_both_positive = "red"`.
 
+> To see all the available plot parameters for this plate type, run
+> `?plot.custom_thresholds`. In addition, any plot parameter that is
+> available for default plates can also be used here (all parameters
+> listed under `?plot.ddpcr_plate`).
+
 ### Gating droplets in PNPP experiments automatically
 
 If you have a *PNPP* experiment (*(FAM+)/(FAM+HEX+)* or
@@ -692,7 +706,7 @@ Now we can analyze the plate
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (0 seconds)
+    #> Identifying empty droplets... DONE (1 seconds)
     #> Classifying droplets... DONE (0 seconds)
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
     #> Analysis complete
@@ -758,6 +772,11 @@ Plotting the data is usually the best way to see the results
     plate_pnpp %>% plot(text_size_mutant_freq = 8)
 
 ![](vignettes/overview_files/figure-markdown_strict/pnppplot-1.png)
+
+> To see all the available plot parameters for this plate type, run
+> `?plot.pnpp_experiment`. In addition, any plot parameter that is
+> available for default plates can also be used here (all parameters
+> listed under `?plot.ddpcr_plate`).
 
 The wildtype droplets are green and the mutant droplets are purple. The
 well colours themselves reflect the **significant\_mutant\_cluster**
@@ -875,7 +894,7 @@ Advanced topic 2: Algorithms used in each step
 ----------------------------------------------
 
 If you want to know how a step is performed, you can see the exact
-algorithm used in each step by consulting the `steps()` function.
+algorithm (code) used in each step by consulting the `steps()` function.
 
     plate_pnpp %>% steps
 
@@ -923,9 +942,18 @@ by running `ddpcr:::init_plate`.
     #> }
     #> <environment: namespace:ddpcr>
 
-TODO link to vignette
+For more details about the algorithm, see [the "Algorithms"
+vignette](vignettes/algorithm.Rmd).
 
 Advanced topic 3: Creating new plate types
 ------------------------------------------
 
-TODO link to vignette
+Each ddPCR plate has a plate type which determines what type of analysis
+to run on the data. `plate_types` contains a list of the built-in plate
+types that are supported, but you can also create your own plate type.
+Creating a new plate type can be used if you want to supply your own
+logic for any analysis step, or even if you simply want to have a type
+that sets different default parameters than the built-in ones.
+
+For more details about how to create new plate types, see [the
+"Extending ddpcr by adding new plate types" vignette](vignettes/extend.Rmd).

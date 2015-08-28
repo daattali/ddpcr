@@ -17,7 +17,7 @@ A character vector with the plate type(s).
 }
 \description{
 Get the type of a ddPCR plate.
-\href{https://github.com/daattali/ddpcr#extend}{See the README} for more
+\href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for more
 information on plate types.
 }
 \examples{

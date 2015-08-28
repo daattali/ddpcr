@@ -21,7 +21,7 @@ from a parent plate means that the same cluster types, analysis steps, and
 parameters will be used by default.
 }
 \details{
-\href{https://github.com/daattali/ddpcr#extend}{See the README} for more
+\href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for more
 information on plate types.
 }
 \seealso{

@@ -18,7 +18,7 @@ Each ddPCR plate type has a specific set of potential clusters the droplets
 can be assigned to.
 }
 \details{
-\href{https://github.com/daattali/ddpcr#extend}{See the README} for
+\href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for
 more information on plate types.
 }
 \examples{

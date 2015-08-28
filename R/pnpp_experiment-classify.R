@@ -7,7 +7,7 @@
 #' Classify each droplet as either rain, ++, or +-. Also calculate the frequency
 #' of negative droplets, and attempt to detemine if each well has a statistically
 #' significant number of such droplets.\cr\cr
-#' \href{https://github.com/daattali/ddpcr#advanced-topic-2-Algorithms-used-in-each-step}{See the README} for
+#' \href{https://github.com/daattali/ddpcr#advanced-topic-2-algorithms-used-in-each-step}{See the README} for
 #' more information about the algorithm used.
 #' 
 #' This function is recommended to be run as part of an analysis pipeline (ie.

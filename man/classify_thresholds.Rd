@@ -17,7 +17,7 @@ in each quadrant.
 \description{
 The main analysis step for ddPCR plates of type \code{custom_thresholds}.
 Assign each droplet into one of four quadrants based on the thresholds.\cr\cr
-\href{https://github.com/daattali/ddpcr#advanced-topic-2-Algorithms-used-in-each-step}{See the README} for
+\href{https://github.com/daattali/ddpcr#advanced-topic-2-algorithms-used-in-each-step}{See the README} for
 more information.
 }
 \details{
