@@ -13,56 +13,50 @@ vignette: >
 knitr::opts_chunk$set(tidy = FALSE, comment = "#>")
 ```
 
+# Algorithms used to analyze ddPCR droplets
 
-## failure:
+The algorithm described below consists of five main steps that are used to analyze a ddPCR plate with (FAM+)/(FAM+HEX+) clusters. Droplets in the (FAM+HEX+) cluster will be referred to as *wildtype*, and droplets in the (FAM+HEX-) cluster will be referred to as *mutant*. The final goal is to calculate the mutant frequency (*MF*) in each well by classifying all temlpate-containing droplets as wildtype or mutant.
 
-The goal here is to see if there is anything that is clearly wrong with the
-data in the well.  First, I ensure enough drops were loaded (BioRad claims 
-20k, we see 12k-17k usually) - less than 5000 (PARAMS$REMOVE_FAILURES$TOTAL_DROPS_T)
-is considered a failed run. Next I make a few basic sanity checks about the 
-general look of the data in clusters.
-If we were to normalize all HEX and FAM values to be between 0-1, we'd expect to
-always have a very large cluster of empty drops near (0,0), a cluster of
-wild-type drops near (1,1), and possibly a cluster of mutant drops neat (0,1).
-Using these assumptions on the data, we make the following three heuristic
-checks after fitting a mixture of 2 normal distributions in the FAM values
-of all the drops:
-  - The centers (mu's) of the two populations need to be far enough (this
-    if checked by seeing if the larger center is at least twice the value of the
-    lower center.  If it is not, that usually indicates that both normal populations
-    are really the same cluster)
-  - The lower population cannot have too few drops (lambda < 0.3)
-    (PARAMS$REMOVE_FAILURES$EMPTY_LAMBDA_LOW_T), as that means there is no
-    empty cluster.  Likewise, there shouldn't be too many drops (lambda > 0.99)
-    (PARAMS$REMOVE_FAILURES$EMPTY_LAMBDA_HIGH_T), as that means there are not
-    enough drops with daTA
-    
+Plates with (HEX+)/(FAM+HEX+) clusters use a very similar algorithm but HEX and FAM are swapped in every step. Plates that are neither (FAM+)/(FAM+HEX+) nor (HEX+)/(FAM+HEX+) only benefit from the first three steps of the pipeline (droplet gating is not performed). 
 
-## outliers:
+The initial droplet data is a list of *n* matrices, where *n* is the number of wells. Each matrix contains has two clumns and *m_i* rows, where *m_i* is the number of droplets in the *i*-th well. Each row represents a single droplet in a well and the two columns are the measured values of HEX and FAM fluorescence intensity. 
 
-The idea borrows from outlier detection in normal populations (looking for
-points that are further than k*IQR from the 1st/3rd quartiles), but since
-our data is highly skewed and non-normal, I use a small tweak.
-For each dimension ([FAM, HEX]): get the 1% (PARAMS$OUTLIERS$TOP_PERCENT) of
-drops that have the highest value in that dimension.  Calculate the IQR of the
-values only within these drops. Mark the outlier cutoff as the 3rd quantile
-plus 5 (PARAMS$OUTLIERS$CUTOFF_IQR) IQR
-Get the cutoff for outliers
+## Step 1: Identify failed wells
 
+The first step is to identify any wells that clearly failed the ddPCR run by checking four quality control metrics.
 
-## empty cutoff:
+(1) The total number of droplets in a well must exceed a specific threshold value (`params(plate, 'REMOVE_FAILURES', 'TOTAL_DROPS_T')`, default is 5000). BioRad claims that wells should have 20,000 droplets, but in practice we usually see between 12,000-17,000 droplets per well, and any well with too few droplets is considered a failure.
 
-We fit a mixture of 2 normal populations in the Y values of all the drops.
-The lower population corresponds to the empty drops, which form a fairly
-dense cluster. To capture the cutoff of empty drops, we simply assume that
-the Y intensity of empty drops can be roughly modeled by a normal distribution.
-More specifically, we set the threshold at 7 (PARAMS$EMPTY$CUTOFF_SD)
-standard deviations above the center of the distribution. Then repeat for X dimension
-(only one of the dimensions if we know which one to expect)
+The other three metrics evaluate the expected droplet clusters (empty, mutant, wildtype) and their quality by fitting a two-component Gaussian mixture model to the FAM signals of all droplets. Each of the two components is defined with a mean (*center*) and a standard deviation (*sd*). In a typical well, the distribution with the lower center will capture the empty droplets, while the higher distribution models the FAM+ (or template-containing) droplets. Every well is expected to have mostly empty droplets, so (2) acceptable segregation of empty droplets from the FAM+ cluster is assessed by measuring the difference between the centers of the two distributions. (3) The droplet density within the lower (empty) population is evaluated to ensure it the fraction of droplets is above a certain threshold (`params(plate, 'REMOVE_FAILURES', 'EMPTY_LAMBDA_LOW_T')`, default is 0.3), as failure to meet this criterion indicates a lack of a defined empty cluster. (4) Similarly, the droplet density must also be below a certain fraction (`params(plate, 'REMOVE_FAILURES', 'EMPTY_LAMBDA_HIGH_T')`, default is 0.99), as having too many empty droplets is a sign that there are not enough amplifiable template in the well.
+
+Any well that does not meet all four critera is deemd a failed run, and such wells are removed from further analysis.
+
+## Step 2: Identify outlier droplets
+
+While the FAM and HEX signal intensities have a lower bound of 0, there is no upper bound on the value the ddPCR reader may read. As a result, it is possible to observe a small number of droplets with abnormally large HEX or FAM values, which can be considered outlier droplets.  A common method for detecting outliers in normal distributions is to calculate the first quartile (*Q1*), third quartile (*Q3*), and interquartile range (*IQR*, defined as *Q3 - Q1*), and define any observations that fall outside the range of [_Q1 - 1.5*IQR_, _Q3 + 1.5*IQR_] as outliers.
+
+If ddPCR data was normal and this method could be used, only the upper bound of _Q3 + 1.5*IQR_ would be used to define outliers, as there are no outliers on the lower end of the distribution because most values are close to the minimum value of 0.  However, ddPCR data is extremely skewed and non-normal, so the common outlier detection approach will not work. Instead, a small tweak can be made to make it applicable to ddPCR data. For each signal dimension (FAM and HEX) we identify the top *p* percent (*p* = `params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT')`, default is 1%) of droplets having the highest signal value in that dimension out of droplets in the entire plate. An outlier threshold is then defined as _Q3 + k*IQR_ (*k* = `params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT')`, default is 5) of this subset of droplets, and any droplets that have a signal value larger than this threshold are considered outliers. Essentially, this is a variation on the common outlier detection method but the outlier threshold is calculated using only a fraction of the droplets.
+
+Any droplet in any well that has a FAM value exceeding the FAM outlier threshold or a HEX value exceeding the HEX outlier threshold is considered an outlier droplet, and removed from further analysis.
+
+## Step 3: Identify empty droplets
+
+Droplets with very low fluorescent signal are considered empty and are removed from any downstream analysis. These droplets do not contain any amplifiable template and make up the majority of droplets in a typical well. The removal of empty droplets is beneficial for two reasons. First, it greatly reduces the dimension of the data, which consequently allows for faster computations on the remaining droplets. Secondly, removing the major cluster of empty droplets also serves to eliminate any bias in a statistic model that would be otherwise dominated by the large number of empty droplets. While a large portion of the droplets is discarded, no useful information is lost as all the template-containing droplets are retained.
+
+Empty droplets are identified in each well separately. First, a two-component Gaussian mixture model is fitted to the FAM signals of all droplets in a well. Only the FAM signal is used because all empty droplets emit no FAM signal while all template-containing droplets will surely emit FAM signal. Note that the same argument cannot be applied to the HEX signal because both empty droplets and mutant droplets are HEX-, so FAM can be used as a discriminant for empty dropletw while HEX cannot. The Gaussian distribution with the lower mean is assumed to be modelling the empty droplets, and it will likely have a fairly small standard deviation (*sd*) as the empty droplets are densely clustered. A FAM threshold for empty droplets is then calculated using the assumption that the FAM value of empty droplets can be roughly modeled by a normal distribution. Specifically, a threshold is defined as _mean + k*sd_ (*k* = `params(plate, 'REMOVE_EMPTY', 'CUTOFF_SD')`, default is 7) of the lower (empty) distribution. Any droplets in the well with a FAM value lower than the threshold are deemed empty.
+
+## Step 4: Gate droplets
+
+https://github.com/jennybc/haynes/blob/master/analysis/22_gate-using-inflection-points.R
+https://github.com/jennybc/haynes/blob/master/analysis/23_inflection-points-optimize-density-bw.R
+https://github.com/jennybc/haynes/blob/master/analysis/24_density-minima-instead-of-inflection-points.R
+
+---
 
 
 ## classify:
 
+After successfull identifying the "filled" droplets, the step of separating MT from WT drops was previously done using a mixture model of 2 normal distributions, but now I'm looking into doing it by looking at the inflection point on the density curve. The hardest part is figuring out what bandwidth to use for the smoothing. Using too high of a bandwidth will not find the mutant cluster, and too low will call every droplet a mutant cluster. There doesn't seem to be a single global value that can be used, even within the same dataset different bandwiths are optimal for different wells, and using too high/too low of a bandwidth doesn't identify the correct gates.
 
 
 ## mutant vs wildtype

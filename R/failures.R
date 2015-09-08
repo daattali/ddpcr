@@ -118,6 +118,7 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
   smaller_center_idx <- distances %>% which.min
   
   # Check if the two cluster centers are very close to each other
+  # if they are too close, it indicates that the two clusters are really the same
   if (diff(centers[[1]], centers[[2]]) < diff(centers[[smaller_center_idx]])) {
     return(FALSE)
   }

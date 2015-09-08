@@ -101,6 +101,8 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
   adj_prev <- NULL 
   # final "adjust" value
   adj_final <- NULL 
+  
+  # try to find the optimal bandwidth for the density kernel
   for (adj in seq(params(plate, 'CLASSIFY', 'ADJUST_BW_MIN'),
                   params(plate, 'CLASSIFY', 'ADJUST_BW_MAX'),
                   0.5)) {
@@ -108,7 +110,7 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
     maxima_idx <- local_maxima(dens_smooth$y)
     minima_idx <- local_minima(dens_smooth$y)
     
-    # ensure the right peak is centered on the wildype cluster and not a couple
+    # ensure the right peak is centered on the wildype cluster and not a few
     # outlier drops
     while (TRUE) {
       btwn_right_mins <-
@@ -125,8 +127,12 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
       }
     }
     
+    # number of peaks = number of local maxima
     num_peaks <- length(maxima_idx)
+    
+    # if there is only one peak, record the bandwidth and stop
     if (num_peaks == 1) {
+      # if it's not the first attempt, revert to the previous bandwidth
       if (!bw_orig) {
         adj <- adj_prev
         dens_smooth <- density(filled[[variable_var]], bw = "sj", adjust = adj)
@@ -137,10 +143,13 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
       adj_final <- adj
       break
     }
+    # if there are two peaks, stop
     if (num_peaks == 2) {
       adj_final <- adj
       break
     }
+    
+    # if there are more than 2 peaks, increase the bandwidth
     adj_prev <- adj
     bw_orig <- FALSE
   }
@@ -148,14 +157,19 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
     err_msg(sprintf("Could not analyze well %s", well_id))
   }
   
+  # if there is only one peak, then everything is positive
+  # otherwise, use the local minimum to the right of the left-most peak
+  # usually there will only be two peaks, so this means the only local minimum.
+  # But if we failed to find a bandwidth that produces only two peaks, then
+  # we need to make sure we choose the correct minimum
   negative_border <- 0
   if (num_peaks > 1) {
-    # use the local minimum to the right of the left-most peak
     left_peak <- dens_smooth$x[maxima_idx][1]
     minimas <- dens_smooth$x[minima_idx]
     negative_border <- minimas[which(minimas > left_peak) %>% min]
   }
   
+  # markd all the negative and positive droplets according to the border
   negative_drops <- filled %>%
     dplyr::filter_(lazyeval::interp(~ var <= negative_border,
                                     var = as.name(variable_var)))    
