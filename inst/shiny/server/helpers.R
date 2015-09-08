@@ -23,8 +23,8 @@ withBusyIndicator <- function(buttonId, expr) {
   tryCatch({
     value <- expr
     show(selector = doneEl)
-    hide(selector = doneEl, anim = TRUE, animType = "fade",
-         time = 0.5, delay = 2)
+    delay(2000, hide(selector = doneEl, anim = TRUE, animType = "fade",
+         time = 0.5))
     value
   }, error = errorFunc)
 }

@@ -2,6 +2,8 @@
 
 - shiny app about tab
 
-- matias (stats prof) - better stats for outlier detection?
+- extend vignette
 
-vignette("introduction", package = "dplyr")
+- algorithm vignette
+
+- matias (stats prof) - better stats for outlier detection?
