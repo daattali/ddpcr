@@ -28,8 +28,7 @@
 #' @param ... Ignored
 #' @return Plate with data only from the specified wells/samples.
 #' @examples
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir)
+#' plate <- new_plate(sample_data_dir())
 #' plate %>% wells_used
 #' plate %>% subset("C01") %>% wells_used
 #' plate %>% subset(c("C01", "C08")) %>% wells_used

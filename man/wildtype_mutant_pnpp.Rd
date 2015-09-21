@@ -27,8 +27,7 @@ more information on plate types.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir, type = plate_types$wildtype_mutant_pnpp)
+plate <- new_plate(sample_data_dir(), type = plate_types$wildtype_mutant_pnpp)
 type(plate)
 }
 }

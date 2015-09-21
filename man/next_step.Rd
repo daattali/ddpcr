@@ -22,8 +22,7 @@ want to run all the remaining steps at once, use \code{\link[ddpcr]{analyze}} in
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir, type = plate_types$custom_thresholds)
+plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 plate <- next_step(plate)
 }
 }

@@ -12,7 +12,7 @@ test_that("get_filled_border works", {
 })
 
 test_that("get_filled_drops works", {
-  dir <- system.file("sample_data", "small", package = "ddpcr")
+  dir <- sample_data_dir()
   plate <- load_plate(file.path(dir, "analyzed_pnpp.rds"))
   
   border_B06 <- get_filled_border(plate, "B06")

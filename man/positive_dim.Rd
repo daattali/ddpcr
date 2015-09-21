@@ -20,8 +20,7 @@ that has a high fluorescence intensity in all non-empty drops in a
 \code{pnpp_experiment} plate.
 }
 \examples{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir = dir, type = plate_types$pnpp_experiment)
+plate <- new_plate(dir = sample_data_dir(), type = plate_types$pnpp_experiment)
 positive_dim(plate) <- "Y"
 }
 \seealso{

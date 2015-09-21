@@ -22,7 +22,7 @@ of the steps in the list is the order in which they are run on the dataset.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
+dir <- sample_data_dir()
 new_plate(dir) \%>\% steps
 new_plate(dir, plate_types$fam_positive_pnpp) \%>\% steps
 }

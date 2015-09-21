@@ -17,8 +17,7 @@
 #' @seealso \code{\link[ddpcr]{plate_types}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$fam_positive_pnpp)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$fam_positive_pnpp)
 #' type(plate)
 #' type(plate, TRUE)
 #' } 
@@ -47,8 +46,7 @@ type <- function(plate, all = FALSE) {
 #' \code{\link[ddpcr]{plot.ddpcr_plate}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir)
+#' plate <- new_plate(sample_data_dir())
 #' plate_data(plate)
 #' } 
 #' @export
@@ -143,8 +141,7 @@ analysis_complete <- function(plate) {
 #' \code{\link[ddpcr]{plot.ddpcr_plate}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir)
+#' plate <- new_plate(sample_data_dir())
 #' plate %>% plate_meta(only_used = TRUE)
 #' plate %>% analyze %>% plate_meta(only_used = TRUE)
 #' } 
@@ -188,8 +185,7 @@ arrange_meta <- function(plate) {
 #' @return Plate name
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir)
+#' plate <- new_plate(sample_data_dir())
 #' name(plate)
 #' name(plate) <- "foo"
 #' name(plate)
@@ -241,8 +237,7 @@ name <- function(plate) {
 #' @seealso \code{\link[ddpcr]{x_var}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir)
+#' plate <- new_plate(sample_data_dir())
 #' 
 #' # retrieving plate parameters
 #' str(params(plate))
@@ -301,7 +296,7 @@ params <- function(plate, category, name) {
 #' plate type.
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' dir <- sample_data_dir()
 #' new_plate(dir) %>% clusters
 #' new_plate(dir, plate_types$fam_positive_pnpp) %>% clusters
 #' }
@@ -321,8 +316,7 @@ clusters <- function(plate) {
 #' Get cluster ID by name
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir)
+#' plate <- new_plate(sample_data_dir())
 #' # see what cluster names exist and their order
 #' clusters(plate)
 #' cluster(plate, 'FAILED')
@@ -340,8 +334,7 @@ cluster <- function(plate, cluster) {
 #' Get cluster name by ID
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir)
+#' plate <- new_plate(sample_data_dir())
 #' # see what cluster names exist and their order
 #' clusters(plate)
 #' cluster_name(plate, 2)
@@ -372,8 +365,7 @@ cluster_name <- function(plate, cluster) {
 #' @seealso \code{\link[ddpcr]{cluster}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir)
+#' plate <- new_plate(sample_data_dir())
 #' unanalyzed_clusters(plate, 3)
 #' unanalyzed_clusters(plate, cluster(plate, "OUTLIER"))
 #' plate %>% unanalyzed_clusters(cluster(plate, "OUTLIER")) %>% cluster_name(plate, .)
@@ -406,7 +398,7 @@ unanalyzed_clusters <- function(plate, current) {
 #' \code{\link[ddpcr]{next_step}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' dir <- sample_data_dir()
 #' new_plate(dir) %>% steps
 #' new_plate(dir, plate_types$fam_positive_pnpp) %>% steps
 #' }
@@ -425,8 +417,7 @@ steps <- function(plate) {
 #' Get step ID by step name
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir)
+#' plate <- new_plate(sample_data_dir())
 #' # see what step names exist and their order
 #' steps(plate)
 #' step(plate, 'REMOVE_OUTLIERS')
@@ -443,8 +434,7 @@ step <- function(plate, step) {
 #' Get step name by ID
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir)
+#' plate <- new_plate(sample_data_dir())
 #' # see what step names exist and their order
 #' steps(plate)
 #' step_name(plate, 2)
@@ -466,7 +456,7 @@ step_name <- function(plate, step) {
 #' run the previous steps.
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' dir <- sample_data_dir()
 #' plate <- new_plate(dir)
 #' status(plate) # current step
 #' check_step(plate, 2) # are we ready to start step 2?
@@ -488,7 +478,7 @@ check_step <- function(plate, step) {
 #' @param step A step name
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' dir <- sample_data_dir()
 #' plate <- new_plate(dir)
 #' steps(plate)
 #' has_step(plate, 'REMOVE_FAILURES')
@@ -520,8 +510,7 @@ has_step <- function(plate, step) {
 #' @seealso \code{\link[ddpcr]{params}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir)
+#' plate <- new_plate(sample_data_dir())
 #' x_var(plate)
 #' x_var(plate) <- "VIC"
 #' x_var(plate)

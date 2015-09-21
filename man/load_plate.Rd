@@ -16,8 +16,7 @@ The plate that was saved in the given file.
 Reloads a plate that has been saved with \code{\link[ddpcr]{save_plate}}.
 }
 \examples{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir)
+plate <- new_plate(sample_data_dir())
 save_plate(plate, "myplate")
 plate2 <- load_plate("myplate")
 plate3 <- load_plate("myplate.rds")

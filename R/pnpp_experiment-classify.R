@@ -169,7 +169,7 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
     negative_border <- minimas[which(minimas > left_peak) %>% min]
   }
   
-  # markd all the negative and positive droplets according to the border
+  # mark all the negative and positive droplets according to the border
   negative_drops <- filled %>%
     dplyr::filter_(lazyeval::interp(~ var <= negative_border,
                                     var = as.name(variable_var)))    

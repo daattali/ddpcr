@@ -18,8 +18,7 @@ get the wells that were deemed as having mostly positive droplets.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir, type = plate_types$pnpp_experiment) \%>\% analyze
+plate <- new_plate(sample_data_dir(), type = plate_types$pnpp_experiment) \%>\% analyze
 wells_positive(plate)
 }
 }

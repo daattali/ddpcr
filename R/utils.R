@@ -5,6 +5,20 @@
 # but some are "internal exports" to allow people to use them if they want to
 # create their own plate types.
 
+#' Get directory of sample ddPCR data
+#' 
+#' This function returns a directory that contains sample ddPCR data, which can
+#' be used to initialize a ddPCR plate. It is mainly used to have an easy way
+#' to initialize ddpcr plates in the documentation examples, but you can also
+#' use it for learning purposes.
+#' @examples 
+#' new_plate(dir = sample_data_dir())
+#' @return directory of sample ddPCR data
+#' @export
+sample_data_dir <- function() {
+  system.file("sample_data", "small", package = "ddpcr")
+}
+
 #' Get droplet data from a well
 #' 
 #' @param plate A ddPCR plate.

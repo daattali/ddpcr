@@ -23,8 +23,7 @@ along the Y axis that divides the droplet quadrants.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir, type = plate_types$custom_thresholds)
+plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 y_threshold(plate)
 y_threshold(plate) <- 8000
 plot(plate)

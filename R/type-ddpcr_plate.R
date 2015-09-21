@@ -24,8 +24,7 @@
 #' @name ddpcr_plate
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$ddpcr_plate)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$ddpcr_plate)
 #' type(plate)
 #' plate %>% analyze %>% plot
 #' } 

@@ -57,8 +57,7 @@
 #' by defalt the random seed used by default is 8. If you want to create
 #' a new plate that uses a different random seed, you could do so like this:
 #' \preformatted{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, params = list('GENERAL' = list('RANDOM_SEED' = 10)))
+#' plate <- new_plate(sample_data_dir(), params = list('GENERAL' = list('RANDOM_SEED' = 10)))
 #' plate %>% p
 #' } 
 #' 
@@ -74,8 +73,7 @@
 #' \code{\link[ddpcr]{params}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir)
+#' plate <- new_plate(sample_data_dir())
 #' } 
 #' @export
 new_plate <- function(dir, type, data_files, meta_file, name, params) {
@@ -114,8 +112,7 @@ new_plate <- function(dir, type, data_files, meta_file, name, params) {
 #' \code{\link[ddpcr]{new_plate}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' plate <- reset(plate, type=plate_types$fam_positive_pnpp)
 #' } 
 #' @export
@@ -147,8 +144,7 @@ reset <- function(plate, type, params,
 #' @seealso \code{\link[ddpcr]{params}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' x_var(plate) <- "VIC"
 #' plate <- set_default_params(plate)
 #' } 
@@ -180,8 +176,7 @@ set_default_params <- function(plate) {
 #' @seealso \code{\link[ddpcr]{plate_meta}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' well_info(plate, "B01", "drops")
 #' } 
 #' @export
@@ -201,8 +196,7 @@ well_info <- function(plate, well_ids, var) {
 #' @seealso \code{\link[ddpcr]{subset.ddpcr_plate}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' wells_used(plate)
 #' plate <- subset(plate, "B01:C06")
 #' wells_used(plate)
@@ -235,8 +229,7 @@ wells_used <- function(plate) {
 #' @return The analyzed ddPCR plate
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' plate <- analyze(plate)
 #' } 
 #' @seealso
@@ -274,8 +267,7 @@ analyze <- function(plate, restart = FALSE) {
 #' @return The ddPCR plate after running the next step
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' plate <- next_step(plate)
 #' } 
 #' @seealso \code{\link[ddpcr]{plot.ddpcr_plate}}\cr

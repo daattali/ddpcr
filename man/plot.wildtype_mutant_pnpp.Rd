@@ -60,8 +60,7 @@ and more information.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir, type = plate_types$fam_positive_pnpp) \%>\% analyze
+plate <- new_plate(sample_data_dir(), type = plate_types$fam_positive_pnpp) \%>\% analyze
 wells_wildtype(plate)
 plot(plate)
 plate <- plate \%>\% analyze

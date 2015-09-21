@@ -16,7 +16,7 @@ Does a ddPCR plate have a step with this name?
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
+dir <- sample_data_dir()
 plate <- new_plate(dir)
 steps(plate)
 has_step(plate, 'REMOVE_FAILURES')

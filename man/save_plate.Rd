@@ -24,8 +24,7 @@ retrieve the data using \code{\link[ddpcr]{plate_data}} or
 \code{\link[utils]{write.csv}}.
 }
 \examples{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir)
+plate <- new_plate(sample_data_dir())
 save_plate(plate, "myplate")
 unlink("myplate.rds")
 }

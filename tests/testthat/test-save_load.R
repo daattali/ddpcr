@@ -1,7 +1,7 @@
 context("save_load")
 
 test_that("save and load work", {
-  dir <- system.file("sample_data", "small", package = "ddpcr")
+  dir <- sample_data_dir()
   plate <- new_plate(dir)
   save_plate(plate, "myplate")
   plate2 <- load_plate("myplate")

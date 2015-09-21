@@ -52,8 +52,7 @@
 #' @name pnpp_experiment
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$pnpp_experiment)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$pnpp_experiment)
 #' type(plate)
 #' } 
 NULL
@@ -130,8 +129,7 @@ define_steps.pnpp_experiment <- function(plate) {
 #' \code{\link[ddpcr]{pnpp_experiment}}\cr
 #' \code{\link[ddpcr]{variable_dim}}
 #' @examples 
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir = dir, type = plate_types$pnpp_experiment)
+#' plate <- new_plate(dir = sample_data_dir(), type = plate_types$pnpp_experiment)
 #' positive_dim(plate) <- "Y"
 #' @name positive_dim
 NULL
@@ -162,8 +160,7 @@ positive_dim <- function(plate) {
 #' \code{\link[ddpcr]{pnpp_experiment}}\cr
 #' \code{\link[ddpcr]{positive_dim}}
 #' @examples 
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir = dir, type = plate_types$pnpp_experiment)
+#' plate <- new_plate(dir = sample_data_dir(), type = plate_types$pnpp_experiment)
 #' variable_dim(plate) <- "Y"
 #' variable_dim(plate)
 #' positive_dim(plate)
@@ -240,8 +237,7 @@ variable_dim_var <- function(plate) {
 #' \code{\link[ddpcr]{wells_negative}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$pnpp_experiment) %>% analyze
+#' plate <- new_plate(sample_data_dir(), type = plate_types$pnpp_experiment) %>% analyze
 #' wells_positive(plate)
 #' }
 #' @export
@@ -272,8 +268,7 @@ wells_positive <- function(plate) {
 #' \code{\link[ddpcr]{wells_positive}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$pnpp_experiment) %>% analyze
+#' plate <- new_plate(sample_data_dir(), type = plate_types$pnpp_experiment) %>% analyze
 #' wells_negative(plate)
 #' }
 #' @export
@@ -298,8 +293,7 @@ wells_negative <- function(plate) {
 #' \code{meta_var_name} translates a default metadata variable name to the correct one.
 #' @seealso \code{\link[ddpcr]{pnpp_experiment}}
 #' @examples 
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir = dir, type = plate_types$pnpp_experiment)
+#' plate <- new_plate(dir = sample_data_dir(), type = plate_types$pnpp_experiment)
 #' params(plate, 'GENERAL', 'NEGATIVE_NAME') <- "mutant"
 #' meta_var_name(plate, 'num_negative_drops')
 #' @keywords internal

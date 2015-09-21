@@ -22,8 +22,7 @@ information on plate types.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir, type = plate_types$fam_positive_pnpp)
+plate <- new_plate(sample_data_dir(), type = plate_types$fam_positive_pnpp)
 type(plate)
 type(plate, TRUE)
 }

@@ -25,8 +25,7 @@ concentration, and more.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir)
+plate <- new_plate(sample_data_dir())
 plate \%>\% plate_meta(only_used = TRUE)
 plate \%>\% analyze \%>\% plate_meta(only_used = TRUE)
 }

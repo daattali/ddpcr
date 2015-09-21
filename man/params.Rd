@@ -46,8 +46,7 @@ Instead, use \code{\link[ddpcr]{x_var}} or \code{\link[ddpcr]{y_var}}.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir)
+plate <- new_plate(sample_data_dir())
 
 # retrieving plate parameters
 str(params(plate))

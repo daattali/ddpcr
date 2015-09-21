@@ -3,7 +3,7 @@
 - rmarkdown::render("vignettes/overview.Rmd", output_format = "md_document")
 - go to vignettes/overview.md
 - fix the image path (replace "../inst" with "inst"
-- replace "overview_files" with -"vignettes/overview_files")
+- replace "overview_files" with "vignettes/overview_files"
 - fix links to other vignettes (*.rmd -> vignettes/*.rmd)
 - copy the contents of vignettes/overview.md here
 - add this bit of text and the badges to the beginning -->
@@ -19,9 +19,9 @@ droplet digital PCR (ddPCR) data in R. An interactive tool was also
 created and is available online to facilitate this analysis for anyone
 who is not comfortable with using R.
 
-This document provides an explanation of what the package does includes
-a tutorial on how to use. It should take about 20 minutes to go through
-this document.
+This document explains the purpose of this package and includes a
+tutorial on how to use. It should take about 20 minutes to go through
+the entire document.
 
 Background
 ==========
@@ -69,17 +69,17 @@ The main features include:
 
 -   **Identify failed wells** - determining which wells in the plate
     seemed to have failed the ddPCR experiment, and thus these wells
-    will be excluded from all downstream analysis. No template control
-    (NTC) will be deemed as failures by this tool.
+    will be excluded from all downstream analysis. No template
+    control (NTC) will be deemed as failures by this tool.
 -   **Identify outlier droplets** - sometimes a few droplets can have an
     extremely high fluorescent intensity value that is probably
-    erroneous, perhaps as a result of an error with the fluorescent
-    reader. These droplets are identified and removed from the
-    downstream analysis.
+    erroneous, perhaps as a result of an error with the
+    fluorescent reader. These droplets are identified and removed from
+    the downstream analysis.
 -   **Identify empty droplets** - droplets with very low fluorescent
-    emissions are considered empty and are removed from the downstream
-    analysis. Removing these droplets is beneficial for two reasons: 1.
-    the size of the data is greatly reduced, which means the
+    emissions are considered empty and are removed from the
+    downstream analysis. Removing these droplets is beneficial for two
+    reasons: 1. the size of the data is greatly reduced, which means the
     computations will be faster on the remaining droplets, and 2. the
     real signal of interest is in the non-empty droplets, and empty
     droplets can be regarded as noise.
@@ -91,8 +91,8 @@ The main features include:
     can gate the data with custom thresholds just like on QuantaSoft.
 -   **Explore results** - the results from each well (\# of drops, \# of
     outliers, \# of empty drops, concentration, etc.) can be explored as
-    a histogram or boxplot to see the distribution of all wells in the
-    plate.
+    a histogram or boxplot to see the distribution of all wells in
+    the plate.
 -   **Plot** - you can plot the data in the plate with many customizable
     parameters
 
@@ -184,7 +184,7 @@ analysis. Explanation will follow, these are just here as a teaser.
 > workflows.
 
     library(ddpcr)
-    dir <- system.file("sample_data", "small", package = "ddpcr")
+    dir <- sample_data_dir()
 
     # example 1: manually set thresholds
     plate1 <-
@@ -195,12 +195,21 @@ analysis. Explanation will follow, these are just here as a teaser.
     plot(plate1, show_grid_labels = TRUE, alpha_drops = 0.3,
            title = "Manually set gating thresholds\nworks with any data")
 
+    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
+    #> instead.
+
     # example 2: automatic gating
     new_plate(dir, type = plate_types$fam_positive_pnpp) %>%
       subset("B01:B06") %>%
       analyze %>%
       plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, alpha_drops = 0.3,
            title = "Automatic gating\nworks with PNPP experiments")
+
+    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
+    #> instead.
+
+    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
+    #> instead.
 
 <img src="vignettes/overview_files/figure-markdown_strict/quickstart-1.png" title="" alt="" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/quickstart-2.png" title="" alt="" width="50%" />
 
@@ -224,8 +233,8 @@ QuantaSoft, then QuantaSoft will export the following files:
     well A01 will be saved in *2015-05-20\_mouse\_A01\_Aamplitude.csv*
 -   1 results file: a small file named *2015-05-20\_mouse.csv* will be
     generated with some information about the plate, including the name
-    of the sample in each well (assuming you named the samples
-    previously)
+    of the sample in each well (assuming you named the
+    samples previously)
 
 The well files are the only required input to `ddpcr`, and since ddPCR
 plates contain 96 wells, you can upload anywhere from 1 to 96 well
@@ -238,7 +247,7 @@ If given a directory, it will automatically find all the valid well
 files in the directory and attempt to find a matching results file.
 
     library(ddpcr)
-    dir <- system.file("sample_data", "small", package = "ddpcr")
+    dir <- sample_data_dir()
     plate <- new_plate(dir)
 
     #> Reading data files into plate... DONE (0 seconds)
@@ -256,6 +265,9 @@ We can explore the data we loaded even before doing any analysis. The
 first and easiest thing to do is to plot the raw data.
 
     plot(plate)
+
+    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
+    #> instead.
 
 ![](vignettes/overview_files/figure-markdown_strict/plotraw-1.png)
 
@@ -303,18 +315,19 @@ We can see all the droplets data with `plate_data()`
 
     #> Source: local data frame [75,706 x 4]
     #> 
-    #>    well  HEX  FAM cluster
-    #> 1   B01 1374 1013       1
-    #> 2   B01 1411 1018       1
-    #> 3   B01 1428 1024       1
-    #> 4   B01 1313 1026       1
-    #> 5   B01 1362 1027       1
-    #> 6   B01 1290 1028       1
-    #> 7   B01 1319 1030       1
-    #> 8   B01 1492 1032       1
-    #> 9   B01 1312 1036       1
-    #> 10  B01 1294 1037       1
-    #> ..  ...  ...  ...     ...
+    #>     well   HEX   FAM cluster
+    #>    (chr) (int) (int)   (int)
+    #> 1    B01  1374  1013       1
+    #> 2    B01  1411  1018       1
+    #> 3    B01  1428  1024       1
+    #> 4    B01  1313  1026       1
+    #> 5    B01  1362  1027       1
+    #> 6    B01  1290  1028       1
+    #> 7    B01  1319  1030       1
+    #> 8    B01  1492  1032       1
+    #> 9    B01  1312  1036       1
+    #> 10   B01  1294  1037       1
+    #> ..   ...   ...   ...     ...
 
 > **Technical note**: This shows us the fluorescent intensities of each
 > droplet, along with the current cluster assignment of each droplet.
@@ -402,7 +415,7 @@ run through the steps one by one using `next_step()`.
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (1 seconds)
+    #> Identifying empty droplets... DONE (0 seconds)
     #> Analysis complete
 
     # equivalent to `plate %>% next_step(3)`
@@ -435,18 +448,19 @@ what steps are remaining). We can also look at the droplets data
 
     #> Source: local data frame [60,905 x 4]
     #> 
-    #>    well  HEX  FAM cluster
-    #> 1   B01 1374 1013       4
-    #> 2   B01 1411 1018       4
-    #> 3   B01 1428 1024       4
-    #> 4   B01 1313 1026       4
-    #> 5   B01 1362 1027       4
-    #> 6   B01 1290 1028       4
-    #> 7   B01 1319 1030       4
-    #> 8   B01 1492 1032       4
-    #> 9   B01 1312 1036       4
-    #> 10  B01 1294 1037       4
-    #> ..  ...  ...  ...     ...
+    #>     well   HEX   FAM cluster
+    #>    (chr) (int) (int)   (int)
+    #> 1    B01  1374  1013       4
+    #> 2    B01  1411  1018       4
+    #> 3    B01  1428  1024       4
+    #> 4    B01  1313  1026       4
+    #> 5    B01  1362  1027       4
+    #> 6    B01  1290  1028       4
+    #> 7    B01  1319  1030       4
+    #> 8    B01  1492  1032       4
+    #> 9    B01  1312  1036       4
+    #> 10   B01  1294  1037       4
+    #> ..   ...   ...   ...     ...
 
 This isn't very informative since it shows the cluster assignment for
 each droplet, which is not easy for a human to digest. Instead, this
@@ -485,6 +499,9 @@ function.
 
     plate %>% plot
 
+    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
+    #> instead.
+
 ![](vignettes/overview_files/figure-markdown_strict/plotsimple-1.png)
 
 Notice well `C06` is grayed out, which means that it is a failed well.
@@ -514,8 +531,15 @@ parameters.
     plate %>% plot(wells = "B01,B06", show_full_plate = TRUE,
                    show_drops_empty = TRUE, col_drops_empty = "red",
                    title = "Show full plate")
+
+    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
+    #> instead.
+
     plate %>% plot(wells = "B01,B06", superimpose = TRUE,
                    show_grid = TRUE, show_grid_labels = TRUE, title = "Superimpose")
+
+    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
+    #> instead.
 
 <img src="vignettes/overview_files/figure-markdown_strict/plotparams-1.png" title="" alt="" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/plotparams-2.png" title="" alt="" width="50%" />
 
@@ -590,6 +614,9 @@ the draw the thresholds
 
     plot(plate_manual, show_grid_labels = TRUE)
 
+    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
+    #> instead.
+
 ![](vignettes/overview_files/figure-markdown_strict/plotcrosshair-1.png)
 
 If you noticed, there's a droplet in well *C06* that has a HEX value of
@@ -629,6 +656,9 @@ Now the plate is ready and we can plot it or look at its results
     #> 4                1                9                  14
 
     plot(plate_manual)
+
+    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
+    #> instead.
 
 ![](vignettes/overview_files/figure-markdown_strict/crosshairresults-1.png)
 
@@ -706,7 +736,7 @@ Now we can analyze the plate
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (1 seconds)
+    #> Identifying empty droplets... DONE (0 seconds)
     #> Classifying droplets... DONE (0 seconds)
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
     #> Analysis complete
@@ -770,6 +800,15 @@ Explanation of some of the variables:
 Plotting the data is usually the best way to see the results
 
     plate_pnpp %>% plot(text_size_mutant_freq = 8)
+
+    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
+    #> instead.
+
+    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
+    #> instead.
+
+    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
+    #> instead.
 
 ![](vignettes/overview_files/figure-markdown_strict/pnppplot-1.png)
 
@@ -887,7 +926,7 @@ the `restart = TRUE` parameter.
     #> Initializing plate of type `ddpcr_plate`... DONE (0 seconds)
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (1 seconds)
+    #> Identifying empty droplets... DONE (0 seconds)
     #> Analysis complete
 
 Advanced topic 2: Algorithms used in each step

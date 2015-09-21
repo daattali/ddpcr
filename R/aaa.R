@@ -29,7 +29,7 @@ DEFAULT_PLATE_META <-
 #' @usage NULL
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' dir <- sample_data_dir()
 #' new_plate(dir, type = plate_types$ddpcr_plate)
 #' new_plate(dir, type = plate_types$custom_thresholds)
 #' new_plate(dir, type = plate_types$fam_positive_pnpp)

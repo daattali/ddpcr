@@ -15,8 +15,7 @@ that can have both high and low fluorescence intensities in the non-empty
 drops in a \code{pnpp_experiment} plate.
 }
 \examples{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir = dir, type = plate_types$pnpp_experiment)
+plate <- new_plate(dir = sample_data_dir(), type = plate_types$pnpp_experiment)
 variable_dim(plate) <- "Y"
 variable_dim(plate)
 positive_dim(plate)

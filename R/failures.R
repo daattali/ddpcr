@@ -149,7 +149,7 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
 #' @seealso \code{\link[ddpcr]{remove_failures}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
+#' dir <- sample_data_dir()
 #' plate <- new_plate(dir) %>% analyze
 #' plate %>% wells_success
 #' plate %>% wells_failed

@@ -77,8 +77,7 @@ and more information.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir, type = plate_types$pnpp_experiment)
+plate <- new_plate(sample_data_dir(), type = plate_types$pnpp_experiment)
 positive_dim(plate) <- "Y"
 plot(plate)
 plate <- plate \%>\% analyze

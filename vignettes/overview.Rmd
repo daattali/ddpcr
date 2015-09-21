@@ -91,7 +91,7 @@ Here are two basic examples of how to use `ddpcr` to analyze and plot your ddPCR
 
 ```{r quickstart, message = FALSE, fig.show='hold', out.width='50%', fig.retina=FALSE}
 library(ddpcr)
-dir <- system.file("sample_data", "small", package = "ddpcr")
+dir <- sample_data_dir()
 
 # example 1: manually set thresholds
 plate1 <-
@@ -127,7 +127,7 @@ The well files are the only required input to `ddpcr`, and since ddPCR plates co
 
 ```{r readdata}
 library(ddpcr)
-dir <- system.file("sample_data", "small", package = "ddpcr")
+dir <- sample_data_dir()
 plate <- new_plate(dir)
 ```
 

@@ -1,6 +1,6 @@
 context("type-pnpp_experiment")
 
-.dir <- system.file("sample_data", "small", package = "ddpcr")
+.dir <- sample_data_dir()
 .plate <- new_plate(dir = .dir, type = plate_types$pnpp_experiment)
 get_plate <- function() {
   .plate

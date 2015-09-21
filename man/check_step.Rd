@@ -14,7 +14,7 @@ run the previous steps.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
+dir <- sample_data_dir()
 plate <- new_plate(dir)
 status(plate) # current step
 check_step(plate, 2) # are we ready to start step 2?

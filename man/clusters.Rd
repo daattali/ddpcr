@@ -23,7 +23,7 @@ more information on plate types.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
+dir <- sample_data_dir()
 new_plate(dir) \%>\% clusters
 new_plate(dir, plate_types$fam_positive_pnpp) \%>\% clusters
 }

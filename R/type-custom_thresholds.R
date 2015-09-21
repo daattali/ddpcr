@@ -29,8 +29,7 @@
 #' @name custom_thresholds
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' type(plate)
 #' plate %>% analyze %>% plot
 #' } 
@@ -92,8 +91,7 @@ define_steps.custom_thresholds <- function(plate) {
 #' \code{\link[ddpcr]{thresholds}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' x_threshold(plate)
 #' x_threshold(plate) <- 5500
 #' plot(plate)
@@ -128,8 +126,7 @@ x_threshold <- function(plate) {
 #' \code{\link[ddpcr]{thresholds}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' y_threshold(plate)
 #' y_threshold(plate) <- 8000
 #' plot(plate)
@@ -166,8 +163,7 @@ y_threshold <- function(plate) {
 #' \code{\link[ddpcr]{y_threshold}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' thresholds(plate)
 #' thresholds(plate) <- c(5500, 8000)
 #' set_thresholds(plate, c(5500, 8000))
@@ -295,8 +291,7 @@ classify_thresholds <- function(plate) {
 #' \code{\link[ddpcr]{custom_thresholds}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$custom_thresholds)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' plate %>% set_thresholds(c(5500, 8000)) %>% analyze %>% plot
 #' }
 #' @export

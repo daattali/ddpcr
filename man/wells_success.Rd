@@ -22,7 +22,7 @@ the ddPCR run was not successful and did not produce useful droplet data.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
+dir <- sample_data_dir()
 plate <- new_plate(dir) \%>\% analyze
 plate \%>\% wells_success
 plate \%>\% wells_failed

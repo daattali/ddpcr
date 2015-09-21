@@ -37,8 +37,7 @@
 #' @name wildtype_mutant_pnpp
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$wildtype_mutant_pnpp)
+#' plate <- new_plate(sample_data_dir(), type = plate_types$wildtype_mutant_pnpp)
 #' type(plate)
 #' } 
 NULL
@@ -80,8 +79,7 @@ define_params.wildtype_mutant_pnpp <- function(plate) {
 #' \code{\link[ddpcr]{wells_mutant}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$fam_positive_pnpp) %>% analyze
+#' plate <- new_plate(sample_data_dir(), type = plate_types$fam_positive_pnpp) %>% analyze
 #' wells_wildtype(plate)
 #' }
 #' @export
@@ -100,8 +98,7 @@ wells_wildtype <- function(plate) {
 #' \code{\link[ddpcr]{wells_wildtype}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$fam_positive_pnpp) %>% analyze
+#' plate <- new_plate(sample_data_dir(), type = plate_types$fam_positive_pnpp) %>% analyze
 #' wells_mutant(plate)
 #' }
 #' @export
@@ -144,8 +141,7 @@ wells_mutant <- function(plate) {
 #' \code{\link[ddpcr]{wildtype_mutant_pnpp}}
 #' @examples 
 #' \dontrun{
-#' dir <- system.file("sample_data", "small", package = "ddpcr")
-#' plate <- new_plate(dir, type = plate_types$fam_positive_pnpp) %>% analyze
+#' plate <- new_plate(sample_data_dir(), type = plate_types$fam_positive_pnpp) %>% analyze
 #' wells_wildtype(plate)
 #' plot(plate)
 #' plate <- plate %>% analyze

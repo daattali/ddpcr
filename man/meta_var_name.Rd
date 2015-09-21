@@ -13,8 +13,7 @@ then any variable in the metadata will be renamed to use these names.
 \code{meta_var_name} translates a default metadata variable name to the correct one.
 }
 \examples{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir = dir, type = plate_types$pnpp_experiment)
+plate <- new_plate(dir = sample_data_dir(), type = plate_types$pnpp_experiment)
 params(plate, 'GENERAL', 'NEGATIVE_NAME') <- "mutant"
 meta_var_name(plate, 'num_negative_drops')
 }

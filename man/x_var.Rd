@@ -35,8 +35,7 @@ to change the X/Y variable rather than changing the parameters directly.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir)
+plate <- new_plate(sample_data_dir())
 x_var(plate)
 x_var(plate) <- "VIC"
 x_var(plate)

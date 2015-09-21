@@ -70,8 +70,7 @@ For example, if you inspect the parameters of any ddPCR plate, you will see that
 by defalt the random seed used by default is 8. If you want to create
 a new plate that uses a different random seed, you could do so like this:
 \preformatted{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir, params = list('GENERAL' = list('RANDOM_SEED' = 10)))
+plate <- new_plate(sample_data_dir(), params = list('GENERAL' = list('RANDOM_SEED' = 10)))
 plate %>% p
 }
 
@@ -81,8 +80,7 @@ analysis of a plate if you require different parameters.
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir)
+plate <- new_plate(sample_data_dir())
 }
 }
 \seealso{

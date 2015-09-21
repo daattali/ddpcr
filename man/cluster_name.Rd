@@ -11,8 +11,7 @@ Get cluster name by ID
 }
 \examples{
 \dontrun{
-dir <- system.file("sample_data", "small", package = "ddpcr")
-plate <- new_plate(dir)
+plate <- new_plate(sample_data_dir())
 # see what cluster names exist and their order
 clusters(plate)
 cluster_name(plate, 2)
