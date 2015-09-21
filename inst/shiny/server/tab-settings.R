@@ -57,7 +57,7 @@ output$wellsUsedPlot <- renderPlot({
   
   p <-
     ggplot2::ggplot(meta, ggplot2::aes(col, row)) +
-    ggplot2::geom_tile(ggplot2::aes(fill = used), color = "#222222", show_guide = FALSE) +
+    ggplot2::geom_tile(ggplot2::aes(fill = used), color = "#222222", show.legend = FALSE) +
     ggplot2::scale_fill_manual(values = c("FALSE" = "#333333", "TRUE" = "white")) +
     ggplot2::theme(
       panel.grid       = ggplot2::element_blank(),

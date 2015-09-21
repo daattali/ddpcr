@@ -274,7 +274,7 @@ plot.ddpcr_plate <- function(
         ggplot2::aes_string(x = x_var, y = y_var,
                             color = "cluster", alpha = "cluster"),
         size = drops_size,
-        show_guide = FALSE) +
+        show.legend = FALSE) +
       ggplot2::scale_color_manual(values = cluster_cols) +
       ggplot2::scale_alpha_manual(values = cluster_alphas)
     }

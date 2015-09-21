@@ -195,21 +195,12 @@ analysis. Explanation will follow, these are just here as a teaser.
     plot(plate1, show_grid_labels = TRUE, alpha_drops = 0.3,
            title = "Manually set gating thresholds\nworks with any data")
 
-    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
-    #> instead.
-
     # example 2: automatic gating
     new_plate(dir, type = plate_types$fam_positive_pnpp) %>%
       subset("B01:B06") %>%
       analyze %>%
       plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, alpha_drops = 0.3,
            title = "Automatic gating\nworks with PNPP experiments")
-
-    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
-    #> instead.
-
-    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
-    #> instead.
 
 <img src="vignettes/overview_files/figure-markdown_strict/quickstart-1.png" title="" alt="" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/quickstart-2.png" title="" alt="" width="50%" />
 
@@ -265,9 +256,6 @@ We can explore the data we loaded even before doing any analysis. The
 first and easiest thing to do is to plot the raw data.
 
     plot(plate)
-
-    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
-    #> instead.
 
 ![](vignettes/overview_files/figure-markdown_strict/plotraw-1.png)
 
@@ -499,9 +487,6 @@ function.
 
     plate %>% plot
 
-    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
-    #> instead.
-
 ![](vignettes/overview_files/figure-markdown_strict/plotsimple-1.png)
 
 Notice well `C06` is grayed out, which means that it is a failed well.
@@ -530,16 +515,10 @@ parameters.
 
     plate %>% plot(wells = "B01,B06", show_full_plate = TRUE,
                    show_drops_empty = TRUE, col_drops_empty = "red",
-                   title = "Show full plate")
-
-    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
-    #> instead.
+                   title = "Show full plate").
 
     plate %>% plot(wells = "B01,B06", superimpose = TRUE,
                    show_grid = TRUE, show_grid_labels = TRUE, title = "Superimpose")
-
-    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
-    #> instead.
 
 <img src="vignettes/overview_files/figure-markdown_strict/plotparams-1.png" title="" alt="" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/plotparams-2.png" title="" alt="" width="50%" />
 
@@ -614,9 +593,6 @@ the draw the thresholds
 
     plot(plate_manual, show_grid_labels = TRUE)
 
-    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
-    #> instead.
-
 ![](vignettes/overview_files/figure-markdown_strict/plotcrosshair-1.png)
 
 If you noticed, there's a droplet in well *C06* that has a HEX value of
@@ -656,9 +632,6 @@ Now the plate is ready and we can plot it or look at its results
     #> 4                1                9                  14
 
     plot(plate_manual)
-
-    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
-    #> instead.
 
 ![](vignettes/overview_files/figure-markdown_strict/crosshairresults-1.png)
 
@@ -800,15 +773,6 @@ Explanation of some of the variables:
 Plotting the data is usually the best way to see the results
 
     plate_pnpp %>% plot(text_size_mutant_freq = 8)
-
-    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
-    #> instead.
-
-    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
-    #> instead.
-
-    #> Warning: `show_guide` has been deprecated. Please use `show.legend`
-    #> instead.
 
 ![](vignettes/overview_files/figure-markdown_strict/pnppplot-1.png)
 

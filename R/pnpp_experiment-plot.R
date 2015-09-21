@@ -130,7 +130,7 @@ plot.pnpp_experiment <- function(
           ggplot2::aes_string(fill = meta_var_name(plate, "significant_negative_cluster"),
                               xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf),
           alpha = alpha_bg_low_high_neg_freq,
-          show_guide = FALSE) +
+          show.legend = FALSE) +
         ggplot2::scale_fill_manual(values = bg_cols)
     }
   }
@@ -173,7 +173,7 @@ plot.pnpp_experiment <- function(
           hjust = hjust, vjust = vjust,
           fontface = "bold",
           size = text_size_negative_freq,
-          show_guide = FALSE)
+          show.legend = FALSE)
     }
   }
   
