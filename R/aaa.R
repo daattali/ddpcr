@@ -13,8 +13,12 @@ DEFAULT_PLATE_META <-
 #' 
 #' Each ddPCR plate has a plate type which determines what type of analysis to run
 #' on the data. \code{plate_types} is a list containing the plate types that are
-#' supported. If no plate type is specified, the default type is
+#' supported. If no plate type is specified, the default assumed type is
 #' \code{ddpcr_plate}.\cr\cr
+#' The most useful built-in plate types are:
+#' \code{\link[ddpcr]{fam_positive_pnpp}},
+#' \code{\link[ddpcr]{hex_positive_pnpp}},
+#' \code{\link[ddpcr]{custom_thresholds}}.\cr\cr
 #' For full details on the differences between plate types or to learn how to
 #' add a new plate type, \href{https://github.com/daattali/ddpcr}{see the package README}.
 #' @seealso \code{\link[ddpcr]{new_plate}}\cr
