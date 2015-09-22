@@ -11,3 +11,203 @@ vignette: >
 
 # Extending ddpcr by adding new plate types
 
+While this package was developed as a tool to facilitate the analysis of some specific types of ddPCR data, it was implemented in a way that easily allows users to add custom ddPCR plate types through *S3 inheritance*. The basic concept is that every plate type has a parent plate type, from which it inherits all features, but can be made more specific or add/modify its behaviour. Inheritance is transitive (features are inherited from all ancestors, not only the most immediate one), but a plate can only have one parent (multiple inheritance is not supported). 
+
+## Default plate type: ddpcr_plate
+
+The most basic plate type is `ddpcr_plate`, and every plate type inherits from it, either directly or by inheriting from other plate types that are descendants of `ddpcr_plate`. This is handy because it means that all functionality that is common to all ddPCR types is implemented once for `ddpcr_plate` and can be used by all plate types, unless a plate type specifically removes or modifies some behaviour.
+Every plate type by default inherits all methods that `ddpcr_plate` has, which can be found by running `methods(class = "ddpcr_plate")`. If you create a new plate type and no parent is specified, or if you initialize a ddPCR plate without specifying a plate type, then `ddpcr_plate` is assumed.
+
+Calling the `analyze()` function on any plate will result in running the ddPCR data through a series of *steps* that are defined for the given plate type, and the droplets in the data will be assigned to one of several *clusters* associated with the given plate type.
+
+Plates of type `ddpcr_plate` have 4 possible clusters: `UNDEFINED` for any droplet that has not been assigned a cluster yet, `FAILED` for droplets in failed wells, `OUTLIER` for outlier droplets, and `EMPTY` for droplets without any template in them.  This information can also be seen with the `clusters()` function.
+
+Plates of type `ddpcr_plate` have 4 analysis steps: `INITIALIZE`, `REMOVE_FAILURES`, `REMOVE_OUTLIERES`, and `REMOVE_EMPTY`. This means that any plate that is created will perform these basic steps of removing failied wells, outlier droplets, and empty droplets. The exact functions used for each step can be seen with the `steps()` function. For example, `new_plate(sample_data_dir()) %>% steps` will reveal that the `REMOVE_FAILURED` steps calls the function `remove_failures()`, so you can view the algorithm by running `ddpcr:::remove_failures.ddpcr_plate`.
+
+Plates of type `ddpcr_plate` also have a set of parameters that can be viewed with the `params()` function. Running `new_plate(sample_data_dir()) %>% params %>% str` will show all the default parameters that are used. Any of these parameters can be overridden in new plate types, and new parameters can be added.
+
+## Built-in plate types
+
+The default plate type is the common base for all built-in types, but because it is not specific to any particular ddPCR data, it does not do any droplet gating, as that is highly dependent on the type of data. The default type is useful for pre-processing, exploring, and visualizing any ddPCR data. There are other built-in plate types available, and you can see a list through the `plate_types` variable. You can learn more about the built-in plate types and what kind of ddPCR data is suitable for each one by viewing its documentation with `?plate_types`. If none of the built-in plate types are useful for your data, you can create a new plate type with custom analysis steps or parameters.
+
+## Functions to implement when adding a new plate type
+
+If you want to add a new plate type, there are a few functions you need to implement. All these functions take one argument: a `ddpcr` plate object.  Note that all these functions are S3 generics, so you need to follow the S3 method naming scheme. 
+
+### `parent_plate_type()`: Define parent plate type
+
+Each ddPCR plate has a "parent" plate type from which it inherits all its properties. When creating a custom plate type, you should define this function and simply return the parent plate type. If you don't define this function, the parent plate type is assumed to be the base type of `ddpcr_plate`. Inheriting from a parent plate means that the same cluster types, analysis steps, and parameters will be used by default. 
+
+### `define_params()`: Define plate type parameters
+
+Every ddPCR plate type has a set of default parameters. When creating a custom plate type, if your plate type needs a different set of parameters than its parent type, you must define this function and have it return the parameters specific to this plate. When defining this function, you can use `NextMethod("define_params")` to get a list of the parameters of the parent type so that you can simply add to that list rather than redefining all the parameters.
+
+
+### `define_clusters()`: Define droplet clusters
+
+Every ddPCR plate type has a set of potential clusters the droplets can be assigned to. When creating a custom plate type, if your plate type uses a different set of clusters than its parent type, you must define this function and have it return the cluster names. When defining this function, you can use `NextMethod("define_clusters")` to get a list of the clusters available in the parent type if you want to simply add new clusters without defining all of them.
+
+### `define_steps()`: Define analysis steps
+
+Every ddPCR plate type has an ordered set of steps that are run to analyze the data. When creating a new plate type, if your plate type has different analysis steps than its parent type, you must define this function and have it return a named list of the analysis steps. When defining this function, you can use `NextMethod("define_steps")` to get a list of the steps available in the parent type if you want to simply add new steps without defining all of them. Any step that you define must have an associated function with the same name that takes a ddPCR plate as an argument and returns the ddPCR plate after running the given step on it. Most analysis steps will usually change the plate's metadata (`?plate_meta`) and the droplet cluster assignments (`?plate_data`). See the example below for helper functions that are available when writing code for an analysis step.
+
+### `plot()`: Plot a ddPCR plate
+
+The default plot function provided by `ddpcr_plate` will usually be enough to convey your ddPCR plate information. If there is anything specific you want to add to plots of your new plate type, you can define this function. It is recommended to build on top of the output of the default plot function, rather than start a complete new plot. This can be done by having the first line of code being `p <- NextMethod("plot")` and adding plot elements on top of `p`. Note that `ggplot2` is the default plotting library. Read the help section of the default plot to learn more `?plot.ddpcr_plate`.
+
+### Changing the algorithm of an existing step
+
+With the `define_steps()` function you can define new analysis steps that are unique to your new plate type. It can also be desirable to simply change the implementation of an existing step instead of creating a new step. For example, any ddPCR plate will, by default, use the `ddpcr:::remove_failures.ddpcr_plate` function as the algorithm for flagging failed wells. If your plate type has a specific way of flagging failed wells, you can overwrite this step by defining a new S3 generic function for your plate type.
+
+## Example
+
+As a simple exercise to show how easy it is to create a new plate type, this section will walk through the steps required to create a new plate type. The name of the new plate type is `fam_border`. In experiments of this type, we are interested in running the typical pre-processing (identify failed wells, outliers droplets, and empty droplets), followed by simply classifying the remaining droplets as either FAM-positive or FAM-negative, with the border between positive and negative being a predefined value. This plate type is clearly not very useful but it is good for demonstration purposes.
+
+The first thing to do is to define the parent plate type, which in this case will be `ddpcr_plate`.
+
+```{r defineparent}
+parent_plate_type.fam_border <- function(plate) {
+  "ddpcr_plate"
+}
+```
+
+The next step is to define the parameters of this plate type. ddPCR plates of this type are expected to have at least 14,000 droplets per well as a QA metric. If any well has less droplets, it is considered a failure. There is already a parameter for this, so we just need to modify it. We also add a new parameter for the border to use for gating the droplets, and give it a default value.
+
+```{r defineparams}
+define_params.fam_border <- function(plate) {
+  params <- NextMethod("define_params")
+  
+  new_params <- list(
+    'REMOVE_FAILURES' = list(
+      'TOTAL_DROPS_T' = 14000  # overwriting an existing parameter
+    ),
+    'GATE' = list(
+      'FAM_BORDER' = 5000  # defining a new parameter
+    )
+  )
+  params <- modifyList(params, new_params)
+  
+  params
+}
+```
+
+Next we define the potential droplet clusters. We use the same clusters as the default plate type and add two more, to denote droplets in the FAM-positive and FAM-negative sections.
+
+```{r defineclusters}
+define_clusters.fam_border <- function(plate) {
+  clusters <- NextMethod("define_clusters")
+  
+  c(clusters,
+    'FAM_POSITIVE',
+    'FAM_NEGATIVE'
+  )
+}
+```
+
+Next we define the analysis steps. We use all the default analysis steps (pre-processing steps), and add a gating step.
+
+```{r definesteps}
+define_steps.fam_border <- function(plate) {
+  steps <- NextMethod("define_steps")
+  
+  c(steps,
+    list(
+      'GATE' = 'gate_droplets'
+    ))
+}
+```
+
+We need to create the `gate_droplets` function with the actual logic that will perform the step. Notice the use of the following helper functions that are especially useful when writing analysis step functions: `step`, `check_step`, `step_begin`, `step_end`, `unanalyzed_clusters`, `status`. You can look up the documentation for each of these functions to learn more.
+
+```{r definegatestep}
+gate_droplets <- function(plate) {
+  # make sure this step was not called prematurely
+  current_step <- step(plate, 'GATE')
+  check_step(plate, current_step)  
+  
+  # show an informative message to the user
+  step_begin("Classifying droplets as FAM-positive or negative")
+  
+  data <- plate_data(plate)
+  border <- params(plate, 'GATE', 'FAM_BORDER')
+  
+  # get a list of clusters that have not been considered yet in the analysis
+  # this is useful so that we only look at droplets that have not yet been
+  # assigned to a cluster
+  unanalyzed_clusters <- unanalyzed_clusters(plate, 'FAM_POSITIVE')
+  
+  # get the indices of all droplets that are FAM-positive and negative
+  unanalyzed_idx <- data$cluster %in% unanalyzed_clusters
+  fam_pos <- unanalyzed_idx & data$FAM >= border
+  fam_neg <- unanalyzed_idx & data$FAM < border
+  
+  # assign each droplet to its cluster
+  data[fam_pos, 'cluster'] <- cluster(plate, 'FAM_POSITIVE')
+  data[fam_neg, 'cluster'] <- cluster(plate, 'FAM_NEGATIVE')
+  
+  # update the data on the plate object
+  plate_data(plate) <- data
+  
+  # record how many drops in each well are in each cluster
+  # and add this info to the plate's metadata
+  drops_per_cluster <- 
+    plyr::ddply(data, ~ well, function(x) {
+      data.frame(
+        'drops_positive' = sum(x$cluster == cluster(plate, 'FAM_POSITIVE')),
+        'drops_negative' = sum(x$cluster == cluster(plate, 'FAM_NEGATIVE'))
+      )
+    })
+  plate_meta(plate) <-
+    dplyr::left_join(
+      plate_meta(plate),
+      drops_per_cluster,
+      by = "well"
+    )
+  
+  # VERY IMPORTANT - do not forget to update the status of the plate
+  status(plate) <- current_step
+  step_end()
+  
+  plate
+}
+```
+
+Now the new plate type is ready to be used. We can also add a plot function if there are any customizations to the plot that are specific to this plate type. The default plot function of ddPCR plates goes a long way, but one thing we can add is a line showing the division border.
+
+```{r defineplot}
+plot.fam_border <- function(x, ..., show_border = FALSE) {
+  # Plot a regular ddpcr plate
+  p <- NextMethod("plot", x)
+  
+  # Show the custom thresholds
+  if (show_border) {
+    border <- params(x, 'GATE', 'FAM_BORDER')
+    p <- p +
+      ggplot2::geom_hline(yintercept = border)
+  }
+  
+  p
+}
+```
+
+The one last thing we can add is a convenient way for the user to set the border parameter.
+
+```{r defineborderparam}
+`fam_border<-` <- function(plate, value) {
+  params(plate, 'GATE', 'FAM_BORDER') <- value
+  plate
+}
+```
+
+Now we can create a new ddPCR plate with the new type and run a full analysis of it.
+
+```{r customanalysis, fig.show='hold', out.width='50%', fig.retina=FALSE}
+library(ddpcr)
+plate <- new_plate(dir = sample_data_dir(), type = "fam_border")
+fam_border(plate) <- 8000
+plate <- analyze(plate)
+plot(plate, show_drops_empty = TRUE)
+plot(plate, col_drops_fam_negative = "red",
+     col_drops_fam_positive = "blue", show_border = TRUE)
+plate_meta(plate, only_used = TRUE)
+```
