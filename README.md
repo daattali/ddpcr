@@ -1,18 +1,10 @@
-<!-- To create this README:
-- devtools::build_vignettes()
-- rmarkdown::render("vignettes/overview.Rmd", output_format = "md_document")
-- go to vignettes/overview.md
-- fix the image path (replace "../inst" with "inst"
-- replace "overview_files" with "vignettes/overview_files"
-- fix links to other vignettes (*.rmd -> vignettes/*.rmd)
-- copy the contents of vignettes/overview.md here
-- add this bit of text and the badges to the beginning -->
-
 ddpcr: Analysis and visualization of Digital Droplet PCR data in R and on the web
 =================================================================================
 
-[![Build Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
-[![CRAN version](http://www.r-pkg.org/badges/version/ddpcr)](http://cran.r-project.org/web/packages/ddpcr/index.html)
+[![Build
+Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
+[![CRAN
+version](http://www.r-pkg.org/badges/version/ddpcr)](http://cran.r-project.org/web/packages/ddpcr/index.html)
 
 This package provides an interface to explore, analyze, and visualize
 droplet digital PCR (ddPCR) data in R. An interactive tool was also
@@ -403,7 +395,7 @@ run through the steps one by one using `next_step()`.
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (0 seconds)
+    #> Identifying empty droplets... DONE (1 seconds)
     #> Analysis complete
 
     # equivalent to `plate %>% next_step(3)`
@@ -515,8 +507,7 @@ parameters.
 
     plate %>% plot(wells = "B01,B06", show_full_plate = TRUE,
                    show_drops_empty = TRUE, col_drops_empty = "red",
-                   title = "Show full plate").
-
+                   title = "Show full plate")
     plate %>% plot(wells = "B01,B06", superimpose = TRUE,
                    show_grid = TRUE, show_grid_labels = TRUE, title = "Superimpose")
 
@@ -890,7 +881,7 @@ the `restart = TRUE` parameter.
     #> Initializing plate of type `ddpcr_plate`... DONE (0 seconds)
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (0 seconds)
+    #> Identifying empty droplets... DONE (1 seconds)
     #> Analysis complete
 
 Advanced topic 2: Algorithms used in each step
