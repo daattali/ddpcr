@@ -154,7 +154,8 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
     bw_orig <- FALSE
   }
   if (is.null(adj_final)) {
-    err_msg(sprintf("Could not analyze well %s", well_id))
+    warn_msg(paste0("Could not accurately analyze well ", well_id, 
+                    ", please double-check the results to ensure it looks ok"))
   }
   
   # if there is only one peak, then everything is positive

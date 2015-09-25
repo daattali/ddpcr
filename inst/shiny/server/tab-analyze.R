@@ -9,6 +9,9 @@ observeEvent(input$analyzeBtn, {
       dataValues$plate <- dataValues$plate %>% analyze(restart = TRUE),
       message = function(m) {
         text("analyzeProgress", m$message, TRUE)
+      },
+      warning = function(m) {
+        text("analyzeProgress", paste0(m$message, "\n"), TRUE)
       }
     )
     show("analyzeNextMsg")
