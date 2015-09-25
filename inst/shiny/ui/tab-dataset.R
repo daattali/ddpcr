@@ -73,6 +73,21 @@ tabPanel(
           class = "btn-primary"
         )
       )
+    ),
+    
+    # tab for loading sample dataset ----
+    tabPanel(
+      title = "Use sample dataset",
+      id = "sampleDatasetTab",
+      h3(strong("Use sample dataset")),
+      br(),
+      withBusyIndicator(
+        actionButton(
+          "loadSampleBtn",
+          "Load data",
+          class = "btn-primary"
+        )
+      )
     )
   ),
   

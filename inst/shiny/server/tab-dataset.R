@@ -37,6 +37,17 @@ observeEvent(input$loadFileBtn, {
   })
 })
 
+# load the sample dataset
+observeEvent(input$loadSampleBtn, {
+  withBusyIndicator("loadSampleBtn", {
+    dataValues$plate <- new_plate(dir = sample_data_dir(),
+                                  type = plate_types$fam_positive_pnpp)
+    
+    output$datasetChosen <- reactive({ TRUE })
+    show("datasetNextMsg")
+  })
+})
+
 # change to settings tab when clicking on link
 observeEvent(input$toSettings,
   updateTabsetPanel(session, "mainNav", "settingsTab")
