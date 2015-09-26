@@ -43,7 +43,7 @@ This document explains the purpose of this package and includes a tutorial on ho
         - [Plot parameters](#plot-params)
         - [Save your data](#save)
     - [Analysis of different plate types](#plate-type)
-        - [Gating droplets in any ddPCR plate with custom thresholds](#custom-gates))
+        - [Gating droplets in any ddPCR plate with custom thresholds](#custom-gates)
         - [Gating droplets in PNPP experiments automatically](#pnpp)
             - [Clusters of a PNPP experiment](#pnpp-clusters)
             - [Analysis of a PNPP experiment](#pnpp-analysis)
@@ -76,7 +76,7 @@ The main features include:
 - **Explore results** - the results from each well (# of drops, # of outliers, # of empty drops, concentration, etc.) can be explored as a histogram or boxplot to see the distribution of all wells in the plate.
 - **Plot** - you can plot the data in the plate with many customizable parameters
 
-<h2 id="supported-type">Supported experiment types</h2>
+<h2 id="supported-types">Supported experiment types</h2>
 
 While this tool was originally developed to automatically gate data for a particular ddPCR assay (TODO reference to Roza's paper), any assay with similar characteristics can also use this tool to automatically gate the droplets. In order to benefit from the full automatic analysis, your ddPCR experiment needs to have these characteristics:  
 
@@ -498,10 +498,10 @@ This list contains all the steps of analyzing the given plate, with each item in
 ddpcr:::init_plate
 ```
 
-**For more details about the algorithm, see [the "Algorithms" vignette](algorithm.Rmd).**
+**For more details about the algorithm, see [the _Algorithms_ vignette](algorithm.Rmd).**
 
 <h2 id="new-types">Advanced topic 3: Creating new plate types</h2>
 
 Each ddPCR plate has a plate type which determines what type of analysis to run on the data. `plate_types` contains a list of the built-in plate types that are supported, but you can also create your own plate type. Creating a new plate type can be used if you want to supply your own logic for any analysis step, or even if you simply want to have a type that sets different default parameters than the built-in ones.
 
-**For more details about how to create new plate types, see [the "Extending ddpcr by adding new plate types" vignette](extend.Rmd).**
+**For more details about how to create new plate types, see [the _Extending ddpcr by adding new plate types_ vignette](extend.Rmd).**

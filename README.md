@@ -37,7 +37,7 @@ Table of contents
         -   [Save your data](#save)
     -   [Analysis of different plate types](#plate-type)
         -   [Gating droplets in any ddPCR plate with custom
-            thresholds](#custom-gates))
+            thresholds](#custom-gates)
         -   [Gating droplets in PNPP experiments automatically](#pnpp)
             -   [Clusters of a PNPP experiment](#pnpp-clusters)
             -   [Analysis of a PNPP experiment](#pnpp-analysis)
@@ -119,7 +119,7 @@ The main features include:
 -   **Plot** - you can plot the data in the plate with many customizable
     parameters
 
-<h2 id="supported-type">
+<h2 id="supported-types">
 Supported experiment types
 </h2>
 While this tool was originally developed to automatically gate data for
@@ -743,7 +743,7 @@ Now we can analyze the plate
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (1 seconds)
+    #> Identifying empty droplets... DONE (0 seconds)
     #> Classifying droplets... DONE (0 seconds)
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
     #> Analysis complete
@@ -925,7 +925,7 @@ the `restart = TRUE` parameter.
     #> Initializing plate of type `ddpcr_plate`... DONE (0 seconds)
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (1 seconds)
+    #> Identifying empty droplets... DONE (0 seconds)
     #> Analysis complete
 
 <h2 id="algorithms">
@@ -980,7 +980,7 @@ by running `ddpcr:::init_plate`.
     #> }
     #> <environment: namespace:ddpcr>
 
-**For more details about the algorithm, see [the "Algorithms"
+**For more details about the algorithm, see [the *Algorithms*
 vignette](vignettes/algorithm.Rmd).**
 
 <h2 id="new-types">
@@ -994,4 +994,4 @@ logic for any analysis step, or even if you simply want to have a type
 that sets different default parameters than the built-in ones.
 
 **For more details about how to create new plate types, see [the
-"Extending ddpcr by adding new plate types" vignette](vignettes/extend.Rmd).**
+*Extending ddpcr by adding new plate types* vignette](vignettes/extend.Rmd).**
