@@ -15,9 +15,40 @@ This document explains the purpose of this package and includes a
 tutorial on how to use. It should take about 20 minutes to go through
 the entire document.
 
-Background
-==========
+Table of contents
+=================
 
+-   [Background](#background)
+-   [Overview](#overview)
+-   [Main features](#main-features)
+-   [Supported experiment types](#supported-types)
+-   [Analysis using the interactive tool](#analysis-interactive)
+-   [Analysis using R](#analysis-r)
+-   [Running the interactive tool through R](#r-interactive)
+-   [Quick start](#quick-start)
+-   [Running a basic analysis - detailed walkthrough](#walkthrough)
+    -   [Loading ddPCR data](#load)
+    -   [Pre-analysis exploration of the data](#explore)
+    -   [Subset the plate](#subset)
+    -   [Run analysis](#run)
+    -   [Post-analysis exploration of the data](#explore2)
+    -   [Plot](#plot)
+    -   [Plot parameters](#plot-params)
+    -   [Save your data](#save)
+-   [Analysis of different plate types](#plate-type)
+    -   [Gating droplets in any ddPCR plate with custom
+        thresholds](#custom-gates))
+    -   [Gating droplets in PNPP experiments automatically](#pnpp)
+    -   [Clusters of a PNPP experiment](#pnpp-clusters)
+    -   [Analysis of a PNPP experiment](#pnpp-analysis)
+    -   [Results of a PNPP experiment](#pnpp-results)
+-   [Advanced topic 1: Plate parameters](#plate-params)
+-   [Advanced topic 2: Algorithms used in each step](#algorithms)
+-   [Advanced topic 3: Creating new plate types](#new-types)
+
+<h1 id="background">
+Background
+</h1>
 Droplet Digital PCR (ddPCR) is a technology provided by Bio-Rad for
 performing digital PCR. The basic workflow of ddPCR involves three main
 steps: partitioning sample DNA into 20,000 droplets, PCR amplifying the
@@ -47,16 +78,16 @@ users currently gate their data manually because QuantaSoft's automatic
 gating often does a poor job and **there are no other tools available
 for gating ddPCR data**.
 
+<h1 id="overview">
 Overview
-========
-
+</h1>
 The `ddpcr` package allows you to upload ddPCR data, perform some basic
 analysis, explore characteristic of the data, and create customizable
 figures of the data.
 
+<h2 id="main-features">
 Main features
--------------
-
+</h2>
 The main features include:
 
 -   **Identify failed wells** - determining which wells in the plate
@@ -88,9 +119,9 @@ The main features include:
 -   **Plot** - you can plot the data in the plate with many customizable
     parameters
 
+<h2 id="supported-type">
 Supported experiment types
---------------------------
-
+</h2>
 While this tool was originally developed to automatically gate data for
 a particular ddPCR assay (TODO reference to Roza's paper), any assay
 with similar characteristics can also use this tool to automatically
@@ -137,17 +168,17 @@ built-in experiment types.
 > that conventionally when visualizing the data the FAM intensity is
 > plotted on the Y axis and the HEX intensity is on the X axis.
 
+<h1 id="analysis-interactive">
 Analysis using the interactive tool
-===================================
-
+</h1>
 If you're not comfortable using R and would like to use a visual tool
 that requires no programming, you can [use the tool online](TODO). You
 should still skim through the rest of this document (you can ignore the
 actual code/commands) as it will explain some important concepts.
 
+<h1 id="analysis-r">
 Analysis using R
-================
-
+</h1>
 Enough talking, let's get our hands dirty.
 
 First, install `ddpcr`
@@ -155,17 +186,17 @@ First, install `ddpcr`
     install.packages("devtools")
     devtools::install_github("daattali/ddpcr")
 
+<h2 id="r-interactive">
 Running the interactive tool through R
---------------------------------------
-
+</h2>
 Even if you do know R, using the interactive application can be easier
 and more convenient than running R commands. If you want to use the
 tool, simply run `ddpcr::shine()` and it will run the same application
 that's hosted online on your own machine.
 
+<h2 id="quick-start">
 Quick start
------------
-
+</h2>
 Here are two basic examples of how to use `ddpcr` to analyze and plot
 your ddPCR data. One example shows an analysis where the gating
 thresholds are manually set, and the other example uses the automated
@@ -196,14 +227,15 @@ analysis. Explanation will follow, these are just here as a teaser.
 
 <img src="vignettes/overview_files/figure-markdown_strict/quickstart-1.png" title="" alt="" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/quickstart-2.png" title="" alt="" width="50%" />
 
+<h2 id="walkthrough">
 Running a basic analysis - detailed walkthrough
------------------------------------------------
-
+</h2>
 This section will go into details of how to use `ddpcr` to analyze ddPCR
 data.
 
-### Loading ddPCR data
-
+<h3 id="load">
+Loading ddPCR data
+</h3>
 The first step is to get the ddPCR data into R. `ddpcr` uses the data
 files that are exported by QuantaSoft as its input. You need to have all
 the well files for the wells you want to analyze (one file per well),
@@ -242,8 +274,9 @@ message decribing what it's doing. You can turn off messages by
 disabling the verbose option with the command
 `options(ddpcr.verbose = FALSE)`.
 
-### Pre-analysis exploration of the data
-
+<h3 id="explore">
+Pre-analysis exploration of the data
+</h3>
 We can explore the data we loaded even before doing any analysis. The
 first and easiest thing to do is to plot the raw data.
 
@@ -328,10 +361,10 @@ We can see the results of the plate so far with `plate_meta()`
     plate %>% plate_meta(only_used = TRUE)
 
     #>   well sample row col used drops
-    #> 1  B01     #1   B   1 TRUE 17458
-    #> 2  B06     #9   B   6 TRUE 13655
-    #> 3  C01     #3   C   1 TRUE 15279
-    #> 4  C06    #12   C   6 TRUE 14513
+    #> 1  B01   Dean   B   1 TRUE 17458
+    #> 2  B06   Dave   B   6 TRUE 13655
+    #> 3  C01   Mike   C   1 TRUE 15279
+    #> 4  C06  Emily   C   6 TRUE 14513
     #> 5  C08   <NA>   C   8 TRUE 14801
 
 The `only_used` parameter is used so that we'll only get data about the
@@ -341,8 +374,9 @@ This is because the meta/results table contains information for each
 well such as its name, number of drops, number of empty drops,
 concentration, and many other calculated values.
 
-### Subset the plate
-
+<h3 id="subset">
+Subset the plate
+</h3>
 If you aren't interested in all the wells, you can use the `subset()`
 function to retain only certain wells. Alternatively, you can use the
 `data_files` argument of the `new_plate()` function to only load certain
@@ -368,8 +402,9 @@ Back to our data: we have 5 wells, let's keep 4 of them
 
     #> [1] "B01" "B06" "C01" "C06"
 
-### Run analysis
-
+<h3 id="run">
+Run analysis
+</h3>
 An analysis of a ddPCR plate consists of running the plate through a
 sequence of steps. You can see the steps of an experiment by printing
 it.
@@ -408,8 +443,9 @@ analysis could take several minutes. Sometimes it can be useful to run
 each step individually rather than all of them together if you want to
 inspect the data after each step.
 
-### Post-analysis exploration of the data
-
+<h3 id="explore2">
+Post-analysis exploration of the data
+</h3>
 We can explore the plate again, now that it has been analyzed.
 
     plate
@@ -450,10 +486,10 @@ also look at the plate results
     plate %>% plate_meta(only_used = TRUE)
 
     #>   well sample row col used drops success drops_outlier drops_empty
-    #> 1  B01     #1   B   1 TRUE 17458    TRUE             0       16690
-    #> 2  B06     #9   B   6 TRUE 13655    TRUE             0       12925
-    #> 3  C01     #3   C   1 TRUE 15279    TRUE             0       13903
-    #> 4  C06    #12   C   6 TRUE 14513   FALSE             3          NA
+    #> 1  B01   Dean   B   1 TRUE 17458    TRUE             0       16690
+    #> 2  B06   Dave   B   6 TRUE 13655    TRUE             0       12925
+    #> 3  C01   Mike   C   1 TRUE 15279    TRUE             0       13903
+    #> 4  C06  Emily   C   6 TRUE 14513   FALSE             3          NA
     #>   drops_non_empty drops_empty_fraction concentration
     #> 1             768                0.956            49
     #> 2             730                0.947            59
@@ -472,8 +508,9 @@ variable of a specific well from the results.
 
     #> [1] 12925
 
-### Plot
-
+<h3 id="plot">
+Plot
+</h3>
 The easiest way to visualize a ddPCR plate is using the `plot()`
 function.
 
@@ -489,8 +526,9 @@ You don't have to analyze a plate object before you can plot it - a
 ddPCR plate can be plotted at any time to show the data in it. If you
 plot a plate before analyzing it, it'll show the raw data.
 
-### Plot parameters
-
+<h3 id="plot-params">
+Plot parameters
+</h3>
 There are many plot parameters to allow you to create extremely
 customizable plots. Among the many parameters, there are three special
 categories of parameters that affect the visibility of droplets:
@@ -515,8 +553,9 @@ parameters.
 
 > To see all the available plot parameters, run `?plot.ddpcr_plate`.
 
-### Save your data
-
+<h3 id="save">
+Save your data
+</h3>
 As was shown previously, you can use the `plate_meta()` function to
 retrieve a table with the results. If you want to save that table, you
 can use R's builtin `write.csv()` or `write.table()` functions.
@@ -535,13 +574,13 @@ object at a later time with `plate_load()`.
 
     unlink("myplate.rds")
 
+<h2 id="plate-type">
 Analysis of different plate types
----------------------------------
-
-So far we only used the default plate type in thuse analysis, but
-droplet gating does not take place with the default type. While you can
-define your own plate types (more on that later), there are three
-built-in plate types you can use:
+</h2>
+So far we only used the default plate type in this analysis, but droplet
+gating does not take place with the default type. While you can define
+your own plate types (more on that later), there are three built-in
+plate types you can use:
 
 1.  **`plate_types$custom_thresholds`** - when you want to gate your
     droplets into four quadrants according to HEX and FAM values that
@@ -553,8 +592,9 @@ built-in plate types you can use:
 
 The next two sections explain how to use these experiment types.
 
-### Gating droplets in any ddPCR plate with custom thresholds
-
+<h3 id="custom-gates">
+Gating droplets in any ddPCR plate with custom thresholds
+</h3>
 If you want to perform a simple 4-quadrant gating like the one available
 in QuantaSoft, you need to set the type of the plate object to
 `plate_types$custom_thresholds`. This can either be done when
@@ -612,10 +652,10 @@ Now the plate is ready and we can plot it or look at its results
     plate_meta(plate_manual, only_used = TRUE)
 
     #>   well sample row col used drops drops_outlier drops_empty
-    #> 1  B01     #1   B   1 TRUE 17458             0       16801
-    #> 2  B06     #9   B   6 TRUE 13655             0       12998
-    #> 3  C01     #3   C   1 TRUE 15279             0       14019
-    #> 4  C06    #12   C   6 TRUE 14513             2       14487
+    #> 1  B01   Dean   B   1 TRUE 17458             0       16801
+    #> 2  B06   Dave   B   6 TRUE 13655             0       12998
+    #> 3  C01   Mike   C   1 TRUE 15279             0       14019
+    #> 4  C06  Emily   C   6 TRUE 14513             2       14487
     #>   drops_x_positive drops_y_positive drops_both_positive
     #> 1               20                3                 634
     #> 2                5              156                 496
@@ -645,8 +685,9 @@ red, we just add a parameter `col_drops_both_positive = "red"`.
 > available for default plates can also be used here (all parameters
 > listed under `?plot.ddpcr_plate`).
 
-### Gating droplets in PNPP experiments automatically
-
+<h3 id="pnpp">
+Gating droplets in PNPP experiments automatically
+</h3>
 If you have a *PNPP* experiment (*(FAM+)/(FAM+HEX+)* or
 *(HEX+)/(FAM+HEX+)*), then `ddpcr` can perform a fully automatic
 analysis on the plate. The sample dataset used in this running example
@@ -664,8 +705,9 @@ Let's create a new plate object of the desired type.
 If the data were *(HEX+)/(FAM+HEX+)*, we would have used
 `type = plate_types$hex_positive_pnpp` instead.
 
-#### Clusters of a PNPP experiment
-
+<h4 id="pnpp-clusters">
+Clusters of a PNPP experiment
+</h4>
 Before running the analysis, it's a good idea to know what are the
 possible cluster groupings that a droplet can belong to
 
@@ -692,8 +734,9 @@ considered *RAIN*.
 > remember: wildtype = double-positive droplets, mutant =
 > singly-positive droplets.
 
-#### Analysis of a PNPP experiment
-
+<h4 id="pnpp-analysis">
+Analysis of a PNPP experiment
+</h4>
 Now we can analyze the plate
 
     plate_pnpp <- analyze(plate_pnpp)
@@ -721,18 +764,19 @@ are more clearly defined, to adjust the gates in wells with a low
 *mutant frequency*. The reclassification step only takes place if there
 are enough wells with a high mutant frequency.
 
-#### Results of a PNPP experiment
-
+<h4 id="pnpp-results">
+Results of a PNPP experiment
+</h4>
 Take a look at the results
 
     plate_pnpp %>% plate_meta(only_used = TRUE)
 
     #>   well sample row col used drops success drops_outlier drops_empty
-    #> 1  B01     #1   B   1 TRUE 17458    TRUE             0       16691
-    #> 2  B06     #9   B   6 TRUE 13655    TRUE             0       12925
-    #> 3  C01     #3   C   1 TRUE 15279    TRUE             0       13903
+    #> 1  B01   Dean   B   1 TRUE 17458    TRUE             0       16691
+    #> 2  B06   Dave   B   6 TRUE 13655    TRUE             0       12925
+    #> 3  C01   Mike   C   1 TRUE 15279    TRUE             0       13903
     #> 4  C08   <NA>   C   8 TRUE 14801    TRUE             0       14023
-    #> 5  C06    #12   C   6 TRUE 14513   FALSE             9          NA
+    #> 5  C06  Emily   C   6 TRUE 14513   FALSE             9          NA
     #>   drops_non_empty drops_empty_fraction concentration mutant_border
     #> 1             767                0.956            49          3551
     #> 2             730                0.947            59          4090
@@ -790,9 +834,9 @@ wells with a significant mutant cluster and those without.
 
     #> [1] "B01" "C01"
 
+<h2 id="plate-params">
 Advanced topic 1: Plate parameters
-----------------------------------
-
+</h2>
 Every ddPCR plate object has adjustable parameters associated with it.
 There are general parameters that apply to the plate as a whole, and
 each analysis step has its own set of parameters that are used for the
@@ -884,9 +928,9 @@ the `restart = TRUE` parameter.
     #> Identifying empty droplets... DONE (1 seconds)
     #> Analysis complete
 
+<h2 id="algorithms">
 Advanced topic 2: Algorithms used in each step
-----------------------------------------------
-
+</h2>
 If you want to know how a step is performed, you can see the exact
 algorithm (code) used in each step by consulting the `steps()` function.
 
@@ -936,12 +980,12 @@ by running `ddpcr:::init_plate`.
     #> }
     #> <environment: namespace:ddpcr>
 
-For more details about the algorithm, see [the "Algorithms"
-vignette](vignettes/algorithm.Rmd).
+**For more details about the algorithm, see [the "Algorithms"
+vignette](vignettes/algorithm.Rmd).**
 
+<h2 id="new-types">
 Advanced topic 3: Creating new plate types
-------------------------------------------
-
+</h2>
 Each ddPCR plate has a plate type which determines what type of analysis
 to run on the data. `plate_types` contains a list of the built-in plate
 types that are supported, but you can also create your own plate type.
@@ -949,5 +993,5 @@ Creating a new plate type can be used if you want to supply your own
 logic for any analysis step, or even if you simply want to have a type
 that sets different default parameters than the built-in ones.
 
-For more details about how to create new plate types, see [the
-"Extending ddpcr by adding new plate types" vignette](vignettes/extend.Rmd).
+**For more details about how to create new plate types, see [the
+"Extending ddpcr by adding new plate types" vignette](vignettes/extend.Rmd).**

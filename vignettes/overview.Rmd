@@ -23,7 +23,36 @@ This package provides an interface to explore, analyze, and visualize droplet di
 
 This document explains the purpose of this package and includes a tutorial on how to use. It should take about 20 minutes to go through the entire document. 
 
-# Background
+# Table of contents
+
+- [Background](#background)
+- [Overview](#overview)
+  - [Main features](#main-features)
+  - [Supported experiment types](#supported-types)
+- [Analysis using the interactive tool](#analysis-interactive)
+- [Analysis using R](#analysis-r)
+  - [Running the interactive tool through R](#r-interactive)
+  - [Quick start](#quick-start)
+  - [Running a basic analysis - detailed walkthrough](#walkthrough)
+    - [Loading ddPCR data](#load)
+    - [Pre-analysis exploration of the data](#explore)
+    - [Subset the plate](#subset)
+    - [Run analysis](#run)
+    - [Post-analysis exploration of the data](#explore2)
+    - [Plot](#plot)
+    - [Plot parameters](#plot-params)
+    - [Save your data](#save)
+  - [Analysis of different plate types](#plate-type)
+    - [Gating droplets in any ddPCR plate with custom thresholds](#custom-gates))
+    - [Gating droplets in PNPP experiments automatically](#pnpp)
+      - [Clusters of a PNPP experiment](#pnpp-clusters)
+      - [Analysis of a PNPP experiment](#pnpp-analysis)
+      - [Results of a PNPP experiment](#pnpp-results)
+  - [Advanced topic 1: Plate parameters](#plate-params)
+  - [Advanced topic 2: Algorithms used in each step](#algorithms)
+  - [Advanced topic 3: Creating new plate types](#new-types)
+
+<h1 id="background">Background</h1>
 
 Droplet Digital PCR (ddPCR) is a technology provided by Bio-Rad for performing digital PCR. The basic workflow of ddPCR involves three main steps: partitioning sample DNA into 20,000 droplets, PCR amplifying the nucleic acid in each droplet, and finally passing the droplets through a reader that detects flurescent intensities in two different wavelengths corresponding to FAM and HEX dyes. As a result, the data obtained from a ddPCR experiment can be visualized as a 2D scatterplot (one dimension is FAM intensity and the other dimension is HEX intensity) with 20,000 points (each droplet represents a point).
 
@@ -31,11 +60,11 @@ ddPCR experiments can be defined as singleplex, duplex, or multiplex depending o
 
 After running a ddPCR experiment, a key step in the analysis is gating the droplets to determine how many droplets belong to each cluster. Bio-Rad provides an analysis software called QuantaSoft which can be used to perform gating. QuantaSoft can either do the gating automatically or allow the user to set the gates manually. Most ddPCR users currently gate their data manually because QuantaSoft's automatic gating often does a poor job and **there are no other tools available for gating ddPCR data**.
 
-# Overview
+<h1 id="overview">Overview</h1>
 
 The `ddpcr` package allows you to upload ddPCR data, perform some basic analysis, explore characteristic of the data, and create customizable figures of the data.  
 
-## Main features
+<h2 id="main-features">Main features</h2>
 
 The main features include:
 
@@ -47,7 +76,7 @@ The main features include:
 - **Explore results** - the results from each well (# of drops, # of outliers, # of empty drops, concentration, etc.) can be explored as a histogram or boxplot to see the distribution of all wells in the plate.
 - **Plot** - you can plot the data in the plate with many customizable parameters
 
-## Supported experiment types
+<h2 id="supported-type">Supported experiment types</h2>
 
 While this tool was originally developed to automatically gate data for a particular ddPCR assay (TODO reference to Roza's paper), any assay with similar characteristics can also use this tool to automatically gate the droplets. In order to benefit from the full automatic analysis, your ddPCR experiment needs to have these characteristics:  
 
@@ -68,11 +97,11 @@ If your ddPCR experiment is not a **PNPP** type, you can still use this tool for
 
 > Note: throughout this document, *FAM*  will be synonymous to *Y axis* and *HEX* will be synonymous to *X axis*, as a reflection of the fact that conventionally when visualizing the data the FAM intensity is plotted on the Y axis and the HEX intensity is on the X axis.
 
-# Analysis using the interactive tool
+<h1 id="analysis-interactive">Analysis using the interactive tool</h1>
 
 If you're not comfortable using R and would like to use a visual tool that requires no programming, you can [use the tool online](TODO). You should still skim through the rest of this document (you can ignore the actual code/commands) as it will explain some important concepts.
 
-# Analysis using R
+<h1 id="analysis-r">Analysis using R</h1>
 
 Enough talking, let's get our hands dirty.
 
@@ -83,11 +112,11 @@ install.packages("devtools")
 devtools::install_github("daattali/ddpcr")
 ```
 
-## Running the interactive tool through R
+<h2 id="r-interactive">Running the interactive tool through R</h2>
 
 Even if you do know R, using the interactive application can be easier and more convenient than running R commands. If you want to use the tool, simply run `ddpcr::shine()` and it will run the same application that's hosted online on your own machine.
 
-## Quick start
+<h2 id="quick-start">Quick start</h2>
 
 Here are two basic examples of how to use `ddpcr` to analyze and plot your ddPCR data. One example shows an analysis where the gating thresholds are manually set, and the other example uses the automated analysis. Explanation will follow, these are just here as a teaser.
 
@@ -114,11 +143,11 @@ new_plate(dir, type = plate_types$fam_positive_pnpp) %>%
        title = "Automatic gating\nworks with PNPP experiments")
 ```
 
-## Running a basic analysis - detailed walkthrough
+<h2 id="walkthrough">Running a basic analysis - detailed walkthrough</h2>
 
 This section will go into details of how to use `ddpcr` to analyze ddPCR data.
 
-### Loading ddPCR data
+<h3 id="load">Loading ddPCR data</h3>
 
 The first step is to get the ddPCR data into R. `ddpcr` uses the data files that are exported by QuantaSoft as its input. You need to have all the well files for the wells you want to analyze (one file per well), and you can optionally add the results file from QuantaSoft. If you loaded an experiment named *2015-05-20_mouse* with 50 wells to QuantaSoft, then QuantaSoft will export the following files:
 
@@ -137,7 +166,7 @@ plate <- new_plate(dir)
 
 You will see some messages appear - every time `ddpcr` runs an analysis step (initializing the plate is part of the analysis), it will output a message decribing what it's doing. You can turn off messages by disabling the verbose option with the command `options(ddpcr.verbose = FALSE)`.
 
-### Pre-analysis exploration of the data
+<h3 id="explore">Pre-analysis exploration of the data</h3>
 
 We can explore the data we loaded even before doing any analysis. The first and easiest thing to do is to plot the raw data.
 
@@ -189,7 +218,7 @@ plate %>% plate_meta(only_used = TRUE)
 
 The `only_used` parameter is used so that we'll only get data about the 5 existing wells and ignore the other 91 unused wells on the plate. Notice that *meta* (short for *metadata*) is used instead of *results*. This is because the meta/results table contains information for each well such as its name, number of drops, number of empty drops, concentration, and many other calculated values. 
 
-### Subset the plate
+<h3 id="subset">Subset the plate</h3>
 
 If you aren't interested in all the wells, you can use the `subset()` function to retain only certain wells. Alternatively, you can use the `data_files` argument of the `new_plate()` function to only load certain well files instead of a full directory.  
 The `subset()` function can take accept either a list of sample names, a list of wells, or a special *range notation*. The range notation is a convenient way to select many wells: use a colon (`:`) to specify a range of wells and a comma (`,`) to add another well or range. A range of wells is defined as all wells in the rectangular area between the two endpoints. For example, `B05:C06` corresponds to the four wells `B05, B06, C05, C06`.  The following diagram shows the result of subsetting with a range notation of `A01:H03, C05, E06, B07:C08` on a plate that initially contains all 96 wells.  
@@ -204,7 +233,7 @@ plate <- plate %>% subset("B01:C06")
 plate %>% wells_used
 ```
 
-### Run analysis
+<h3 id="run">Run analysis</h3>
 
 An analysis of a ddPCR plate consists of running the plate through a sequence of steps. You can see the steps of an experiment by printing it.
 
@@ -222,7 +251,7 @@ plate <- plate %>% analyze
 
 As each step of the analysis is performed, a message describing the current step is printed to the screen. Since we only have 2 wells, it should be very fast, but when you have a full 96-well plate, the analysis could take several minutes. Sometimes it can be useful to run each step individually rather than all of them together if you want to inspect the data after each step.
 
-### Post-analysis exploration of the data
+<h3 id="explore2">Post-analysis exploration of the data</h3>
 
 We can explore the plate again, now that it has been analyzed.
 
@@ -250,7 +279,7 @@ You can use the `well_info()` function to get the value of a specific variable o
 well_info(plate, "B06", "drops_empty")
 ```
 
-### Plot
+<h3 id="plot">Plot</h3>
 
 The easiest way to visualize a ddPCR plate is using the `plot()` function. 
 
@@ -262,7 +291,8 @@ Notice well `C06` is grayed out, which means that it is a failed well. By defaul
 
 You don't have to analyze a plate object before you can plot it - a ddPCR plate can be plotted at any time to show the data in it. If you plot a plate before analyzing it, it'll show the raw data.
 
-### Plot parameters
+
+<h3 id="plot-params">Plot parameters</h3>
 
 There are many plot parameters to allow you to create extremely customizable plots. Among the many parameters, there are three special categories of parameters that affect the visibility of droplets: `show_drops_*` is used to show/hide certain droplets, `col_drops_*` is used to set the colour of droplets, and `alpha_drops_*` is used to set the transparency of droplets (0 = transparent, 1 = opaque). The `*` can be replaced by the name of any droplet cluster (the available clusters can be obtained with `clusters(plate)` as mentioned earlier). For example, to show the outlier droplets in blue you would need to add the parameters `show_drops_outlier = TRUE, col_drops_outlier = "blue"`.
 
@@ -278,7 +308,7 @@ plate %>% plot(wells = "B01,B06", superimpose = TRUE,
 
 > To see all the available plot parameters, run `?plot.ddpcr_plate`.
 
-### Save your data
+<h3 id="save">Save your data</h3>
 
 As was shown previously, you can use the `plate_meta()` function to retrieve a table with the results. If you want to save that table, you can use R's builtin `write.csv()` or `write.table()` functions.
 
@@ -291,9 +321,9 @@ identical(plate, from_file)
 unlink("myplate.rds")
 ```
 
-## Analysis of different plate types
+<h2 id="plate-type">Analysis of different plate types</h2>
 
-So far we only used the default plate type in thuse analysis, but droplet gating does not take place with the default type. While you can define your own plate types (more on that later), there are three built-in plate types you can use:
+So far we only used the default plate type in this analysis, but droplet gating does not take place with the default type. While you can define your own plate types (more on that later), there are three built-in plate types you can use:
 
 1. **`plate_types$custom_thresholds`** - when you want to gate your droplets into four quadrants according to HEX and FAM values that you set  
 2. **`plate_types$fam_positive_pnpp`** - when you have a FAM-positive PNPP plate (FAM+)/(FAM+HEX+)  
@@ -301,7 +331,7 @@ So far we only used the default plate type in thuse analysis, but droplet gating
 
 The next two sections explain how to use these experiment types.
 
-### Gating droplets in any ddPCR plate with custom thresholds
+<h3 id="custom-gates">Gating droplets in any ddPCR plate with custom thresholds</h3>
 
 If you want to perform a simple 4-quadrant gating like the one available in QuantaSoft, you need to set the type of the plate object to `plate_types$custom_thresholds`. This can either be done when initializing a new plate or by reseting an existing plate object.
 
@@ -349,7 +379,7 @@ Now if we want to change the colour of the double-positive droplets to red, we j
 
 > To see all the available plot parameters for this plate type, run `?plot.custom_thresholds`. In addition, any plot parameter that is available for default plates can also be used here (all parameters listed under `?plot.ddpcr_plate`).
 
-### Gating droplets in PNPP experiments automatically
+<h3 id="pnpp">Gating droplets in PNPP experiments automatically</h3>
 
 If you have a *PNPP* experiment (*(FAM+)/(FAM+HEX+)* or *(HEX+)/(FAM+HEX+)*), then `ddpcr` can perform a fully automatic analysis on the plate. The sample dataset used in this running example is from a *(FAM+)/(FAM+HEX+)* experiment, so we can take advantage of the automatic gating if we set the type to `plate_types$fam_positive_pnpp`.
 
@@ -361,7 +391,7 @@ plate_pnpp <- new_plate(dir, type = plate_types$fam_positive_pnpp)
 
 If the data were *(HEX+)/(FAM+HEX+)*, we would have used `type = plate_types$hex_positive_pnpp` instead.
 
-#### Clusters of a PNPP experiment
+<h4 id="pnpp-clusters">Clusters of a PNPP experiment</h4>
 
 Before running the analysis, it's a good idea to know what are the possible cluster groupings that a droplet can belong to
 
@@ -373,7 +403,7 @@ The first 4 clusters we've seen before, as they are common to all plate types. D
 
 > When using the `plate_types$fam_positive_pnpp` type, the positive droplets (FAM+HEX+) are called wildtype, and the negative droplets (FAM+HEX-) are called mutant. Why? This package was originally designed to analyze a specific assay where the FAM+HEX+ cluster represented droplets with a wildtype gene inside, while the FAM+HEX- cluster corresponded to droplets with a mutant gene. Talking about positive vs negative drops or positive vs negative wells sounds a bit weird, so it was decided to stick with mutant vs wildtype. Just remember: wildtype = double-positive droplets, mutant = singly-positive droplets.
 
-#### Analysis of a PNPP experiment
+<h4 id="pnpp-analysis">Analysis of a PNPP experiment</h4>
 
 Now we can analyze the plate
 
@@ -384,7 +414,7 @@ plate_pnpp <- analyze(plate_pnpp)
 One of the key goals in running the analysis is to determine the number of *POSITIVE* (wildtype) and *NEGATIVE* (mutant) droplets in each well, and similarly the *mutant frequency* (if a well has 95 wildtype droplets and 5 mutant droplets, then the *mutant frequency* in the well is 5%).    
 You can see from the output that the two last steps are **classifying** and **reclassifying** the droplets, and that the reclassification didn't take place. The classification step identifies all the non-empty droplets as either rain, mutant, or wildtype by analyzing each well individually. Wells with a very low *mutant frequency* (ie there are very few mutant droplets) are much harder to gate accurately, which is the reason for the reclassification step. The reclassification step uses information from wells with high a *mutant frequency*, where the gates are more clearly defined, to adjust the gates in wells with a low *mutant frequency*. The reclassification step only takes place if there are enough wells with a high mutant frequency.
 
-#### Results of a PNPP experiment
+<h4 id="pnpp-results">Results of a PNPP experiment</h4>
 
 Take a look at the results
 
@@ -415,7 +445,7 @@ plate_pnpp %>% wells_mutant
 plate_pnpp %>% wells_wildtype
 ```
 
-## Advanced topic 1: Plate parameters
+<h2 id="plate-params">Advanced topic 1: Plate parameters</h2>
 
 Every ddPCR plate object has adjustable parameters associated with it. There are general parameters that apply to the plate as a whole, and each analysis step has its own set of parameters that are used for the algorithm in that step. You can see all the parameters of a plate using the `params()` function
 
@@ -454,7 +484,7 @@ plate <- analyze(plate)
 plate <- analyze(plate, restart = TRUE)
 ```
 
-## Advanced topic 2: Algorithms used in each step
+<h2 id="algorithms">Advanced topic 2: Algorithms used in each step</h2>
 
 If you want to know how a step is performed, you can see the exact algorithm (code) used in each step by consulting the `steps()` function.
 
@@ -468,10 +498,10 @@ This list contains all the steps of analyzing the given plate, with each item in
 ddpcr:::init_plate
 ```
 
-For more details about the algorithm, see [the "Algorithms" vignette](algorithm.Rmd).
+**For more details about the algorithm, see [the "Algorithms" vignette](algorithm.Rmd).**
 
-## Advanced topic 3: Creating new plate types
+<h2 id="new-types">Advanced topic 3: Creating new plate types</h2>
 
 Each ddPCR plate has a plate type which determines what type of analysis to run on the data. `plate_types` contains a list of the built-in plate types that are supported, but you can also create your own plate type. Creating a new plate type can be used if you want to supply your own logic for any analysis step, or even if you simply want to have a type that sets different default parameters than the built-in ones.
 
-For more details about how to create new plate types, see [the "Extending ddpcr by adding new plate types" vignette](extend.Rmd).
+**For more details about how to create new plate types, see [the "Extending ddpcr by adding new plate types" vignette](extend.Rmd).**
