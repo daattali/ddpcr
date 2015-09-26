@@ -32,9 +32,9 @@ test_that("subset works", {
                    c("B01", "B06", "C06", "C08"))
   expect_identical(plate %>% subset("B01:B06, C01:C06, C08") %>% wells_used,
                    c("B01", "B06", "C01", "C06", "C08"))
-  expect_identical(plate %>% subset(samples = "#1") %>% wells_used,
+  expect_identical(plate %>% subset(samples = "Dean") %>% wells_used,
                    c("B01"))
-  expect_identical(plate %>% subset(samples = c("#1", "#3")) %>% wells_used,
+  expect_identical(plate %>% subset(samples = c("Dean", "Mike")) %>% wells_used,
                    c("B01", "C01"))
 })
 

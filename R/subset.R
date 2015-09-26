@@ -40,8 +40,8 @@
 #' plate %>% subset("B01, B06:C08") %>% wells_used
 #' plate %>% subset("B01, B06:C06, C08") %>% wells_used
 #' plate %>% subset("B01:B06, C01:C06, C08") %>% wells_used
-#' plate %>% subset(samples = "#1") %>% wells_used
-#' plate %>% subset(samples = c("#1", "#3")) %>% wells_used
+#' plate %>% subset(samples = "Dean") %>% wells_used
+#' plate %>% subset(samples = c("Dean", "Mike")) %>% wells_used
 #' @export
 subset.ddpcr_plate <- function(x, wells, samples, ...) {
   if (!missing(wells) && !missing(samples)) {
