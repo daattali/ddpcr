@@ -4,6 +4,5 @@ tabPanel(
   value = "aboutTab",
   name  = "aboutTab",
   icon  = icon("info-circle"),
-  
-  "About this program"
+  includeMarkdown(file.path("text", "about.md"))
 )
