@@ -14,7 +14,7 @@ knitr::opts_chunk$set(tidy = FALSE, comment = "#>")
 options(ddpcr.verbose = TRUE)
 ```
 
-# ddpcr: Analysis and visualization of Digital Droplet PCR data in R and on the web
+# ddpcr: Analysis and visualization of Droplet Digital PCR data in R and on the web
 
 [![Build Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
 [![CRAN version](http://www.r-pkg.org/badges/version/ddpcr)](http://cran.r-project.org/web/packages/ddpcr/index.html)
@@ -114,7 +114,7 @@ devtools::install_github("daattali/ddpcr")
 
 <h2 id="r-interactive">Running the interactive tool through R</h2>
 
-Even if you do know R, using the interactive application can be easier and more convenient than running R commands. If you want to use the tool, simply run `ddpcr::shine()` and it will run the same application that's hosted online on your own machine.
+Even if you do know R, using the interactive application can be easier and more convenient than running R commands. If you want to use the visual tool, simply run `ddpcr::gui()` (GUI = Graphical User Interface) and it will run the same application that's hosted online on your own machine.
 
 <h2 id="quick-start">Quick start</h2>
 

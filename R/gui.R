@@ -4,7 +4,7 @@
 #' also provides an interactive tool that can be used to analyze ddPCR data
 #' more easily. The tool will be launched in a web browser.
 #' @export
-shine <- function() {
+gui <- function() {
   shiny::runApp(system.file("shiny", package = "ddpcr"),
                 display.mode = "normal",
                 launch.browser = TRUE)

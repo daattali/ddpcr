@@ -1,7 +1,7 @@
 ## ddpcr - R package for analysis of droplet digital PCR data
 ## Copyright (C) 2015 Dean Attali
 
-#' Analysis and visualization of Digital Droplet PCR data.
+#' Analysis and visualization of Droplet Digital PCR data.
 #' 
 #' An interface to explore, analyze, and visualize droplet digital PCR
 #' (ddPCR) data in R. This is the first known non-proprietary software for

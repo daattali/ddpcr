@@ -1,4 +1,4 @@
-ddpcr: Analysis and visualization of Digital Droplet PCR data in R and on the web
+ddpcr: Analysis and visualization of Droplet Digital PCR data in R and on the web
 =================================================================================
 
 [![Build
@@ -191,8 +191,9 @@ Running the interactive tool through R
 </h2>
 Even if you do know R, using the interactive application can be easier
 and more convenient than running R commands. If you want to use the
-tool, simply run `ddpcr::shine()` and it will run the same application
-that's hosted online on your own machine.
+visual tool, simply run `ddpcr::gui()` (GUI = Graphical User Interface)
+and it will run the same application that's hosted online on your own
+machine.
 
 <h2 id="quick-start">
 Quick start
@@ -925,7 +926,7 @@ the `restart = TRUE` parameter.
     #> Initializing plate of type `ddpcr_plate`... DONE (0 seconds)
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (0 seconds)
+    #> Identifying empty droplets... DONE (1 seconds)
     #> Analysis complete
 
 <h2 id="algorithms">
