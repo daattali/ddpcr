@@ -22,7 +22,7 @@ tabPanel(
       fileInput(
         "uploadDataFiles",
         div("Data files",
-            helpPopup("These are all the <i>_Amplitude</i> files exported by QuantaSoft"),
+            helpPopup('These are all the files exported by QuantaSoft with names ending in "_Amplitude"'),
             br(), downloadLink("sampleDataFile", "Example data file")
         ),
         multiple = TRUE,
