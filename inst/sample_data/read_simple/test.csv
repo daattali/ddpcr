@@ -2,4 +2,4 @@ Well,ExptType,Experiment,Sample,TypeAssay,Assay,Status,Concentration,TotalConfMa
 A01,Absolute Quantification,,a1,Ch1Unknown,,Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 B02,Absolute Quantification,,b2,Ch1Unknown,,Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 A01,Absolute Quantification,,a1,Ch2Unknown,,Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-B01,Absolute Quantification,,b2,Ch2Unknown,,Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+B02,Absolute Quantification,,b2,Ch2Unknown,,Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

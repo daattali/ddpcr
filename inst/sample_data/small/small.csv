@@ -3,4 +3,4 @@ Well,ExptType,Experiment,Sample,TypeAssay,Assay,Status,Concentration,TotalConfMa
 "B06",Absolute Quantification,"","Dave",Ch1Unknown,"Consensus BRAF","Manual",53.8,,,57.9,49.6,652,13003,506,146,25,12978,41.5,13655,,,,,,,,1.23,,,1.23,1.09,55.2,,,55.2,52.4,1,1,9594.3,1476.9,1864.5,""
 "C01",Absolute Quantification,"","Mike",Ch1Unknown,"Consensus BRAF","Manual",93.6,,,98.8,88.5,1248,14031,1247,1,58,13973,93.6,15279,,,,,,,,0.954,,,0.954,0.88,48.8,,,48.8,46.9,1,1,9105.2,1342,1976.1,""
 "C06",Absolute Quantification,"","Emily",Ch1Unknown,"Consensus BRAF","Manual",1.82,,,2.65,1.18,24,14488,14,10,1,14487,1.06,14512,,,,,,,,1.6,,,1.6,0.556,61.5,,,61.5,46.1,1,1,10618,1581.5,1596.4,""
-"C09",Absolute Quantification,"","Mary",Ch1Unknown,"Consensus BRAF","Manual",0,,,0.216,0,0,15238,0,0,540,14698,0,15238,,,,,,,,,,,,,,,,,,1,1,0,1328.2,1328.2,""
+"C08",Absolute Quantification,"","Mary",Ch1Unknown,"Consensus BRAF","Manual",0,,,0.216,0,0,15238,0,0,540,14698,0,15238,,,,,,,,,,,,,,,,,,1,1,0,1328.2,1328.2,""
