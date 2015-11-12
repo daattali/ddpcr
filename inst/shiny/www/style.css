@@ -146,6 +146,11 @@ button.btn-primary.lg-btn {
   font-weight: bold;
 }
 
+#sampleDataFile, #sampleResultsFile {
+  font-size: 0.8em;
+  font-weight: normal;
+}
+
 #basicSettingsTabContent .shiny-input-container {
   width: 400px;
 }

@@ -140,8 +140,8 @@ tabPanel(
     div(
       id = "settingsNextMsg",
       class = "next-msg",
-      "When you are finished with the settings, continue to",
-      actionLink("toAnalyze", "Analyze")
+      "When you are finished with the settings,",
+      actionLink("toAnalyze", "continue to Analyze")
     )
   )
 )

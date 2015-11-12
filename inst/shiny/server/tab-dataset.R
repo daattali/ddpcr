@@ -48,6 +48,22 @@ observeEvent(input$loadSampleBtn, {
   })
 })
 
+# download sample data file
+output$sampleDataFile <- downloadHandler(
+  filename = function() { "example_dataset_C08_Amplitude.csv" },
+  content = function(file) {
+    file.copy(from = sample_data_file(), to = file, overwrite = TRUE)
+  }
+)
+
+# download sample results file
+output$sampleResultsFile <- downloadHandler(
+  filename = function() { "example_dataset.csv" },
+  content = function(file) {
+    file.copy(from = sample_results_file(), to = file, overwrite = TRUE)
+  }
+)
+
 # change to settings tab when clicking on link
 observeEvent(input$toSettings,
   updateTabsetPanel(session, "mainNav", "settingsTab")

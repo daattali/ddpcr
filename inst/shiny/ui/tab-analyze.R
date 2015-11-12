@@ -27,8 +27,8 @@ tabPanel(
       div(
         id = "analyzeNextMsg",
         class = "next-msg",
-        "The data has been analyzed, you can continue to",
-        actionLink("toResults", "Results")
+        "The data has been analyzed, you can",
+        actionLink("toResults", "continue to Results")
       )
     )    
   )

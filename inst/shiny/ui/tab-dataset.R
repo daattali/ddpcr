@@ -16,13 +16,15 @@ tabPanel(
       title = "Upload new dataset",
       id = "newDatasetTab",
       h3(strong("Upload data from QuantaSoft "),
-         helpPopup("You must first export the data from QuantaSoft to <i>.csv</i> (Excel) files")
+         helpPopup("To use this tool, you must first export the data from QuantaSoft to <i>.csv</i> (Excel) files")
       ),
       br(),
       fileInput(
         "uploadDataFiles",
         div("Data files",
-            helpPopup("These are all the <i>_Amplitude</i> files exported by QuantaSoft")),
+            helpPopup("These are all the <i>_Amplitude</i> files exported by QuantaSoft"),
+            br(), downloadLink("sampleDataFile", "Example data file")
+        ),
         multiple = TRUE,
         accept = c(
           'text/csv',
@@ -33,7 +35,9 @@ tabPanel(
       fileInput(
         "uploadMetaFile",
         div("Main results file (optional)",
-            helpPopup("This is the Excel file exported by QuantaSoft that contains the main results for every well.")),
+            helpPopup("This is the Excel file exported by QuantaSoft that contains the main results for every well."),
+            br(), downloadLink("sampleResultsFile", "Example results file")
+        ),
         multiple = FALSE,
         accept = c(
           'text/csv',
@@ -56,7 +60,11 @@ tabPanel(
       title = "Load saved dataset",
       id = "loadDatasetTab",
       h3(strong("Upload previously saved data"),
-         helpPopup("If you've previously used this program to save data, you can load it here")),
+         helpPopup(paste0(
+           "If you've previously used this tool to save data (using the",
+           strong(icon("download"), "Save data"),
+           "button), you can load it here")
+         )),
       br(),
       fileInput(
         "loadFile",
@@ -95,8 +103,8 @@ tabPanel(
     div(
       id = "datasetNextMsg",
       class = "next-msg",
-      "The data has been loaded, you can continue to",
-      actionLink("toSettings", "Settings")
+      "The data has been loaded, you can",
+      actionLink("toSettings", "continue to Settings")
     )
   )
 )

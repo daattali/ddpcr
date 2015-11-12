@@ -19,6 +19,21 @@ sample_data_dir <- function() {
   system.file("sample_data", "small", package = "ddpcr")
 }
 
+sample_data_file <- function() {
+  data_files <- find_data_files(sample_data_dir())
+  sample_file <- grep("C08_Amplitude", data_files, value = TRUE)
+  sample_file
+}
+
+sample_results_file <- function() {
+  name <-
+    sample_data_dir() %>%
+    find_data_files() %>%
+    get_consensus_name_from_data_files()
+  results_file <- find_meta_file(sample_data_dir(), name)
+  results_file
+}
+
 #' Get droplet data from a well
 #' 
 #' @param plate A ddPCR plate.
