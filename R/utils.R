@@ -19,12 +19,18 @@ sample_data_dir <- function() {
   system.file("sample_data", "small", package = "ddpcr")
 }
 
+#' Get path to sample data file
+#' @keywords internal
+#' @export
 sample_data_file <- function() {
   data_files <- find_data_files(sample_data_dir())
   sample_file <- grep("C08_Amplitude", data_files, value = TRUE)
   sample_file
 }
 
+#' Get path to sample results file
+#' @keywords internal
+#' @export
 sample_results_file <- function() {
   name <-
     sample_data_dir() %>%

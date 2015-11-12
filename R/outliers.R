@@ -40,36 +40,40 @@ remove_outliers.ddpcr_plate <- function(plate) {
   data <- plate_data(plate)
   
   # ---
+
+  if (length(wells_success(plate)) > 0) {
   
-  # get the cutoff for outliers for the whole plate in each dimension
-  outlier_cutoff <- plate %>% get_outlier_cutoff
-  cutoff_x <- outlier_cutoff[[x_var(plate)]]
-  cutoff_y <- outlier_cutoff[[y_var(plate)]]
+    # get the cutoff for outliers for the whole plate in each dimension
+    outlier_cutoff <- plate %>% get_outlier_cutoff
+    cutoff_x <- outlier_cutoff[[x_var(plate)]]
+    cutoff_y <- outlier_cutoff[[y_var(plate)]]
+    
+    # assign the OUTLIER cluster to any drops that have a fluorescence value
+    # above the cutoff
+    CLUSTER_OUTLIER <- plate %>% cluster('OUTLIER')
+    outlier_idx <-
+      (data[[y_var(plate)]] > cutoff_y | data[[x_var(plate)]] > cutoff_x)
+    data[outlier_idx, 'cluster'] <- CLUSTER_OUTLIER  
+    
+    # count how many outlier drops are in each well and add it to the metadata
+    drops_outlies_df <- dplyr::data_frame(
+      "well" = plate %>% wells_used,
+      "drops_outlier" = 0L)  
+    
+    meta <-
+      data %>%
+      dplyr::filter_(~ cluster == CLUSTER_OUTLIER) %>%
+      dplyr::group_by_("well") %>%
+      dplyr::summarise_("drops_outlier" = ~ n()) %>%
+      merge_dfs_overwrite_col(drops_outlies_df, ., "drops_outlier") %>%
+      merge_dfs_overwrite_col(plate_meta(plate), ., "drops_outlier")
+    
+    # ---
+    
+    plate_data(plate) <- data
+    plate_meta(plate) <- meta
+  }
   
-  # assign the OUTLIER cluster to any drops that have a fluorescence value
-  # above the cutoff
-  CLUSTER_OUTLIER <- plate %>% cluster('OUTLIER')
-  outlier_idx <-
-    (data[[y_var(plate)]] > cutoff_y | data[[x_var(plate)]] > cutoff_x)
-  data[outlier_idx, 'cluster'] <- CLUSTER_OUTLIER  
-  
-  # count how many outlier drops are in each well and add it to the metadata
-  drops_outlies_df <- dplyr::data_frame(
-    "well" = plate %>% wells_used,
-    "drops_outlier" = 0L)  
-  
-  meta <-
-    data %>%
-    dplyr::filter_(~ cluster == CLUSTER_OUTLIER) %>%
-    dplyr::group_by_("well") %>%
-    dplyr::summarise_("drops_outlier" = ~ n()) %>%
-    merge_dfs_overwrite_col(drops_outlies_df, ., "drops_outlier") %>%
-    merge_dfs_overwrite_col(plate_meta(plate), ., "drops_outlier")
-  
-  # ---
-  
-  plate_data(plate) <- data
-  plate_meta(plate) <- meta
   status(plate) <- CURRENT_STEP
   step_end()
   

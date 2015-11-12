@@ -244,16 +244,16 @@ variable_dim_var <- function(plate) {
 wells_positive <- function(plate) {
   stopifnot(plate %>% inherits("pnpp_experiment"))
   
-  if (status(plate) < step(plate, 'CLASSIFY')) {
-    return()
+  var_name <- meta_var_name(plate, "significant_negative_cluster")
+  
+  if (status(plate) < step(plate, 'CLASSIFY') ||
+      (!var_name %in% (plate %>% plate_meta %>% names))) {
+    return(c())
   }
   
   plate %>%
     plate_meta %>%
-    dplyr::filter_(lazyeval::interp(
-      ~ !var,
-      var = as.name(meta_var_name(plate, "significant_negative_cluster"))
-    )) %>%
+    dplyr::filter_(lazyeval::interp(~ !var, var = as.name(var_name))) %>%
     .[['well']]
 }
 
@@ -275,14 +275,16 @@ wells_positive <- function(plate) {
 wells_negative <- function(plate) {
   stopifnot(plate %>% inherits("pnpp_experiment"))
   
-  if (status(plate) < step(plate, 'CLASSIFY')) {
+  var_name <- meta_var_name(plate, "significant_negative_cluster")
+  
+  if (status(plate) < step(plate, 'CLASSIFY') ||
+      (!var_name %in% (plate %>% plate_meta %>% names))) {
     return(c())
-  }  
+  }
   
   plate %>%
     plate_meta %>%
-    dplyr::filter_(as.name(meta_var_name(plate, "significant_negative_cluster"))) %>%
-    .[['well']]
+    dplyr::filter_(as.name(var_name)) %>% .[['well']]
 }
 
 #' Name of variable in PNPP experiment metadata

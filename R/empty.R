@@ -37,72 +37,75 @@ remove_empty.ddpcr_plate <- function(plate) {
   step_begin("Identifying empty droplets")
   
   # ---
-  
-  # get the empty cutoff of every well
-  empty_cutoff_map <-
-    vapply(
-      wells_success(plate),
-      function(x) get_empty_cutoff(plate, x),
-      list("x", "y")
-    ) %>%
-    lol_to_df
-  
-  # set the cluster to EMPTY for every empty droplet in every well
-  x_var <- x_var(plate)
-  y_var <- y_var(plate)
-  CLUSTERS_UNANALYZED <- unanalyzed_clusters(plate, 'EMPTY')
-  data <-
-    plate_data(plate) %>%
-    dplyr::group_by_("well") %>%
-    dplyr::do({
-      well_data <- .
-      well_id = well_data[['well']][1]
-      if (!well_id %in% empty_cutoff_map[['well']]) {
-        return(well_data)
-      }
-      
-      # find the cutoffs for this well and mark all droplets below as empty
-      cutoffs <- empty_cutoff_map %>% dplyr::filter_(~ well == well_id)
-      cutoff_x <- cutoffs[['x']]
-      cutoff_y <- cutoffs[['y']]
-      
-      empty_idx <- well_data[['cluster']] %in% CLUSTERS_UNANALYZED
-      if (!is.na(cutoff_x)) {
-        empty_idx <- empty_idx & well_data[[x_var]] < cutoff_x
-      }
-      if (!is.na(cutoff_y)) {
-        empty_idx <- empty_idx & well_data[[y_var]] < cutoff_y
-      }
-      well_data[empty_idx, 'cluster'] <- plate %>% cluster('EMPTY')
-      well_data
-    }) %>%
-    dplyr::ungroup()
-  
-  # calculate a few metadata variables
-  meta <-
-    data %>%
-    dplyr::filter_(~ cluster == plate %>% cluster('EMPTY')) %>%
-    dplyr::group_by_("well") %>%
-    dplyr::summarise_("drops_empty" = ~ n()) %>%
-    merge_dfs_overwrite_col(plate_meta(plate), ., "drops_empty") %>%
-    dplyr::mutate_(.dots = setNames(
-      list(
-        lazyeval::interp(~ ifelse(is.na(empty), NA, drops - empty),
-                         empty = quote(drops_empty), drops = quote(drops)),
-        lazyeval::interp(~ ifelse(is.na(empty), NA, signif(empty / drops, 3)),
-                         empty = quote(drops_empty), drops = quote(drops))
-      ),
-      c("drops_non_empty", "drops_empty_fraction")
-    ))
-  
-  # ---
-  
-  # set the new drop data and metadata into the plate
-  plate_data(plate) <- data
-  plate_meta(plate) <- meta
-  
-  # now that we have information about empty droplets, calculate template concentrations
-  plate %<>% calculate_concentration
+
+  if (length(wells_success(plate)) > 0) {
+    
+    # get the empty cutoff of every well
+    empty_cutoff_map <-
+      vapply(
+        wells_success(plate),
+        function(x) get_empty_cutoff(plate, x),
+        list("x", "y")
+      ) %>%
+      lol_to_df
+    
+    # set the cluster to EMPTY for every empty droplet in every well
+    x_var <- x_var(plate)
+    y_var <- y_var(plate)
+    CLUSTERS_UNANALYZED <- unanalyzed_clusters(plate, 'EMPTY')
+    data <-
+      plate_data(plate) %>%
+      dplyr::group_by_("well") %>%
+      dplyr::do({
+        well_data <- .
+        well_id = well_data[['well']][1]
+        if (!well_id %in% empty_cutoff_map[['well']]) {
+          return(well_data)
+        }
+        
+        # find the cutoffs for this well and mark all droplets below as empty
+        cutoffs <- empty_cutoff_map %>% dplyr::filter_(~ well == well_id)
+        cutoff_x <- cutoffs[['x']]
+        cutoff_y <- cutoffs[['y']]
+        
+        empty_idx <- well_data[['cluster']] %in% CLUSTERS_UNANALYZED
+        if (!is.na(cutoff_x)) {
+          empty_idx <- empty_idx & well_data[[x_var]] < cutoff_x
+        }
+        if (!is.na(cutoff_y)) {
+          empty_idx <- empty_idx & well_data[[y_var]] < cutoff_y
+        }
+        well_data[empty_idx, 'cluster'] <- plate %>% cluster('EMPTY')
+        well_data
+      }) %>%
+      dplyr::ungroup()
+    
+    # calculate a few metadata variables
+    meta <-
+      data %>%
+      dplyr::filter_(~ cluster == plate %>% cluster('EMPTY')) %>%
+      dplyr::group_by_("well") %>%
+      dplyr::summarise_("drops_empty" = ~ n()) %>%
+      merge_dfs_overwrite_col(plate_meta(plate), ., "drops_empty") %>%
+      dplyr::mutate_(.dots = setNames(
+        list(
+          lazyeval::interp(~ ifelse(is.na(empty), NA, drops - empty),
+                           empty = quote(drops_empty), drops = quote(drops)),
+          lazyeval::interp(~ ifelse(is.na(empty), NA, signif(empty / drops, 3)),
+                           empty = quote(drops_empty), drops = quote(drops))
+        ),
+        c("drops_non_empty", "drops_empty_fraction")
+      ))
+    
+    # ---
+    
+    # set the new drop data and metadata into the plate
+    plate_data(plate) <- data
+    plate_meta(plate) <- meta
+    
+    # now that we have information about empty droplets, calculate template concentrations
+    plate %<>% calculate_concentration
+  }
   
   status(plate) <- CURRENT_STEP
   step_end()

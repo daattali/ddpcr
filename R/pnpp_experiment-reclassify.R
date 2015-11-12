@@ -36,65 +36,68 @@ reclassify_droplets.pnpp_experiment <- function(plate) {
   CURRENT_STEP <- plate %>% step('RECLASSIFY')
   plate %>% check_step(CURRENT_STEP)
   
-  # if there are not enough wells with high MT freq to use as prior info or if
-  # there are no wells with low MT freq to reclassify, do nothing
-  min_wells <- params(plate, 'RECLASSIFY', 'MIN_WELLS_NEGATIVE_CLUSTER')
-  if (plate %>% wells_negative %>% length < min_wells ||
-      plate %>% wells_positive %>% length == 0) {
-    msg(paste0("Reclassifying droplets... skipped (not enough",
-                   " wells with significant ",
-                   params(plate, 'GENERAL', 'NEGATIVE_NAME'),
-                   " clusters)"))
-    status(plate) <- CURRENT_STEP
-    return(plate)
+  if (length(wells_success(plate)) > 0) {
+    
+    # if there are not enough wells with high MT freq to use as prior info or if
+    # there are no wells with low MT freq to reclassify, do nothing
+    min_wells <- params(plate, 'RECLASSIFY', 'MIN_WELLS_NEGATIVE_CLUSTER')
+    if (plate %>% wells_negative %>% length < min_wells ||
+        plate %>% wells_positive %>% length == 0) {
+      msg(paste0("Reclassifying droplets... skipped (not enough",
+                     " wells with significant ",
+                     params(plate, 'GENERAL', 'NEGATIVE_NAME'),
+                     " clusters)"))
+      status(plate) <- CURRENT_STEP
+      return(plate)
+    }
+    
+    step_begin("Reclassify droplets based on info in all wells")
+    
+    data <- plate_data(plate)
+    CLUSTER_NEGATIVE <- plate %>% cluster('NEGATIVE')
+    CLUSTER_POSITIVE <- plate %>% cluster('POSITIVE')
+    
+    # calculate the ratio of the highest MT drop over the median WT drop
+    variable_var <- variable_dim_var(plate)
+    consensus_border_ratio <-
+      vapply(plate %>% wells_negative,
+             function(x) {
+               negative_max <- 
+                 data %>%
+                 dplyr::filter_(~ well == x,
+                                ~ cluster == CLUSTER_NEGATIVE) %>%
+                 .[[variable_var]] %>%
+                 max
+               positive_median <- 
+                 data %>%
+                 dplyr::filter_(~ well == x,
+                                ~ cluster == CLUSTER_POSITIVE) %>%
+                 .[[variable_var]] %>%
+                 median               
+               ratio <- negative_max / positive_median
+               ratio
+             },
+             numeric(1)
+      ) %>%
+      quantile(params(plate, 'RECLASSIFY', 'BORDER_RATIO_QUANTILE')) %>%
+      as.numeric
+    
+    wells_to_reclassify <- plate %>% wells_positive
+    
+    well_clusters_info <-
+      vapply(wells_to_reclassify,
+             function(x) reclassify_droplets_single(plate, x, consensus_border_ratio = consensus_border_ratio),
+             integer(1)) %>%
+      named_vec_to_df(meta_var_name(plate, "negative_border"))
+    
+    # add metadata to each well
+    plate_meta(plate) %<>%
+      merge_dfs_overwrite_col(well_clusters_info)  
+    
+    plate %<>%
+      mark_clusters(wells_to_reclassify) %>%
+      calculate_negative_freqs
   }
-  
-  step_begin("Reclassify droplets based on info in all wells")
-  
-  data <- plate_data(plate)
-  CLUSTER_NEGATIVE <- plate %>% cluster('NEGATIVE')
-  CLUSTER_POSITIVE <- plate %>% cluster('POSITIVE')
-  
-  # calculate the ratio of the highest MT drop over the median WT drop
-  variable_var <- variable_dim_var(plate)
-  consensus_border_ratio <-
-    vapply(plate %>% wells_negative,
-           function(x) {
-             negative_max <- 
-               data %>%
-               dplyr::filter_(~ well == x,
-                              ~ cluster == CLUSTER_NEGATIVE) %>%
-               .[[variable_var]] %>%
-               max
-             positive_median <- 
-               data %>%
-               dplyr::filter_(~ well == x,
-                              ~ cluster == CLUSTER_POSITIVE) %>%
-               .[[variable_var]] %>%
-               median               
-             ratio <- negative_max / positive_median
-             ratio
-           },
-           numeric(1)
-    ) %>%
-    quantile(params(plate, 'RECLASSIFY', 'BORDER_RATIO_QUANTILE')) %>%
-    as.numeric
-  
-  wells_to_reclassify <- plate %>% wells_positive
-  
-  well_clusters_info <-
-    vapply(wells_to_reclassify,
-           function(x) reclassify_droplets_single(plate, x, consensus_border_ratio = consensus_border_ratio),
-           integer(1)) %>%
-    named_vec_to_df(meta_var_name(plate, "negative_border"))
-  
-  # add metadata to each well
-  plate_meta(plate) %<>%
-    merge_dfs_overwrite_col(well_clusters_info)  
-  
-  plate %<>%
-    mark_clusters(wells_to_reclassify) %>%
-    calculate_negative_freqs
   
   # ---
   

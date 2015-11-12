@@ -42,23 +42,26 @@ classify_droplets.pnpp_experiment <- function(plate) {
   step_begin("Classifying droplets")
   
   # ---
-  
-  # get droplet classifications in each well
-  well_clusters_info <-
-    vapply(wells_success(plate),
-           function(x) classify_droplets_single(plate, x),
-           vector(mode = "list", length = 3)) %>%
-    lol_to_df %>%
-    magrittr::set_names(lapply(names(.), function(x) meta_var_name(plate, x)))
-  
-  # add metadata to each well
-  plate_meta(plate) %<>%
-    merge_dfs_overwrite_col(well_clusters_info)
-  
-  # mark the droplets with their assigned cluster in the plate and calculate frequencies
-  plate %<>%
-    mark_clusters(plate %>% wells_success) %>%
-    calculate_negative_freqs
+ 
+  if (length(wells_success(plate)) > 0) {
+     
+    # get droplet classifications in each well
+    well_clusters_info <-
+      vapply(wells_success(plate),
+             function(x) classify_droplets_single(plate, x),
+             vector(mode = "list", length = 3)) %>%
+      lol_to_df %>%
+      magrittr::set_names(lapply(names(.), function(x) meta_var_name(plate, x)))
+    
+    # add metadata to each well
+    plate_meta(plate) %<>%
+      merge_dfs_overwrite_col(well_clusters_info)
+    
+    # mark the droplets with their assigned cluster in the plate and calculate frequencies
+    plate %<>%
+      mark_clusters(plate %>% wells_success) %>%
+      calculate_negative_freqs
+  }
   
   # ---
   
