@@ -155,6 +155,11 @@ button.btn-primary.lg-btn {
   width: 400px;
 }
 
+#showPlateTypeExample {
+  position: relative;
+  top: -15px;
+}
+
 #settingsSubset {
   width: 650px;
 }

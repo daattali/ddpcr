@@ -23,7 +23,7 @@ tabPanel(
         
         div(id = "basicSettingsTabContent",
         fixedRow(
-          column(12,
+          column(6,
             selectInput(
               "settingsPlateType",
               div("Droplet clusters",
@@ -32,11 +32,26 @@ tabPanel(
               c("(FAM+) / (FAM+HEX+)" = plate_types$fam_positive_pnpp,
                 "(HEX+) / (FAM+HEX+)" = plate_types$hex_positive_pnpp,
                 "Custom thresholds" = plate_types$custom_thresholds)
-            )
+            ),
+            conditionalPanel(
+              sprintf("input.settingsPlateType != '%s'", plate_types$custom_thresholds),
+              actionLink("showPlateTypeExample", "Show example typical well") 
+            ),
+            conditionalPanel(
+              "input.showPlateTypeExample % 2 == 1",
+              conditionalPanel(
+                sprintf("input.settingsPlateType == '%s'", plate_types$fam_positive_pnpp),
+                img(src = "fampositive.png")
+              ),
+              conditionalPanel(
+                sprintf("input.settingsPlateType == '%s'", plate_types$hex_positive_pnpp),
+                img(src = "hexpositive.png")
+              )              
+            )            
           )
         ),
         fixedRow(
-          column(12,
+          column(6,
                  textInput("settingsName", "Dataset name", "")
           )
         ),
