@@ -744,8 +744,8 @@ Now we can analyze the plate
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (1 seconds)
-    #> Classifying droplets... DONE (1 seconds)
+    #> Identifying empty droplets... DONE (0 seconds)
+    #> Classifying droplets... DONE (0 seconds)
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
     #> Analysis complete
 
