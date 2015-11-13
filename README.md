@@ -293,7 +293,7 @@ the plate object.
     #>                     ddpcr plate
     #>                    -------------
     #>             Dataset name : small
-    #>             Data summary : 5 wells; 75,706 drops
+    #>             Data summary : 5 wells; 75,699 drops
     #>               Plate type : ddpcr_plate
     #> Completed analysis steps : INITIALIZE
     #> Remaining analysis steps : REMOVE_FAILURES, REMOVE_OUTLIERS, REMOVE_EMPTY
@@ -327,7 +327,7 @@ We can see all the droplets data with `plate_data()`
 
     plate %>% plate_data
 
-    #> Source: local data frame [75,706 x 4]
+    #> Source: local data frame [75,699 x 4]
     #> 
     #>     well   HEX   FAM cluster
     #>    (chr) (int) (int)   (int)
@@ -363,10 +363,10 @@ We can see the results of the plate so far with `plate_meta()`
 
     #>   well sample row col used drops
     #> 1  B01   Dean   B   1 TRUE 17458
-    #> 2  B06   Dave   B   6 TRUE 13655
+    #> 2  B06   Dave   B   6 TRUE 13657
     #> 3  C01   Mike   C   1 TRUE 15279
-    #> 4  C06  Emily   C   6 TRUE 14513
-    #> 5  C08   <NA>   C   8 TRUE 14801
+    #> 4  C06  Emily   C   6 TRUE 14504
+    #> 5  C08   Mary   C   8 TRUE 14801
 
 The `only_used` parameter is used so that we'll only get data about the
 5 existing wells and ignore the other 91 unused wells on the plate.
@@ -415,7 +415,7 @@ it.
     #>                     ddpcr plate
     #>                    -------------
     #>             Dataset name : small
-    #>             Data summary : 4 wells; 60,905 drops
+    #>             Data summary : 4 wells; 60,898 drops
     #>               Plate type : ddpcr_plate
     #> Completed analysis steps : INITIALIZE
     #> Remaining analysis steps : REMOVE_FAILURES, REMOVE_OUTLIERS, REMOVE_EMPTY
@@ -454,7 +454,7 @@ We can explore the plate again, now that it has been analyzed.
     #>         ddpcr plate
     #>        -------------
     #> Dataset name : small
-    #> Data summary : 4 wells; 60,905 drops
+    #> Data summary : 4 wells; 60,898 drops
     #>   Plate type : ddpcr_plate
     #>       Status : Analysis completed
 
@@ -463,7 +463,7 @@ what steps are remaining). We can also look at the droplets data
 
     plate %>% plate_data
 
-    #> Source: local data frame [60,905 x 4]
+    #> Source: local data frame [60,898 x 4]
     #> 
     #>     well   HEX   FAM cluster
     #>    (chr) (int) (int)   (int)
@@ -488,12 +488,12 @@ also look at the plate results
 
     #>   well sample row col used drops success drops_outlier drops_empty
     #> 1  B01   Dean   B   1 TRUE 17458    TRUE             0       16690
-    #> 2  B06   Dave   B   6 TRUE 13655    TRUE             0       12925
+    #> 2  B06   Dave   B   6 TRUE 13657    TRUE             2       12925
     #> 3  C01   Mike   C   1 TRUE 15279    TRUE             0       13903
-    #> 4  C06  Emily   C   6 TRUE 14513   FALSE             3          NA
+    #> 4  C06  Emily   C   6 TRUE 14504   FALSE             0          NA
     #>   drops_non_empty drops_empty_fraction concentration
     #> 1             768                0.956            49
-    #> 2             730                0.947            59
+    #> 2             732                0.946            61
     #> 3            1376                0.910           103
     #> 4              NA                   NA            NA
 
@@ -615,7 +615,7 @@ initializing a new plate or by reseting an existing plate object.
     #>                     ddpcr plate
     #>                    -------------
     #>             Dataset name : small
-    #>             Data summary : 4 wells; 60,905 drops
+    #>             Data summary : 4 wells; 60,898 drops
     #>               Plate type : custom_thresholds, ddpcr_plate
     #> Completed analysis steps : INITIALIZE
     #> Remaining analysis steps : REMOVE_OUTLIERS, CLASSIFY
@@ -654,14 +654,14 @@ Now the plate is ready and we can plot it or look at its results
 
     #>   well sample row col used drops drops_outlier drops_empty
     #> 1  B01   Dean   B   1 TRUE 17458             0       16801
-    #> 2  B06   Dave   B   6 TRUE 13655             0       12998
+    #> 2  B06   Dave   B   6 TRUE 13657             1       12998
     #> 3  C01   Mike   C   1 TRUE 15279             0       14019
-    #> 4  C06  Emily   C   6 TRUE 14513             2       14487
+    #> 4  C06  Emily   C   6 TRUE 14504             0       14487
     #>   drops_x_positive drops_y_positive drops_both_positive
     #> 1               20                3                 634
-    #> 2                5              156                 496
+    #> 2                5              157                 496
     #> 3               12               12                1236
-    #> 4                1                9                  14
+    #> 4                1                4                  12
 
     plot(plate_manual)
 
@@ -744,8 +744,8 @@ Now we can analyze the plate
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (0 seconds)
-    #> Classifying droplets... DONE (0 seconds)
+    #> Identifying empty droplets... DONE (1 seconds)
+    #> Classifying droplets... DONE (1 seconds)
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
     #> Analysis complete
 
@@ -774,13 +774,13 @@ Take a look at the results
 
     #>   well sample row col used drops success drops_outlier drops_empty
     #> 1  B01   Dean   B   1 TRUE 17458    TRUE             0       16691
-    #> 2  B06   Dave   B   6 TRUE 13655    TRUE             0       12925
+    #> 2  B06   Dave   B   6 TRUE 13657    TRUE             2       12925
     #> 3  C01   Mike   C   1 TRUE 15279    TRUE             0       13903
-    #> 4  C08   <NA>   C   8 TRUE 14801    TRUE             0       14023
-    #> 5  C06  Emily   C   6 TRUE 14513   FALSE             9          NA
+    #> 4  C08   Mary   C   8 TRUE 14801    TRUE             0       14023
+    #> 5  C06  Emily   C   6 TRUE 14504   FALSE             0          NA
     #>   drops_non_empty drops_empty_fraction concentration mutant_border
     #> 1             767                0.956            49          3551
-    #> 2             730                0.947            59          4090
+    #> 2             732                0.946            61          4090
     #> 3            1376                0.910           103          4424
     #> 4             778                0.947            59          3990
     #> 5              NA                   NA            NA            NA
