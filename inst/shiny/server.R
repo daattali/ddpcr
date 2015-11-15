@@ -77,4 +77,11 @@ shinyServer(function(input, output, session) {
   
   # hide the loading message
   hide("loading-content", TRUE, "fade")  
+  
+# TODO remove this , for testing purposes only
+# dataValues$plate <- new_plate(dir = sample_data_dir(),
+#                               type = plate_types$fam_positive_pnpp)
+# 
+# output$datasetChosen <- reactive({ TRUE })  
+# updateTabsetPanel(session, "mainNav", "settingsTab")
 })

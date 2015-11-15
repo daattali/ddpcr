@@ -11,7 +11,8 @@ hasSampleNames <- eventReactive(dataValues$plate, {
 # that aren't important enough to show by default
 metaColsHideIdx <- eventReactive(dataValues$plate, {
   meta <- dataValues$plate %>% plate_meta(only_used = TRUE)
-  colsHide <- c("row", "col", "used", "mutant_border", "filled_border")
+  colsHide <- c("row", "col", "used", "filled_border",
+                sprintf("%s_border", meta_var_name(dataValues$plate, "negative")))
   if (!hasSampleNames()) {
     colsHide <- c(colsHide, "sample")
   }
@@ -35,7 +36,40 @@ observeEvent(dataValues$plate, {
   show(selector = sprintf("[data-ddpcr-type~=%s]", dataValues$plate %>% type))
   if (type(dataValues$plate) == plate_types$custom_thresholds) {
     updateSelectInput(session, "plotParamDropShow-empty", selected = "TRUE")
-  }  
+  } else {
+    # update the wildtype/mutant text
+    updateCheckboxInput(
+      session, "plotParam_show_mutant_freq",
+      label = sprintf("Show %s frequency",
+                      meta_var_name(dataValues$plate, "negative"))) 
+    updateNumericInput(
+      session, "plotParam_text_size_mutant_freq",
+      label = sprintf("%s frequency text size",
+                      capitalize(meta_var_name(dataValues$plate, "negative"))))
+    updateCheckboxInput(
+      session, "plotParam_show_low_high_mut_freq",
+      label = sprintf("Different colours for wells with high vs low %s frequency",
+                      meta_var_name(dataValues$plate, "negative"))) 
+    updateSelectInput(
+      session, "plotParam_bg_mutant",
+      label = sprintf("%s wells colour",
+                      capitalize(meta_var_name(dataValues$plate, "negative"))))
+    updateSelectInput(
+      session, "plotParam_bg_wildtype",
+      label = sprintf("%s wells colour",
+                      capitalize(meta_var_name(dataValues$plate, "positive"))))
+    updateSelectInput(
+      session, "plotParam_alpha_bg_low_high_mut_freq",
+      label = sprintf("Transparency of %s/%s wells",
+                      meta_var_name(dataValues$plate, "negative"),
+                      meta_var_name(dataValues$plate, "positive")))
+    shinyjs::text("plotParamsDropRowLabel-negative",
+                  capitalize(sprintf("%s droplets",
+                          meta_var_name(dataValues$plate, "negative"))))
+    shinyjs::text("plotParamsDropRowLabel-positive",
+                  capitalize(sprintf("%s droplets",
+                          meta_var_name(dataValues$plate, "positive"))))
+  }
 })
 
 # Droplets data tab ----

@@ -45,7 +45,7 @@ reclassify_droplets.pnpp_experiment <- function(plate) {
         plate %>% wells_positive %>% length == 0) {
       msg(paste0("Reclassifying droplets... skipped (not enough",
                      " wells with significant ",
-                     params(plate, 'GENERAL', 'NEGATIVE_NAME'),
+                     negative_name(plate),
                      " clusters)"))
       status(plate) <- CURRENT_STEP
       return(plate)

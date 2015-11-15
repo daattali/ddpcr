@@ -10,6 +10,9 @@ observeEvent(dataValues$plate, {
   if (type(dataValues$plate) == plate_types$custom_thresholds) {
     updateTextInput(session, "settingsXThreshold", value = dataValues$plate %>% x_threshold)
     updateTextInput(session, "settingsYThreshold", value = dataValues$plate %>% y_threshold)
+  } else {
+    updateTextInput(session, "settingsPosName", value = positive_name(dataValues$plate))
+    updateTextInput(session, "settingsNegName", value = negative_name(dataValues$plate))
   }
   updateTextInput(session, "settingsSubset", value = "")
 })
@@ -19,7 +22,6 @@ observeEvent(dataValues$plate, {
 # update basic settings button is clicked
 observeEvent(input$updateBasicSettings, {
   withBusyIndicator("updateBasicSettings", {
-    
     # if a new plate type is chosen, need to reset the plate
     if (type(dataValues$plate) != input$settingsPlateType &&
         input$settingsPlateType != "") {
@@ -34,6 +36,9 @@ observeEvent(input$updateBasicSettings, {
     if (type(dataValues$plate) == plate_types$custom_thresholds) {
       x_threshold(dataValues$plate) <- input$settingsXThreshold
       y_threshold(dataValues$plate) <- input$settingsYThreshold
+    } else {
+      positive_name(dataValues$plate) <- input$settingsPosName
+      negative_name(dataValues$plate) <- input$settingsNegName
     }
   })
 })
@@ -163,6 +168,7 @@ observeEvent(dataValues$plate, {
             
             params_ignore <- c(
               "GENERAL::X_VAR", "GENERAL::Y_VAR",
+              "GENERAL::POSITIVE_NAME", "GENERAL::NEGATIVE_NAME",
               "CLASSIFY::X_THRESHOLD", "CLASSIFY::Y_THRESHOLD"
             )
             

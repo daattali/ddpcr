@@ -90,8 +90,8 @@ tabPanel(
                   ),
                   div(
                     `data-ddpcr-type` = paste(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp, collapse = " "),
-                    checkboxInput("plotParam_show_mutant_freq", "Show mutant frequency", TRUE),
-                    numericInput("plotParam_text_size_mutant_freq", "Mutant frequency text size", 4, 0, 100)
+                    checkboxInput("plotParam_show_mutant_freq", "set value in server/tab-results.R", TRUE),
+                    numericInput("plotParam_text_size_mutant_freq", "set value in server/tab-results.R", 4, 0, 100)
                   )
                 )
               )
@@ -128,7 +128,8 @@ tabPanel(
                     fixedRow(
                       column(
                         3,
-                        tags$label(strong(HTML(plotDropsParams[[x]]$name))),
+                        tags$label(strong(HTML(plotDropsParams[[x]]$name)),
+                                   id = sprintf("plotParamsDropRowLabel-%s", x)),
                         class = "plotParamDropName"
                       ),
                       column(
@@ -210,14 +211,14 @@ tabPanel(
                   div(
                     `data-ddpcr-type` = paste(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp, collapse = " "),
                     checkboxInput("plotParam_show_low_high_mut_freq",
-                                  "Different colours for wells with high vs low mutant frequency",
+                                  "set value in server/tab-results.R",
                                   TRUE),
-                    selectInput("plotParam_bg_mutant", "Mutant wells colour",
+                    selectInput("plotParam_bg_mutant", "set value in server/tab-results.R",
                                 allCols, "purple3"),
-                    selectInput("plotParam_bg_wildtype", "Wild type wells colour",
+                    selectInput("plotParam_bg_wildtype", "set value in server/tab-results.R",
                                 allCols, "green3"),
                     sliderInput("plotParam_alpha_bg_low_high_mut_freq",
-                                "Transparency of mutant/wild type wells",
+                                "set value in server/tab-results.R",
                                 0, 1, 0.1, 0.05, ticks = FALSE)
                   )
                 )

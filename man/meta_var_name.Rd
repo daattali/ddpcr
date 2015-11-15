@@ -14,7 +14,7 @@ then any variable in the metadata will be renamed to use these names.
 }
 \examples{
 plate <- new_plate(dir = sample_data_dir(), type = plate_types$pnpp_experiment)
-params(plate, 'GENERAL', 'NEGATIVE_NAME') <- "mutant"
+negative_name(plate) <- "mutant"
 meta_var_name(plate, 'num_negative_drops')
 }
 \seealso{

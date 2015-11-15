@@ -426,3 +426,11 @@ bind_df_ends <- function(df, cols, dir = 1) {
   
   df
 }
+
+#' Capitalize the first letter of a string
+#' @keywords internal
+#' @export
+capitalize <- function(x) {
+  paste(toupper(substring(x, 1, 1)), substring(x, 2),
+        sep = "", collapse = " ")
+}

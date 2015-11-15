@@ -63,14 +63,14 @@ plotDropsParams <- list(
     alpha = 0.1
   ),
   "positive" = list(
-    name = "Wild type droplets",
+    name = "set value in server/tab-results.R",
     type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp),
     show = TRUE,
     col = "green3",
     alpha = 0.1
   ),
   "negative" = list(
-    name = "Mutant droplets",
+    name = "set value in server/tab-results.R",
     type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp),
     show = TRUE,
     col = "purple3",

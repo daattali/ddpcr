@@ -296,13 +296,56 @@ wells_negative <- function(plate) {
 #' @seealso \code{\link[ddpcr]{pnpp_experiment}}
 #' @examples 
 #' plate <- new_plate(dir = sample_data_dir(), type = plate_types$pnpp_experiment)
-#' params(plate, 'GENERAL', 'NEGATIVE_NAME') <- "mutant"
+#' negative_name(plate) <- "mutant"
 #' meta_var_name(plate, 'num_negative_drops')
 #' @keywords internal
 #' @export
 meta_var_name <- function(plate, var) {
-  stopifnot(plate %>% inherits("pnpp_experiment"))
+  if(!inherits(plate, "pnpp_experiment")) {
+    return(var)
+  }
   var %>%
-    gsub("negative", params(plate, 'GENERAL', 'NEGATIVE_NAME'), .) %>%
-    gsub("positive", params(plate, 'GENERAL', 'POSITIVE_NAME'), .)
+    gsub("negative", negative_name(plate), .) %>%
+    gsub("positive", positive_name(plate), .)
+}
+
+#' Name identifier for positive and negative droplets
+#' @param plate A ddPCR plate.
+#' @param value The identifier to use for droplets in the positive/negative cluster.
+#' @seealso
+#' \code{\link[ddpcr]{pnpp_experiment}}
+#' @name positive_name
+NULL
+
+#' @rdname positive_name
+#' @export
+#' @keywords internal
+positive_name <- function(plate) {
+  stopifnot(plate %>% inherits("pnpp_experiment"))
+  params(plate, 'GENERAL', 'POSITIVE_NAME')
+}
+#' @rdname positive_name
+#' @export
+#' @keywords internal
+`positive_name<-` <- function(plate, value) {
+  stopifnot(plate %>% inherits("pnpp_experiment"))
+  value %<>% make.names
+  params(plate, 'GENERAL', 'POSITIVE_NAME') <- value
+  plate
+}
+#' @rdname positive_name
+#' @export
+#' @keywords internal
+negative_name <- function(plate) {
+  stopifnot(plate %>% inherits("pnpp_experiment"))
+  params(plate, 'GENERAL', 'NEGATIVE_NAME')
+}
+#' @rdname positive_name
+#' @export
+#' @keywords internal
+`negative_name<-` <- function(plate, value) {
+  stopifnot(plate %>% inherits("pnpp_experiment"))
+  value %<>% make.names
+  params(plate, 'GENERAL', 'NEGATIVE_NAME') <- value
+  plate
 }

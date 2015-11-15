@@ -73,7 +73,19 @@ tabPanel(
               numericInput("settingsYThreshold", "Y threshold", 5000, min = 0, step = 100)
             )
           )
-        )),
+        ),
+        conditionalPanel(
+          sprintf("input.settingsPlateType != '%s'", plate_types$custom_thresholds),
+          fixedRow(
+            column(6,
+              textInput("settingsPosName", "Identifier for double-positive droplets")
+            ),
+            column(6,
+              textInput("settingsNegName", "Identifier for singly-positive droplets")
+            )
+          )
+        )        
+        ),
         br(),
         withBusyIndicator(
           actionButton(
