@@ -75,7 +75,8 @@ read_files <- function(plate, data_files, meta_file) {
         wdat
       }) %>%
       dplyr::bind_rows() %>%
-      move_front("well")
+      move_front("well") %>%
+      dplyr::arrange_("well")
   },
   error = function(err) {
     err_msg("there was a problem reading one or more of the data files")

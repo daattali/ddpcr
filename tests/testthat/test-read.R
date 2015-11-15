@@ -200,7 +200,7 @@ test_that("read_files inconsistent data files, correct metadata file", {
     plate <- get_empty_plate() %>% read_files(data_files, meta_file)
   )
   expect_equal(name(plate), "test")
-  expect_equal(plate_data(plate) %>% as.data.frame,
+  expect_equal(plate_data(plate),
                expected_data)
   expect_that(plate_meta(plate), not(is_null()))
 })
