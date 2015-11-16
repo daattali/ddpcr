@@ -131,3 +131,48 @@ test_that("named_vec_to_df works", {
     magrittr::set_rownames(c("a", "b", "c"))
   expect_identical(actual, expected)
 })
+
+test_that("capitalize works", {
+  expect_identical(capitalize("one two"), "One two")
+  expect_identical(capitalize("3one two"), "3one two")
+})
+
+test_that("get_single_well works", {
+  file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
+  plate <- load_plate(file)
+  
+  expect_identical(
+    get_single_well(plate, "B06"),
+    plate_data(plate) %>%
+      dplyr::filter(well == "B06") %>%
+      dplyr::filter(cluster > cluster(plate, "EMPTY")) %>%
+      dplyr::select(-well, -cluster)
+  )
+  expect_identical(
+    get_single_well(plate, "B06"),
+    plate_data(plate) %>%
+      dplyr::filter(well == "B06") %>%
+      dplyr::filter(cluster > cluster(plate, "EMPTY")) %>%
+      dplyr::select(-well, -cluster)
+  )
+  expect_identical(
+    get_single_well(plate, "B06", clusters = TRUE),
+    plate_data(plate) %>%
+      dplyr::filter(well == "B06") %>%
+      dplyr::filter(cluster > cluster(plate, "EMPTY")) %>%
+      dplyr::select(-well)
+  )  
+  expect_identical(
+    get_single_well(plate, "B06", empty = TRUE, clusters = TRUE),
+    plate_data(plate) %>%
+      dplyr::filter(well == "B06") %>%
+      dplyr::filter(cluster > cluster(plate, "OUTLIER")) %>%
+      dplyr::select(-well)
+  )  
+  expect_identical(
+    get_single_well(plate, "B06", empty = TRUE, outliers = TRUE, clusters = TRUE),
+    plate_data(plate) %>%
+      dplyr::filter(well == "B06") %>%
+      dplyr::select(-well)
+  )  
+})
