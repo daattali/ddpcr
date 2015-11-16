@@ -25,25 +25,99 @@ The initial droplet data is a list of *n* matrices, where *n* is the number of w
 
 The first step is to identify any wells that clearly failed the ddPCR run by checking four quality control metrics.
 
-(1) The total number of droplets in a well must exceed a specific threshold value (`params(plate, 'REMOVE_FAILURES', 'TOTAL_DROPS_T')`, default is 5000). BioRad claims that wells should have 20,000 droplets, but in practice we usually see between 12,000-17,000 droplets per well, and any well with too few droplets is considered a failure.
+The first check is to ensure the total number of droplets in a well must exceed a specific threshold value (`params(plate, 'REMOVE_FAILURES', 'TOTAL_DROPS_T')`, default is 5000). BioRad claims that wells should have 20,000 droplets, but in practice we usually see between 12,000-17,000 droplets per well, and any well with too few droplets is considered a failure.
 
-The other three metrics evaluate the expected droplet clusters (empty, mutant, wildtype) and their quality by fitting a two-component Gaussian mixture model to the FAM signals of all droplets. Each of the two components is defined with a mean (*center*) and a standard deviation (*sd*). In a typical well, the distribution with the lower center will capture the empty droplets, while the higher distribution models the FAM+ (or template-containing) droplets. Every well is expected to have mostly empty droplets, so (2) acceptable segregation of empty droplets from the FAM+ cluster is assessed by measuring the difference between the centers of the two distributions. (3) The droplet density within the lower (empty) population is evaluated to ensure it the fraction of droplets is above a certain threshold (`params(plate, 'REMOVE_FAILURES', 'EMPTY_LAMBDA_LOW_T')`, default is 0.3), as failure to meet this criterion indicates a lack of a defined empty cluster. (4) Similarly, the droplet density must also be below a certain fraction (`params(plate, 'REMOVE_FAILURES', 'EMPTY_LAMBDA_HIGH_T')`, default is 0.99), as having too many empty droplets is a sign that there are not enough amplifiable template in the well.
+The other three metrics evaluate the expected droplet clusters (empty, mutant, wildtype) and their quality by fitting a two-component Gaussian mixture model to the FAM signals of all droplets. Each of the two components is defined with a mean (*center*) and a standard deviation (*sd*). In a typical well, the distribution with the lower center will capture the empty droplets, while the higher distribution models the FAM+ (or template-containing) droplets. Every well is expected to have mostly empty droplets, so the second metric involves looking for acceptable segregation of empty droplets from the FAM+ cluster by measuring the difference between the centers of the two distributions. The third metric evaluates the droplet density within the lower (empty) population to ensure the fraction of empty droplets is above a certain threshold (`params(plate, 'REMOVE_FAILURES', 'EMPTY_LAMBDA_LOW_T')`, default is 0.3). Failure to meet this criterion indicates a lack of a defined empty cluster. Similarly, the fourth quality control check ensures the droplet density must also be below a certain fraction (`params(plate, 'REMOVE_FAILURES', 'EMPTY_LAMBDA_HIGH_T')`, default is 0.99), as having too many empty droplets is a sign that there is not enough amplifiable template in the well.
 
-Any well that does not meet all four critera is deemd a failed run, and such wells are removed from further analysis.
+Any well that does not meet all four criteria is deemd a failed run, and such wells are removed from further analysis.
 
 ## Step 2: Identify outlier droplets
 
 While the FAM and HEX signal intensities have a lower bound of 0, there is no upper bound on the value the ddPCR reader may read. As a result, it is possible to observe a small number of droplets with abnormally large HEX or FAM values, which can be considered outlier droplets.  A common method for detecting outliers in normal distributions is to calculate the first quartile (*Q1*), third quartile (*Q3*), and interquartile range (*IQR*, defined as *Q3 - Q1*), and define any observations that fall outside the range of [_Q1 - 1.5*IQR_, _Q3 + 1.5*IQR_] as outliers.
 
-If ddPCR data was normal and this method could be used, only the upper bound of _Q3 + 1.5*IQR_ would be used to define outliers, as there are no outliers on the lower end of the distribution because most values are close to the minimum value of 0.  However, ddPCR data is extremely skewed and non-normal, so the common outlier detection approach will not work. Instead, a small tweak can be made to make it applicable to ddPCR data. For each signal dimension (FAM and HEX) we identify the top *p* percent (*p* = `params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT')`, default is 1%) of droplets having the highest signal value in that dimension out of droplets in the entire plate. An outlier threshold is then defined as _Q3 + k*IQR_ (*k* = `params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT')`, default is 5) of this subset of droplets, and any droplets that have a signal value larger than this threshold are considered outliers. Essentially, this is a variation on the common outlier detection method but the outlier threshold is calculated using only a fraction of the droplets.
+If ddPCR data was normally distributed and this method could be used, only the upper bound of _Q3 + 1.5*IQR_ would be used to define outliers, as there are no outliers on the lower end of the distribution because most values are close to the minimum value of 0.  However, ddPCR data is extremely skewed and non-normal, so the common outlier detection approach will not work. Instead, a small tweak can be made to make it applicable to ddPCR data. For each signal dimension (FAM and HEX) we identify the top *p* percent (*p* = `params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT')`, default is 1%) of droplets having the highest signal value in that dimension out of droplets in the entire plate. An outlier threshold is then defined as _Q3 + k*IQR_ (*k* = `params(plate, 'REMOVE_OUTLIERS', 'CUTOFF_IQR')`, default is 5) of this subset of droplets, and any droplets that have a signal value larger than this threshold are considered outliers. This is essentially a variation of the common outlier detection method but the outlier threshold is calculated using only a fraction of the droplets.
 
-Any droplet in any well that has a FAM value exceeding the FAM outlier threshold or a HEX value exceeding the HEX outlier threshold is considered an outlier droplet, and removed from further analysis.
+Any droplet in any well that has a FAM value exceeding the FAM outlier threshold or a HEX value exceeding the HEX outlier threshold is considered an outlier droplet, and removed from further analysis. The figure below shows a summary of this method.
+
+
+```{r outliers-img, echo=FALSE, warning=FALSE, include=FALSE, message=FALSE, cache=TRUE}
+dir.create("algorithm_img", showWarnings = FALSE)
+
+library(ggplot2)
+library(grid)
+library(gridExtra)
+library(ddpcr)
+plate <- new_plate(sample_data_dir()) %>% subset("b6") %>%
+  `plate_data<-`(plate_data(.) %>% dplyr::filter(FAM < 11000))
+full <- plate_data(plate)
+ndrops <- nrow(full)
+top1 <- full %>% dplyr::arrange(desc(HEX)) %>% head(ndrops/100)
+p <- ggplot(full, aes(HEX, FAM)) +
+  geom_point(alpha = 0.2, size = 2) + theme_classic(15)
+line <- quantile(full$HEX, .75) + 5*IQR(full$HEX)
+pline <- p + geom_vline(xintercept = line, linetype = 2)
+p1 <- pline
+p2 <- ggplot(full, aes(HEX, FAM)) +
+  geom_point(colour = "white") + theme_classic(15) +
+  geom_point(data = top1, alpha = 0.3, size = 2)
+line <- quantile(top1$HEX, .75) + 5*IQR(top1$HEX)
+p2 <- p2 + geom_vline(xintercept = line, linetype = 2)
+p3 <- p + geom_vline(xintercept = line, linetype = 2) +
+  geom_point(data = top1 %>% dplyr::filter(HEX > 10000),
+             alpha = 0.7, size = 2, colour = "red")
+p1 <- arrangeGrob(p1, top = textGrob("A", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
+p2 <- arrangeGrob(p2, top = textGrob("B", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
+p3 <- arrangeGrob(p3, top = textGrob("C", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
+png("algorithm_img/outliers.png", width = 1000, height = 300)
+grid.arrange(p1, p2, p3, ncol = 3)
+dev.off()
+```
+
+[![Remove outliers](algorithm_img/outliers.png)](algorithm_img/outliers.png)
+
+Plot A shows a well with a clear outlier on the far right. The dotted line shows the HEX value that corresponds to _Q3 + 5*IQR_ of all HEX values, which is clearly a poor threshold for determinig outliers. Plot B shows only the 1% of droplets with the highest HEX value, while the dotted line shows the value of _Q3 + 5*IQR_ of the HEX values of only those droplets. Plot C shows the full well data and the outlier threshold calculated using the top 1% of the droplets. Using this threshold, the lone outlier point at the extreme HEX value (marked in red) is identified as an outlier.
 
 ## Step 3: Identify empty droplets
 
 Droplets with very low fluorescent signal are considered empty and are removed from any downstream analysis. These droplets do not contain any amplifiable template and make up the majority of droplets in a typical well. The removal of empty droplets is beneficial for two reasons. First, it greatly reduces the dimension of the data, which consequently allows for faster computations on the remaining droplets. Secondly, removing the major cluster of empty droplets also serves to eliminate any bias in a statistic model that would be otherwise dominated by the large number of empty droplets. While a large portion of the droplets is discarded, no useful information is lost as all the template-containing droplets are retained.
 
-Empty droplets are identified in each well separately. First, a two-component Gaussian mixture model is fitted to the FAM signals of all droplets in a well. Only the FAM signal is used because all empty droplets emit no FAM signal while all template-containing droplets will surely emit FAM signal. Note that the same argument cannot be applied to the HEX signal because both empty droplets and mutant droplets are HEX-, so FAM can be used as a discriminant for empty dropletw while HEX cannot. The Gaussian distribution with the lower mean is assumed to be modelling the empty droplets, and it will likely have a fairly small standard deviation (*sd*) as the empty droplets are densely clustered. A FAM threshold for empty droplets is then calculated using the assumption that the FAM value of empty droplets can be roughly modeled by a normal distribution. Specifically, a threshold is defined as _mean + k*sd_ (*k* = `params(plate, 'REMOVE_EMPTY', 'CUTOFF_SD')`, default is 7) of the lower (empty) distribution. Any droplets in the well with a FAM value lower than the threshold are deemed empty.
+Empty droplets are identified in each well separately. First, a two-component Gaussian mixture model is fitted to the FAM signals of all droplets in a well. Only the FAM signal is used because all empty droplets emit no FAM signal while all template-containing droplets will surely emit FAM signal. Note that the same argument cannot be applied to the HEX signal because both empty droplets and mutant droplets are HEX-, so FAM can be used as a discriminant for empty droplets while HEX cannot. The Gaussian distribution with the lower mean is assumed to be modelling the empty droplets, and it will likely have a fairly small standard deviation (*sd*) as the empty droplets are densely clustered. A FAM threshold for empty droplets is then calculated under the assumption that the FAM value of empty droplets can be roughly modeled by a normal distribution. Specifically, a threshold is defined as _mean + k*sd_ (*k* = `params(plate, 'REMOVE_EMPTY', 'CUTOFF_SD')`, default is 7) of the lower (empty) distribution.
+
+Any droplets in the well with a FAM value lower than the threshold are deemed empty and not considered in further analysis. The figure below shows a summary of this step.
+
+
+```{r empty-img, echo=FALSE, warning=FALSE, include=FALSE, message=FALSE, cache=TRUE}
+library(ggplot2)
+library(ddpcr)
+library(grid)
+library(gridExtra)
+plate <- new_plate(sample_data_dir()) %>% subset("b6") %>%
+  `plate_data<-`(plate_data(.) %>%dplyr::filter(FAM < 11000, HEX < 10000))
+full <- plate_data(plate)
+quiet( mixmdl <- mixtools::normalmixEM(full$FAM, k = 2) )
+smaller_comp <- mixmdl$mu %>% which.min
+cutoff <- mixmdl$mu[smaller_comp] + params(plate, 'REMOVE_EMPTY', 'CUTOFF_SD') * mixmdl$sigma[smaller_comp]
+p <- ggplot(full, aes(HEX, FAM)) +
+  geom_point(alpha = 0.2, size = 2) + theme_classic(15)
+pline <- p + geom_hline(yintercept = mixmdl$mu) +
+  geom_hline(yintercept = cutoff, linetype = 2)
+p1 <- ggExtra::ggMarginal(pline, margins = "y")
+p2 <- ggplot(full %>% dplyr::filter(FAM > cutoff), aes(HEX, FAM)) +
+  geom_point(alpha = 0.2, size = 2) + theme_classic(15) +
+  geom_hline(yintercept = cutoff, linetype = 2) +
+  geom_point(data = full %>% dplyr::filter(FAM < cutoff),
+             colour = "red", alpha=0.2, size = 2)
+p1 <- arrangeGrob(p1, top = textGrob("A", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
+p2 <- arrangeGrob(p2, top = textGrob("B", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
+png("algorithm_img/empty.png", width = 700, height = 300)
+grid.arrange(p1, p2, ncol = 2)
+dev.off()
+```
+
+[![Remove empty](algorithm_img/empty.png)](algorithm_img/empty.png)
+
+Plot A shows a well and a marginal density plot of the FAM values of its droplets. The solid lines are the means of the two Gaussian distributions fitted to the FAM values, while the dotted line is the _mean + 7*sd_ of the lower one. Plot B shows that using the _mean + 7*sd_ value is a fairly accurate threshold for the empty droplets (marked in red).
+
 
 ## Step 4: Gate droplets
 
