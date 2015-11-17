@@ -87,11 +87,11 @@ While this tool was originally developed to automatically gate data for a partic
 
 In other words, the built-in automatic gating will work when there are three clusters of droplets: (1) double-negative, (2) double-positive, and (3) either FAM+ or HEX+. These types of experiments will be referred to as **(FAM+)/(FAM+HEX+)** or  **(HEX+)/(FAM+HEX+)**. Both of these experiment types fall under the name of **PNPP experiments**; PNPP is short for PositiveNegative/PositivePositive, which is a reflection of the droplet clusters. Here is what a typical well from a PNPP experiment looks like:
 
-[![Supported experiment types](../inst/img/supported-exp-types.png)](../inst/img/supported-exp-types.png)
+[![Supported experiment types](../inst/vignettes-supp/supported-exp-types.png)](../inst/vignettes-supp/supported-exp-types.png)
 
 If your experiment matches the criteria for a **PNPP** experiment (either a **(FAM+)/(FAM+HEX+)** or a **(HEX+)/(FAM+HEX+)** experiment), then after calculating empty droplets the program will analyze the rest of the droplets and assign each droplet one of the following three clustes: FAM+ (or HEX+), FAM+HEX+, or rain. Here is the result of analyzing a single well from a **(FAM+)/(FAM+HEX+)** experiment:
 
-[![Analyze result](../inst/img/pnpp-simple-result.png)](../inst/img/pnpp-simple-result.png)
+[![Analyze result](../inst/vignettes-supp/pnpp-simple-result.png)](../inst/vignettes-supp/pnpp-simple-result.png)
 
 If your ddPCR experiment is not a **PNPP** type, you can still use this tool for the rest of the analysis, exploration, and plotting, but it will not benefit from the automatic gating. However, `ddpcr` is built to be easily extensible, which means that you can add your own experiment type. Custom experiment types need to define their own method for gating the droplets in a well, and then they can be used in the same way as the built-in experiment types.
 
@@ -223,7 +223,7 @@ The `only_used` parameter is used so that we'll only get data about the 5 existi
 If you aren't interested in all the wells, you can use the `subset()` function to retain only certain wells. Alternatively, you can use the `data_files` argument of the `new_plate()` function to only load certain well files instead of a full directory.  
 The `subset()` function can take accept either a list of sample names, a list of wells, or a special *range notation*. The range notation is a convenient way to select many wells: use a colon (`:`) to specify a range of wells and a comma (`,`) to add another well or range. A range of wells is defined as all wells in the rectangular area between the two endpoints. For example, `B05:C06` corresponds to the four wells `B05, B06, C05, C06`.  The following diagram shows the result of subsetting with a range notation of `A01:H03, C05, E06, B07:C08` on a plate that initially contains all 96 wells.  
 
-[![Subset example](../inst/img/ex-subset.png)](../inst/img/ex-subset.png)
+[![Subset example](../inst/vignettes-supp/ex-subset.png)](../inst/vignettes-supp/ex-subset.png)
 
 Back to our data: we have 5 wells, let's keep 4 of them
 

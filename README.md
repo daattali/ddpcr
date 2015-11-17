@@ -92,17 +92,17 @@ The main features include:
 
 -   **Identify failed wells** - determining which wells in the plate
     seemed to have failed the ddPCR experiment, and thus these wells
-    will be excluded from all downstream analysis. No template
-    control (NTC) will be deemed as failures by this tool.
+    will be excluded from all downstream analysis. No template control
+    (NTC) will be deemed as failures by this tool.
 -   **Identify outlier droplets** - sometimes a few droplets can have an
     extremely high fluorescent intensity value that is probably
-    erroneous, perhaps as a result of an error with the
-    fluorescent reader. These droplets are identified and removed from
-    the downstream analysis.
+    erroneous, perhaps as a result of an error with the fluorescent
+    reader. These droplets are identified and removed from the
+    downstream analysis.
 -   **Identify empty droplets** - droplets with very low fluorescent
-    emissions are considered empty and are removed from the
-    downstream analysis. Removing these droplets is beneficial for two
-    reasons: 1. the size of the data is greatly reduced, which means the
+    emissions are considered empty and are removed from the downstream
+    analysis. Removing these droplets is beneficial for two reasons: 1.
+    the size of the data is greatly reduced, which means the
     computations will be faster on the remaining droplets, and 2. the
     real signal of interest is in the non-empty droplets, and empty
     droplets can be regarded as noise.
@@ -114,8 +114,8 @@ The main features include:
     can gate the data with custom thresholds just like on QuantaSoft.
 -   **Explore results** - the results from each well (\# of drops, \# of
     outliers, \# of empty drops, concentration, etc.) can be explored as
-    a histogram or boxplot to see the distribution of all wells in
-    the plate.
+    a histogram or boxplot to see the distribution of all wells in the
+    plate.
 -   **Plot** - you can plot the data in the plate with many customizable
     parameters
 
@@ -143,7 +143,7 @@ the droplet clusters. Here is what a typical well from a PNPP experiment
 looks like:
 
 [![Supported experiment
-types](inst/img/supported-exp-types.png)](inst/img/supported-exp-types.png)
+types](inst/vignettes-supp/supported-exp-types.png)](inst/vignettes-supp/supported-exp-types.png)
 
 If your experiment matches the criteria for a **PNPP** experiment
 (either a **(FAM+)/(FAM+HEX+)** or a **(HEX+)/(FAM+HEX+)** experiment),
@@ -153,7 +153,7 @@ clustes: FAM+ (or HEX+), FAM+HEX+, or rain. Here is the result of
 analyzing a single well from a **(FAM+)/(FAM+HEX+)** experiment:
 
 [![Analyze
-result](inst/img/pnpp-simple-result.png)](inst/img/pnpp-simple-result.png)
+result](inst/vignettes-supp/pnpp-simple-result.png)](inst/vignettes-supp/pnpp-simple-result.png)
 
 If your ddPCR experiment is not a **PNPP** type, you can still use this
 tool for the rest of the analysis, exploration, and plotting, but it
@@ -249,8 +249,8 @@ QuantaSoft, then QuantaSoft will export the following files:
     well A01 will be saved in *2015-05-20\_mouse\_A01\_Aamplitude.csv*
 -   1 results file: a small file named *2015-05-20\_mouse.csv* will be
     generated with some information about the plate, including the name
-    of the sample in each well (assuming you named the
-    samples previously)
+    of the sample in each well (assuming you named the samples
+    previously)
 
 The well files are the only required input to `ddpcr`, and since ddPCR
 plates contain 96 wells, you can upload anywhere from 1 to 96 well
@@ -393,7 +393,7 @@ subsetting with a range notation of `A01:H03, C05, E06, B07:C08` on a
 plate that initially contains all 96 wells.
 
 [![Subset
-example](inst/img/ex-subset.png)](inst/img/ex-subset.png)
+example](inst/vignettes-supp/ex-subset.png)](inst/vignettes-supp/ex-subset.png)
 
 Back to our data: we have 5 wells, let's keep 4 of them
 
@@ -744,7 +744,7 @@ Now we can analyze the plate
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (0 seconds)
+    #> Identifying empty droplets... DONE (1 seconds)
     #> Classifying droplets... DONE (0 seconds)
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
     #> Analysis complete

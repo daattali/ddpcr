@@ -68,9 +68,9 @@ p3 <- p + geom_vline(xintercept = line, linetype = 2) +
 p1 <- arrangeGrob(p1, top = textGrob("A", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
 p2 <- arrangeGrob(p2, top = textGrob("B", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
 p3 <- arrangeGrob(p3, top = textGrob("C", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
-png("algorithm_img/outliers.png", width = 1000, height = 300)
+#png("algorithm_img/outliers.png", width = 1000, height = 300)
 grid.arrange(p1, p2, p3, ncol = 3)
-dev.off()
+#dev.off()
 ```
 
 [![Remove outliers](algorithm_img/outliers.png)](algorithm_img/outliers.png)
@@ -109,9 +109,9 @@ p2 <- ggplot(full %>% dplyr::filter(FAM > cutoff), aes(HEX, FAM)) +
              colour = "red", alpha=0.2, size = 2)
 p1 <- arrangeGrob(p1, top = textGrob("A", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
 p2 <- arrangeGrob(p2, top = textGrob("B", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
-png("algorithm_img/empty.png", width = 700, height = 300)
+#png("algorithm_img/empty.png", width = 700, height = 300)
 grid.arrange(p1, p2, ncol = 2)
-dev.off()
+#dev.off()
 ```
 
 [![Remove empty](algorithm_img/empty.png)](algorithm_img/empty.png)
