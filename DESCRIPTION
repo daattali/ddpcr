@@ -24,6 +24,7 @@ Imports:
     shiny (>= 0.11.0)
 Suggests:
     DT (>= 0.1),
+    ggExtra (>= 0.3.0),
     grid (>= 3.2.2),
     gridExtra (>= 2.0.0),
     knitr (>= 1.7),

@@ -39,41 +39,7 @@ If ddPCR data was normally distributed and this method could be used, only the u
 
 Any droplet in any well that has a FAM value exceeding the FAM outlier threshold or a HEX value exceeding the HEX outlier threshold is considered an outlier droplet, and removed from further analysis. The figure below shows a summary of this method.
 
-
-```{r outliers-img, echo=FALSE, warning=FALSE, include=FALSE, message=FALSE, cache=TRUE}
-dir.create("algorithm_img", showWarnings = FALSE)
-
-library(ggplot2)
-library(grid)
-library(gridExtra)
-library(ddpcr)
-plate <- new_plate(sample_data_dir()) %>% subset("b6") %>%
-  `plate_data<-`(plate_data(.) %>% dplyr::filter(FAM < 11000))
-full <- plate_data(plate)
-ndrops <- nrow(full)
-top1 <- full %>% dplyr::arrange(desc(HEX)) %>% head(ndrops/100)
-p <- ggplot(full, aes(HEX, FAM)) +
-  geom_point(alpha = 0.2, size = 2) + theme_classic(15)
-line <- quantile(full$HEX, .75) + 5*IQR(full$HEX)
-pline <- p + geom_vline(xintercept = line, linetype = 2)
-p1 <- pline
-p2 <- ggplot(full, aes(HEX, FAM)) +
-  geom_point(colour = "white") + theme_classic(15) +
-  geom_point(data = top1, alpha = 0.3, size = 2)
-line <- quantile(top1$HEX, .75) + 5*IQR(top1$HEX)
-p2 <- p2 + geom_vline(xintercept = line, linetype = 2)
-p3 <- p + geom_vline(xintercept = line, linetype = 2) +
-  geom_point(data = top1 %>% dplyr::filter(HEX > 10000),
-             alpha = 0.7, size = 2, colour = "red")
-p1 <- arrangeGrob(p1, top = textGrob("A", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
-p2 <- arrangeGrob(p2, top = textGrob("B", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
-p3 <- arrangeGrob(p3, top = textGrob("C", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
-#png("algorithm_img/outliers.png", width = 1000, height = 300)
-grid.arrange(p1, p2, p3, ncol = 3)
-#dev.off()
-```
-
-[![Remove outliers](algorithm_img/outliers.png)](algorithm_img/outliers.png)
+[![Remove outliers](../inst/vignettes-supp/outliers.png)](../inst/vignettes-supp/outliers.png)
 
 Plot A shows a well with a clear outlier on the far right. The dotted line shows the HEX value that corresponds to _Q3 + 5*IQR_ of all HEX values, which is clearly a poor threshold for determinig outliers. Plot B shows only the 1% of droplets with the highest HEX value, while the dotted line shows the value of _Q3 + 5*IQR_ of the HEX values of only those droplets. Plot C shows the full well data and the outlier threshold calculated using the top 1% of the droplets. Using this threshold, the lone outlier point at the extreme HEX value (marked in red) is identified as an outlier.
 
@@ -85,36 +51,7 @@ Empty droplets are identified in each well separately. First, a two-component Ga
 
 Any droplets in the well with a FAM value lower than the threshold are deemed empty and not considered in further analysis. The figure below shows a summary of this step.
 
-
-```{r empty-img, echo=FALSE, warning=FALSE, include=FALSE, message=FALSE, cache=TRUE}
-library(ggplot2)
-library(ddpcr)
-library(grid)
-library(gridExtra)
-plate <- new_plate(sample_data_dir()) %>% subset("b6") %>%
-  `plate_data<-`(plate_data(.) %>%dplyr::filter(FAM < 11000, HEX < 10000))
-full <- plate_data(plate)
-quiet( mixmdl <- mixtools::normalmixEM(full$FAM, k = 2) )
-smaller_comp <- mixmdl$mu %>% which.min
-cutoff <- mixmdl$mu[smaller_comp] + params(plate, 'REMOVE_EMPTY', 'CUTOFF_SD') * mixmdl$sigma[smaller_comp]
-p <- ggplot(full, aes(HEX, FAM)) +
-  geom_point(alpha = 0.2, size = 2) + theme_classic(15)
-pline <- p + geom_hline(yintercept = mixmdl$mu) +
-  geom_hline(yintercept = cutoff, linetype = 2)
-p1 <- ggExtra::ggMarginal(pline, margins = "y")
-p2 <- ggplot(full %>% dplyr::filter(FAM > cutoff), aes(HEX, FAM)) +
-  geom_point(alpha = 0.2, size = 2) + theme_classic(15) +
-  geom_hline(yintercept = cutoff, linetype = 2) +
-  geom_point(data = full %>% dplyr::filter(FAM < cutoff),
-             colour = "red", alpha=0.2, size = 2)
-p1 <- arrangeGrob(p1, top = textGrob("A", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
-p2 <- arrangeGrob(p2, top = textGrob("B", x = unit(0, "npc"), y = unit(1, "npc"), just=c("left","top"), gp=gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")))
-#png("algorithm_img/empty.png", width = 700, height = 300)
-grid.arrange(p1, p2, ncol = 2)
-#dev.off()
-```
-
-[![Remove empty](algorithm_img/empty.png)](algorithm_img/empty.png)
+[![Remove empty](../inst/vignettes-supp/empty.png)](../inst/vignettes-supp/empty.png)
 
 Plot A shows a well and a marginal density plot of the FAM values of its droplets. The solid lines are the means of the two Gaussian distributions fitted to the FAM values, while the dotted line is the _mean + 7*sd_ of the lower one. Plot B shows that using the _mean + 7*sd_ value is a fairly accurate threshold for the empty droplets (marked in red).
 
