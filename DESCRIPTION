@@ -11,9 +11,9 @@ Description: An interface to explore, analyze, and visualize droplet digital PCR
     using R.
 URL: https://github.com/daattali/ddpcr
 BugReports: https://github.com/daattali/ddpcr/issues
-Depends:
+Depends: 
     R (>= 3.1.0)
-Imports:
+Imports: 
     dplyr (>= 0.4.0),
     ggplot2 (>= 1.0.1.9003),
     lazyeval (>= 0.1.10),
@@ -22,14 +22,15 @@ Imports:
     plyr (>= 1.8.1),
     readr (>= 0.1.0),
     shiny (>= 0.11.0)
-Suggests:
+Suggests: 
     DT (>= 0.1),
     ggExtra (>= 0.3.0),
     grid (>= 3.2.2),
     gridExtra (>= 2.0.0),
     knitr (>= 1.7),
     testthat (>= 0.9.1),
-    shinyjs (>= 0.2.0)
+    shinyjs (>= 0.2.0),
+    rmarkdown
 License: file LICENSE
 LazyData: true
 VignetteBuilder: knitr
