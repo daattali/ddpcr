@@ -1,7 +1,12 @@
 #!usr/bin/make -f
 # All commands are run as R functions rather than shell commands so that it will work easily on any Windows machine, even if the Windows machine isn't properly set up with all the right tools
 
-all: README.md inst/vignettes-supp/empty.png inst/vignettes-supp/outliers.png inst/vignettes-supp/gating.png
+figures = \
+	inst/vignettes-supp/empty.png \
+	inst/vignettes-supp/outliers.png \
+	inst/vignettes-supp/gating.png
+
+all: README.md $(figures)
 
 clean:
 	Rscript -e 'suppressWarnings(file.remove("README.md", "vignettes/overview.md"))'
@@ -25,6 +30,6 @@ README.md : vignettes/overview.Rmd
 	Rscript -e 'file.copy("vignettes/overview.md", "README.md", overwrite = TRUE)'
 	Rscript -e 'suppressWarnings(file.remove("vignettes/overview.md"))'
 	
-inst/vignettes-supp/empty.png inst/vignettes-supp/outliers.png inst/vignettes-supp/gating.png : inst/vignettes-supp/algorithms-imgs.R
+$(figures) : inst/vignettes-supp/algorithms-imgs.R
 #	echo "Creating images for algorithms vignette"
 	Rscript $<
