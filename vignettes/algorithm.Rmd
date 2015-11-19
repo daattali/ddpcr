@@ -19,7 +19,7 @@ The algorithm described below consists of five main steps that are used to analy
 
 Plates with (HEX+)/(FAM+HEX+) clusters use a very similar algorithm but HEX and FAM are swapped in every step. Plates that are neither (FAM+)/(FAM+HEX+) nor (HEX+)/(FAM+HEX+) only benefit from the first three steps of the pipeline (droplet gating is not performed). 
 
-The initial droplet data is a list of *n* matrices, where *n* is the number of wells. Each matrix contains has two clumns and *m_i* rows, where *m_i* is the number of droplets in the *i*-th well. Each row represents a single droplet in a well and the two columns are the measured values of HEX and FAM fluorescence intensity. 
+The initial droplet data is a list of *n* matrices, where *n* is the number of wells. Each matrix contains has two clumns and *m_i* rows, where *m_i* is the number of droplets in the *i*-th well. Each row represents a single droplet in a well and the two columns are the measured values of HEX and FAM fluorescennt amplitude. 
 
 ## Step 1: Identify failed wells
 
@@ -45,7 +45,7 @@ Plot A shows a well with a clear outlier on the far right. The dotted line shows
 
 ## Step 3: Identify empty droplets
 
-Droplets with very low fluorescent signal are considered empty and are removed from any downstream analysis. These droplets do not contain any amplifiable template and make up the majority of droplets in a typical well. The removal of empty droplets is beneficial for two reasons. First, it greatly reduces the dimension of the data, which consequently allows for faster computations on the remaining droplets. Secondly, removing the major cluster of empty droplets also serves to eliminate any bias in a statistic model that would be otherwise dominated by the large number of empty droplets. While a large portion of the droplets is discarded, no useful information is lost as all the template-containing droplets are retained.
+Droplets with very low fluorescent signal in both channels are considered empty and are removed from any downstream analysis. These droplets do not contain any amplifiable template and make up the majority of droplets in a typical well. The removal of empty droplets is beneficial for two reasons. First, it greatly reduces the dimension of the data, which consequently allows for faster computations on the remaining droplets. Secondly, removing the major cluster of empty droplets also serves to eliminate any bias in a statistic model that would be otherwise dominated by the large number of empty droplets. While a large portion of the droplets is discarded, no useful information is lost as all the template-containing droplets are retained.
 
 Empty droplets are identified in each well separately. First, a two-component Gaussian mixture model is fitted to the FAM signals of all droplets in a well. Only the FAM signal is used because all empty droplets emit no FAM signal while all template-containing droplets will surely emit FAM signal. Note that the same argument cannot be applied to the HEX signal because both empty droplets and mutant droplets are HEX-, so FAM can be used as a discriminant for empty droplets while HEX cannot. The Gaussian distribution with the lower mean is assumed to be modelling the empty droplets, and it will likely have a fairly small standard deviation (*sd*) as the empty droplets are densely clustered. A FAM threshold for empty droplets is then calculated under the assumption that the FAM value of empty droplets can be roughly modeled by a normal distribution. Specifically, a threshold is defined as _mean + k\*sd_ (*k* = `params(plate, 'REMOVE_EMPTY', 'CUTOFF_SD')`, default is 7) of the lower (empty) distribution.
 
@@ -58,7 +58,7 @@ Plot A shows a well and a marginal density plot of the FAM values of its droplet
 
 ## Step 4: Gate droplets
 
-The main step of the pipeline is to gate the remaining droplets automatically and classify each droplet as either *mutant*, *wildtype*, or *rain*. Rain droplets are droplets that are not empty, yet the ddPCR reader did not detect enough fluorescence emitted from them, which could be caused by poor quality DNA. Droplets that do have enough high quality template are defined as *filled* droplets; every filled droplet contains either a mutant or wildtype template and can therefore be classified as either mutant or wildtype.
+The main step of the pipeline is to gate the remaining droplets automatically and classify each droplet as either *mutant*, *wildtype*, or *rain*. Rain droplets are droplets that are not empty, yet the ddPCR reader did not detect enough fluorescence emitted from them. The exact cause of rain droplets is not yet clear, but they are normally omitted from analysis due to their ambiguity. Droplets that do have contain high quality ampplifiable template are defined as *filled* droplets; every filled droplet contains either a mutant or wildtype template and can therefore be classified as either mutant or wildtype.
 
 The gating step is best explained by being broken down into sub-steps.
 
