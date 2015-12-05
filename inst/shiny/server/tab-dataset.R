@@ -40,8 +40,14 @@ observeEvent(input$loadFileBtn, {
 # load the sample dataset
 observeEvent(input$loadSampleBtn, {
   withBusyIndicator("loadSampleBtn", {
-    dataValues$plate <- new_plate(dir = sample_data_dir(),
-                                  type = plate_types$fam_positive_pnpp)
+    if (input$sampleDatasetType == "small") {
+      dataValues$plate <- new_plate(dir = sample_data_dir(),
+                                    type = plate_types$fam_positive_pnpp)
+    } else if (input$sampleDatasetType == "large") {
+      dataValues$plate <- sample_plate()
+    } else {
+      err_msg("There was a problem loading the sample dataset")
+    }
     
     output$datasetChosen <- reactive({ TRUE })
     show("datasetNextMsg")

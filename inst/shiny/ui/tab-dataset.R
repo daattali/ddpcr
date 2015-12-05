@@ -89,6 +89,10 @@ tabPanel(
       id = "sampleDatasetTab",
       h3(strong("Use sample dataset")),
       br(),
+      selectInput("sampleDatasetType", "Choose a dataset to load",
+                  c("Small dataset" = "small", "Large dataset" = "large")
+      ),
+      br(),
       withBusyIndicator(
         actionButton(
           "loadSampleBtn",
