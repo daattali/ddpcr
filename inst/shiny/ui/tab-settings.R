@@ -149,6 +149,8 @@ tabPanel(
         title = "Advanced Settings",
         id = "advancedSettingsTab",
         h3(strong("These are advanced options. Only use them if you know what you're doing.")),
+        h4(strong("An explanation of all the settings is available in the"),
+           a("algorithm vignette", target = "_blank", href = "https://github.com/daattali/ddpcr/blob/master/vignettes/algorithm.Rmd")),
         br(),
         uiOutput("advancedSettings"),
         actionButton(
