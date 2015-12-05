@@ -5,21 +5,34 @@
 # but some are "internal exports" to allow people to use them if they want to
 # create their own plate types.
 
-#' Get directory of sample ddPCR data
+#' Get sample data
 #' 
-#' This function returns a directory that contains sample ddPCR data, which can
-#' be used to initialize a ddPCR plate. It is mainly used to have an easy way
-#' to initialize ddpcr plates in the documentation examples, but you can also
-#' use it for learning purposes.
+#' These functions return sample data files or folders and can be used to
+#' load ddPCR plates with sample data. They are used primarily in the
+#' documentation examples, but you can also use them for learning purposes.
+#' There are two sample datasetes: a small dataset and a large dataset. The
+#' small dataset contains the full raw data, but the large dataset only
+#' includes the processed file because the raw data would be too large.
+#' \cr\cr
+#' \code{sample_data_dir}: get the directory of the small sample dataset\cr
+#' \code{sample_data_file}: get path to one of the data files in the small sample dataset\cr
+#' \code{sample_results_file}: get path to the results file of the small sample dataset\cr
+#' \code{sample_plate}: get the ddpcr plate object containing the data of the large dataset\cr
 #' @examples 
-#' new_plate(dir = sample_data_dir())
-#' @return directory of sample ddPCR data
+#' plate1 <- new_plate(dir = sample_data_dir())
+#' plate2 <- new_plate(data_files = sample_data_file(), meta_file = sample_results_file())
+#' plate3 <- sample_plate()
+#' @name sample_data
+NULL
+
+#' @rdname sample_data
+#' @keywords internal
 #' @export
 sample_data_dir <- function() {
   system.file("sample_data", "small", package = "ddpcr")
 }
 
-#' Get path to sample data file
+#' @rdname sample_data
 #' @keywords internal
 #' @export
 sample_data_file <- function() {
@@ -28,7 +41,7 @@ sample_data_file <- function() {
   sample_file
 }
 
-#' Get path to sample results file
+#' @rdname sample_data
 #' @keywords internal
 #' @export
 sample_results_file <- function() {
@@ -38,6 +51,15 @@ sample_results_file <- function() {
     get_consensus_name_from_data_files()
   results_file <- find_meta_file(sample_data_dir(), name)
   results_file
+}
+
+#' @rdname sample_data
+#' @keywords internal
+#' @export
+sample_plate <- function() {
+  dir <- system.file("sample_data", "large", package = "ddpcr")
+  plate <- load_plate(file.path(dir, "large"))
+  plate
 }
 
 #' Get droplet data from a well
