@@ -173,7 +173,7 @@ built-in experiment types.
 Analysis using the interactive tool
 </h1>
 If you're not comfortable using R and would like to use a visual tool
-that requires no programming, you can [use the tool online](TODO). You
+that requires no programming, you can [use the tool online](http://daattali.com/shiny/ddpcr/). You
 should still skim through the rest of this document (you can ignore the
 actual code/commands) as it will explain some important concepts.
 
