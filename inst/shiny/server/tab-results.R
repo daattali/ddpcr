@@ -63,10 +63,10 @@ observeEvent(dataValues$plate, {
       label = sprintf("Transparency of %s/%s wells",
                       meta_var_name(dataValues$plate, "negative"),
                       meta_var_name(dataValues$plate, "positive")))
-    shinyjs::text("plotParamsDropRowLabel-negative",
+    shinyjs::html("plotParamsDropRowLabel-negative",
                   capitalize(sprintf("%s droplets",
                           meta_var_name(dataValues$plate, "negative"))))
-    shinyjs::text("plotParamsDropRowLabel-positive",
+    shinyjs::html("plotParamsDropRowLabel-positive",
                   capitalize(sprintf("%s droplets",
                           meta_var_name(dataValues$plate, "positive"))))
   }

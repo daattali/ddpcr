@@ -32,7 +32,7 @@ withBusyIndicator <- function(buttonId, expr) {
 # Error handler that gets used in many tryCatch blocks
 errorFunc <- function(err) {
   errMessage <- gsub("^ddpcr: (.*)", "\\1", err$message)
-  text("errorMsg", errMessage)
+  html("errorMsg", errMessage)
   show("errorDiv", TRUE, "fade")
 }
 

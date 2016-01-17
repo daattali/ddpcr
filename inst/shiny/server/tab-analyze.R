@@ -4,14 +4,14 @@
 # analyze button is clicked
 observeEvent(input$analyzeBtn, {
   withBusyIndicator("analyzeBtn", {
-    text("analyzeProgress", "")
+    html("analyzeProgress", "")
     withCallingHandlers(
       dataValues$plate <- dataValues$plate %>% analyze(restart = TRUE),
       message = function(m) {
-        text("analyzeProgress", m$message, TRUE)
+        html("analyzeProgress", m$message, TRUE)
       },
       warning = function(m) {
-        text("analyzeProgress", paste0(m$message, "\n"), TRUE)
+        html("analyzeProgress", paste0(m$message, "\n"), TRUE)
       }
     )
     show("analyzeNextMsg")
