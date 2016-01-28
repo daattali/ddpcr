@@ -155,45 +155,49 @@ observeEvent(input$resetParamsBtn, {
 # When the plate changes, update the advanced settings UI
 observeEvent(dataValues$plate, {
   plate <- dataValues$plate
+  
   output$advancedSettings <- renderUI({
     
     # loop through the parameters and create an input for each one
     lapply(
       plate %>% params %>% names,
       function(major_name) {
-        lapply(
-          plate %>% params %>% .[[major_name]] %>% names,
-          function(minor_name) {
-            param_name <- sprintf("%s::%s", major_name, minor_name)
-            
-            params_ignore <- c(
-              "GENERAL::X_VAR", "GENERAL::Y_VAR",
-              "GENERAL::POSITIVE_NAME", "GENERAL::NEGATIVE_NAME",
-              "CLASSIFY::X_THRESHOLD", "CLASSIFY::Y_THRESHOLD"
-            )
-            
-            if (param_name %in% params_ignore) {
-              return(NULL)
+        tagList(
+          h3(strong(major_name)),
+          lapply(
+            plate %>% params %>% .[[major_name]] %>% names,
+            function(minor_name) {
+              param_name <- sprintf("%s", major_name, minor_name)
+              
+              params_ignore <- c(
+                "GENERAL::X_VAR", "GENERAL::Y_VAR",
+                "GENERAL::POSITIVE_NAME", "GENERAL::NEGATIVE_NAME",
+                "CLASSIFY::X_THRESHOLD", "CLASSIFY::Y_THRESHOLD"
+              )
+              
+              if (param_name %in% params_ignore) {
+                return(NULL)
+              }
+              
+              param_val <- plate %>% params %>% .[[c(major_name, minor_name)]] 
+              param_id <- sprintf("advanced_setting_param_%s__%s", major_name, minor_name)
+              
+              
+              # in order to ensure the correct type for each variable,
+              # we need to make sure that boolean/numeric/string parameters
+              # are rendered in an appropriate input type. Otherwise if I used
+              # textInput for all of them, then all parameters would be
+              # converted to string when reading them back.
+              if (param_val %>% is.logical) {
+                input_type <- checkboxInput
+              } else if (param_val %>% is.numeric) {
+                input_type <- numericInput
+              } else {
+                input_type <- textInput
+              }
+              do.call(input_type, list(param_id, minor_name, param_val))
             }
-            
-            param_val <- plate %>% params %>% .[[c(major_name, minor_name)]] 
-            param_id <- sprintf("advanced_setting_param_%s__%s", major_name, minor_name)
-            
-            
-            # in order to ensure the correct type for each variable,
-            # we need to make sure that boolean/numeric/string parameters
-            # are rendered in an appropriate input type. Otherwise if I used
-            # textInput for all of them, then all parameters would be
-            # converted to string when reading them back.
-            if (param_val %>% is.logical) {
-              input_type <- checkboxInput
-            } else if (param_val %>% is.numeric) {
-              input_type <- numericInput
-            } else {
-              input_type <- textInput
-            }
-            do.call(input_type, list(param_id, param_name, param_val))
-          }
+          )
         )
       }
     )

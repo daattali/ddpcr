@@ -8,8 +8,10 @@ version](http://www.r-pkg.org/badges/version/ddpcr)](http://cran.r-project.org/w
 
 This package provides an interface to explore, analyze, and visualize
 droplet digital PCR (ddPCR) data in R. An interactive tool was also
-created and is available online to facilitate this analysis for anyone
-who is not comfortable with using R.
+created to facilitate this analysis for anyone who is not comfortable
+with using R. The tool is [available online
+here](http://daattali.com/shiny/ddpcr/) or can be used locally [as
+described below](#r-interactive).
 
 This document explains the purpose of this package and includes a
 tutorial on how to use. It should take about 20 minutes to go through
@@ -24,7 +26,7 @@ Table of contents
     -   [Supported experiment types](#supported-types)
 -   [Analysis using the interactive tool](#analysis-interactive)
 -   [Analysis using R](#analysis-r)
-    -   [Running the interactive tool through R](#r-interactive)
+    -   [Running the interactive tool locally through R](#r-interactive)
     -   [Quick start](#quick-start)
     -   [Running a basic analysis - detailed walkthrough](#walkthrough)
         -   [Loading ddPCR data](#load)
@@ -64,11 +66,10 @@ depending on the number of dyes used (one, two, and more than two,
 respectively). A duplex experiment typically uses one FAM dye and one
 HEX dye, and consequently the droplets will be grouped into one of four
 clusters: double-negative (empty droplets without any amplifiable
-template that do not emit fluorescence in either channel),
-HEX-positive, FAM-positive, or double-positive. When plotting the
-droplets, each quadrant of the plot corresponds to a cluster; for
-example, the droplets in the lower-left quadrant are the double-negative
-droplets.
+template that do not emit fluorescence in either channel), HEX-positive,
+FAM-positive, or double-positive. When plotting the droplets, each
+quadrant of the plot corresponds to a cluster; for example, the droplets
+in the lower-left quadrant are the double-negative droplets.
 
 After running a ddPCR experiment, a key step in the analysis is gating
 the droplets to determine how many droplets belong to each cluster.
@@ -173,9 +174,10 @@ built-in experiment types.
 Analysis using the interactive tool
 </h1>
 If you're not comfortable using R and would like to use a visual tool
-that requires no programming, you can [use the tool online](http://daattali.com/shiny/ddpcr/). You
-should still skim through the rest of this document (you can ignore the
-actual code/commands) as it will explain some important concepts.
+that requires no programming, you can [use the tool
+online](http://daattali.com/shiny/ddpcr/). You should still skim through
+the rest of this document (you can ignore the actual code/commands) as
+it will explain some important concepts.
 
 <h1 id="analysis-r">
 Analysis using R
@@ -188,7 +190,7 @@ First, install `ddpcr`
     devtools::install_github("daattali/ddpcr")
 
 <h2 id="r-interactive">
-Running the interactive tool through R
+Running the interactive tool locally through R
 </h2>
 Even if you do know R, using the interactive application can be easier
 and more convenient than running R commands. If you want to use the
@@ -927,7 +929,7 @@ the `restart = TRUE` parameter.
     #> Initializing plate of type `ddpcr_plate`... DONE (0 seconds)
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (0 seconds)
+    #> Identifying empty droplets... DONE (1 seconds)
     #> Analysis complete
 
 <h2 id="algorithms">

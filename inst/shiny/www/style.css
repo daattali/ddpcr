@@ -180,6 +180,10 @@ button.btn-primary.lg-btn {
   margin-left: 15px;
 }
 
+#advancedSettings .shiny-input-container {
+  margin-left: 20px;
+}
+
 #analyzeTabContent {
   font-size: 1.5em;
   color: #444;
