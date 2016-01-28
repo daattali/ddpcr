@@ -19,7 +19,7 @@ options(ddpcr.verbose = TRUE)
 [![Build Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
 [![CRAN version](http://www.r-pkg.org/badges/version/ddpcr)](http://cran.r-project.org/web/packages/ddpcr/index.html)
 
-This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. An interactive tool was also created and is available online to facilitate this analysis for anyone who is not comfortable with using R.
+This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. An interactive tool was also created to facilitate this analysis for anyone who is not comfortable with using R. The tool is [available online here](http://daattali.com/shiny/ddpcr/) or can be used locally [as described below](#r-interactive).
 
 This document explains the purpose of this package and includes a tutorial on how to use. It should take about 20 minutes to go through the entire document. 
 
@@ -31,7 +31,7 @@ This document explains the purpose of this package and includes a tutorial on ho
     - [Supported experiment types](#supported-types)
 - [Analysis using the interactive tool](#analysis-interactive)
 - [Analysis using R](#analysis-r)
-    - [Running the interactive tool through R](#r-interactive)
+    - [Running the interactive tool locally through R](#r-interactive)
     - [Quick start](#quick-start)
     - [Running a basic analysis - detailed walkthrough](#walkthrough)
         - [Loading ddPCR data](#load)
@@ -112,7 +112,7 @@ install.packages("devtools")
 devtools::install_github("daattali/ddpcr")
 ```
 
-<h2 id="r-interactive">Running the interactive tool through R</h2>
+<h2 id="r-interactive">Running the interactive tool locally through R</h2>
 
 Even if you do know R, using the interactive application can be easier and more convenient than running R commands. If you want to use the visual tool, simply run `ddpcr::gui()` (GUI = Graphical User Interface) and it will run the same application that's hosted online on your own machine.
 
