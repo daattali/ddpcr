@@ -8,13 +8,16 @@
 \alias{sample_results_file}
 \title{Get sample data}
 \usage{
-sample_data_dir()
+sample_data_dir(size = c("small", "large"))
 
 sample_data_file()
 
 sample_results_file()
 
-sample_plate()
+sample_plate(size = c("small", "large"))
+}
+\arguments{
+\item{size}{The dataset to retrieve, either \code{"small"} or \code{"large"}}
 }
 \description{
 These functions return sample data files or folders and can be used to
@@ -24,10 +27,10 @@ There are two sample datasetes: a small dataset and a large dataset. The
 small dataset contains the full raw data, but the large dataset only
 includes the processed file because the raw data would be too large.
 \cr\cr
-\code{sample_data_dir}: get the directory of the small sample dataset\cr
+\code{sample_data_dir}: get the directory of the small or large sample dataset\cr
 \code{sample_data_file}: get path to one of the data files in the small sample dataset\cr
 \code{sample_results_file}: get path to the results file of the small sample dataset\cr
-\code{sample_plate}: get the ddpcr plate object containing the data of the large dataset\cr
+\code{sample_plate}: get the ddpcr plate object containing the data of the small or large dataset\cr
 }
 \examples{
 plate1 <- new_plate(dir = sample_data_dir())
