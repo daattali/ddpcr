@@ -467,8 +467,8 @@ observe({
   
   lapply(paramsDropShow, function(x) {
     name <- gsub(paramsDropShowRegex, "\\1", x)
-    toggleState(sprintf("plotParamDropCol-%s", name), as.logical(input[[x]]))
-    toggleState(sprintf("plotParamDropAlpha-%s", name), as.logical(input[[x]]))
+    toggle(sprintf("plotParamDropCol-%s", name), condition = as.logical(input[[x]]))
+    toggle(sprintf("plotParamDropAlpha-%s", name), condition = as.logical(input[[x]]))
   })
 })
 
