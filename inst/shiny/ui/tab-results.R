@@ -72,11 +72,11 @@ tabPanel(
                 ),
                 column(
                   4,
-                  numericInput("plotParam_drops_size", "Droplets size", 2, 0, 50),
+                  numericInput("plotParam_drops_size", "Droplets size", 1, 0, 50),
                   selectInput("plotParam_col_drops", "Droplets colour",
                               allCols, "black"),
                   sliderInput("plotParam_alpha_drops", "Droplets transparency",
-                              0, 1, 0.1, 0.05, ticks = FALSE)
+                              0, 1, 0.2, 0.05, ticks = FALSE)
                 ),
                 column(
                   4,

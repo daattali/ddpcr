@@ -14,7 +14,7 @@ Calculate template concentration in each wells in a plate using the same formula
 QuantaSoft uses. The concentration information is added to the plate's metadata.
 }
 \details{
-The concentration in a well as number of copies per templates per microlitre
+The concentration in a well as number of copies of template per microlitre
 of sample, and uses the following equation:
 
 (-log(drops_empty / drops_total) * drops_total) / (droplet_volume * drops_total)

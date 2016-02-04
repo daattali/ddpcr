@@ -115,11 +115,11 @@ plot.ddpcr_plate <- function(
   col_drops = "black", col_drops_undefined = col_drops, col_drops_failed = col_drops,
   col_drops_empty = col_drops, col_drops_outlier = "orange",
   bg_plot = "transparent", bg_failed = "#111111", bg_unused = "#FFFFFF",
-  alpha_drops = 0.1, alpha_drops_outlier = 1,
+  alpha_drops = 0.2, alpha_drops_outlier = 1,
   alpha_bg_failed = 0.7,
   xlab = x_var(plate), ylab = y_var(plate), title = NULL,
   show_grid = FALSE, show_grid_labels = FALSE,
-  drops_size = 2,
+  drops_size = 1,
   text_size_title = 14, text_size_row_col = 12, text_size_axes_labels = 12, 
   text_size_grid_labels = 12,
   ...)

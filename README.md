@@ -109,8 +109,8 @@ The main features include:
     real signal of interest is in the non-empty droplets, and empty
     droplets can be regarded as noise.
 -   **Calculating template concentration** - after knowing how many
-    empty droplets are in each well, the template concentration in each
-    well can be calculated.
+    empty droplets are in each well, the template concentration (copies
+    per microlitre) in each well can be calculated.
 -   **Gating droplets** - if your experiment matches some criteria (more
     on that soon), then automatic gating can take place; otherwise, you
     can gate the data with custom thresholds just like on QuantaSoft.
@@ -434,7 +434,7 @@ run through the steps one by one using `next_step()`.
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (1 seconds)
+    #> Identifying empty droplets... DONE (2 seconds)
     #> Analysis complete
 
     # equivalent to `plate %>% next_step(3)`
@@ -747,8 +747,8 @@ Now we can analyze the plate
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (0 seconds)
-    #> Classifying droplets... DONE (0 seconds)
+    #> Identifying empty droplets... DONE (1 seconds)
+    #> Classifying droplets... DONE (1 seconds)
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
     #> Analysis complete
 

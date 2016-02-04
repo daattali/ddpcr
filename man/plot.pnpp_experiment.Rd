@@ -10,7 +10,7 @@
   text_size_negative_freq = 4, alpha_drops_low_negative_freq = 0.5,
   show_low_high_neg_freq = TRUE, bg_negative = "purple3",
   bg_positive = "green3", alpha_bg_low_high_neg_freq = 0.1,
-  superimpose = FALSE, show_drops = TRUE, drops_size = 2)
+  superimpose = FALSE, show_drops = TRUE, drops_size = 1)
 }
 \arguments{
 \item{x}{A ddPCR plate.}

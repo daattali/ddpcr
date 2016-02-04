@@ -39,7 +39,7 @@ plotDropsParams <- list(
     type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp, "ddpcr_plate"),
     show = TRUE,
     col = "Default",
-    alpha = 0.1
+    alpha = 0.2
   ),
   "outlier" = list(
     name = "Outlier droplets",
@@ -53,49 +53,49 @@ plotDropsParams <- list(
     type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp, plate_types$custom_thresholds, "ddpcr_plate"),
     show = FALSE,
     col = "Default",
-    alpha = 0.1
+    alpha = 0.2
   ),
   "rain" = list(
     name = "Rain droplets",
     type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp),
     show = TRUE,
     col = "black",
-    alpha = 0.1
+    alpha = 0.2
   ),
   "positive" = list(
     name = "set value in server/tab-results.R",
     type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp),
     show = TRUE,
     col = "green3",
-    alpha = 0.1
+    alpha = 0.2
   ),
   "negative" = list(
     name = "set value in server/tab-results.R",
     type = c(plate_types$hex_positive_pnpp, plate_types$fam_positive_pnpp),
     show = TRUE,
     col = "purple3",
-    alpha = 0.1
+    alpha = 0.2
   ),
   "x_positive" = list(
     name = "X+Y- droplets",
     type = c(plate_types$custom_thresholds),
     show = TRUE,
     col = "green3",
-    alpha = 0.1
+    alpha = 0.2
   ),
   "y_positive" = list(
     name = "X-Y+ droplets",
     type = c(plate_types$custom_thresholds),
     show = TRUE,
     col = "blue",
-    alpha = 0.1
+    alpha = 0.2
   ),
   "both_positive" = list(
     name = "X+Y+ droplets",
     type = c(plate_types$custom_thresholds),
     show = TRUE,
     col = "orange",
-    alpha = 0.1
+    alpha = 0.2
   )
 )
 
