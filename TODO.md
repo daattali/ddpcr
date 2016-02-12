@@ -1,1 +1,0 @@
-- algorithms vignette: images / pseudocode

@@ -78,7 +78,7 @@ The main features include:
 
 <h2 id="supported-types">Supported experiment types</h2>
 
-While this tool was originally developed to automatically gate data for a particular ddPCR assay (TODO reference to Roza's paper), any assay with similar characteristics can also use this tool to automatically gate the droplets. In order to benefit from the full automatic analysis, your ddPCR experiment needs to have these characteristics:  
+While this tool was originally developed to automatically gate data for a particular ddPCR assay ([*Quantitative Detection and Resolution of BRAF V600 Status in Colorectal Cancer Using Droplet Digital PCR and a Novel Wild-Type Negative Assay*](http://jmd.amjpathol.org/article/S1525-1578(15)00262-7/) by Roza Bidshahri, Dean Attali, et al.), any assay with similar characteristics can also use this tool to automatically gate the droplets. In order to benefit from the full automatic analysis, your ddPCR experiment needs to have these characteristics:  
 
 - The experiment is a duplex ddPCR experiment
 - The majority of droplets are empty (double-negative)
@@ -114,7 +114,7 @@ devtools::install_github("daattali/ddpcr")
 
 <h2 id="r-interactive">Running the interactive tool locally through R</h2>
 
-Even if you do know R, using the interactive application can be easier and more convenient than running R commands. If you want to use the visual tool, simply run `ddpcr::gui()` (GUI = Graphical User Interface) and it will run the same application that's hosted online on your own machine.
+Even if you do know R, using the interactive application can be easier and more convenient than running R commands. If you want to use the visual tool, simply run `ddpcr::launch()` and it will run the same application that's hosted online on your own machine.
 
 <h2 id="quick-start">Quick start</h2>
 
