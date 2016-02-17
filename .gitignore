@@ -5,3 +5,4 @@
 data/
 inst/doc
 inst/shiny/datasets/
+vignettes/*_cache/

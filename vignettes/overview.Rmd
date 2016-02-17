@@ -10,7 +10,7 @@ vignette: >
 ---
   
 ```{r setup, echo = FALSE, message = FALSE}
-knitr::opts_chunk$set(tidy = FALSE, comment = "#>")
+knitr::opts_chunk$set(tidy = FALSE, comment = "#>", cache = TRUE)
 options(ddpcr.verbose = TRUE)
 ```
 
