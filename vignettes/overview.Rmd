@@ -84,18 +84,18 @@ The main features include:
 
 <h2 id="supported-types">Supported experiment types</h2>
 
-While this tool was originally developed to automatically gate data for a particular ddPCR assay (TODO reference to Roza's paper), any assay with similar characteristics can also use this tool to automatically gate the droplets. In order to benefit from the full automatic analysis, your ddPCR experiment needs to have these characteristics:  
+While this tool was originally developed to automatically gate data for a particular ddPCR assay (TODO reference to Roza's paper), any assay with similar characteristics can also use this tool to automatically gate the droplets. *JB: an assay cannot use this tool. Reword.* In order to benefit from the full automatic analysis, your ddPCR experiment needs to have these characteristics:  
 
-- The experiment is a duplex ddPCR experiment
-- The majority of droplets are empty (double-negative)
-- The majority of non-empty droplets are double-positive
-- There can be a third cluster of either FAM+ or HEX+ droplets
+- The experiment is a duplex ddPCR experiment.
+- The majority of droplets are empty (double-negative).
+- The majority of non-empty droplets are double-positive.
+- There can be a third cluster of either FAM+ or HEX+ droplets.
 
 In other words, the built-in automatic gating will work when there are three clusters of droplets: (1) double-negative, (2) double-positive, and (3) either FAM+ or HEX+. These types of experiments will be referred to as **(FAM+)/(FAM+HEX+)** or  **(HEX+)/(FAM+HEX+)**. Both of these experiment types fall under the name of **PNPP experiments**; PNPP is short for PositiveNegative/PositivePositive, which is a reflection of the droplet clusters. Here is what a typical well from a PNPP experiment looks like:
 
 [![Supported experiment types](../inst/vignettes-supp/supported-exp-types.png)](../inst/vignettes-supp/supported-exp-types.png)
 
-If your experiment matches the criteria for a **PNPP** experiment (either a **(FAM+)/(FAM+HEX+)** or a **(HEX+)/(FAM+HEX+)** experiment), then after calculating empty droplets the program will analyze the rest of the droplets and assign each droplet one of the following three clusters: FAM+ (or HEX+), FAM+HEX+, or rain. Here is the result of analyzing a single well from a **(FAM+)/(FAM+HEX+)** experiment:
+If your experiment matches the criteria for a **PNPP** experiment (either a **(FAM+)/(FAM+HEX+)** or a **(HEX+)/(FAM+HEX+)** experiment), then after calculating empty droplets the program will analyze the rest of the droplets and assign each droplet to one of the following three clusters: FAM+ (or HEX+), FAM+HEX+, or rain. *JB: wait ... are the double negative or empty droplets now called "rain"? I understand but you've gone very quickly from one set of 3 clusters to a slightly different set of 3 clusters.* Here is the result of analyzing a single well from a **(FAM+)/(FAM+HEX+)** experiment:
 
 [![Analyze result](../inst/vignettes-supp/pnpp-simple-result.png)](../inst/vignettes-supp/pnpp-simple-result.png)
 
