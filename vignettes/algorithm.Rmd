@@ -15,11 +15,13 @@ knitr::opts_chunk$set(tidy = FALSE, comment = "#>")
 
 # Algorithms used to analyze ddPCR droplets
 
-The algorithm described below consists of five main steps that are used to analyze a ddPCR plate with (FAM+)/(FAM+HEX+) clusters. Droplets in the (FAM+HEX+) cluster will be referred to as *wildtype*, and droplets in the (FAM+HEX-) cluster will be referred to as *mutant*. The final goal is to calculate the mutant frequency (*MF*) in each well by classifying all temlpate-containing droplets as wildtype or mutant. This document explains most of the algorithms and attemps to be as accurate as possible, but inspecting the documented source code is the best way to see the full details. 
+The algorithm described below consists of five main steps that are used to analyze a ddPCR plate with (FAM+ HEX-)/(FAM+ HEX+) clusters. Droplets in the (FAM+ HEX+) cluster will be referred to as *wildtype*, and droplets in the (FAM+ HEX-) cluster will be referred to as *mutant*. The final goal is to calculate the mutant frequency (*MF*) in each well by classifying all template-containing droplets as wildtype or mutant. 
 
-Plates with (HEX+)/(FAM+HEX+) clusters use a very similar algorithm but HEX and FAM are swapped in every step. Plates that are neither (FAM+)/(FAM+HEX+) nor (HEX+)/(FAM+HEX+) only benefit from the first three steps of the pipeline (droplet gating is not performed). 
+Plates with (FAM- HEX+)/(FAM+ HEX+) clusters use a very similar algorithm but HEX and FAM are swapped in every step. Plates that are neither (FAM+ HEX-)/(FAM+ HEX+) nor (FAM- HEX+)/(FAM+ HEX+) only benefit from the first three steps of the pipeline (droplet gating is not performed). 
 
-The initial droplet data is a list of *n* matrices, where *n* is the number of wells. Each matrix contains has two clumns and *m_i* rows, where *m_i* is the number of droplets in the *i*-th well. Each row represents a single droplet in a well and the two columns are the measured values of HEX and FAM fluorescennt amplitude. 
+*JB: You talk about the properties of plates but it would be more accurate to talk about the assay. Which, of course, implies properties of actual data, on actual plates.*
+
+The initial droplet data is a list of *n* matrices, where *n* is the number of wells. Each matrix has two columns and *m_i* rows, where *m_i* is the number of droplets in the *i*-th well. Each row represents a single droplet in a well and the two columns are the measured values of HEX and FAM fluorescence amplitude. 
 
 ## Step 1: Identify failed wells
 
