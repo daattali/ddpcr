@@ -31,7 +31,11 @@ The first check is to ensure the total number of droplets in a well must exceed 
 
 The other three metrics evaluate the expected droplet clusters (empty, mutant, wildtype) and their quality by fitting a two-component Gaussian mixture model to the FAM signals of all droplets. Each of the two components is defined with a mean (*center*) and a standard deviation (*sd*). In a typical well, the distribution with the lower center will capture the empty droplets, while the higher distribution models the FAM+ (or template-containing) droplets. Every well is expected to have mostly empty droplets, so the second metric involves looking for acceptable segregation of empty droplets from the FAM+ cluster by measuring the difference between the centers of the two distributions. The third metric evaluates the droplet density within the lower (empty) population to ensure the fraction of empty droplets is above a certain threshold (`params(plate, 'REMOVE_FAILURES', 'EMPTY_LAMBDA_LOW_T')`, default is 0.3). Failure to meet this criterion indicates a lack of a defined empty cluster. Similarly, the fourth quality control check ensures the droplet density must also be below a certain fraction (`params(plate, 'REMOVE_FAILURES', 'EMPTY_LAMBDA_HIGH_T')`, default is 0.99), as having too many empty droplets is a sign that there is not enough amplifiable template in the well.
 
-Any well that does not meet all four criteria is deemd a failed run, and such wells are removed from further analysis.
+*JB: in many places above you use the word "density" in an unexpected context and it seems like you mean (relative) frequency?*
+
+Any well that does not meet all four criteria is deemed a failed run, and such wells are removed from further analysis.
+
+*JB: could this be formatted as a list of 4 bullets with a key phrase in bold at the start? Total # droplets > threshhold, Segregation between empty and nonempty droplets, Proportion of empty droplets > threshhold, Proportion of empty droplets < threshhold.*
 
 ## Step 2: Identify outlier droplets
 
