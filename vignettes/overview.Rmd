@@ -19,7 +19,7 @@ options(ddpcr.verbose = TRUE)
 [![Build Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
 [![CRAN version](http://www.r-pkg.org/badges/version/ddpcr)](http://cran.r-project.org/web/packages/ddpcr/index.html)
 
-This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. An interactive tool was also created and is available online to facilitate this analysis for anyone who is not comfortable with using R.
+This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. It includes an interactive web app to facilitate analysis by anyone who is not comfortable using R, which is available online (<http://daattali.com/shiny/ddpcr/>) and can also be run locally.
 
 This document explains the purpose of this package and includes a tutorial on how to use. It should take about 20 minutes to go through the entire document. 
 
@@ -89,7 +89,7 @@ In other words, the built-in automatic gating will work when there are three clu
 
 [![Supported experiment types](../inst/vignettes-supp/supported-exp-types.png)](../inst/vignettes-supp/supported-exp-types.png)
 
-If your experiment matches the criteria for a **PNPP** experiment (either a **(FAM+)/(FAM+HEX+)** or a **(HEX+)/(FAM+HEX+)** experiment), then after calculating empty droplets the program will analyze the rest of the droplets and assign each droplet one of the following three clustes: FAM+ (or HEX+), FAM+HEX+, or rain. Here is the result of analyzing a single well from a **(FAM+)/(FAM+HEX+)** experiment:
+If your experiment matches the criteria for a **PNPP** experiment (either a **(FAM+)/(FAM+HEX+)** or a **(HEX+)/(FAM+HEX+)** experiment), then after calculating empty droplets the program will analyze the rest of the droplets and assign each droplet one of the following three clusters: FAM+ (or HEX+), FAM+HEX+, or rain. Here is the result of analyzing a single well from a **(FAM+)/(FAM+HEX+)** experiment:
 
 [![Analyze result](../inst/vignettes-supp/pnpp-simple-result.png)](../inst/vignettes-supp/pnpp-simple-result.png)
 
@@ -164,7 +164,7 @@ dir <- sample_data_dir()
 plate <- new_plate(dir)
 ```
 
-You will see some messages appear - every time `ddpcr` runs an analysis step (initializing the plate is part of the analysis), it will output a message decribing what it's doing. You can turn off messages by disabling the verbose option with the command `options(ddpcr.verbose = FALSE)`.
+You will see some messages appear - every time `ddpcr` runs an analysis step (initializing the plate is part of the analysis), it will output a message describing what it's doing. You can turn off messages by disabling the verbose option with the command `options(ddpcr.verbose = FALSE)`.
 
 <h3 id="explore">Pre-analysis exploration of the data</h3>
 
@@ -310,7 +310,7 @@ plate %>% plot(wells = "B01,B06", superimpose = TRUE,
 
 <h3 id="save">Save your data</h3>
 
-As was shown previously, you can use the `plate_meta()` function to retrieve a table with the results. If you want to save that table, you can use R's builtin `write.csv()` or `write.table()` functions.
+As was shown previously, you can use the `plate_meta()` function to retrieve a table with the results. If you want to save that table, you can use R's built-in `write.csv()` or `write.table()` functions.
 
 You can also save a ddPCR plate object using `plate_save()`. This will create a single `.rds` file that contains an exact copy of the plate's current state, including all the data, attributes, and analysis progress of the plate. The resulting file can be loaded to restore the ddPCR object at a later time with `plate_load()`.
 
@@ -333,7 +333,7 @@ The next two sections explain how to use these experiment types.
 
 <h3 id="custom-gates">Gating droplets in any ddPCR plate with custom thresholds</h3>
 
-If you want to perform a simple 4-quadrant gating like the one available in QuantaSoft, you need to set the type of the plate object to `plate_types$custom_thresholds`. This can either be done when initializing a new plate or by reseting an existing plate object.
+If you want to perform a simple 4-quadrant gating like the one available in QuantaSoft, you need to set the type of the plate object to `plate_types$custom_thresholds`. This can either be done when initializing a new plate or by resetting an existing plate object.
 
 ```{r reset, message=FALSE}
 # two ways to create the desired plate
@@ -399,7 +399,7 @@ Before running the analysis, it's a good idea to know what are the possible clus
 clusters(plate_pnpp)
 ```
 
-The first 4 clusters we've seen before, as they are common to all plate types. Droplets in the *HEX+FAM+* cluster are considered *POSITIVE*, while dropets in the *FAM+* cluster are considered *NEGATIVE* since they are *HEX-*. Any droplets that are not empty but don't emit enough fluorescent intensity to be in the *POSITIVE* or *NEGATIVE* clusters are considered *RAIN*.
+The first 4 clusters we've seen before, as they are common to all plate types. Droplets in the *HEX+FAM+* cluster are considered *POSITIVE*, while droplets in the *FAM+* cluster are considered *NEGATIVE* since they are *HEX-*. Any droplets that are not empty but don't emit enough fluorescent intensity to be in the *POSITIVE* or *NEGATIVE* clusters are considered *RAIN*.
 
 > When using the `plate_types$fam_positive_pnpp` type, the positive droplets (FAM+HEX+) are called wildtype, and the negative droplets (FAM+HEX-) are called mutant. Why? This package was originally designed to analyze a specific assay where the FAM+HEX+ cluster represented droplets with a wildtype gene inside, while the FAM+HEX- cluster corresponded to droplets with a mutant gene. Talking about positive vs negative drops or positive vs negative wells sounds a bit weird, so it was decided to stick with mutant vs wildtype. Just remember: wildtype = double-positive droplets, mutant = singly-positive droplets.
 
@@ -412,7 +412,7 @@ plate_pnpp <- analyze(plate_pnpp)
 ```
 
 One of the key goals in running the analysis is to determine the number of *POSITIVE* (wildtype) and *NEGATIVE* (mutant) droplets in each well, and similarly the *mutant frequency* (if a well has 95 wildtype droplets and 5 mutant droplets, then the *mutant frequency* in the well is 5%).    
-You can see from the output that the two last steps are **classifying** and **reclassifying** the droplets, and that the reclassification didn't take place. The classification step identifies all the non-empty droplets as either rain, mutant, or wildtype by analyzing each well individually. Wells with a very low *mutant frequency* (ie there are very few mutant droplets) are much harder to gate accurately, which is the reason for the reclassification step. The reclassification step uses information from wells with high a *mutant frequency*, where the gates are more clearly defined, to adjust the gates in wells with a low *mutant frequency*. The reclassification step only takes place if there are enough wells with a high mutant frequency.
+You can see from the output that the two last steps are **classifying** and **reclassifying** the droplets, and that the reclassification didn't take place. The classification step identifies all the non-empty droplets as either rain, mutant, or wildtype by analyzing each well individually. Wells with a very low *mutant frequency* (i.e., there are very few mutant droplets) are much harder to gate accurately, which is the reason for the reclassification step. The reclassification step uses information from wells with high a *mutant frequency*, where the gates are more clearly defined, to adjust the gates in wells with a low *mutant frequency*. The reclassification step only takes place if there are enough wells with a high mutant frequency.
 
 <h4 id="pnpp-results">Results of a PNPP experiment</h4>
 
