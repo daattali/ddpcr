@@ -293,7 +293,7 @@ well_info(plate, "B06", "drops_empty")
 The easiest way to visualize a ddPCR plate is using the `plot()` function. 
 
 ```{r plotsimple}
-plate %>% plot
+plate %>% plot()
 ```
 
 Notice well `C06` is grayed out, which means that it is a failed well. By default, failed wells have a grey background, and empty and outlier droplets are excluded from the plot. 
@@ -303,7 +303,7 @@ You don't have to analyze a plate object before you can plot it - a ddPCR plate 
 
 <h3 id="plot-params">Plot parameters</h3>
 
-There are many plot parameters to allow you to create extremely customizable plots. Among the many parameters, there are three special categories of parameters that affect the visibility of droplets: `show_drops_*` is used to show/hide certain droplets, `col_drops_*` is used to set the colour of droplets, and `alpha_drops_*` is used to set the transparency of droplets (0 = transparent, 1 = opaque). The `*` can be replaced by the name of any droplet cluster (the available clusters can be obtained with `clusters(plate)` as mentioned earlier). For example, to show the outlier droplets in blue you would need to add the parameters `show_drops_outlier = TRUE, col_drops_outlier = "blue"`.
+There are many plot parameters to allow you to create extremely customizable plots. Among the many parameters, there are three special categories of parameters that affect the visibility of droplets: `show_drops_*` is used to show/hide certain droplets, `col_drops_*` is used to set the colour of droplets, and `alpha_drops_*` is used to set the transparency of droplets (0 = transparent, 1 = opaque). The `*` can be replaced by the name of any droplet cluster (the available clusters can be obtained with `clusters(plate)` as mentioned earlier). For example, to show the outlier droplets in blue, add the parameters `show_drops_outlier = TRUE, col_drops_outlier = "blue"`.
 
 The following two plots show examples of how to use some plot parameters.
 
@@ -336,7 +336,7 @@ So far we only used the default plate type in this analysis, but droplet gating 
 
 1. **`plate_types$custom_thresholds`** - when you want to gate your droplets into four quadrants according to HEX and FAM values that you set  
 2. **`plate_types$fam_positive_pnpp`** - when you have a FAM-positive PNPP plate (FAM+)/(FAM+HEX+)  
-3. **`plate_types$fam_positive_pnpp`** - when you have a HEX-positive PNPP plate (HEX+)/(FAM+HEX+)
+3. **`plate_types$hex_positive_pnpp`** - when you have a HEX-positive PNPP plate (HEX+)/(FAM+HEX+)
 
 The next two sections explain how to use these experiment types.
 
@@ -347,7 +347,8 @@ If you want to perform a simple 4-quadrant gating like the one available in Quan
 ```{r reset, message=FALSE}
 # two ways to create the desired plate
 plate_manual <- reset(plate, type = plate_types$custom_thresholds)
-plate_manual2 <- new_plate(dir, type = plate_types$custom_thresholds) %>% subset("B01:C06")
+plate_manual2 <- new_plate(dir, type = plate_types$custom_thresholds) %>%
+  subset("B01:C06")
 
 # make sure the two methods above are identical
 identical(plate_manual, plate_manual2)
