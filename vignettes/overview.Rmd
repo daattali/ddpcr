@@ -189,8 +189,8 @@ plate
 Among other things, this tells us how many wells and total droplets we have in the data, and what steps of the analysis are remaining. All the information that gets shown when you print a ddpcr plate object is also available through other functions that are dedicated to show one piece of information. For example
 
 ```{r explore-1}
-plate %>% name  # equivalent to `name(plate)`
-plate %>% type  # equivalent to `type(plate)`
+plate %>% name()  # equivalent to `name(plate)`
+plate %>% type()  # equivalent to `type(plate)`
 ```
 
 Since we didn't specify an experiment type, this plate object has the default type of `ddpcr_plate`.
@@ -198,7 +198,7 @@ Since we didn't specify an experiment type, this plate object has the default ty
 We can see what wells are in our data with `wells_used()`   
 
 ```{r explore-2}
-plate %>% wells_used
+plate %>% wells_used()
 ```
 
 There are 5 wells because the sample data folder has 5 well files.
@@ -206,15 +206,15 @@ There are 5 wells because the sample data folder has 5 well files.
 We can see all the droplets data with `plate_data()` 
 
 ```{r explore-3}
-plate %>% plate_data
+plate %>% plate_data()
 ```
 
-> **Technical note**: This shows us the fluorescent amplitudes of each droplet, along with the current cluster assignment of each droplet. Right now all droplets are assigned to cluster 1 which corresponds to *undefined* since no analysis has taken place yet.  You can see all the clusters that a droplet can belong to with the `clusters()` function
+> **Technical note**: This shows us the fluorescence amplitudes of each droplet, along with the current cluster assignment of each droplet. Right now all droplets are assigned to cluster 1 which corresponds to *undefined* since no analysis has taken place yet.  You can see all the clusters that a droplet can belong to with the `clusters()` function
 > 
->     plate %>% clusters
+>     plate %>% clusters()
 >     #> [1] "UNDEFINED" "FAILED"    "OUTLIER"   "EMPTY"
 > 
-> This tells us that any droplet in a `ddpcr_plate`-type experiment can be classified into those clusters.  Any droplet is initially *UNDEFINED*, droplets in failed wells are marked as *FAILED*, and the other two names are self explanatory.
+> This tells us that any droplet in a `ddpcr_plate`-type experiment can be classified into those clusters.  Any droplet is initially *UNDEFINED*, droplets in failed wells are marked as *FAILED*, and the other two names are self-explanatory.
 
 We can see the results of the plate so far with `plate_meta()`
 
