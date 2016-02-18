@@ -155,14 +155,14 @@ This section will go into details of how to use `ddpcr` to analyze ddPCR data.
 
 <h3 id="load">Loading ddPCR data</h3>
 
-The first step is to get the ddPCR data into R. `ddpcr` uses the data files that are exported by QuantaSoft as its input. You need to have all the well files for the wells you want to analyze (one file per well), and you can optionally add the results file from QuantaSoft. If you loaded an experiment named *2015-05-20_mouse* with 50 wells to QuantaSoft, then QuantaSoft will export the following files:
+The first step is to get the ddPCR data into R. `ddpcr` uses the data files that are exported by QuantaSoft as its input. You need to have all the well files for the wells you want to analyze (one file per well), and you can optionally add the results file from QuantaSoft. *JB: clarify what that optional file is. Isn't that the one with info on the meaning of the channels and/or the wells?* If you loaded an experiment named `2015-05-20_mouse` with 50 wells to QuantaSoft, then QuantaSoft will export the following files:
 
-- 50 data files (well files): each well will have its own file with the name ending in *_Amplitude.csv". For example, the droplets in well A01 will be saved in *2015-05-20_mouse_A01_Aamplitude.csv*
-- 1 results file: a small file named *2015-05-20_mouse.csv* will be generated with some information about the plate, including the name of the sample in each well (assuming you named the samples previously)
+- 50 data files (well files): each well will have its own file with the name ending in `*_Amplitude.csv`. For example, the droplets in well A01 will be saved in `2015-05-20_mouse_A01_Aamplitude.csv1`.
+- 1 results file: a small file named `2015-05-20_mouse.csv` will be generated with some information about the plate, including the name of the sample in each well (assuming you named the samples previously).
 
 The well files are the only required input to `ddpcr`, and since ddPCR plates contain 96 wells, you can upload anywhere from 1 to 96 well files. The results file is not mandatory, but if you don't provide it then the wells will not have sample names attached to them.
 
-`ddpcr` contains a sample dataset called *small* that has 5 wells. We use the `new_plate()` function to initialize a new ddPCR plate object. If given a directory, it will automatically find all the valid well files in the directory and attempt to find a matching results file.
+`ddpcr` contains a sample dataset called `small` that has 5 wells. We use the `new_plate()` function to initialize a new ddPCR plate object. If given a directory, it will automatically find all the valid well files in the directory and attempt to find a matching results file.
 
 ```{r readdata}
 library(ddpcr)
