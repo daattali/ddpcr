@@ -421,7 +421,8 @@ Now we can analyze the plate
 plate_pnpp <- analyze(plate_pnpp)
 ```
 
-One of the key goals in running the analysis is to determine the number of *POSITIVE* (wildtype) and *NEGATIVE* (mutant) droplets in each well, and similarly the *mutant frequency* (if a well has 95 wildtype droplets and 5 mutant droplets, then the *mutant frequency* in the well is 5%).    
+One of the key goals in running the analysis is to determine the number of *POSITIVE* (wildtype) and *NEGATIVE* (mutant) droplets in each well, and similarly the *mutant frequency* (if a well has 95 wildtype droplets and 5 mutant droplets, then the *mutant frequency* in the well is 5%).  
+
 You can see from the output that the two last steps are **classifying** and **reclassifying** the droplets, and that the reclassification didn't take place. The classification step identifies all the non-empty droplets as either rain, mutant, or wildtype by analyzing each well individually. Wells with a very low *mutant frequency* (i.e., there are very few mutant droplets) are much harder to gate accurately, which is the reason for the reclassification step. The reclassification step uses information from wells with high a *mutant frequency*, where the gates are more clearly defined, to adjust the gates in wells with a low *mutant frequency*. The reclassification step only takes place if there are enough wells with a high mutant frequency.
 
 <h4 id="pnpp-results">Results of a PNPP experiment</h4>
@@ -448,11 +449,11 @@ plate_pnpp %>% plot(text_size_mutant_freq = 8)
 
 The wildtype droplets are green and the mutant droplets are purple. The well colours themselves reflect the **significant_mutant_cluster** variable: wells that are mostly wildtype droplets are green, and wells with significant mutant clusters are purple. There are parameters to set all these colours, the transparency levels, and many more options.
 
-Similarly to how `wells_failed()` returns the failed wells, you can use the `wells_mutant()` and `wells_wildtype()` functions to extract the wells with a significant mutant cluster and those without.
+Similar to how `wells_failed()` returns the failed wells, you can use the `wells_mutant()` and `wells_wildtype()` functions to extract the wells with a significant mutant cluster and those without.
 
 ```{r pnppnegpos}
-plate_pnpp %>% wells_mutant
-plate_pnpp %>% wells_wildtype
+plate_pnpp %>% wells_mutant()
+plate_pnpp %>% wells_wildtype()
 ```
 
 <h2 id="plate-params">Advanced topic 1: Plate parameters</h2>
@@ -460,7 +461,7 @@ plate_pnpp %>% wells_wildtype
 Every ddPCR plate object has adjustable parameters associated with it. There are general parameters that apply to the plate as a whole, and each analysis step has its own set of parameters that are used for the algorithm in that step. You can see all the parameters of a plate using the `params()` function
 
 ```{r paramsstr}
-plate %>% params %>% str
+plate %>% params() %>% str()
 ```
 
 You can also view the parameters for a specific step or the value of a parameter. For example, to see the parameters used in the step that identifies failed wells, use
@@ -469,7 +470,7 @@ You can also view the parameters for a specific step or the value of a parameter
 plate %>% params("REMOVE_FAILURES")
 ```
 
-You can also view or edit specific parameters. When identifying failed wells, one of the conditions for a successful run is to have at least 5000 droplets in the well (Bio-Rad claims that every well has 20000 droplets). If you know that your particular experiment had much less droplets than usual and as a result `ddpcr` thinks that all the wells are failures, you can change the setting
+You can also view or edit specific parameters. When identifying failed wells, one of the conditions for a successful run is to have at least 5000 droplets in the well (Bio-Rad claims that every well has 20000 droplets). If you know that your particular experiment had much fewer droplets than usual and as a result `ddpcr` thinks that all the wells are failures, you can change the setting
 
 ```{r setparams}
 params(plate, "REMOVE_FAILURES", "TOTAL_DROPS_T")
@@ -483,7 +484,7 @@ If you look at the full parameters of the plate, you'll notice that by default `
 orig_x <- x_var(plate)
 orig_x
 x_var(plate) <- "VIC"
-plate %>% plate_data %>% names
+plate %>% plate_data() %>% names()
 x_var(plate) <- orig_x
 ```
 
@@ -512,6 +513,6 @@ ddpcr:::init_plate
 
 <h2 id="new-types">Advanced topic 3: Creating new plate types</h2>
 
-Each ddPCR plate has a plate type which determines what type of analysis to run on the data. `plate_types` contains a list of the built-in plate types that are supported, but you can also create your own plate type. Creating a new plate type can be used if you want to supply your own logic for any analysis step, or even if you simply want to have a type that sets different default parameters than the built-in ones.
+Each ddPCR plate has a plate type which determines what type of analysis to run on the data. `plate_types` contains a list of the built-in plate types that are supported, but you can also create your own plate type. Create a new plate type if you want to supply your own logic for any analysis step, or even if you simply want to have a type that sets different default parameters than the built-in ones.
 
 **For more details about how to create new plate types, see [the _Extending ddpcr by adding new plate types_ vignette](extend.Rmd).**
