@@ -19,7 +19,7 @@ options(ddpcr.verbose = TRUE)
 [![Build Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
 [![CRAN version](http://www.r-pkg.org/badges/version/ddpcr)](http://cran.r-project.org/web/packages/ddpcr/index.html)
 
-This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. It includes an interactive web app to facilitate analysis by anyone who is not comfortable with using R, which is [available online](http://daattali.com/shiny/ddpcr/) and can also be [run locally](#r-interactive).
+This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. It also includes an interactive web app to facilitate analysis by anyone who is not comfortable with using R, which is [available online](http://daattali.com/shiny/ddpcr/) and can also be [run locally](#r-interactive).
 
 This document explains the purpose of this package and includes a tutorial on how to use. It should take about 20 minutes to go through the entire document. 
 
@@ -56,7 +56,7 @@ This document explains the purpose of this package and includes a tutorial on ho
 
 Droplet Digital PCR (ddPCR) is a technology provided by Bio-Rad for performing digital PCR. The basic workflow of ddPCR involves three main steps: partitioning sample DNA into 20,000 droplets, PCR amplifying the nucleic acid in each droplet, and finally passing the droplets through a reader that detects fluorescent amplitudes in two different wavelengths corresponding to FAM and HEX dyes. As a result, the data obtained from a ddPCR experiment can be visualized as a 2D scatterplot (one dimension is FAM intensity and the other dimension is HEX intensity) with 20,000 points (each droplet represents a point).  The following figure is an example of a scatterplot from ddPCR data.
 
-[![Sample ddPCR data](../inst/vignettes-supp/sample-ddpcr.png)](../inst/vignettes-supp/sample-ddpcr.png)
+[![Sample ddPCR data](../inst/vignettes-supp/ddpcr-example.png)](../inst/vignettes-supp/ddpcr-example.png)
 
 ddPCR experiments can be defined as singleplex, duplex, or multiplex depending on the number of targets amplified (one, two, and more than two, respectively). A duplex experiment typically uses one FAM dye and one HEX dye, and consequently the droplets will be grouped into one of four clusters: double-positive (droplets that contain both target sequences and emit both HEX and FAM fluorescence), FAM-positive, HEX-positive, and double-negative (empty droplets without any amplifiable template that do not emit fluorescence in either channel). When plotting the droplets, each quadrant of the plot corresponds to a cluster; for example, the droplets in the lower-left quadrant are the double-negative droplets.
 
@@ -111,7 +111,7 @@ Enough talking, let's get our hands dirty.
 First, install `ddpcr`
 
 ```{r installpkg, eval = FALSE}
-install.packages("devtools")
+install.packages("ddpcr")
 ```
 
 <h2 id="r-interactive">Running the interactive tool locally through R</h2>

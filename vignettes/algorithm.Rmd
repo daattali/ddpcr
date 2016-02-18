@@ -25,11 +25,11 @@ The initial droplet data is a list of *n* matrices, where *n* is the number of w
 
 The first step is to identify any wells that clearly failed the ddPCR run by checking four quality control metrics.
 
-The first check is to ensure the total number of droplets in a well must exceed a specific threshold value (`params(plate, 'REMOVE_FAILURES', 'TOTAL_DROPS_T')`, default is 5000). BioRad claims that wells should have 20,000 droplets, but in practice we usually see between 12,000-17,000 droplets per well, and any well with too few droplets is considered a failure.
+The first check is to ensure the total number of droplets in a well must exceed a specific threshold value (`params(plate, 'REMOVE_FAILURES', 'TOTAL_DROPS_T')`, default is 5,000). BioRad claims that wells should have 20,000 droplets, but in practice we usually see between 12,000-17,000 droplets per well, and any well with too few droplets is considered a failure.
 
 The other three metrics evaluate the expected droplet clusters (empty, mutant, wildtype) and their quality by fitting a two-component Gaussian mixture model to the FAM signals of all droplets. Each of the two components is defined with a mean (*center*) and a standard deviation (*sd*). In a typical well, the distribution with the lower center will capture the empty droplets, while the higher distribution models the FAM+ (or template-containing) droplets. Every well is expected to have mostly empty droplets, so the second metric involves looking for acceptable segregation of empty droplets from the FAM+ cluster by measuring the difference between the centers of the two distributions. The third metric evaluates the relative droplet frequency within the lower (empty) population to ensure the fraction of empty droplets is above a certain threshold (`params(plate, 'REMOVE_FAILURES', 'EMPTY_LAMBDA_LOW_T')`, default is 0.3). Failure to meet this criterion indicates a lack of a defined empty cluster. Similarly, the fourth quality control check ensures the empty droplet frequency must also be below a certain fraction (`params(plate, 'REMOVE_FAILURES', 'EMPTY_LAMBDA_HIGH_T')`, default is 0.99), as having too many empty droplets is a sign that there is not enough amplifiable template in the well.
 
-Any well that does not meet all four criteria is deemd a failed run, and such wells are removed from further analysis.
+Any well that does not meet all four criteria is deemed a failed run, and such wells are removed from further analysis.
 
 ## Step 2: Identify outlier droplets
 

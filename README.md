@@ -7,10 +7,10 @@ Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-
 version](http://www.r-pkg.org/badges/version/ddpcr)](http://cran.r-project.org/web/packages/ddpcr/index.html)
 
 This package provides an interface to explore, analyze, and visualize
-droplet digital PCR (ddPCR) data in R. It includes an interactive web
-app to facilitate analysis by anyone who is not comfortable with using
-R, which is [available online](http://daattali.com/shiny/ddpcr/) and can
-also be [run locally](#r-interactive).
+droplet digital PCR (ddPCR) data in R. It also includes an interactive
+web app to facilitate analysis by anyone who is not comfortable with
+using R, which is [available online](http://daattali.com/shiny/ddpcr/)
+and can also be [run locally](#r-interactive).
 
 This document explains the purpose of this package and includes a
 tutorial on how to use. It should take about 20 minutes to go through
@@ -62,7 +62,7 @@ points (each droplet represents a point). The following figure is an
 example of a scatterplot from ddPCR data.
 
 [![Sample ddPCR
-data](inst/vignettes-supp/sample-ddpcr.png)](inst/vignettes-supp/sample-ddpcr.png)
+data](inst/vignettes-supp/ddpcr-example.png)](inst/vignettes-supp/ddpcr-example.png)
 
 ddPCR experiments can be defined as singleplex, duplex, or multiplex
 depending on the number of targets amplified (one, two, and more than
@@ -200,7 +200,7 @@ Enough talking, let's get our hands dirty.
 
 First, install `ddpcr`
 
-    install.packages("devtools")
+    install.packages("ddpcr")
 
 <h2 id="r-interactive">
 Running the interactive tool locally through R
@@ -793,11 +793,11 @@ Now we can analyze the plate
 
     #> Identifying empty droplets...
 
-    #> DONE (1 seconds)
+    #> DONE (0 seconds)
 
     #> Classifying droplets...
 
-    #> DONE (1 seconds)
+    #> DONE (0 seconds)
 
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
 
@@ -993,7 +993,7 @@ the `restart = TRUE` parameter.
 
     #> Identifying empty droplets...
 
-    #> DONE (1 seconds)
+    #> DONE (0 seconds)
 
     #> Analysis complete
 
