@@ -266,10 +266,10 @@ We can explore the plate again, now that it has been analyzed.
 plate
 ```
 
-We now get a message that says the analysis is complete (earlier it said what steps are remaining). We can also look at the droplets data
+We now get a message that says the analysis is complete (earlier it said which steps were remaining). We can also look at the droplets data
 
 ```{r explore-post-2}
-plate %>% plate_data
+plate %>% plate_data()
 ```
 
 This isn't very informative since it shows the cluster assignment for each droplet, which is not easy for a human to digest. Instead, this information can be visualized by plotting the plate (coming up). We can also look at the plate results 
@@ -285,6 +285,8 @@ You can use the `well_info()` function to get the value of a specific variable o
 ```{r explore-post-4}
 well_info(plate, "B06", "drops_empty")
 ```
+
+*JB: what's that third argument? maybe specify it by name?*
 
 <h3 id="plot">Plot</h3>
 
