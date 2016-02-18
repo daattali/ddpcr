@@ -113,8 +113,8 @@ Enough talking, let's get our hands dirty.
 
 First, install `ddpcr`
 
-```
-install.packages("devtools")
+```{r eval = FALSE}
+# install.packages("devtools")
 devtools::install_github("daattali/ddpcr")
 ```
 
@@ -137,14 +137,14 @@ plate1 <-
   new_plate(dir, type = plate_types$custom_thresholds) %>%
   subset("B01,B06") %>%
   set_thresholds(c(5000, 7500)) %>%
-  analyze
+  analyze()
 plot(plate1, show_grid_labels = TRUE, alpha_drops = 0.3,
-       title = "Manually set gating thresholds\nworks with any data")
+     title = "Manually set gating thresholds\nworks with any data")
 
 # example 2: automatic gating
 new_plate(dir, type = plate_types$fam_positive_pnpp) %>%
   subset("B01:B06") %>%
-  analyze %>%
+  analyze() %>%
   plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, alpha_drops = 0.3,
        title = "Automatic gating\nworks with PNPP experiments")
 ```
