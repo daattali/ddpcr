@@ -227,7 +227,8 @@ The `only_used` parameter is used so that we'll only get data about the 5 existi
 <h3 id="subset">Subset the plate</h3>
 
 If you aren't interested in all the wells, you can use the `subset()` function to retain only certain wells. Alternatively, you can use the `data_files` argument of the `new_plate()` function to only load certain well files instead of a full directory.  
-The `subset()` function can take accept either a list of sample names, a list of wells, or a special *range notation*. The range notation is a convenient way to select many wells: use a colon (`:`) to specify a range of wells and a comma (`,`) to add another well or range. A range of wells is defined as all wells in the rectangular area between the two endpoints. For example, `B05:C06` corresponds to the four wells `B05, B06, C05, C06`.  The following diagram shows the result of subsetting with a range notation of `A01:H03, C05, E06, B07:C08` on a plate that initially contains all 96 wells.  
+
+The `subset()` function accepts either a list of sample names, a list of wells, or a special *range notation*. The range notation is a convenient way to select many wells: use a colon (`:`) to specify a range of wells and a comma (`,`) to add another well or range. A range of wells is defined as all wells in the rectangular area between the two endpoints. For example, `B05:C06` corresponds to the four wells `B05, B06, C05, C06`.  The following diagram shows the result of subsetting with a range notation of `A01:H03, C05, E06, B07:C08` on a plate that initially contains all 96 wells.  
 
 [![Subset example](../inst/vignettes-supp/ex-subset.png)](../inst/vignettes-supp/ex-subset.png)
 
@@ -236,7 +237,7 @@ Back to our data: we have 5 wells, let's keep 4 of them
 ```{r subset}
 plate <- plate %>% subset("B01:C06")
 # could have also used subset("B01, B06, C01, C06")
-plate %>% wells_used
+plate %>% wells_used()
 ```
 
 <h3 id="run">Run analysis</h3>
