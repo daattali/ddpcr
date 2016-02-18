@@ -248,15 +248,15 @@ An analysis of a ddPCR plate consists of running the plate through a sequence of
 plate
 ```
 
-The last two lines show up what steps have been completed and what steps remain. These steps are the default steps that any ddpcr plate will go through by default if no type is specified. At this point all we did was load the data, so the initialization step was done and there are 3 remaining steps. You can run all remaining steps with `analyze()`, or run through the steps one by one using `next_step()`.
+The last two lines show which steps have been completed and which steps remain. These steps are the default steps that any ddpcr plate will go through by default if no type is specified. At this point all we did was load the data, so the initialization step was done and there are 3 remaining steps. You can run all remaining steps with `analyze()`, or run through the steps one by one using `next_step()`.
 
 ```{r analyze}
-plate <- plate %>% analyze
+plate <- plate %>% analyze()
 # equivalent to `plate %>% next_step(3)`
-# also equivalent to `plate %>% next_step %>% next_step %>% next_step`
+# also equivalent to `plate %>% next_step() %>% next_step() %>% next_step()`
 ```
 
-As each step of the analysis is performed, a message describing the current step is printed to the screen. Since we only have 2 wells, it should be very fast, but when you have a full 96-well plate, the analysis could take several minutes. Sometimes it can be useful to run each step individually rather than all of them together if you want to inspect the data after each step.
+As each step of the analysis is performed, a message describing the current step is printed to the screen. Since we only have 2 wells *JB: no we've got 4!*, it should be very fast, but when you have a full 96-well plate, the analysis could take several minutes. Sometimes it can be useful to run each step individually rather than all of them together if you want to inspect the data after each step.
 
 <h3 id="explore2">Post-analysis exploration of the data</h3>
 
