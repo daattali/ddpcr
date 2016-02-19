@@ -4,7 +4,7 @@ ddpcr: Analysis and visualization of Droplet Digital PCR data in R and on the we
 [![Build
 Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
 [![CRAN
-version](http://www.r-pkg.org/badges/version/ddpcr)](http://cran.r-project.org/web/packages/ddpcr/index.html)
+version](http://www.r-pkg.org/badges/version/ddpcr)](http://cran.r-project.org/package=ddpcr)
 
 This package provides an interface to explore, analyze, and visualize
 droplet digital PCR (ddPCR) data in R. It also includes an interactive
@@ -793,11 +793,11 @@ Now we can analyze the plate
 
     #> Identifying empty droplets...
 
-    #> DONE (0 seconds)
+    #> DONE (1 seconds)
 
     #> Classifying droplets...
 
-    #> DONE (0 seconds)
+    #> DONE (1 seconds)
 
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
 
@@ -993,7 +993,7 @@ the `restart = TRUE` parameter.
 
     #> Identifying empty droplets...
 
-    #> DONE (0 seconds)
+    #> DONE (1 seconds)
 
     #> Analysis complete
 

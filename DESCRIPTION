@@ -31,7 +31,7 @@ Suggests:
     knitr (>= 1.7),
     testthat (>= 0.9.1),
     rmarkdown
-License: file LICENSE
+License: MIT + file LICENSE
 LazyData: true
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1

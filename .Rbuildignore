@@ -6,3 +6,4 @@
 ^\.travis\.yml$
 ^Makefile$
 ^.*\.o$
+inst/shiny/datasets/
