@@ -47,3 +47,57 @@ Pls fix
 Addressed all previous comments (used conventional LICENSE file and namespaced all functions from default packages)
 
 ### Reviewer comments
+
+2016-02-18 Kurt Hornik:
+
+```
+Now
+
+* checking top-level files ... NOTE
+Non-standard file/directory found at top level:
+  ‘cran-comments.md’
+
+Pls fix
+
+Best
+-k
+```
+
+## Round 3
+
+### Submission comments
+
+2016-02-19
+
+Added cran-comments to buildignore
+
+### Reviewer comments
+
+2016-02-18 Kurt Hornik:
+
+```
+We also see
+
+Found the following (possibly) invalid URLs:
+  URL: http://cran.r-project.org/package=ddpcr
+    From: inst/doc/overview.html
+    Status: 404
+    Message: Not Found
+
+This cannot work yet, but should be https:// instead.
+
+Pls fix
+
+Best
+-k
+```
+
+## Round 4
+
+### Submission comments
+
+2016-02-19
+
+Changed CRAN package URL from http to https
+
+### Reviewer comments
