@@ -101,3 +101,12 @@ Best
 Changed CRAN package URL from http to https
 
 ### Reviewer comments
+
+2016-02-18 Kurt Hornik:
+
+```
+Thanks, on CRAN now.
+
+Best
+-k
+```
