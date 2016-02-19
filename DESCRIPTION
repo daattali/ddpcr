@@ -1,8 +1,8 @@
 Package: ddpcr
 Title: Analysis and Visualization of Droplet Digital PCR in R and on the Web
-Version: 0.9.2
+Version: 1.0.0
 Authors@R: c(
-    person("Dean", "Attali", , "daattali@gmail.com", role = c("aut", "cre"))
+    person("Dean", "Attali", email = "daattali@gmail.com", role = c("aut", "cre"))
     )
 Description: An interface to explore, analyze, and visualize droplet digital PCR
     (ddPCR) data in R. This is the first known non-proprietary software for
