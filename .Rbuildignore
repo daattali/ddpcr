@@ -7,3 +7,4 @@
 ^Makefile$
 ^.*\.o$
 inst/shiny/datasets/
+^cran-comments\.md$
