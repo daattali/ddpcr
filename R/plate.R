@@ -86,7 +86,7 @@ new_plate <- function(dir, type, data_files, meta_file, name, params) {
   }
   
   if (!missing(params)) {
-    params(plate) %<>% modifyList(params)
+    params(plate) %<>% utils::modifyList(params)
   }
   
   plate <- init_plate(plate)
@@ -130,7 +130,7 @@ reset <- function(plate, type, params,
   plate <- setup_plate(plate, type)
   plate <- init_plate(plate)
   if (!missing(params)) {
-    params(plate) %<>% modifyList(params)
+    params(plate) %<>% utils::modifyList(params)
   }
   plate
 }

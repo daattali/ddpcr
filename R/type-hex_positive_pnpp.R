@@ -60,7 +60,7 @@ define_params.hex_positive_pnpp <- function(plate) {
       'POSITIVE_DIMENSION' = 'X'
     )
   )
-  params %<>% modifyList(new_params)
+  params %<>% utils::modifyList(new_params)
   
   params
 }

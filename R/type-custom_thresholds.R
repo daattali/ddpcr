@@ -49,7 +49,7 @@ define_params.custom_thresholds <- function(plate) {
       'Y_THRESHOLD' = 5000
     )
   )
-  params %<>% modifyList(new_params)
+  params %<>% utils::modifyList(new_params)
   
   params
 }

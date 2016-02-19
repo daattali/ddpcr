@@ -63,7 +63,7 @@ define_params.wildtype_mutant_pnpp <- function(plate) {
       'NEGATIVE_NAME' = 'mutant'
     )
   )
-  params %<>% modifyList(new_params)
+  params %<>% utils::modifyList(new_params)
   
   params
 }

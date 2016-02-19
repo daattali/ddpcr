@@ -73,14 +73,14 @@ reclassify_droplets.pnpp_experiment <- function(plate) {
                  dplyr::filter_(~ well == x,
                                 ~ cluster == CLUSTER_POSITIVE) %>%
                  .[[variable_var]] %>%
-                 median               
+                 stats::median()               
                ratio <- negative_max / positive_median
                ratio
              },
              numeric(1)
       ) %>%
-      quantile(params(plate, 'RECLASSIFY', 'BORDER_RATIO_QUANTILE')) %>%
-      as.numeric
+      stats::quantile(params(plate, 'RECLASSIFY', 'BORDER_RATIO_QUANTILE')) %>%
+      as.numeric()
     
     wells_to_reclassify <- plate %>% wells_positive
     
@@ -131,7 +131,7 @@ reclassify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., cons
     well_data %>%
     dplyr::filter_(~ cluster == CLUSTER_POSITIVE) %>%
     .[[variable_var]] %>%
-    median    
+    stats::median()
   
   # determine the negative border based on the median WT drops and the given ratio
   negative_border <- (consensus_border_ratio * positive_median) %>% as.integer

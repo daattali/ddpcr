@@ -109,7 +109,7 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
   for (adj in seq(params(plate, 'CLASSIFY', 'ADJUST_BW_MIN'),
                   params(plate, 'CLASSIFY', 'ADJUST_BW_MAX'),
                   0.5)) {
-    dens_smooth <- density(filled[[variable_var]], bw = "sj", adjust = adj)
+    dens_smooth <- stats::density(filled[[variable_var]], bw = "sj", adjust = adj)
     maxima_idx <- local_maxima(dens_smooth$y)
     minima_idx <- local_minima(dens_smooth$y)
     
@@ -118,13 +118,13 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
     while (TRUE) {
       btwn_right_mins <-
         filled %>%
-        dplyr::filter_(lazyeval::interp(~ var %btwn% dens_smooth$x[tail(minima_idx, 2)],
+        dplyr::filter_(lazyeval::interp(~ var %btwn% dens_smooth$x[utils::tail(minima_idx, 2)],
                                         var = as.name(variable_var)))
       
       if (nrow(btwn_right_mins) < nrow(filled) * 0.1) {
         # discard rightmost extreme points
-        maxima_idx %<>% head(-1)
-        minima_idx %<>% head(-1)
+        maxima_idx %<>% utils::head(-1)
+        minima_idx %<>% utils::head(-1)
       } else {
         break
       }
@@ -138,7 +138,7 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
       # if it's not the first attempt, revert to the previous bandwidth
       if (!bw_orig) {
         adj <- adj_prev
-        dens_smooth <- density(filled[[variable_var]], bw = "sj", adjust = adj)
+        dens_smooth <- stats::density(filled[[variable_var]], bw = "sj", adjust = adj)
         maxima_idx <- local_maxima(dens_smooth$y)
         minima_idx <- local_minima(dens_smooth$y)
         num_peaks <- length(maxima_idx)
@@ -186,7 +186,7 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
   # mutants and wildtypes
   negative_border_tight <-
     mean(negative_drops[[variable_var]]) +
-    (sd(negative_drops[[variable_var]]) * 3)
+    (stats::sd(negative_drops[[variable_var]]) * 3)
   if (!is.na(negative_border_tight) && negative_border_tight < negative_border) {
     negative_border <- negative_border_tight
     negative_drops <- filled %>%
@@ -206,13 +206,13 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
                      round(dens_smooth$bw)),
       xlab = paste0("max: ", paste(round(dens_smooth$x[maxima_idx]), collapse = ", "),
                     "\nmin: ", paste(round(dens_smooth$x[minima_idx]), collapse = ", ")))
-    points(filled, col = "blue")
-    points(negative_drops, col = "purple3")
-    points(positive_drops, col = "green3")
-    abline(h = filled_border, col = "black")
-    abline(v = dens_smooth$x[minima_idx])
-    abline(v = dens_smooth$x[maxima_idx], col = "grey")
-    abline(v = negative_border_tight, col = "red")
+    graphics::points(filled, col = "blue")
+    graphics::points(negative_drops, col = "purple3")
+    graphics::points(positive_drops, col = "green3")
+    graphics::abline(h = filled_border, col = "black")
+    graphics::abline(v = dens_smooth$x[minima_idx])
+    graphics::abline(v = dens_smooth$x[maxima_idx], col = "grey")
+    graphics::abline(v = negative_border_tight, col = "red")
   }
   
   # detemine if the well has a statistically significant negative cluster 
@@ -306,6 +306,7 @@ has_signif_negative_cluster <- function(plate, neg, pos) {
   pval <- params(plate, 'CLASSIFY', 'SIGNIFICANT_P_VALUE')
   total <- neg + pos
   result <- 
-    (1 - pbinom(neg, total, freq_threshold) + dbinom(neg, total, freq_threshold)) < pval
+    (1 - stats::pbinom(neg, total, freq_threshold) + 
+       stats::dbinom(neg, total, freq_threshold)) < pval
   result
 }

@@ -217,10 +217,10 @@ quiet <- function(expr, all = TRUE) {
   
   if (all) {
     suppressWarnings(suppressMessages(suppressPackageStartupMessages(
-      capture.output(expr, file = file) 
+      utils::capture.output(expr, file = file) 
     )))
   } else {
-    capture.output(expr, file = file)
+    utils::capture.output(expr, file = file)
   }
 }
 
@@ -283,7 +283,7 @@ merge_dfs_overwrite_col <- function(olddf, newdf, cols, bycol = "well") {
                                     result[[colname_x]],
                                     result[[colname_y]])
       result %<>%
-        dplyr::rename_(.dots = setNames(colname_x, colname)) %>%
+        dplyr::rename_(.dots = stats::setNames(colname_x, colname)) %>%
         dplyr::select_(lazyeval::interp(~ -colname, colname = as.name(colname_y)))
     }
   }

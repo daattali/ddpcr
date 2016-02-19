@@ -43,7 +43,7 @@ init_plate <- function(plate) {
     init_meta
   
   status(plate) <- step(plate, 'INITIALIZE')
-  plate[['version']] <- as.character(packageVersion("ddpcr"))
+  plate[['version']] <- as.character(utils::packageVersion("ddpcr"))
   step_end()
   
   plate

@@ -20,16 +20,16 @@ plate <- new_plate(sample_data_dir()) %>% subset("b6") %>%
   `plate_data<-`(plate_data(.) %>% dplyr::filter(FAM < 11000))
 full <- plate_data(plate)
 ndrops <- nrow(full)
-top1 <- full %>% dplyr::arrange(desc(HEX)) %>% head(ndrops/100)
+top1 <- full %>% dplyr::arrange(desc(HEX)) %>% utils::head(ndrops/100)
 p <- ggplot(full, aes(HEX, FAM)) +
   geom_point(alpha = 0.2, size = 2) + theme_classic(15)
-line <- quantile(full$HEX, .75) + 5*IQR(full$HEX)
+line <- stats::quantile(full$HEX, .75) + 5*IQR(full$HEX)
 pline <- p + geom_vline(xintercept = line, linetype = 2)
 p1 <- pline
 p2 <- ggplot(full, aes(HEX, FAM)) +
   geom_point(colour = "white") + theme_classic(15) +
   geom_point(data = top1, alpha = 0.3, size = 2)
-line <- quantile(top1$HEX, .75) + 5*IQR(top1$HEX)
+line <- stats::quantile(top1$HEX, .75) + 5*IQR(top1$HEX)
 p2 <- p2 + geom_vline(xintercept = line, linetype = 2)
 p3 <- p + geom_vline(xintercept = line, linetype = 2) +
   geom_point(data = top1 %>% dplyr::filter(HEX > 10000),
@@ -96,7 +96,7 @@ p1 <- ggExtra::ggMarginal(p, xparams = list(colour = "transparent"))
 
 full <- full %>% dplyr::filter(FAM >= filled_border)
 range <- ggplot_build(p)$panel$x_scales[[1]]$range$range
-dens_smooth <- density(full$HEX)
+dens_smooth <- stats::density(full$HEX)
 maxima_idx <- local_maxima(dens_smooth$y)
 minima_idx <- local_minima(dens_smooth$y)
 left_peak <- dens_smooth$x[maxima_idx][1]

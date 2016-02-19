@@ -87,7 +87,7 @@ remove_empty.ddpcr_plate <- function(plate) {
       dplyr::group_by_("well") %>%
       dplyr::summarise_("drops_empty" = ~ n()) %>%
       merge_dfs_overwrite_col(plate_meta(plate), ., "drops_empty") %>%
-      dplyr::mutate_(.dots = setNames(
+      dplyr::mutate_(.dots = stats::setNames(
         list(
           lazyeval::interp(~ ifelse(is.na(empty), NA, drops - empty),
                            empty = quote(drops_empty), drops = quote(drops)),

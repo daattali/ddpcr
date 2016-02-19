@@ -87,7 +87,7 @@ define_params.pnpp_experiment <- function(plate) {
       'BORDER_RATIO_QUANTILE'        = 0.75
     )
   )
-  params %<>% modifyList(new_params)
+  params %<>% utils::modifyList(new_params)
   
   params
 }

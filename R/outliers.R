@@ -103,10 +103,10 @@ get_outlier_cutoff.ddpcr_plate <- function(plate) {
   # get the top 1% of values in the Y dimension
   top_y <- 
     sort(data[[y_var]], decreasing = TRUE) %>%
-    head(nrow(data) / 100 * params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT'))
+    utils::head(nrow(data) / 100 * params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT'))
   # define the cutoff as the third quantile of the aforementioned top 1%
   # plus 5 IQR
-  q_y <- quantile(top_y, c(.25, .75))
+  q_y <- stats::quantile(top_y, c(.25, .75))
   cutoff_y <-
     (diff(q_y) * params(plate, 'REMOVE_OUTLIERS', 'CUTOFF_IQR') + q_y[2]) %>%
     as.numeric
@@ -114,8 +114,8 @@ get_outlier_cutoff.ddpcr_plate <- function(plate) {
   # repeat above with the X dimension
   top_x <- 
     sort(data[[x_var]], decreasing = TRUE) %>%
-    head(nrow(data) / 100 * params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT'))
-  q_x <- quantile(top_x, c(.25, .75))
+    utils::head(nrow(data) / 100 * params(plate, 'REMOVE_OUTLIERS', 'TOP_PERCENT'))
+  q_x <- stats::quantile(top_x, c(.25, .75))
   cutoff_x <-
     (diff(q_x) * params(plate, 'REMOVE_OUTLIERS', 'CUTOFF_IQR') + q_x[2]) %>%
     as.numeric

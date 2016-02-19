@@ -135,7 +135,7 @@ output$metaAggregate <- DT::renderDataTable({
   vars <- metaNumericVars()
   niceVars <- humanFriendlyNames(vars)
   selectInput("exploreVarSelect", "Choose summary variable",
-              setNames(vars, niceVars))
+              stats::setNames(vars, niceVars))
   
   meta <-
     dataValues$plate %>%
@@ -148,7 +148,7 @@ output$metaAggregate <- DT::renderDataTable({
   data <- 
     plyr::ldply(meta, function(x) {
       data.frame(Mean = mean(x, na.rm = TRUE),
-                 `Standard error` = sd(x, na.rm = TRUE) / sqrt(length(x)),
+                 `Standard error` = stats::sd(x, na.rm = TRUE) / sqrt(length(x)),
                  check.names = FALSE)},
       .id = "Variable"
     )
@@ -182,7 +182,7 @@ output$exploreVarOutput <- renderUI({
   vars <- metaNumericVars()
   niceVars <- humanFriendlyNames(vars)
   selectInput("exploreVarSelect", "Choose summary variable",
-              setNames(vars, niceVars))
+              stats::setNames(vars, niceVars))
 })
 
 # make the exploratory plot for the selected variable
@@ -200,7 +200,7 @@ makeExplorePlot <- function() {
   if (input$explorePlotType == "box") {
     boxplot(data, main = title, ylab = niceVar, col = "#eeeeee")
   } else if (input$explorePlotType == "density") {
-    dens <- density(data, na.rm = TRUE)
+    dens <- stats::density(data, na.rm = TRUE)
     plot(dens, main = title, xlab = niceVar, ylab = "")
     polygon(dens, col = "#eeeeee")
   } else {
@@ -342,7 +342,7 @@ makePlot <- eventReactive(input$plotBtn, {
         if (is.na(value)) {
           err_msg(sprintf("Invalid value for %s", x))
         }
-        setNames(value, x) %>% as.list
+        stats::setNames(value, x) %>% as.list
       })
     generalParams <- unlist(generalParams, recursive = FALSE)
     plotParams <- append(plotParams, generalParams)    
@@ -400,7 +400,7 @@ makePlot <- eventReactive(input$plotBtn, {
         if (is.na(value)) {
           err_msg(sprintf("Invalid value for %s", x))
         }
-        setNames(value, x) %>% as.list
+        stats::setNames(value, x) %>% as.list
       })
     figureParams <- unlist(figureParams, recursive = FALSE)
     plotParams <- append(plotParams, figureParams)
@@ -417,7 +417,7 @@ makePlot <- eventReactive(input$plotBtn, {
         if (is.na(value)) {
           err_msg(sprintf("Invalid value for %s", x))
         }
-        setNames(value, x) %>% as.list
+        stats::setNames(value, x) %>% as.list
       })
     wellParams <- unlist(wellParams, recursive = FALSE)
     plotParams <- append(plotParams, wellParams)

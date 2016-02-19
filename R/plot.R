@@ -167,7 +167,7 @@ plot.ddpcr_plate <- function(
                param_name <- paste0("show_drops_", cluster) %>% tolower
                param_idx <- which(param_name == all_params %>% names %>% tolower)
                if (length(param_idx) > 0) {
-                 show_cluster <- as.logical(all_params[[param_idx %>% tail(1)]])
+                 show_cluster <- as.logical(all_params[[param_idx %>% utils::tail(1)]])
                } else {
                  show_cluster <- TRUE
                }
@@ -241,7 +241,7 @@ plot.ddpcr_plate <- function(
                param_name <- paste0("col_drops_", cluster_name)
                param_idx <- which(param_name == all_params %>% names %>% tolower)
                if (length(param_idx) > 0) {
-                 cluster_col <- all_params[[param_idx %>% tail(1)]]
+                 cluster_col <- all_params[[param_idx %>% utils::tail(1)]]
                } else {
                  cluster_col <- col_drops
                }
@@ -258,7 +258,7 @@ plot.ddpcr_plate <- function(
                param_name <- paste0("alpha_drops_", cluster_name)
                param_idx <- which(param_name == all_params %>% names %>% tolower)
                if (length(param_idx) > 0) {
-                 cluster_alpha <- all_params[[param_idx %>% tail(1)]]
+                 cluster_alpha <- all_params[[param_idx %>% utils::tail(1)]]
                } else {
                  cluster_alpha <- alpha_drops
                }

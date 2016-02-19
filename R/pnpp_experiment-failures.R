@@ -22,7 +22,7 @@ is_well_success.pnpp_experiment <- function(plate, well_id) {
   
   y_var <- y_var(plate)
   
-  kmeans_y <- kmeans(well_data[[y_var]], 2, nstart = 5)
+  kmeans_y <- stats::kmeans(well_data[[y_var]], 2, nstart = 5)
   centers_y <- kmeans_y$centers %>% as.integer
   smaller_comp_y <- centers_y %>% which.min
   

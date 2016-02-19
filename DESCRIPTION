@@ -26,11 +26,14 @@ Imports:
     shinyjs (>= 0.4.0)
 Suggests: 
     ggExtra (>= 0.3.0),
+    graphics,
     grid (>= 3.2.2),
     gridExtra (>= 2.0.0),
     knitr (>= 1.7),
+    rmarkdown,
+    stats,
     testthat (>= 0.9.1),
-    rmarkdown
+    utils
 License: MIT + file LICENSE
 LazyData: true
 VignetteBuilder: knitr

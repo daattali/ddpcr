@@ -537,7 +537,7 @@ y_var <- function(plate) {
   
   value %<>% make.names
   plate_data(plate) %<>%
-    dplyr::rename_(.dots = setNames(x_var(plate), value))
+    dplyr::rename_(.dots = stats::setNames(x_var(plate), value))
   params(plate, 'GENERAL', 'X_VAR') <- value
   plate
 }
@@ -548,7 +548,7 @@ y_var <- function(plate) {
   
   value %<>% make.names
   plate_data(plate) %<>%
-    dplyr::rename_(.dots = setNames(y_var(plate), value))
+    dplyr::rename_(.dots = stats::setNames(y_var(plate), value))
   params(plate, 'GENERAL', 'Y_VAR') <- value
   plate
 }

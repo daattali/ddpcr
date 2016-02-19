@@ -108,7 +108,7 @@ is_well_success.ddpcr_plate <- function(plate, well_id) {
   set.seed(params(plate, 'GENERAL', 'RANDOM_SEED'))
   
   # fit two clusters into the 2D data
-  kmeans <- kmeans(well_data, 2)
+  kmeans <- stats::kmeans(well_data, 2)
   
   # extract the centers of the two clusters as a 'point2d' object
   centers <- kmeans$centers %>% t %>% as.data.frame %>% lapply(point2d)

@@ -60,7 +60,7 @@ define_params.fam_positive_pnpp <- function(plate) {
       'POSITIVE_DIMENSION' = 'Y'
     )
   )
-  params %<>% modifyList(new_params)
+  params %<>% utils::modifyList(new_params)
     
   params
 }

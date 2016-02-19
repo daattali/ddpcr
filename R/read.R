@@ -88,7 +88,7 @@ read_files <- function(plate, data_files, meta_file) {
   if (!is.null(meta_file)) {
     tryCatch({
       plate_meta <-
-        read.csv(meta_file, stringsAsFactors = FALSE) %>%
+        utils::read.csv(meta_file, stringsAsFactors = FALSE) %>%
         magrittr::set_colnames(colnames(.) %>% tolower)
     },
     error = function(err) {
