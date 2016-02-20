@@ -21,7 +21,7 @@ Calculate negative frequency of a single well
 \examples{
 file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
 plate <- load_plate(file)
-plate \%>\% calculate_neg_freq_single("B06")
+plate \%>\% calculate_neg_freq_single("A05")
 }
 \seealso{
 \code{\link[ddpcr]{pnpp_experiment}}

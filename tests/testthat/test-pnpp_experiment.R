@@ -69,6 +69,6 @@ test_that("meta_var_name works", {
 test_that("wells_positive and wells_negative work", {
   file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
   plate <- load_plate(file)
-  expect_identical(plate %>% wells_positive, c("B01", "C01"))
-  expect_identical(plate %>% wells_negative, c("B06", "C08"))
+  expect_identical(plate %>% wells_positive, c("A01", "C01"))
+  expect_identical(plate %>% wells_negative, c("A05", "F05"))
 })

@@ -177,7 +177,7 @@ set_default_params <- function(plate) {
 #' @examples 
 #' \dontrun{
 #' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
-#' well_info(plate, "B01", "drops")
+#' well_info(plate, "A01", "drops")
 #' } 
 #' @export
 well_info <- function(plate, well_ids, var) {
@@ -198,7 +198,7 @@ well_info <- function(plate, well_ids, var) {
 #' \dontrun{
 #' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' wells_used(plate)
-#' plate <- subset(plate, "B01:C06")
+#' plate <- subset(plate, "A01:C05")
 #' wells_used(plate)
 #' } 
 #' @export

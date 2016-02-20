@@ -28,8 +28,8 @@ candidates for the \code{negative} and \code{positive} clusters.
 \examples{
 file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
 plate <- load_plate(file)
-get_filled_drops(plate, "B06")
-get_filled_drops(plate, "B06", get_filled_border(plate, "B06"))
+get_filled_drops(plate, "A05")
+get_filled_drops(plate, "A05", get_filled_border(plate, "A05"))
 }
 \seealso{
 \code{\link[ddpcr]{pnpp_experiment}}\cr

@@ -142,37 +142,37 @@ test_that("get_single_well works", {
   plate <- load_plate(file)
   
   expect_identical(
-    get_single_well(plate, "B06"),
+    get_single_well(plate, "A05"),
     plate_data(plate) %>%
-      dplyr::filter(well == "B06") %>%
+      dplyr::filter(well == "A05") %>%
       dplyr::filter(cluster > cluster(plate, "EMPTY")) %>%
       dplyr::select(-well, -cluster)
   )
   expect_identical(
-    get_single_well(plate, "B06"),
+    get_single_well(plate, "A05"),
     plate_data(plate) %>%
-      dplyr::filter(well == "B06") %>%
+      dplyr::filter(well == "A05") %>%
       dplyr::filter(cluster > cluster(plate, "EMPTY")) %>%
       dplyr::select(-well, -cluster)
   )
   expect_identical(
-    get_single_well(plate, "B06", clusters = TRUE),
+    get_single_well(plate, "A05", clusters = TRUE),
     plate_data(plate) %>%
-      dplyr::filter(well == "B06") %>%
+      dplyr::filter(well == "A05") %>%
       dplyr::filter(cluster > cluster(plate, "EMPTY")) %>%
       dplyr::select(-well)
   )  
   expect_identical(
-    get_single_well(plate, "B06", empty = TRUE, clusters = TRUE),
+    get_single_well(plate, "A05", empty = TRUE, clusters = TRUE),
     plate_data(plate) %>%
-      dplyr::filter(well == "B06") %>%
+      dplyr::filter(well == "A05") %>%
       dplyr::filter(cluster > cluster(plate, "OUTLIER")) %>%
       dplyr::select(-well)
   )  
   expect_identical(
-    get_single_well(plate, "B06", empty = TRUE, outliers = TRUE, clusters = TRUE),
+    get_single_well(plate, "A05", empty = TRUE, outliers = TRUE, clusters = TRUE),
     plate_data(plate) %>%
-      dplyr::filter(well == "B06") %>%
+      dplyr::filter(well == "A05") %>%
       dplyr::select(-well)
   )  
 })

@@ -25,7 +25,7 @@ calc_negative_freq_simple <- function(negative_drops, positive_drops) {
 #' @examples 
 #' file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
 #' plate <- load_plate(file)
-#' plate %>% calculate_neg_freq_single("B06")
+#' plate %>% calculate_neg_freq_single("A05")
 #' @keywords internal
 #' @export
 calculate_neg_freq_single <- function(plate, well_id) {

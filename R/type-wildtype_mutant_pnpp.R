@@ -146,7 +146,7 @@ wells_mutant <- function(plate) {
 #' plot(plate)
 #' plate <- plate %>% analyze
 #' plot(plate)
-#' plot(plate, "B01:C06", col_drops_rain = "blue")
+#' plot(plate, "A01:C05", col_drops_rain = "blue")
 #' }
 #' @export
 plot.wildtype_mutant_pnpp <- function(

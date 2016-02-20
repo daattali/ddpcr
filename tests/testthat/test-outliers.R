@@ -5,11 +5,11 @@ test_that("get_outlier_cutoff works", {
   
   expect_identical(
     plate %>% get_outlier_cutoff,
-    list(HEX = 8168, FAM = 10855.25)
+    list(HEX = 7510, FAM = 9671.5)
   )
 
   expect_identical(
-    plate %>% subset("B06") %>% get_outlier_cutoff,
-    list(HEX = 8358.25, FAM = 10642.75)
+    plate %>% subset("A05") %>% get_outlier_cutoff,
+    list(HEX = 7314, FAM = 9647)
   )
 })

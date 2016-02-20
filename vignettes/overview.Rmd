@@ -131,7 +131,7 @@ dir <- sample_data_dir()
 # example 1: manually set thresholds
 plate1 <-
   new_plate(dir, type = plate_types$custom_thresholds) %>%
-  subset("B01,B06") %>%
+  subset("A01,A05") %>%
   set_thresholds(c(5000, 7500)) %>%
   analyze()
 plot(plate1, show_grid_labels = TRUE, alpha_drops = 0.3,
@@ -139,7 +139,7 @@ plot(plate1, show_grid_labels = TRUE, alpha_drops = 0.3,
 
 # example 2: automatic gating
 new_plate(dir, type = plate_types$fam_positive_pnpp) %>%
-  subset("B01:B06") %>%
+  subset("A01:A05") %>%
   analyze() %>%
   plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, alpha_drops = 0.3,
        title = "Automatic gating\nworks with PNPP experiments")
@@ -231,8 +231,8 @@ The `subset()` function accepts either a list of sample names, a list of wells, 
 Back to our data: we have 5 wells, let's keep 4 of them
 
 ```{r subset}
-plate <- plate %>% subset("B01:C06")
-# could have also used subset("B01, B06, C01, C06")
+plate <- plate %>% subset("A01:C05")
+# could have also used subset("A01, A05, C01, C05")
 plate %>% wells_used()
 ```
 
@@ -274,12 +274,12 @@ This isn't very informative since it shows the cluster assignment for each dropl
 plate %>% plate_meta(only_used = TRUE)
 ```
 
-Now there's a bit more information in the results table. The *success* column indicates whether or not the ddPCR run was successful in that particular well; notice how well `C06` was deemed a failure, and thus is not included the any subsequent analysis steps.
+Now there's a bit more information in the results table. The *success* column indicates whether or not the ddPCR run was successful in that particular well; notice how well `C05` was deemed a failure, and thus is not included the any subsequent analysis steps.
 
-You can use the `well_info()` function to get the value of a specific variable of a specific well from the results.  For example, we can query the plate object to see how many empty droplets are in well `B06`.
+You can use the `well_info()` function to get the value of a specific variable of a specific well from the results.  For example, we can query the plate object to see how many empty droplets are in well `A05`.
 
 ```{r explore-post-4}
-well_info(plate, "B06", "drops_empty")
+well_info(plate, "A05", "drops_empty")
 ```
 
 <h3 id="plot">Plot</h3>
@@ -290,7 +290,7 @@ The easiest way to visualize a ddPCR plate is using the `plot()` function.
 plate %>% plot()
 ```
 
-Notice well `C06` is grayed out, which means that it is a failed well. By default, failed wells have a grey background, and empty and outlier droplets are excluded from the plot. 
+Notice well `C05` is grayed out, which means that it is a failed well. By default, failed wells have a grey background, and empty and outlier droplets are excluded from the plot. 
 
 You don't have to analyze a plate object before you can plot it - a ddPCR plate can be plotted at any time to show the data in it. If you plot a plate before analyzing it, it'll show the raw data.
 
@@ -302,10 +302,10 @@ There are many plot parameters to allow you to create extremely customizable plo
 The following two plots show examples of how to use some plot parameters.
 
 ```{r plotparams, fig.show='hold', out.width='50%', fig.retina=FALSE}
-plate %>% plot(wells = "B01,B06", show_full_plate = TRUE,
+plate %>% plot(wells = "A01,A05", show_full_plate = TRUE,
                show_drops_empty = TRUE, col_drops_empty = "red",
                title = "Show full plate")
-plate %>% plot(wells = "B01,B06", superimpose = TRUE,
+plate %>% plot(wells = "A01,A05", superimpose = TRUE,
                show_grid = TRUE, show_grid_labels = TRUE, title = "Superimpose")
 ```
 
@@ -342,7 +342,7 @@ If you want to perform a simple 4-quadrant gating like the one available in Quan
 # two ways to create the desired plate
 plate_manual <- reset(plate, type = plate_types$custom_thresholds)
 plate_manual2 <- new_plate(dir, type = plate_types$custom_thresholds) %>%
-  subset("B01:C06")
+  subset("A01:C05")
 
 # make sure the two methods above are identical
 identical(plate_manual, plate_manual2)
@@ -356,7 +356,7 @@ It's usually a good idea to take a look at the raw data to decide where the draw
 plot(plate_manual, show_grid_labels = TRUE)
 ```
 
-If you noticed, there's a droplet in well *C06* that has a HEX value of 25000 and is probably an outlier, which is the cause of the weird scale.  After analyzing the plate, it will be identified as an outlier and hidden automatically. Before running the analysis, we should set where the thresholds will be. By default, the thresholds are at (5000, 5000), which is very arbitrary. It looks like the x coordinate is fine, but the y border should move up to approximately 8000. Then run the analysis.
+If you noticed, there's a droplet in well *A05* that has a much larger fluorescence value and is probably an outlier, which is the reason the scale is a bit too large.  After analyzing the plate, it will be identified as an outlier and hidden automatically. Before running the analysis, we should set where the thresholds will be. By default, the thresholds are at (5000, 5000), which is very arbitrary. It looks like the x coordinate is fine, but the y border should move up to approximately 8000. Then run the analysis.
 
 ```{r setthresholds}
 # what are the current thresholds?

@@ -155,7 +155,7 @@ plate <- new_plate(sample_data_dir())
 plot(plate)
 plate <- plate \%>\% analyze
 plot(plate)
-plot(plate, "B01:C06", show_drops_empty = TRUE, col_drops_empty = "red")
+plot(plate, "A01:C05", show_drops_empty = TRUE, col_drops_empty = "red")
 }
 }
 

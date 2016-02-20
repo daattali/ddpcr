@@ -49,7 +49,7 @@ observeEvent(input$loadSampleBtn, {
 
 # download sample data file
 output$sampleDataFile <- downloadHandler(
-  filename = function() { "example_dataset_C08_Amplitude.csv" },
+  filename = function() { "example_dataset_F05_Amplitude.csv" },
   content = function(file) {
     file.copy(from = sample_data_file(), to = file, overwrite = TRUE)
   }

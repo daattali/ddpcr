@@ -19,7 +19,7 @@ Get a list of the wells that have any data in a ddPCR plate.
 \dontrun{
 plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 wells_used(plate)
-plate <- subset(plate, "B01:C06")
+plate <- subset(plate, "A01:C05")
 wells_used(plate)
 } 
 }

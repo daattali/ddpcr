@@ -9,10 +9,10 @@ test_that("calc_negative_freq_simple works", {
 test_that("calculate_neg_freq_single works", {
   file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
   plate <- load_plate(file)
-  expect_equal(plate %>% calculate_neg_freq_single("B06"),
-               list("negative_num" = 140,
-                    "positive_num" = 479,
-                    "negative_freq" = calc_negative_freq_simple(140, 479)))
+  expect_equal(plate %>% calculate_neg_freq_single("A05"),
+               list("negative_num" = 368,
+                    "positive_num" = 1224,
+                    "negative_freq" = calc_negative_freq_simple(368, 1224)))
 })
 
 test_that("calculate_negative_freqs works", {
@@ -24,5 +24,5 @@ test_that("calculate_negative_freqs works", {
     plate_meta %>%
     .[['negative_freq']] %>%
     .[!is.na(.)]
-  expect_equal(neg_freqs, c(0.156, 22.6, 0.164, 26.7))
+  expect_equal(neg_freqs, c(0.218, 23.1, 0.24, 19.8))
 })

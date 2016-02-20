@@ -12,7 +12,7 @@
 #' documentation examples, but you can also use them for learning purposes.
 #' There are two sample datasetes: a small dataset and a large dataset. The
 #' small dataset contains the full raw data, but the large dataset only
-#' includes the processed file because the raw data would be too large.
+#' includes the processed data because the raw data would be too large.
 #' \cr\cr
 #' \code{sample_data_dir}: get the directory of the small or large sample dataset\cr
 #' \code{sample_data_file}: get path to one of the data files in the small sample dataset\cr
@@ -39,7 +39,7 @@ sample_data_dir <- function(size = c("small", "large")) {
 #' @export
 sample_data_file <- function() {
   data_files <- find_data_files(sample_data_dir())
-  sample_file <- grep("C08_Amplitude", data_files, value = TRUE)
+  sample_file <- grep("F05_Amplitude", data_files, value = TRUE)
   sample_file
 }
 

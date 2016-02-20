@@ -25,8 +25,8 @@ dimension that is used to determine which drops are filled.
 \examples{
 file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
 plate <- load_plate(file)
-get_filled_border(plate, "B06")
-get_filled_border(plate, "C08")
+get_filled_border(plate, "A05")
+get_filled_border(plate, "F05")
 }
 \seealso{
 \code{\link[ddpcr]{pnpp_experiment}}\cr

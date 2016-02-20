@@ -25,7 +25,7 @@ load ddPCR plates with sample data. They are used primarily in the
 documentation examples, but you can also use them for learning purposes.
 There are two sample datasetes: a small dataset and a large dataset. The
 small dataset contains the full raw data, but the large dataset only
-includes the processed file because the raw data would be too large.
+includes the processed data because the raw data would be too large.
 \cr\cr
 \code{sample_data_dir}: get the directory of the small or large sample dataset\cr
 \code{sample_data_file}: get path to one of the data files in the small sample dataset\cr

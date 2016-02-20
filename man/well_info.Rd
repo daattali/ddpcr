@@ -27,7 +27,7 @@ for a list of wells.
 \examples{
 \dontrun{
 plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
-well_info(plate, "B01", "drops")
+well_info(plate, "A01", "drops")
 } 
 }
 \seealso{

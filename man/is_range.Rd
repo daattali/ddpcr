@@ -11,11 +11,11 @@ Is the given parameter a range?
 }
 \examples{
 is_range("C05")            # FALSE
-is_range(c("C05", "C08"))  # FALSE
+is_range(c("C05", "F05"))  # FALSE
 is_range("C05")            # FALSE
-is_range("C05, C08")       # TRUE
-is_range("C05:C08")        # TRUE
-is_range("C05.C08")        # FALSE
+is_range("C05, F05")       # TRUE
+is_range("C05:F05")        # TRUE
+is_range("C05.F05")        # FALSE
 }
 \keyword{internal}
 

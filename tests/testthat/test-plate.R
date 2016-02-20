@@ -23,8 +23,8 @@ test_that("reset works", {
 test_that("well_info works", {
   plate <- get_plate()
   expect_equal(
-    plate %>% well_info(c("B06", "C06"), "drops"),
-    c(13657, 14504)
+    plate %>% well_info(c("A05", "C05"), "drops"),
+    c(13165, 14109)
   )
 })
 
@@ -32,11 +32,11 @@ test_that("wells_used works", {
   plate <- get_plate()
   expect_equal(
     plate %>% wells_used,
-    c("B01", "B06", "C01", "C06", "C08")
+    c("A01", "A05", "C01", "C05", "F05")
   )
   expect_equal(
-    plate %>% subset("B06, C08") %>% wells_used,
-    c("B06", "C08")
+    plate %>% subset("A05, F05") %>% wells_used,
+    c("A05", "F05")
   )
 })
 

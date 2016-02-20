@@ -16,7 +16,7 @@
 #' range of wells, and use a comma (\code{,}) to add another well or range. When
 #' specifying a range, all wells in the rectangular area between the two wells
 #' are selected. For example, \code{B04:D06} is equivalent to
-#' \code{B04, B05, B06, C04, C05, C06, D04, D05, D06}. You can combine multiple
+#' \code{B04, B05, A05, C04, C05, C06, D04, D05, D06}. You can combine multiple
 #' ranges in one selection; see the Examples section below. Note that this
 #' notation is only supported for the \code{wells} parameter, but not for the
 #' \code{samples} parameter.
@@ -31,15 +31,15 @@
 #' plate <- new_plate(sample_data_dir())
 #' plate %>% wells_used
 #' plate %>% subset("C01") %>% wells_used
-#' plate %>% subset(c("C01", "C08")) %>% wells_used
-#' plate %>% subset("C01, C08") %>% wells_used
-#' plate %>% subset("C01:C08") %>% wells_used
-#' plate %>% subset("C01:C08, B01") %>% wells_used
-#' plate %>% subset("B01:C03") %>% wells_used
-#' plate %>% subset("B01:C06") %>% wells_used
-#' plate %>% subset("B01, B06:C08") %>% wells_used
-#' plate %>% subset("B01, B06:C06, C08") %>% wells_used
-#' plate %>% subset("B01:B06, C01:C06, C08") %>% wells_used
+#' plate %>% subset(c("C01", "F05")) %>% wells_used
+#' plate %>% subset("C01, F05") %>% wells_used
+#' plate %>% subset("C01:F05") %>% wells_used
+#' plate %>% subset("C01:F05, A01") %>% wells_used
+#' plate %>% subset("A01:C03") %>% wells_used
+#' plate %>% subset("A01:C05") %>% wells_used
+#' plate %>% subset("A01, A05:F05") %>% wells_used
+#' plate %>% subset("A01, A05:C05, F05") %>% wells_used
+#' plate %>% subset("A01:A05, C01:C05, F05") %>% wells_used
 #' plate %>% subset(samples = "Dean") %>% wells_used
 #' plate %>% subset(samples = c("Dean", "Mike")) %>% wells_used
 #' @export
@@ -83,11 +83,11 @@ subset.ddpcr_plate <- function(x, wells, samples, ...) {
 #' Is the given parameter a range?
 #' @examples
 #' is_range("C05")            # FALSE
-#' is_range(c("C05", "C08"))  # FALSE
+#' is_range(c("C05", "F05"))  # FALSE
 #' is_range("C05")            # FALSE
-#' is_range("C05, C08")       # TRUE
-#' is_range("C05:C08")        # TRUE
-#' is_range("C05.C08")        # FALSE
+#' is_range("C05, F05")       # TRUE
+#' is_range("C05:F05")        # TRUE
+#' is_range("C05.F05")        # FALSE
 #' @keywords internal
 #' @export
 is_range <- function(x) {

@@ -39,7 +39,7 @@ test_that("classify works", {
   
   expect_equal(
     plate %>% plate_data %>% dplyr::filter(HEX < 4000, FAM < 7000) %>% nrow,
-    72273L
+    66397L
   )
   expect_equal(
     plate %>% plate_data %>% dplyr::filter(HEX < 4000, FAM < 7000) %>% .$cluster %>% unique,
@@ -47,7 +47,7 @@ test_that("classify works", {
   )
   expect_equal(
     plate %>% plate_data %>% dplyr::filter(HEX >= 4000, FAM < 7000) %>% nrow,
-    48L
+    78L
   )
   expect_equal(
     plate %>% plate_data %>%
@@ -57,7 +57,7 @@ test_that("classify works", {
   )
   expect_equal(
     plate %>% plate_data %>% dplyr::filter(HEX < 4000, FAM >= 7000) %>% nrow,
-    346L
+    650L
   )
   expect_equal(
     plate %>% plate_data %>%
@@ -67,10 +67,10 @@ test_that("classify works", {
   )
   expect_equal(
     plate %>% plate_data %>% dplyr::filter(HEX >= 4000, FAM >= 7000) %>% nrow,
-    3032L
+    5602L
   )
   expect_equal(
     plate %>% plate_data %>% dplyr::filter(HEX >= 4000, FAM >= 7000) %>% .$cluster %>% unique,
-    6L
+    c(6L, 2L)
   )
 })
