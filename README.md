@@ -228,7 +228,7 @@ analysis. Explanation will follow, these are just here as a teaser.
     # example 1: manually set thresholds
     plate1 <-
       new_plate(dir, type = plate_types$custom_thresholds) %>%
-      subset("B01,B06") %>%
+      subset("A01,A05") %>%
       set_thresholds(c(5000, 7500)) %>%
       analyze()
     plot(plate1, show_grid_labels = TRUE, alpha_drops = 0.3,
@@ -236,7 +236,7 @@ analysis. Explanation will follow, these are just here as a teaser.
 
     # example 2: automatic gating
     new_plate(dir, type = plate_types$fam_positive_pnpp) %>%
-      subset("B01:B06") %>%
+      subset("A01:A05") %>%
       analyze() %>%
       plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, alpha_drops = 0.3,
            title = "Automatic gating\nworks with PNPP experiments")
@@ -311,7 +311,7 @@ the plate object.
     #>                     ddpcr plate
     #>                    -------------
     #>             Dataset name : small
-    #>             Data summary : 5 wells; 75,699 drops
+    #>             Data summary : 5 wells; 72,727 drops
     #>               Plate type : ddpcr_plate
     #> Completed analysis steps : INITIALIZE
     #> Remaining analysis steps : REMOVE_FAILURES, REMOVE_OUTLIERS, REMOVE_EMPTY
@@ -337,7 +337,7 @@ We can see what wells are in our data with `wells_used()`
 
     plate %>% wells_used()
 
-    #> [1] "B01" "B06" "C01" "C06" "C08"
+    #> [1] "A01" "A05" "C01" "C05" "F05"
 
 There are 5 wells because the sample data folder has 5 well files.
 
@@ -345,20 +345,20 @@ We can see all the droplets data with `plate_data()`
 
     plate %>% plate_data()
 
-    #> Source: local data frame [75,699 x 4]
+    #> Source: local data frame [72,727 x 4]
     #> 
     #>     well   HEX   FAM cluster
     #>    (chr) (int) (int)   (int)
-    #> 1    B01  1374  1013       1
-    #> 2    B01  1411  1018       1
-    #> 3    B01  1428  1024       1
-    #> 4    B01  1313  1026       1
-    #> 5    B01  1362  1027       1
-    #> 6    B01  1290  1028       1
-    #> 7    B01  1319  1030       1
-    #> 8    B01  1492  1032       1
-    #> 9    B01  1312  1036       1
-    #> 10   B01  1294  1037       1
+    #> 1    A01   577   494       1
+    #> 2    A01   515   495       1
+    #> 3    A01   690   645       1
+    #> 4    A01   929   860       1
+    #> 5    A01   844   868       1
+    #> 6    A01   942   907       1
+    #> 7    A01   985   923       1
+    #> 8    A01  1058   966       1
+    #> 9    A01  1058   979       1
+    #> 10   A01  1095  1002       1
     #> ..   ...   ...   ...     ...
 
 > **Technical note**: This shows us the fluorescence amplitudes of each
@@ -380,11 +380,11 @@ We can see the results of the plate so far with `plate_meta()`
     plate %>% plate_meta(only_used = TRUE)
 
     #>   well sample row col used drops
-    #> 1  B01   Dean   B   1 TRUE 17458
-    #> 2  B06   Dave   B   6 TRUE 13657
-    #> 3  C01   Mike   C   1 TRUE 15279
-    #> 4  C06  Emily   C   6 TRUE 14504
-    #> 5  C08   Mary   C   8 TRUE 14801
+    #> 1  A01   Dean   A   1 TRUE 15820
+    #> 2  A05   Dave   A   5 TRUE 13165
+    #> 3  C01   Mike   C   1 TRUE 14256
+    #> 4  C05  Emily   C   5 TRUE 14109
+    #> 5  F05   Mary   F   5 TRUE 15377
 
 The `only_used` parameter is used so that we'll only get data about the
 5 existing wells and ignore the other 91 unused wells on the plate.
@@ -416,11 +416,11 @@ example](inst/vignettes-supp/ex-subset.png)](inst/vignettes-supp/ex-subset.png)
 
 Back to our data: we have 5 wells, let's keep 4 of them
 
-    plate <- plate %>% subset("B01:C06")
-    # could have also used subset("B01, B06, C01, C06")
+    plate <- plate %>% subset("A01:C05")
+    # could have also used subset("A01, A05, C01, C05")
     plate %>% wells_used()
 
-    #> [1] "B01" "B06" "C01" "C06"
+    #> [1] "A01" "A05" "C01" "C05"
 
 <h3 id="run">
 Run analysis
@@ -434,7 +434,7 @@ it.
     #>                     ddpcr plate
     #>                    -------------
     #>             Dataset name : small
-    #>             Data summary : 4 wells; 60,898 drops
+    #>             Data summary : 4 wells; 57,350 drops
     #>               Plate type : ddpcr_plate
     #> Completed analysis steps : INITIALIZE
     #> Remaining analysis steps : REMOVE_FAILURES, REMOVE_OUTLIERS, REMOVE_EMPTY
@@ -482,7 +482,7 @@ We can explore the plate again, now that it has been analyzed.
     #>         ddpcr plate
     #>        -------------
     #> Dataset name : small
-    #> Data summary : 4 wells; 60,898 drops
+    #> Data summary : 4 wells; 57,350 drops
     #>   Plate type : ddpcr_plate
     #>       Status : Analysis completed
 
@@ -491,20 +491,20 @@ which steps were remaining). We can also look at the droplets data
 
     plate %>% plate_data()
 
-    #> Source: local data frame [60,898 x 4]
+    #> Source: local data frame [57,350 x 4]
     #> 
     #>     well   HEX   FAM cluster
     #>    (chr) (int) (int)   (int)
-    #> 1    B01  1374  1013       4
-    #> 2    B01  1411  1018       4
-    #> 3    B01  1428  1024       4
-    #> 4    B01  1313  1026       4
-    #> 5    B01  1362  1027       4
-    #> 6    B01  1290  1028       4
-    #> 7    B01  1319  1030       4
-    #> 8    B01  1492  1032       4
-    #> 9    B01  1312  1036       4
-    #> 10   B01  1294  1037       4
+    #> 1    A01   577   494       4
+    #> 2    A01   515   495       4
+    #> 3    A01   690   645       4
+    #> 4    A01   929   860       4
+    #> 5    A01   844   868       4
+    #> 6    A01   942   907       4
+    #> 7    A01   985   923       4
+    #> 8    A01  1058   966       4
+    #> 9    A01  1058   979       4
+    #> 10   A01  1095  1002       4
     #> ..   ...   ...   ...     ...
 
 This isn't very informative since it shows the cluster assignment for
@@ -515,28 +515,28 @@ also look at the plate results
     plate %>% plate_meta(only_used = TRUE)
 
     #>   well sample row col used drops success drops_outlier drops_empty
-    #> 1  B01   Dean   B   1 TRUE 17458    TRUE             0       16690
-    #> 2  B06   Dave   B   6 TRUE 13657    TRUE             2       12925
-    #> 3  C01   Mike   C   1 TRUE 15279    TRUE             0       13903
-    #> 4  C06  Emily   C   6 TRUE 14504   FALSE             0          NA
-    #>   drops_non_empty drops_empty_fraction concentration
-    #> 1             768                0.956            49
-    #> 2             732                0.946            61
-    #> 3            1376                0.910           103
-    #> 4              NA                   NA            NA
+    #> 1  A01   Dean   A   1 TRUE 15820    TRUE             2       13690
+    #> 2  A05   Dave   A   5 TRUE 13165    TRUE             1       11283
+    #> 3  C01   Mike   C   1 TRUE 14256    TRUE             0       12879
+    #> 4  C05  Emily   C   5 TRUE 14109   FALSE             0          NA
+    #>   drops_filled drops_empty_fraction concentration
+    #> 1         2130                0.865           159
+    #> 2         1882                0.857           169
+    #> 3         1377                0.903           112
+    #> 4           NA                   NA            NA
 
 Now there's a bit more information in the results table. The *success*
 column indicates whether or not the ddPCR run was successful in that
-particular well; notice how well `C06` was deemed a failure, and thus is
+particular well; notice how well `C05` was deemed a failure, and thus is
 not included the any subsequent analysis steps.
 
 You can use the `well_info()` function to get the value of a specific
 variable of a specific well from the results. For example, we can query
-the plate object to see how many empty droplets are in well `B06`.
+the plate object to see how many empty droplets are in well `A05`.
 
-    well_info(plate, "B06", "drops_empty")
+    well_info(plate, "A05", "drops_empty")
 
-    #> [1] 12925
+    #> [1] 11283
 
 <h3 id="plot">
 Plot
@@ -548,7 +548,7 @@ function.
 
 ![](vignettes/overview_files/figure-markdown_strict/plotsimple-1.png)<!-- -->
 
-Notice well `C06` is grayed out, which means that it is a failed well.
+Notice well `C05` is grayed out, which means that it is a failed well.
 By default, failed wells have a grey background, and empty and outlier
 droplets are excluded from the plot.
 
@@ -573,10 +573,10 @@ example, to show the outlier droplets in blue, add the parameters
 The following two plots show examples of how to use some plot
 parameters.
 
-    plate %>% plot(wells = "B01,B06", show_full_plate = TRUE,
+    plate %>% plot(wells = "A01,A05", show_full_plate = TRUE,
                    show_drops_empty = TRUE, col_drops_empty = "red",
                    title = "Show full plate")
-    plate %>% plot(wells = "B01,B06", superimpose = TRUE,
+    plate %>% plot(wells = "A01,A05", superimpose = TRUE,
                    show_grid = TRUE, show_grid_labels = TRUE, title = "Superimpose")
 
 <img src="vignettes/overview_files/figure-markdown_strict/plotparams-1.png" title="" alt="" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/plotparams-2.png" title="" alt="" width="50%" />
@@ -633,7 +633,7 @@ initializing a new plate or by resetting an existing plate object.
     # two ways to create the desired plate
     plate_manual <- reset(plate, type = plate_types$custom_thresholds)
     plate_manual2 <- new_plate(dir, type = plate_types$custom_thresholds) %>%
-      subset("B01:C06")
+      subset("A01:C05")
 
     # make sure the two methods above are identical
     identical(plate_manual, plate_manual2)
@@ -645,7 +645,7 @@ initializing a new plate or by resetting an existing plate object.
     #>                     ddpcr plate
     #>                    -------------
     #>             Dataset name : small
-    #>             Data summary : 4 wells; 60,898 drops
+    #>             Data summary : 4 wells; 57,350 drops
     #>               Plate type : custom_thresholds, ddpcr_plate
     #> Completed analysis steps : INITIALIZE
     #> Remaining analysis steps : REMOVE_OUTLIERS, CLASSIFY
@@ -657,13 +657,14 @@ the draw the thresholds
 
 ![](vignettes/overview_files/figure-markdown_strict/plotcrosshair-1.png)<!-- -->
 
-If you noticed, there's a droplet in well *C06* that has a HEX value of
-25000 and is probably an outlier, which is the cause of the weird scale.
-After analyzing the plate, it will be identified as an outlier and
-hidden automatically. Before running the analysis, we should set where
-the thresholds will be. By default, the thresholds are at (5000, 5000),
-which is very arbitrary. It looks like the x coordinate is fine, but the
-y border should move up to approximately 8000. Then run the analysis.
+If you noticed, there's a droplet in well *A05* that has a much larger
+fluorescence value and is probably an outlier, which is the reason the
+scale is a bit too large. After analyzing the plate, it will be
+identified as an outlier and hidden automatically. Before running the
+analysis, we should set where the thresholds will be. By default, the
+thresholds are at (5000, 5000), which is very arbitrary. It looks like
+the x coordinate is fine, but the y border should move up to
+approximately 8000. Then run the analysis.
 
     # what are the current thresholds?
     thresholds(plate_manual)
@@ -689,15 +690,15 @@ Now the plate is ready and we can plot it or look at its results
     plate_meta(plate_manual, only_used = TRUE)
 
     #>   well sample row col used drops drops_outlier drops_empty
-    #> 1  B01   Dean   B   1 TRUE 17458             0       16801
-    #> 2  B06   Dave   B   6 TRUE 13657             1       12998
-    #> 3  C01   Mike   C   1 TRUE 15279             0       14019
-    #> 4  C06  Emily   C   6 TRUE 14504             0       14487
+    #> 1  A01   Dean   A   1 TRUE 15820             2       13909
+    #> 2  A05   Dave   A   5 TRUE 13165             1       11512
+    #> 3  C01   Mike   C   1 TRUE 14256             0       12967
+    #> 4  C05  Emily   C   5 TRUE 14109             0       14011
     #>   drops_x_positive drops_y_positive drops_both_positive
-    #> 1               20                3                 634
-    #> 2                5              157                 496
-    #> 3               12               12                1236
-    #> 4                1                4                  12
+    #> 1               20               20                1869
+    #> 2               34              390                1228
+    #> 3                8                7                1274
+    #> 4               15               11                  72
 
     plot(plate_manual)
 
@@ -793,11 +794,11 @@ Now we can analyze the plate
 
     #> Identifying empty droplets...
 
-    #> DONE (0 seconds)
+    #> DONE (1 seconds)
 
     #> Classifying droplets...
 
-    #> DONE (0 seconds)
+    #> DONE (1 seconds)
 
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
 
@@ -828,28 +829,28 @@ Take a look at the results
     plate_pnpp %>% plate_meta(only_used = TRUE)
 
     #>   well sample row col used drops success drops_outlier drops_empty
-    #> 1  B01   Dean   B   1 TRUE 17458    TRUE             0       16691
-    #> 2  B06   Dave   B   6 TRUE 13657    TRUE             2       12925
-    #> 3  C01   Mike   C   1 TRUE 15279    TRUE             0       13903
-    #> 4  C08   Mary   C   8 TRUE 14801    TRUE             0       14023
-    #> 5  C06  Emily   C   6 TRUE 14504   FALSE             0          NA
-    #>   drops_non_empty drops_empty_fraction concentration mutant_border
-    #> 1             767                0.956            49          3551
-    #> 2             732                0.946            61          4090
-    #> 3            1376                0.910           103          4424
-    #> 4             778                0.947            59          3990
-    #> 5              NA                   NA            NA            NA
+    #> 1  A01   Dean   A   1 TRUE 15820    TRUE             2       13690
+    #> 2  A05   Dave   A   5 TRUE 13165    TRUE             1       11283
+    #> 3  C01   Mike   C   1 TRUE 14256    TRUE             0       12879
+    #> 4  F05   Mary   F   5 TRUE 15377    TRUE             0       14126
+    #> 5  C05  Emily   C   5 TRUE 14109   FALSE             0          NA
+    #>   drops_filled drops_empty_fraction concentration mutant_border
+    #> 1         2130                0.865           159          4194
+    #> 2         1882                0.857           169          3789
+    #> 3         1377                0.903           112          4356
+    #> 4         1251                0.919            92          3926
+    #> 5           NA                   NA            NA            NA
     #>   filled_border significant_mutant_cluster mutant_num wildtype_num
-    #> 1          7945                      FALSE          1          642
-    #> 2          8971                       TRUE        140          479
-    #> 3          8524                      FALSE          2         1214
-    #> 4          8869                       TRUE        174          477
+    #> 1          8286                      FALSE          4         1827
+    #> 2          8136                       TRUE        368         1224
+    #> 3          8445                      FALSE          3         1248
+    #> 4          8294                       TRUE        211          855
     #> 5            NA                         NA         NA           NA
     #>   mutant_freq
-    #> 1       0.156
-    #> 2      22.600
-    #> 3       0.164
-    #> 4      26.700
+    #> 1       0.218
+    #> 2      23.100
+    #> 3       0.240
+    #> 4      19.800
     #> 5          NA
 
 Explanation of some of the variables:
@@ -884,11 +885,11 @@ wells with a significant mutant cluster and those without.
 
     plate_pnpp %>% wells_mutant()
 
-    #> [1] "B06" "C08"
+    #> [1] "A05" "F05"
 
     plate_pnpp %>% wells_wildtype()
 
-    #> [1] "B01" "C01"
+    #> [1] "A01" "C01"
 
 <h2 id="plate-params">
 Advanced topic 1: Plate parameters
@@ -993,7 +994,7 @@ the `restart = TRUE` parameter.
 
     #> Identifying empty droplets...
 
-    #> DONE (1 seconds)
+    #> DONE (0 seconds)
 
     #> Analysis complete
 
