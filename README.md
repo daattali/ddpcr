@@ -64,17 +64,14 @@ example of a scatterplot from ddPCR data.
 [![Sample ddPCR
 data](inst/vignettes-supp/ddpcr-example.png)](inst/vignettes-supp/ddpcr-example.png)
 
-ddPCR experiments can be defined as singleplex, duplex, or multiplex
-depending on the number of targets amplified (one, two, and more than
-two, respectively). A duplex experiment typically uses one FAM dye and
-one HEX dye, and consequently the droplets will be grouped into one of
-four clusters: double-positive (droplets that contain both target
-sequences and emit both HEX and FAM fluorescence), FAM-positive,
-HEX-positive, and double-negative (empty droplets without any
-amplifiable template that do not emit fluorescence in either channel).
-When plotting the droplets, each quadrant of the plot corresponds to a
-cluster; for example, the droplets in the lower-left quadrant are the
-double-negative droplets.
+A two-channel assay typically uses one FAM dye and one HEX dye, and
+consequently the droplets will be grouped into one of four clusters:
+double-positive (droplets that contain both target sequences and emit
+both HEX and FAM fluorescence), FAM-positive, HEX-positive, and
+double-negative (empty droplets without any amplifiable template that do
+not emit fluorescence in either channel). When plotting the droplets,
+each quadrant of the plot corresponds to a cluster; for example, the
+droplets in the lower-left quadrant are the double-negative droplets.
 
 After running a ddPCR experiment, a key step in the analysis is gating
 the droplets to determine how many droplets belong to each cluster.
@@ -142,10 +139,13 @@ with similar characteristics can also use this tool to automatically
 gate the droplets. In order to benefit from the full automatic analysis,
 your ddPCR experiment needs to have these characteristics:
 
--   The experiment is a duplex ddPCR experiment.
+-   The experiment uses a two-channel ddPCR assay with three expected
+    droplet clusters: double-negative, double-positive,
+    and single-positive.
 -   The majority of droplets are empty (double-negative).
 -   The majority of non-empty droplets are double-positive.
--   There can be a third cluster of either FAM+ or HEX+ droplets.
+-   There can be a third cluster of either FAM+ or HEX+ droplets, but
+    not both.
 
 In other words, the built-in automatic gating will work when there are
 three expected clusters of droplets: (1) double-negative, (2)
@@ -793,11 +793,11 @@ Now we can analyze the plate
 
     #> Identifying empty droplets...
 
-    #> DONE (1 seconds)
+    #> DONE (0 seconds)
 
     #> Classifying droplets...
 
-    #> DONE (1 seconds)
+    #> DONE (0 seconds)
 
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
 
@@ -1042,7 +1042,7 @@ by running `ddpcr:::init_plate`.
     #>     init_meta
     #>   
     #>   status(plate) <- step(plate, 'INITIALIZE')
-    #>   plate[['version']] <- as.character(packageVersion("ddpcr"))
+    #>   plate[['version']] <- as.character(utils::packageVersion("ddpcr"))
     #>   step_end()
     #>   
     #>   plate
