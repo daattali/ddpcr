@@ -108,6 +108,7 @@ output$clustersMapping <- renderUI({
 # show plate summary table
 output$metaTable <- DT::renderDataTable({
   meta <- dataValues$plate %>% plate_meta(only_used = TRUE)
+  meta[] <- lapply(meta, format, scientific = FALSE, big.mark = ",", drop0trailing = TRUE) 
   colnames <- meta %>% colnames %>% humanFriendlyNames
   DT::datatable(meta,
                 rownames = FALSE,
