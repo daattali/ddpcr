@@ -94,7 +94,7 @@ remove_empty.ddpcr_plate <- function(plate) {
           lazyeval::interp(~ ifelse(is.na(empty), NA, signif(empty / drops, 3)),
                            empty = quote(drops_empty), drops = quote(drops))
         ),
-        c("drops_filled", "drops_empty_fraction")
+        c("drops_non_empty", "drops_empty_fraction")
       ))
     
     # ---
