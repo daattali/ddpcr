@@ -27,14 +27,15 @@ tabPanel(
             selectInput(
               "settingsPlateType",
               div("Droplet clusters",
-                  helpPopup("Select <strong>(FAM+) / (FAM+HEX+)</strong> or <strong>(HEX+) / (FAM+HEX+)</strong> if your data has a main cluster of double-positive droplets (considered wild type) and a secondary cluster of FAM+ or HEX+ droplets (considered mutant).<br/><br/>Select <strong>Custom thresholds</strong> if your data does not fit these models and you want to simply cluster the droplets into 4 quadrants.")
+                  helpPopup("Select <strong>(FAM+) / (FAM+HEX+)</strong> or <strong>(HEX+) / (FAM+HEX+)</strong> if your data has a main cluster of double-positive droplets (considered wild type) and a secondary cluster of FAM+ or HEX+ droplets (considered mutant).<br/><br/>Select <strong>Custom gating thresholds</strong> if your data does not fit these models and you want to simply cluster the droplets into 4 quadrants.<br/><br/>Select <strong>Other</strong> if you want to only explore and run pre-processing on your data, but not droplet gating.")
               ),
               c("(FAM+) / (FAM+HEX+)" = plate_types$fam_positive_pnpp,
                 "(HEX+) / (FAM+HEX+)" = plate_types$hex_positive_pnpp,
-                "Custom thresholds" = plate_types$custom_thresholds)
+                "Custom gating thresholds" = plate_types$custom_thresholds,
+                "Other (no droplet gating)" = plate_types$ddpcr_plate)
             ),
             conditionalPanel(
-              sprintf("input.settingsPlateType != '%s'", plate_types$custom_thresholds),
+              sprintf("input.settingsPlateType == '%s' || input.settingsPlateType == '%s'", plate_types$fam_positive_pnpp, plate_types$hex_positive_pnpp),
               actionLink("showPlateTypeExample", "Show example typical well") 
             ),
             conditionalPanel(
@@ -75,7 +76,7 @@ tabPanel(
           )
         ),
         conditionalPanel(
-          sprintf("input.settingsPlateType != '%s'", plate_types$custom_thresholds),
+          sprintf("input.settingsPlateType == '%s' || input.settingsPlateType == '%s'", plate_types$fam_positive_pnpp, plate_types$hex_positive_pnpp),
           fixedRow(
             column(6,
               textInput("settingsPosName", "Identifier for double-positive droplets")
