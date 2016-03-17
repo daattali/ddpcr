@@ -6,7 +6,7 @@
 
 * Windows 7, R 3.2.2 (local)
 * ubuntu 12.04, R 3.2.0 (on travis-ci)
-* ubuntu 14.04, R 3.1.3 (on my DigitalOcean droplet)
+* ubuntu 14.04, R 3.1.3 (on my DigitalOckean droplet)
 
 ### Submission comments
 
@@ -128,3 +128,7 @@ Best
 R CMD check passed with no errors/warnings/notes
 
 ### Reviewer comments
+
+2016-03-17 Kurt Hornik:
+
+Thanks, on CRAN now
