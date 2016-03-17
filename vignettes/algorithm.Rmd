@@ -15,11 +15,11 @@ knitr::opts_chunk$set(tidy = FALSE, comment = "#>")
 
 # Algorithms used to analyze ddPCR droplets
 
-The algorithm described below consists of five main steps that are used to analyze a ddPCR assay with (FAM+)/(FAM+HEX+) clusters. Droplets in the (FAM+HEX+) cluster will be referred to as *wildtype*, and droplets in the (FAM+HEX-) cluster will be referred to as *mutant*. The final goal is to calculate the mutant frequency (*MF*) in each well by classifying all temlpate-containing droplets as wildtype or mutant. This document explains most of the algorithms and attemps to be as accurate as possible, but inspecting the documented source code is the best way to see the full details. 
+The algorithm described below consists of five main steps that are used to analyze a ddPCR assay with (FAM+)/(FAM+HEX+) clusters. Droplets in the (FAM+HEX+) cluster will be referred to as *wildtype*, and droplets in the (FAM+HEX-) cluster will be referred to as *mutant*. The final goal is to calculate the mutant frequency (*MF*) in each well by classifying all template-containing droplets as wildtype or mutant. This document explains most of the algorithms and attempts to be as accurate as possible, but inspecting the documented source code is the best way to see the full details. 
 
 Assays with (HEX+)/(FAM+HEX+) clusters use a very similar algorithm but HEX and FAM are swapped in every step. Assays that are neither (FAM+)/(FAM+HEX+) nor (HEX+)/(FAM+HEX+) only benefit from the first three steps of the pipeline (droplet gating is not performed). 
 
-The initial droplet data is a list of *n* matrices, where *n* is the number of wells. Each matrix contains has two clumns and *m_i* rows, where *m_i* is the number of droplets in the *i*-th well. Each row represents a single droplet in a well and the two columns are the measured values of HEX and FAM fluorescennt amplitude. 
+The initial droplet data is a list of *n* matrices, where *n* is the number of wells. Each matrix contains has two columns and *m_i* rows, where *m_i* is the number of droplets in the *i*-th well. Each row represents a single droplet in a well and the two columns are the measured values of HEX and FAM fluorescent amplitude. 
 
 ## Step 1: Identify failed wells
 
@@ -41,7 +41,7 @@ Any droplet in any well that has a FAM value exceeding the FAM outlier threshold
 
 [![Remove outliers](../inst/vignettes-supp/outliers.png)](../inst/vignettes-supp/outliers.png)
 
-Plot A shows a well with a clear outlier on the far right. The dotted line shows the HEX value that corresponds to _Q3 + 5\*IQR_ of all HEX values, which is clearly a poor threshold for determinig outliers. Plot B shows only the 1% of droplets with the highest HEX value, while the dotted line shows the value of _Q3 + 5\*IQR_ of the HEX values of only those droplets. Plot C shows the full well data and the outlier threshold calculated using the top 1% of the droplets. Using this threshold, the lone outlier point at the extreme HEX value (marked in red) is identified as an outlier.
+Plot A shows a well with a clear outlier on the far right. The dotted line shows the HEX value that corresponds to _Q3 + 5\*IQR_ of all HEX values, which is clearly a poor threshold for determining outliers. Plot B shows only the 1% of droplets with the highest HEX value, while the dotted line shows the value of _Q3 + 5\*IQR_ of the HEX values of only those droplets. Plot C shows the full well data and the outlier threshold calculated using the top 1% of the droplets. Using this threshold, the lone outlier point at the extreme HEX value (marked in red) is identified as an outlier.
 
 ## Step 3: Identify empty droplets
 
@@ -58,7 +58,7 @@ Plot A shows a well and a marginal density plot of the FAM values of its droplet
 
 ## Step 4: Gate droplets
 
-The main step of the pipeline is to gate the remaining droplets automatically and classify each droplet as either *mutant*, *wildtype*, or *rain*. Rain droplets are droplets that are not empty, yet the ddPCR reader did not detect enough fluorescence emitted from them. The exact cause of rain droplets is not yet clear, but they are normally omitted from analysis due to their ambiguity. Droplets that do have contain high quality ampplifiable template are defined as *filled* droplets; every filled droplet contains either a mutant or wildtype template and can therefore be classified as either mutant or wildtype.
+The main step of the pipeline is to gate the remaining droplets automatically and classify each droplet as either *mutant*, *wildtype*, or *rain*. Rain droplets are droplets that are not empty, yet the ddPCR reader did not detect enough fluorescence emitted from them. The exact cause of rain droplets is not yet clear, but they are normally omitted from analysis due to their ambiguity. Droplets that do have contain high quality amplifiable template are defined as *filled* droplets; every filled droplet contains either a mutant or wildtype template and can therefore be classified as either mutant or wildtype.
 
 The gating step is best explained by being broken down into sub-steps.
 

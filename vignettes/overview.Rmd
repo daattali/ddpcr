@@ -8,7 +8,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---
-  
+
 ```{r setup, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(tidy = FALSE, comment = "#>")
 options(ddpcr.verbose = TRUE)

@@ -519,11 +519,11 @@ also look at the plate results
     #> 2  A05   Dave   A   5 TRUE 13165    TRUE             1       11283
     #> 3  C01   Mike   C   1 TRUE 14256    TRUE             0       12879
     #> 4  C05  Emily   C   5 TRUE 14109   FALSE             0          NA
-    #>   drops_filled drops_empty_fraction concentration
-    #> 1         2130                0.865           159
-    #> 2         1882                0.857           169
-    #> 3         1377                0.903           112
-    #> 4           NA                   NA            NA
+    #>   drops_non_empty drops_empty_fraction concentration
+    #> 1            2130                0.865           159
+    #> 2            1882                0.857           169
+    #> 3            1377                0.903           112
+    #> 4              NA                   NA            NA
 
 Now there's a bit more information in the results table. The *success*
 column indicates whether or not the ddPCR run was successful in that
@@ -794,11 +794,11 @@ Now we can analyze the plate
 
     #> Identifying empty droplets...
 
-    #> DONE (1 seconds)
+    #> DONE (0 seconds)
 
     #> Classifying droplets...
 
-    #> DONE (1 seconds)
+    #> DONE (0 seconds)
 
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
 
@@ -834,12 +834,12 @@ Take a look at the results
     #> 3  C01   Mike   C   1 TRUE 14256    TRUE             0       12879
     #> 4  F05   Mary   F   5 TRUE 15377    TRUE             0       14126
     #> 5  C05  Emily   C   5 TRUE 14109   FALSE             0          NA
-    #>   drops_filled drops_empty_fraction concentration mutant_border
-    #> 1         2130                0.865           159          4194
-    #> 2         1882                0.857           169          3789
-    #> 3         1377                0.903           112          4356
-    #> 4         1251                0.919            92          3926
-    #> 5           NA                   NA            NA            NA
+    #>   drops_non_empty drops_empty_fraction concentration mutant_border
+    #> 1            2130                0.865           159          4194
+    #> 2            1882                0.857           169          3789
+    #> 3            1377                0.903           112          4356
+    #> 4            1251                0.919            92          3926
+    #> 5              NA                   NA            NA            NA
     #>   filled_border significant_mutant_cluster mutant_num wildtype_num
     #> 1          8286                      FALSE          4         1827
     #> 2          8136                       TRUE        368         1224
@@ -994,7 +994,7 @@ the `restart = TRUE` parameter.
 
     #> Identifying empty droplets...
 
-    #> DONE (0 seconds)
+    #> DONE (1 seconds)
 
     #> Analysis complete
 
