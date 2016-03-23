@@ -8,7 +8,7 @@
 \alias{sample_results_file}
 \title{Get sample data}
 \usage{
-sample_data_dir(size = c("small", "large"))
+sample_data_dir()
 
 sample_data_file()
 

@@ -24,9 +24,8 @@ NULL
 
 #' @rdname sample_data
 #' @export
-sample_data_dir <- function(size = c("small", "large")) {
-  size <- match.arg(size)
-  system.file("sample_data", size, package = "ddpcr")
+sample_data_dir <- function() {
+  system.file("sample_data", "small", package = "ddpcr")
 }
 
 #' @rdname sample_data

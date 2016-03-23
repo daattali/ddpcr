@@ -24,7 +24,11 @@ shinyServer(function(input, output, session) {
   # we have a dataset to work with or if we're waiting for dataset to be chosen
   output$datasetChosen <- reactive({ FALSE })
   outputOptions(output, 'datasetChosen', suspendWhenHidden = FALSE)
-
+  
+  observeEvent(dataValues$plate, {
+    shinyjs::toggle(id = "plateDirty", condition = is_dirty(dataValues$plate))
+  })
+  
   # save button (download dataset) button is clicked
   output$saveBtn <- downloadHandler(
     filename = function() {
@@ -78,10 +82,10 @@ shinyServer(function(input, output, session) {
   # hide the loading message
   hide("loading-content", TRUE, "fade")  
   
-# TODO remove this , for testing purposes only
+#TODO remove this , for testing purposes only
 # dataValues$plate <- new_plate(dir = sample_data_dir(),
 #                               type = plate_types$fam_positive_pnpp)
 # 
-# output$datasetChosen <- reactive({ TRUE })  
+# output$datasetChosen <- reactive({ TRUE })
 # updateTabsetPanel(session, "mainNav", "settingsTab")
 })

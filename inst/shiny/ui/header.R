@@ -17,7 +17,13 @@ column(
             "droplets"
             
         ),
-        downloadButton('saveBtn', 'Save data', class = "btn-sm")
+        downloadButton('saveBtn', 'Save data', class = "btn-sm"),
+        div(
+          id = "plateDirty",
+          class = "alert alert-danger",
+          strong("Note:"),
+          "Some settings have changed, please re-run the analysis for changes to take effect"
+        )
       )
   )
 )

@@ -64,4 +64,8 @@ print.ddpcr_plate <- function(x, ...) {
          "\n"
     )
   }
+  
+  if (is_dirty(x)) {
+    cat0("\nNote: some settings have changed, please re-run the analysis with `analyze(plate, restart = TRUE)` for changes to take effect")
+  }
 }

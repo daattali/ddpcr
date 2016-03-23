@@ -34,6 +34,7 @@ save_plate <- function(plate, file) {
     params     = params(plate),
     clusters   = clusters(plate),
     steps      = steps(plate),
+    dirty      = plate[['dirty']],
     version    = plate[['version']]
   )
   saveRDS(object = object, file = file)
@@ -66,11 +67,12 @@ load_plate <- function(file) {
     plate_data(plate)  <- object[['plate_data']]
     plate_meta(plate)  <- object[['plate_meta']]
     name(plate)        <- object[['name']]
-    status(plate)      <- object[['status']]
     params(plate)      <- object[['params']]
     clusters(plate)    <- object[['clusters']]
     steps(plate)       <- object[['steps']]
+    plate[['dirty']]   <- object[['dirty']]
     plate[['version']] <- object[['version']]
+    status(plate)      <- object[['status']]
   },
   error = function(err) {
     err_msg(paste("The given file is not a valid ddPCR file",

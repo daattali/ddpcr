@@ -798,7 +798,7 @@ Now we can analyze the plate
 
     #> Classifying droplets...
 
-    #> DONE (0 seconds)
+    #> DONE (1 seconds)
 
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
 
@@ -1044,6 +1044,7 @@ by running `ddpcr:::init_plate`.
     #>   
     #>   status(plate) <- step(plate, 'INITIALIZE')
     #>   plate[['version']] <- as.character(utils::packageVersion("ddpcr"))
+    #>   plate[['dirty']] <- FALSE
     #>   step_end()
     #>   
     #>   plate

@@ -128,15 +128,19 @@ observeEvent(input$wellsUsedPlotBrush, {
 # check all advanced settings and save them
 observeEvent(input$updateAdvancedSettings, {
   withBusyIndicator("resetParamsBtn", {
+
     disable("updateAdvancedSettings")
     advanced_param_regex <- "^advanced_setting_param_(.*)__(.*)$"
     all_params <- 
       grep(advanced_param_regex, names(input), value = TRUE)
     lapply(all_params, function(x) {
+
       if (!is.null(input[[x]]) && !is.na(input[[x]])) {
         major_name <- gsub(advanced_param_regex, "\\1", x)
         minor_name <- gsub(advanced_param_regex, "\\2", x)
-        params(dataValues$plate, major_name, minor_name) <- input[[x]]
+        if (!is.null(params(dataValues$plate, major_name, minor_name))) {
+          params(dataValues$plate, major_name, minor_name) <- input[[x]]
+        }
       }
     })
     enable("updateAdvancedSettings")
@@ -167,12 +171,12 @@ observeEvent(dataValues$plate, {
           lapply(
             plate %>% params %>% .[[major_name]] %>% names,
             function(minor_name) {
-              param_name <- sprintf("%s", major_name, minor_name)
+              param_name <- sprintf("%s::%s", major_name, minor_name)
               
               params_ignore <- c(
                 "GENERAL::X_VAR", "GENERAL::Y_VAR",
                 "GENERAL::POSITIVE_NAME", "GENERAL::NEGATIVE_NAME",
-                "CLASSIFY::X_THRESHOLD", "CLASSIFY::Y_THRESHOLD"
+                "GENERAL::POSITIVE_DIMENSION"
               )
               
               if (param_name %in% params_ignore) {

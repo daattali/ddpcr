@@ -14,6 +14,7 @@ empty_plate <- function() {
     params     = NULL,
     clusters   = NULL,
     steps      = NULL,
+    dirty      = NULL,
     version    = NULL
   )
 }
@@ -44,6 +45,7 @@ init_plate <- function(plate) {
   
   status(plate) <- step(plate, 'INITIALIZE')
   plate[['version']] <- as.character(utils::packageVersion("ddpcr"))
+  plate[['dirty']] <- FALSE
   step_end()
   
   plate

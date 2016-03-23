@@ -247,6 +247,7 @@ analyze <- function(plate, restart = FALSE) {
   if (restart) {
     msg("Restarting analysis")
     status(plate) <- 0
+    plate[['dirty']] <- FALSE
   }
   steps_left <- length(steps(plate)) - status(plate)
   plate %<>% next_step(n = steps_left)

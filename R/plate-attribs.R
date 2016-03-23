@@ -270,6 +270,12 @@ params <- function(plate, category, name) {
 #' @export
 `params<-` <- function(plate, category, name, value) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
+
+  # If a setting is changed after any analysis steps took place, mark the
+  # plate as 'dirty'
+  if (!is_empty_plate(plate) && status(plate) > step(plate, "INITIALIZE")) {
+    plate[['dirty']] <- TRUE
+  }
   
   replace <- 'params'
   if (!missing(category)) {
@@ -551,4 +557,15 @@ y_var <- function(plate) {
     dplyr::rename_(.dots = stats::setNames(y_var(plate), value))
   params(plate, 'GENERAL', 'Y_VAR') <- value
   plate
+}
+
+#' Is the plate object dirty (ie has changed since the analysis was run)?
+#' @param plate A ddPCR plate
+#' @return \code{TRUE} if any plate settings have changed that require the plate
+#' analysis to re-run; \code{FALSE} otherwise
+#' @keywords internal
+#' @export
+is_dirty <- function(plate) {
+  stopifnot(plate %>% inherits("ddpcr_plate"))
+  plate[['dirty']]
 }

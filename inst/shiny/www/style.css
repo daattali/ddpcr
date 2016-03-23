@@ -17,6 +17,10 @@ body {
   color: #FFFFFF;
 }
 
+#plateDirty {
+  margin-top: 12px;
+}
+
 .navbar {
   margin-bottom: 0;
 }
