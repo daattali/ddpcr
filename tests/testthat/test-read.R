@@ -102,7 +102,7 @@ test_that("read_dir basic functionality works", {
                readr::read_csv(file.path(testdir("read_simple"),
                                          "expected_data.csv"))
   )
-  expect_false(is_null(plate_meta(plate)))
+  expect_false(is.null(plate_meta(plate)))
 })
 
 test_that("read_dir errors and warnings", {
@@ -171,7 +171,7 @@ test_that("read_files basic functionality works", {
                readr::read_csv(file.path(testdir("read_simple"),
                                          "expected_data.csv"))
   )
-  expect_false(is_null(plate_meta(plate)))
+  expect_false(is.null(plate_meta(plate)))
 })
 
 test_that("read_files inconsistent data files, no metadata file", {
@@ -202,5 +202,5 @@ test_that("read_files inconsistent data files, correct metadata file", {
   expect_equal(name(plate), "test")
   expect_equal(plate_data(plate),
                expected_data)
-  expect_false(is_null(plate_meta(plate)))
+  expect_false(is.null(plate_meta(plate)))
 })
