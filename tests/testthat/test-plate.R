@@ -10,7 +10,7 @@ test_that("reset works", {
   expect_equal(plate %>% status, 1L)
   expect_identical(plate %>% type, "custom_thresholds")
   plate <- plate %>% analyze
-  expect_more_than(plate %>% status, 1L)
+  expect_gt(plate %>% status, 1L)
   plate <- plate %>% reset(keep_type = TRUE)
   expect_equal(plate %>% status, 1L)
   expect_identical(plate %>% type, "custom_thresholds")
