@@ -8,9 +8,10 @@ version](http://www.r-pkg.org/badges/version/ddpcr)](https://cran.r-project.org/
 
 This package provides an interface to explore, analyze, and visualize
 droplet digital PCR (ddPCR) data in R. It also includes an interactive
-web app to facilitate analysis by anyone who is not comfortable with
-using R, which is [available online](http://daattali.com/shiny/ddpcr/)
-and can also be [run locally](#r-interactive).
+web application with a visual user interface to facilitate analysis for
+anyone who is not comfortable with using R. The app is [available
+online](http://daattali.com/shiny/ddpcr/) or it can be [run
+locally](#r-interactive).
 
 This document explains the purpose of this package and includes a
 tutorial on how to use. It should take about 20 minutes to go through
@@ -46,23 +47,30 @@ Table of contents
     -   [Advanced topic 1: Plate parameters](#plate-params)
     -   [Advanced topic 2: Algorithms used in each step](#algorithms)
     -   [Advanced topic 3: Creating new plate types](#new-types)
+    -   [Advanced topic 4: Implementation technical
+        details](#technical-details)
 
 <h1 id="background">
 Background
 </h1>
 Droplet Digital PCR (ddPCR) is a technology provided by Bio-Rad for
 performing digital PCR. The basic workflow of ddPCR involves three main
-steps: partitioning sample DNA into 20,000 droplets, PCR amplifying the
-nucleic acid in each droplet, and finally passing the droplets through a
-reader that detects fluorescent amplitudes in two different wavelengths
-corresponding to FAM and HEX dyes. As a result, the data obtained from a
-ddPCR experiment can be visualized as a 2D scatterplot (one dimension is
-FAM intensity and the other dimension is HEX intensity) with 20,000
-points (each droplet represents a point). The following figure is an
-example of a scatterplot from ddPCR data.
+steps: partitioning sample DNA into 20,000 droplets, PCR amplification
+of the nucleic acid in each droplet, and finally passing the droplets
+through a reader that detects fluorescence in two different wavelengths
+(generally set to detect FAM and HEX dyes). As a result, the data
+obtained from a ddPCR experiment can be visualized as a 2D scatterplot
+(one dimension is FAM intensity and the other dimension is HEX
+intensity) with 20,000 points (each droplet represents a point). The
+following figure is an example of a scatterplot from ddPCR data.
 
 [![Sample ddPCR
 data](inst/vignettes-supp/ddpcr-example.png)](inst/vignettes-supp/ddpcr-example.png)
+
+This package is designed to analyze two-channel ddPCR experiments
+(experiments utilizing both fluorescence channels). Single-channel
+experiments (where only one fluorescence channel is used) cannot use
+this tool.
 
 A two-channel assay typically uses one FAM dye and one HEX dye, and
 consequently the droplets will be grouped into one of four clusters:
@@ -241,7 +249,7 @@ analysis. Explanation will follow, these are just here as a teaser.
       plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, alpha_drops = 0.3,
            title = "Automatic gating\nworks with PNPP experiments")
 
-<img src="vignettes/overview_files/figure-markdown_strict/quickstart-1.png" title="" alt="" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/quickstart-2.png" title="" alt="" width="50%" />
+<img src="vignettes/overview_files/figure-markdown_strict/quickstart-1.png" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/quickstart-2.png" width="50%" />
 
 <h2 id="walkthrough">
 Running a basic analysis - detailed walkthrough
@@ -255,15 +263,17 @@ Loading ddPCR data
 The first step is to get the ddPCR data into R. `ddpcr` uses the data
 files that are exported by QuantaSoft as its input. If you loaded an
 experiment named `2015-05-20_mouse` with 50 wells to QuantaSoft, then
-QuantaSoft will export the following files:
+QuantaSoft can export the following files:
 
 -   50 data files (well files): each well will have its own file with
     the name ending in `*_Amplitude.csv`. For example, the droplets in
-    well A01 will be saved in `2015-05-20_mouse_A01_Aamplitude.csv`.
+    well A01 will be saved in `2015-05-20_mouse_A01_Aamplitude.csv`
+    (click on **Export Amplitude and Cluster Data** button in the
+    **Setup** tab).
 -   1 results file: a small file named `2015-05-20_mouse.csv` will be
     generated with some information about the plate, including the name
-    of the sample in each well (assuming you named the
-    samples previously).
+    of the sample in each well (click on **Export CSV** button in the
+    **Analyze** tab).
 
 The well files are the only required input to `ddpcr`, and since ddPCR
 plates contain 96 wells, you can upload anywhere from 1 to 96 well
@@ -301,7 +311,7 @@ first and easiest thing to do is to plot the raw data.
 
     plot(plate)
 
-![](vignettes/overview_files/figure-markdown_strict/plotraw-1.png)<!-- -->
+![](vignettes/overview_files/figure-markdown_strict/plotraw-1.png)
 
 Another way to get a quick overview of the data is by simply printing
 the plate object.
@@ -546,7 +556,7 @@ function.
 
     plate %>% plot()
 
-![](vignettes/overview_files/figure-markdown_strict/plotsimple-1.png)<!-- -->
+![](vignettes/overview_files/figure-markdown_strict/plotsimple-1.png)
 
 Notice well `C05` is grayed out, which means that it is a failed well.
 By default, failed wells have a grey background, and empty and outlier
@@ -579,7 +589,7 @@ parameters.
     plate %>% plot(wells = "A01,A05", superimpose = TRUE,
                    show_grid = TRUE, show_grid_labels = TRUE, title = "Superimpose")
 
-<img src="vignettes/overview_files/figure-markdown_strict/plotparams-1.png" title="" alt="" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/plotparams-2.png" title="" alt="" width="50%" />
+<img src="vignettes/overview_files/figure-markdown_strict/plotparams-1.png" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/plotparams-2.png" width="50%" />
 
 > To see all the available plot parameters, run `?plot.ddpcr_plate`.
 
@@ -655,7 +665,7 @@ the draw the thresholds
 
     plot(plate_manual, show_grid_labels = TRUE)
 
-![](vignettes/overview_files/figure-markdown_strict/plotcrosshair-1.png)<!-- -->
+![](vignettes/overview_files/figure-markdown_strict/plotcrosshair-1.png)
 
 If you noticed, there's a droplet in well *A05* that has a much larger
 fluorescence value and is probably an outlier, which is the reason the
@@ -702,7 +712,7 @@ Now the plate is ready and we can plot it or look at its results
 
     plot(plate_manual)
 
-![](vignettes/overview_files/figure-markdown_strict/crosshairresults-1.png)<!-- -->
+![](vignettes/overview_files/figure-markdown_strict/crosshairresults-1.png)
 
 By default, the droplets in each quadrant are a different colour. If you
 want to change the colour of some droplets, we can use the `col_drops_*`
@@ -798,7 +808,7 @@ Now we can analyze the plate
 
     #> Classifying droplets...
 
-    #> DONE (1 seconds)
+    #> DONE (0 seconds)
 
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
 
@@ -866,7 +876,7 @@ Plotting the data is usually the best way to see the results
 
     plate_pnpp %>% plot(text_size_mutant_freq = 8)
 
-![](vignettes/overview_files/figure-markdown_strict/pnppplot-1.png)<!-- -->
+![](vignettes/overview_files/figure-markdown_strict/pnppplot-1.png)
 
 > To see all the available plot parameters for this plate type, run
 > `?plot.pnpp_experiment`. In addition, any plot parameter that is
@@ -1052,7 +1062,7 @@ by running `ddpcr:::init_plate`.
     #> <environment: namespace:ddpcr>
 
 **For more details about the algorithm, see [the *Algorithms*
-vignette](vignettes/algorithm.Rmd).**
+vignette](vignettes/./algorithm.Rmd).**
 
 <h2 id="new-types">
 Advanced topic 3: Creating new plate types
@@ -1065,4 +1075,11 @@ analysis step, or even if you simply want to have a type that sets
 different default parameters than the built-in ones.
 
 **For more details about how to create new plate types, see [the
-*Extending ddpcr by adding new plate types* vignette](vignettes/extend.Rmd).**
+*Extending ddpcr by adding new plate types* vignette](vignettes/./extend.Rmd).**
+
+<h2 id="technical-details">
+Advanced topic 4: Implementation technical details
+</h2>
+**For details on the technical details regarding the code
+implementation, see [the *Technical details*
+vignette](vignettes/./technical_details.Rmd).**

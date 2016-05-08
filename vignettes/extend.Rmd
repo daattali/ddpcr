@@ -11,7 +11,7 @@ vignette: >
 
 # Extending ddpcr by adding new plate types
 
-While this package was developed as a tool to facilitate the analysis of some specific types of ddPCR data, it was implemented in a way that easily allows users to add custom ddPCR plate types through *S3 inheritance*. The basic concept is that every plate type has a parent plate type, from which it inherits all features, but can be made more specific or add/modify its behaviour. Inheritance is transitive (features are inherited from all ancestors, not only the most immediate one), but a plate can only have one parent (multiple inheritance is not supported). 
+While this package was developed as a tool to facilitate the analysis of some specific types of ddPCR data, it was implemented in a way that easily allows users to add custom ddPCR plate types through *S3 inheritance* (see [the _Technical details_ vignette](./technical_details.Rmd) for more details). The basic concept is that every plate type has a parent plate type, from which it inherits all features, but can be made more specific or add/modify its behaviour. Inheritance is transitive (features are inherited from all ancestors, not only the most immediate one), but a plate can only have one parent (multiple inheritance is not supported). 
 
 ## Default plate type: ddpcr_plate
 
@@ -32,7 +32,7 @@ The default plate type is the common base for all built-in types, but because it
 
 ## Functions to implement when adding a new plate type
 
-If you want to add a new plate type, there are a few functions you need to implement. All these functions take one argument: a `ddpcr` plate object.  Note that all these functions are S3 generics, so you need to follow the S3 method naming scheme. 
+If you want to add a new plate type, there are a few functions you need to implement. All these functions take one argument: a `ddpcr_plate` object.  Note that all these functions are S3 generics, so you need to follow the S3 method naming scheme. 
 
 ### `parent_plate_type()`: Define parent plate type
 
@@ -51,13 +51,13 @@ Every ddPCR plate type has a set of potential clusters the droplets can be assig
 
 Every ddPCR plate type has an ordered set of steps that are run to analyze the data. When creating a new plate type, if your plate type has different analysis steps than its parent type, you must define this function and have it return a named list of the analysis steps. When defining this function, you can use `NextMethod("define_steps")` to get a list of the steps available in the parent type if you want to simply add new steps without defining all of them. Any step that you define must have an associated function with the same name that takes a ddPCR plate as an argument and returns the ddPCR plate after running the given step on it. Most analysis steps will usually change the plate's metadata (`?plate_meta`) and the droplet cluster assignments (`?plate_data`). See the example below for helper functions that are available when writing code for an analysis step.
 
-### `plot()`: Plot a ddPCR plate
-
-The default plot function provided by `ddpcr_plate` will usually be enough to convey your ddPCR plate information. If there is anything specific you want to add to plots of your new plate type, you can define this function. It is recommended to build on top of the output of the default plot function, rather than start a complete new plot. This can be done by having the first line of code being `p <- NextMethod("plot")` and adding plot elements on top of `p`. Note that `ggplot2` is the default plotting library. Read the help section of the default plot to learn more `?plot.ddpcr_plate`.
-
 ### Changing the algorithm of an existing step
 
 With the `define_steps()` function you can define new analysis steps that are unique to your new plate type. It can also be desirable to simply change the implementation of an existing step instead of creating a new step. For example, any ddPCR plate will, by default, use the `ddpcr:::remove_failures.ddpcr_plate` function as the algorithm for flagging failed wells. If your plate type has a specific way of flagging failed wells, you can overwrite this step by defining a new S3 generic function for your plate type.
+
+### `plot()`: Plot a ddPCR plate
+
+The default plot function provided by `ddpcr_plate` will usually be enough to convey your ddPCR plate information. If there is anything specific you want to add to plots of your new plate type, you can define this function. It is recommended to build on top of the output of the default plot function, rather than start a complete new plot. This can be done by having the first line of code being `p <- NextMethod("plot")` and adding plot elements on top of `p`. Note that `ggplot2` is the default plotting library. Read the help section of the default plot to learn more `?plot.ddpcr_plate`.
 
 ## Example
 

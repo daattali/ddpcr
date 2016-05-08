@@ -19,7 +19,7 @@ options(ddpcr.verbose = TRUE)
 [![Build Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
 [![CRAN version](http://www.r-pkg.org/badges/version/ddpcr)](https://cran.r-project.org/package=ddpcr)
 
-This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. It also includes an interactive web app to facilitate analysis by anyone who is not comfortable with using R, which is [available online](http://daattali.com/shiny/ddpcr/) and can also be [run locally](#r-interactive).
+This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. It also includes an interactive web application with a visual user interface to facilitate analysis for anyone who is not comfortable with using R.  The app is [available online](http://daattali.com/shiny/ddpcr/) or it can be [run locally](#r-interactive).
 
 This document explains the purpose of this package and includes a tutorial on how to use. It should take about 20 minutes to go through the entire document. 
 
@@ -51,12 +51,15 @@ This document explains the purpose of this package and includes a tutorial on ho
     - [Advanced topic 1: Plate parameters](#plate-params)
     - [Advanced topic 2: Algorithms used in each step](#algorithms)
     - [Advanced topic 3: Creating new plate types](#new-types)
+    - [Advanced topic 4: Implementation technical details](#technical-details)
 
 <h1 id="background">Background</h1>
 
-Droplet Digital PCR (ddPCR) is a technology provided by Bio-Rad for performing digital PCR. The basic workflow of ddPCR involves three main steps: partitioning sample DNA into 20,000 droplets, PCR amplifying the nucleic acid in each droplet, and finally passing the droplets through a reader that detects fluorescent amplitudes in two different wavelengths corresponding to FAM and HEX dyes. As a result, the data obtained from a ddPCR experiment can be visualized as a 2D scatterplot (one dimension is FAM intensity and the other dimension is HEX intensity) with 20,000 points (each droplet represents a point).  The following figure is an example of a scatterplot from ddPCR data.
+Droplet Digital PCR (ddPCR) is a technology provided by Bio-Rad for performing digital PCR. The basic workflow of ddPCR involves three main steps: partitioning sample DNA into 20,000 droplets, PCR amplification of the nucleic acid in each droplet, and finally passing the droplets through a reader that detects fluorescence in two different wavelengths (generally set to detect FAM and HEX dyes). As a result, the data obtained from a ddPCR experiment can be visualized as a 2D scatterplot (one dimension is FAM intensity and the other dimension is HEX intensity) with 20,000 points (each droplet represents a point).  The following figure is an example of a scatterplot from ddPCR data.
 
 [![Sample ddPCR data](../inst/vignettes-supp/ddpcr-example.png)](../inst/vignettes-supp/ddpcr-example.png)
+
+This package is designed to analyze two-channel ddPCR experiments (experiments utilizing both fluorescence channels). Single-channel experiments (where only one fluorescence channel is used) cannot use this tool.
 
 A two-channel assay typically uses one FAM dye and one HEX dye, and consequently the droplets will be grouped into one of four clusters: double-positive (droplets that contain both target sequences and emit both HEX and FAM fluorescence), FAM-positive, HEX-positive, and double-negative (empty droplets without any amplifiable template that do not emit fluorescence in either channel). When plotting the droplets, each quadrant of the plot corresponds to a cluster; for example, the droplets in the lower-left quadrant are the double-negative droplets.
 
@@ -151,10 +154,10 @@ This section will go into details of how to use `ddpcr` to analyze ddPCR data.
 
 <h3 id="load">Loading ddPCR data</h3>
 
-The first step is to get the ddPCR data into R. `ddpcr` uses the data files that are exported by QuantaSoft as its input. If you loaded an experiment named `2015-05-20_mouse` with 50 wells to QuantaSoft, then QuantaSoft will export the following files:
+The first step is to get the ddPCR data into R. `ddpcr` uses the data files that are exported by QuantaSoft as its input. If you loaded an experiment named `2015-05-20_mouse` with 50 wells to QuantaSoft, then QuantaSoft can export the following files:
 
-- 50 data files (well files): each well will have its own file with the name ending in `*_Amplitude.csv`. For example, the droplets in well A01 will be saved in `2015-05-20_mouse_A01_Aamplitude.csv`.
-- 1 results file: a small file named `2015-05-20_mouse.csv` will be generated with some information about the plate, including the name of the sample in each well (assuming you named the samples previously).
+- 50 data files (well files): each well will have its own file with the name ending in `*_Amplitude.csv`. For example, the droplets in well A01 will be saved in `2015-05-20_mouse_A01_Aamplitude.csv` (click on **Export Amplitude and Cluster Data** button in the **Setup** tab).
+- 1 results file: a small file named `2015-05-20_mouse.csv` will be generated with some information about the plate, including the name of the sample in each well (click on **Export CSV** button in the **Analyze** tab).
 
 The well files are the only required input to `ddpcr`, and since ddPCR plates contain 96 wells, you can upload anywhere from 1 to 96 well files. The results file is not mandatory, but if you don't provide it then the wells will not have sample names attached to them.
 
@@ -503,10 +506,14 @@ This list contains all the steps of analyzing the given plate, with each item in
 ddpcr:::init_plate
 ```
 
-**For more details about the algorithm, see [the _Algorithms_ vignette](algorithm.Rmd).**
+**For more details about the algorithm, see [the _Algorithms_ vignette](./algorithm.Rmd).**
 
 <h2 id="new-types">Advanced topic 3: Creating new plate types</h2>
 
 Each ddPCR plate has a plate type which determines what type of analysis to run on the data. `plate_types` contains a list of the built-in plate types that are supported, but you can also create your own plate type. Create a new plate type if you want to supply your own logic for any analysis step, or even if you simply want to have a type that sets different default parameters than the built-in ones.
 
-**For more details about how to create new plate types, see [the _Extending ddpcr by adding new plate types_ vignette](extend.Rmd).**
+**For more details about how to create new plate types, see [the _Extending ddpcr by adding new plate types_ vignette](./extend.Rmd).**
+
+<h2 id="technical-details">Advanced topic 4: Implementation technical details</h2>
+
+**For details on the technical details regarding the code implementation, see [the _Technical details_ vignette](./technical_details.Rmd).**
