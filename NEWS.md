@@ -1,3 +1,7 @@
+# shinyjs 1.3 2016-06-03
+
+Prepare for re-release to CRAN and to F1000Research
+
 # shinyjs 1.2.0
 
 2016-03-22
