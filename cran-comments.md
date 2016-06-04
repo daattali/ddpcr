@@ -132,3 +132,17 @@ R CMD check passed with no errors/warnings/notes
 2016-03-17 Kurt Hornik:
 
 Thanks, on CRAN now
+
+---
+
+# Version 1.3
+
+## Round 1
+
+### Submission comments
+
+2016-06-03 
+
+No errors or warnings. 1 note telling me that the package was "Archived on 2016-05-02 as check problems were not corrected despite reminders." but I never got any notification of any checks not passing
+
+## Reviewer comments
