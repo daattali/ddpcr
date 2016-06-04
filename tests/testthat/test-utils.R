@@ -3,8 +3,6 @@ context("utils")
 test_that("is_dir is TRUE when passed a directory", {
   expect_true(is_dir("."))
   expect_true(is_dir("../testthat"))
-  expect_true(is_dir("../../tests"))
-  expect_true(is_dir("../../tests/"))
 })
 
 test_that("is_dir is FALSE when passed a file or non-existent dir", {
