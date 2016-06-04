@@ -146,3 +146,31 @@ Thanks, on CRAN now
 No errors or warnings. 1 note telling me that the package was "Archived on 2016-05-02 as check problems were not corrected despite reminders." but I never got any notification of any checks not passing
 
 ## Reviewer comments
+
+2016-06-04 Kurt Hornik:
+
+```
+This fails on win-builder with
+
+* checking tests ...
+** running tests for arch 'i386' ... ERROR
+Running the tests in 'tests/testthat.R' failed.
+Last 13 lines of output:
+  1. Failure: is_dir is TRUE when passed a directory (@test-utils.R#6) -----------
+  is_dir("../../tests") isn't true.
+
+
+  2. Failure: is_dir is TRUE when passed a directory (@test-utils.R#7) -----------
+  is_dir("../../tests/") isn't true.
+```
+
+## Round 2
+
+### Submission comments
+
+2016-06-04 
+
+No errors or warnings, one note telling me the package was archived recently because of failing tests
+
+## Reviewer comments
+
