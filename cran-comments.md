@@ -174,3 +174,23 @@ No errors or warnings, one note telling me the package was archived recently bec
 
 ## Reviewer comments
 
+2016-06-04 Uwe Ligges
+
+Thanks, on CRAN now.
+
+---
+
+# Version 1.4
+
+## Round 1
+
+### Submission comments
+
+2016-06-24 
+
+No errors, warnings, or notes. Need to update only 3 weeks after previous submission in order to comply with Hadley's new dplyr package that was released today
+
+## Reviewer comments
+
+2016-06-25
+
