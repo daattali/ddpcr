@@ -1,3 +1,7 @@
+# ddpcr 1.4 2016-06-24
+
+Small internal changes to reflect `dplyr` update
+
 # ddpcr 1.3 2016-06-03
 
 Prepare for re-release to CRAN and to F1000Research

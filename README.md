@@ -358,7 +358,7 @@ We can see all the droplets data with `plate_data()`
     #> Source: local data frame [72,727 x 4]
     #> 
     #>     well   HEX   FAM cluster
-    #>    (chr) (int) (int)   (int)
+    #>    <chr> <int> <int>   <int>
     #> 1    A01   577   494       1
     #> 2    A01   515   495       1
     #> 3    A01   690   645       1
@@ -468,7 +468,7 @@ run through the steps one by one using `next_step()`.
 
     #> Identifying empty droplets...
 
-    #> DONE (1 seconds)
+    #> DONE (0 seconds)
 
     #> Analysis complete
 
@@ -504,7 +504,7 @@ which steps were remaining). We can also look at the droplets data
     #> Source: local data frame [57,350 x 4]
     #> 
     #>     well   HEX   FAM cluster
-    #>    (chr) (int) (int)   (int)
+    #>    <chr> <int> <int>   <int>
     #> 1    A01   577   494       4
     #> 2    A01   515   495       4
     #> 3    A01   690   645       4

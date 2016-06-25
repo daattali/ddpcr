@@ -380,8 +380,8 @@ bind_df_ends <- function(df, cols, dir = 1) {
   # Bind together the two parts of the data.frame
   df <-
     cbind(
-      df %>% dplyr::select_(~(dir * one_of(cols))),
-      df %>% dplyr::select_(~(-dir * one_of(cols)))
+      df %>% dplyr::select_(~(dir * dplyr::one_of(cols))),
+      df %>% dplyr::select_(~(-dir * dplyr::one_of(cols)))
     )
   
   # If the input was a tbl_df, make sure to return that object too

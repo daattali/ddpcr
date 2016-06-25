@@ -80,7 +80,7 @@ init_meta <- function(plate) {
     meta_cols_keep <- c("well", "sample")
     tryCatch({
       plate_meta %<>%
-        dplyr::select_(~ one_of(meta_cols_keep)) %>%
+        dplyr::select_(~ dplyr::one_of(meta_cols_keep)) %>%
         unique %>%
         merge_dfs_overwrite_col(DEFAULT_PLATE_META, ., "sample", "well")
     },
