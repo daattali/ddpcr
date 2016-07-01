@@ -1,3 +1,7 @@
+# ddpcr 1.4.900x
+
+- better error message when trying to read directory that doesn't have any data files
+
 # ddpcr 1.4 2016-06-24
 
 Small internal changes to reflect `dplyr` update

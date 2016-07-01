@@ -18,13 +18,16 @@ read_plate <- function(plate, dir, data_files, meta_file) {
 # Read a plate data from a given directory
 read_dir <- function(plate, dir) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
-  
+
   if (!is_dir(dir)) {
     err_msg(sprintf("could not find directory `%s`", dir))
   }
   
   # find the data files in the directory and use them to read the plate
   data_files <- find_data_files(dir)
+  if (length(data_files) == 0) {
+    err_msg("Could not find any valid data files (ddpcr expects the \"_Amplitude\" files exported by QuantaSoft)")
+  }
   name <- suppressWarnings(get_consensus_name_from_data_files(data_files))
   meta_file <- find_meta_file(dir, name)
   
