@@ -14,7 +14,7 @@ online](http://daattali.com/shiny/ddpcr/) or it can be [run
 locally](#r-interactive).
 
 This document explains the purpose of this package and includes a
-tutorial on how to use. It should take about 20 minutes to go through
+tutorial on how to use it. It should take about 20 minutes to go through
 the entire document.
 
 Table of contents
@@ -104,7 +104,7 @@ The main features include:
 
 -   **Identify failed wells** - identify wells with a failed
     ddPCR reaction. These wells will be excluded from all
-    downstream analysis. No template control (NTC) will be deemed as
+    downstream analysis. No template control (NTC) wells will be deemed as
     failures by this tool.
 -   **Identify outlier droplets** - sometimes a few droplets can have an
     extremely high fluorescent intensity value that is probably
@@ -267,12 +267,12 @@ QuantaSoft can export the following files:
 
 -   50 data files (well files): each well will have its own file with
     the name ending in `*_Amplitude.csv`. For example, the droplets in
-    well A01 will be saved in `2015-05-20_mouse_A01_Aamplitude.csv`
-    (click on **Export Amplitude and Cluster Data** button in the
+    well A01 will be saved in `2015-05-20_mouse_A01_Amplitude.csv`
+    (click on the **Export Amplitude and Cluster Data** button in the
     **Setup** tab).
 -   1 results file: a small file named `2015-05-20_mouse.csv` will be
     generated with some information about the plate, including the name
-    of the sample in each well (click on **Export CSV** button in the
+    of the sample in each well (click on the **Export CSV** button in the
     **Analyze** tab).
 
 The well files are the only required input to `ddpcr`, and since ddPCR
