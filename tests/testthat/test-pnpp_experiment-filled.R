@@ -19,6 +19,6 @@ test_that("get_filled_drops works", {
   expect_identical(get_filled_drops(plate, "A05"),
                    get_filled_drops(plate, "A05", border_A05))
   
-  expect_identical(get_filled_drops(plate, "A05"),
+  expect_equal(get_filled_drops(plate, "A05"),
                    readr::read_csv(file.path(dir, "A05_filled.csv")))
 })

@@ -1,6 +1,8 @@
 # ddpcr 1.4.900x
 
-- better error message when trying to read directory that doesn't have any data files
+- better error message when trying to read directory that doesn't have any data files (#10)
+- changed default droplet volume to 85 nL based on literature (@seaaan) (#12)
+- change one unit test from `expect_identical` to `expect_equal` to reflect a change in `readr` (#13)
 
 # ddpcr 1.4 2016-06-24
 
