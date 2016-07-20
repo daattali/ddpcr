@@ -21,7 +21,7 @@ options(ddpcr.verbose = TRUE)
 
 This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. It also includes an interactive web application with a visual user interface to facilitate analysis for anyone who is not comfortable with using R.  The app is [available online](http://daattali.com/shiny/ddpcr/) or it can be [run locally](#r-interactive).
 
-This document explains the purpose of this package and includes a tutorial on how to use. It should take about 20 minutes to go through the entire document. 
+This document explains the purpose of this package and includes a tutorial on how to use it. It should take about 20 minutes to go through the entire document. 
 
 # Table of contents
 
@@ -73,7 +73,7 @@ The `ddpcr` package allows you to import your ddPCR data, perform some basic ana
 
 The main features include:
 
-- **Identify failed wells** - identify wells with a failed ddPCR reaction. These wells will be excluded from all downstream analysis. No template control (NTC) will be deemed as failures by this tool.
+- **Identify failed wells** - identify wells with a failed ddPCR reaction. These wells will be excluded from all downstream analysis. No template control (NTC) wells will be deemed as failures by this tool.
 - **Identify outlier droplets** - sometimes a few droplets can have an extremely high fluorescent intensity value that is probably erroneous, perhaps as a result of an error with the fluorescence reader. These droplets are identified and removed from the downstream analysis.
 - **Identify empty droplets** - droplets with very low fluorescent amplitudes are considered empty and are removed from the downstream analysis. Removing these droplets is beneficial for two reasons: 1. the size of the data is greatly reduced, which means the computations will be faster on the remaining droplets, and 2. the real signal of interest is in the non-empty droplets, and empty droplets can be regarded as noise.
 - **Calculating template concentration** - by knowing how many empty droplets are in each well, the starting concentration of the target DNA in the sample can be calculated (as number of copies of target template per microlitre of sample).
@@ -156,8 +156,8 @@ This section will go into details of how to use `ddpcr` to analyze ddPCR data.
 
 The first step is to get the ddPCR data into R. `ddpcr` uses the data files that are exported by QuantaSoft as its input. If you loaded an experiment named `2015-05-20_mouse` with 50 wells to QuantaSoft, then QuantaSoft can export the following files:
 
-- 50 data files (well files): each well will have its own file with the name ending in `*_Amplitude.csv`. For example, the droplets in well A01 will be saved in `2015-05-20_mouse_A01_Aamplitude.csv` (click on **Export Amplitude and Cluster Data** button in the **Setup** tab).
-- 1 results file: a small file named `2015-05-20_mouse.csv` will be generated with some information about the plate, including the name of the sample in each well (click on **Export CSV** button in the **Analyze** tab).
+- 50 data files (well files): each well will have its own file with the name ending in `*_Amplitude.csv`. For example, the droplets in well A01 will be saved in `2015-05-20_mouse_A01_Amplitude.csv` (click on the **Export Amplitude and Cluster Data** button in the **Setup** tab).
+- 1 results file: a small file named `2015-05-20_mouse.csv` will be generated with some information about the plate, including the name of the sample in each well (click on the **Export CSV** button in the **Analyze** tab).
 
 The well files are the only required input to `ddpcr`, and since ddPCR plates contain 96 wells, you can upload anywhere from 1 to 96 well files. The results file is not mandatory, but if you don't provide it then the wells will not have sample names attached to them.
 

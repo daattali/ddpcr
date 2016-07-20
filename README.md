@@ -104,8 +104,8 @@ The main features include:
 
 -   **Identify failed wells** - identify wells with a failed
     ddPCR reaction. These wells will be excluded from all
-    downstream analysis. No template control (NTC) wells will be deemed as
-    failures by this tool.
+    downstream analysis. No template control (NTC) wells will be deemed
+    as failures by this tool.
 -   **Identify outlier droplets** - sometimes a few droplets can have an
     extremely high fluorescent intensity value that is probably
     erroneous, perhaps as a result of an error with the
@@ -272,8 +272,8 @@ QuantaSoft can export the following files:
     **Setup** tab).
 -   1 results file: a small file named `2015-05-20_mouse.csv` will be
     generated with some information about the plate, including the name
-    of the sample in each well (click on the **Export CSV** button in the
-    **Analyze** tab).
+    of the sample in each well (click on the **Export CSV** button in
+    the **Analyze** tab).
 
 The well files are the only required input to `ddpcr`, and since ddPCR
 plates contain 96 wells, you can upload anywhere from 1 to 96 well
@@ -468,7 +468,7 @@ run through the steps one by one using `next_step()`.
 
     #> Identifying empty droplets...
 
-    #> DONE (0 seconds)
+    #> DONE (1 seconds)
 
     #> Analysis complete
 
@@ -1004,7 +1004,7 @@ the `restart = TRUE` parameter.
 
     #> Identifying empty droplets...
 
-    #> DONE (1 seconds)
+    #> DONE (0 seconds)
 
     #> Analysis complete
 
