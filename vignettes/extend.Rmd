@@ -22,7 +22,7 @@ Calling the `analyze()` function on any plate will result in running the ddPCR d
 
 Plates of type `ddpcr_plate` have 4 possible clusters: `UNDEFINED` for any droplet that has not been assigned a cluster yet, `FAILED` for droplets in failed wells, `OUTLIER` for outlier droplets, and `EMPTY` for droplets without any template in them.  This information can also be seen with the `clusters()` function.
 
-Plates of type `ddpcr_plate` have 4 analysis steps: `INITIALIZE`, `REMOVE_FAILURES`, `REMOVE_OUTLIERES`, and `REMOVE_EMPTY`. This means that any plate that is created will perform these basic steps of removing failied wells, outlier droplets, and empty droplets. The exact functions used for each step can be seen with the `steps()` function. For example, `new_plate(sample_data_dir()) %>% steps` will reveal that the `REMOVE_FAILURED` steps calls the function `remove_failures()`, so you can view the algorithm by running `ddpcr:::remove_failures.ddpcr_plate`.
+Plates of type `ddpcr_plate` have 4 analysis steps: `INITIALIZE`, `REMOVE_FAILURES`, `REMOVE_OUTLIERS`, and `REMOVE_EMPTY`. This means that any plate that is created will perform these basic steps of removing failed wells, outlier droplets, and empty droplets. The exact functions used for each step can be seen with the `steps()` function. For example, `new_plate(sample_data_dir()) %>% steps` will reveal that the `REMOVE_FAILURES` steps calls the function `remove_failures()`, so you can view the algorithm by running `ddpcr:::remove_failures.ddpcr_plate`.
 
 Plates of type `ddpcr_plate` also have a set of parameters that can be viewed with the `params()` function. Running `new_plate(sample_data_dir()) %>% params %>% str` will show all the default parameters that are used. Any of these parameters can be overridden in new plate types, and new parameters can be added.
 
@@ -61,7 +61,7 @@ The default plot function provided by `ddpcr_plate` will usually be enough to co
 
 ## Example
 
-As a simple exercise to show how easy it is to create a new plate type, this section will walk through the steps required to create a new plate type. The name of the new plate type is `fam_border`. In experiments of this type, we are interested in running the typical pre-processing (identify failed wells, outliers droplets, and empty droplets), followed by simply classifying the remaining droplets as either FAM-positive or FAM-negative, with the border between positive and negative being a predefined value. This plate type is clearly not very useful but it is good for demonstration purposes.
+As a simple exercise to show how easy it is to create a new plate type, this section will walk through the steps required to create a new plate type. The name of the new plate type is `fam_border`. In experiments of this type, we are interested in running the typical pre-processing (identify failed wells, outlier droplets, and empty droplets), followed by simply classifying the remaining droplets as either FAM-positive or FAM-negative, with the border between positive and negative being a predefined value. This plate type is clearly not very useful but it is good for demonstration purposes.
 
 The first thing to do is to define the parent plate type, which in this case will be `ddpcr_plate`.
 
@@ -71,7 +71,7 @@ parent_plate_type.fam_border <- function(plate) {
 }
 ```
 
-The next step is to define the parameters of this plate type. ddPCR plates of this type are expected to have at least 14,000 droplets per well as a QA metric. If any well has less droplets, it is considered a failure. There is already a parameter for this, so we just need to modify it. We also add a new parameter for the border to use for gating the droplets, and give it a default value.
+The next step is to define the parameters of this plate type. ddPCR plates of this type are expected to have at least 14,000 droplets per well as a QA metric. If any well has fewer droplets, it is considered a failure. There is already a parameter for this, so we just need to modify it. We also add a new parameter for the border to use for gating the droplets, and give it a default value.
 
 ```{r defineparams}
 define_params.fam_border <- function(plate) {
@@ -117,7 +117,7 @@ define_steps.fam_border <- function(plate) {
 }
 ```
 
-We need to create the `gate_droplets` function with the actual logic that will perform the step. Notice the use of the following helper functions that are especially useful when writing analysis step functions: `step`, `check_step`, `step_begin`, `step_end`, `unanalyzed_clusters`, `status`. You can look up the documentation for each of these functions to learn more.
+We need to create the `gate_droplets` function with the actual logic that will perform the step. Notice the use of the following helper functions that are especially useful when writing analysis step functions: `step`, `check_step`, `step_begin`, `step_end`, `unanalyzed_clusters`, and `status`. You can look up the documentation for each of these functions to learn more.
 
 ```{r definegatestep}
 gate_droplets <- function(plate) {
