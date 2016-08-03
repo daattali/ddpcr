@@ -1,4 +1,4 @@
-# ddpcr 1.4.900x
+# ddpcr 1.5 2016-08-03
 
 - better error message when trying to read directory that doesn't have any data files (#10)
 - changed default droplet volume to 85 nL based on literature (@seaaan) (#12)
