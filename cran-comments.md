@@ -192,5 +192,22 @@ No errors, warnings, or notes. Need to update only 3 weeks after previous submis
 
 ## Reviewer comments
 
-2016-06-25
+2016-06-25 Kurt Hornik
 
+Thanks, on CRAN now
+
+# Version 1.5
+
+## Round 1
+
+### Submission comments
+
+2016-08-03
+
+No errors, warnings, or notes
+
+## Reviewer comments
+
+2016-08-03 Duncan Murdoch
+
+Thanks, on CRAN now
