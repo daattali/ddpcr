@@ -19,6 +19,8 @@ options(ddpcr.verbose = TRUE)
 [![Build Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
 [![CRAN version](http://www.r-pkg.org/badges/version/ddpcr)](https://cran.r-project.org/package=ddpcr)
 
+> *Copyright 2016 [Dean Attali](http://deanattali.com). Licensed under the MIT license.*
+
 This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. It also includes an interactive web application with a visual user interface to facilitate analysis for anyone who is not comfortable with using R.  The app is [available online](http://daattali.com/shiny/ddpcr/) or it can be [run locally](#r-interactive).
 
 This document explains the purpose of this package and includes a tutorial on how to use it. It should take about 20 minutes to go through the entire document. 

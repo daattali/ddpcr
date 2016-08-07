@@ -6,6 +6,9 @@ Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-
 [![CRAN
 version](http://www.r-pkg.org/badges/version/ddpcr)](https://cran.r-project.org/package=ddpcr)
 
+> *Copyright 2016 [Dean Attali](http://deanattali.com). Licensed under
+> the MIT license.*
+
 This package provides an interface to explore, analyze, and visualize
 droplet digital PCR (ddPCR) data in R. It also includes an interactive
 web application with a visual user interface to facilitate analysis for
@@ -355,8 +358,7 @@ We can see all the droplets data with `plate_data()`
 
     plate %>% plate_data()
 
-    #> Source: local data frame [72,727 x 4]
-    #> 
+    #> # A tibble: 72,727 x 4
     #>     well   HEX   FAM cluster
     #>    <chr> <int> <int>   <int>
     #> 1    A01   577   494       1
@@ -369,7 +371,7 @@ We can see all the droplets data with `plate_data()`
     #> 8    A01  1058   966       1
     #> 9    A01  1058   979       1
     #> 10   A01  1095  1002       1
-    #> ..   ...   ...   ...     ...
+    #> # ... with 72,717 more rows
 
 > **Technical note**: This shows us the fluorescence amplitudes of each
 > droplet, along with the current cluster assignment of each droplet.
@@ -501,8 +503,7 @@ which steps were remaining). We can also look at the droplets data
 
     plate %>% plate_data()
 
-    #> Source: local data frame [57,350 x 4]
-    #> 
+    #> # A tibble: 57,350 x 4
     #>     well   HEX   FAM cluster
     #>    <chr> <int> <int>   <int>
     #> 1    A01   577   494       4
@@ -515,7 +516,7 @@ which steps were remaining). We can also look at the droplets data
     #> 8    A01  1058   966       4
     #> 9    A01  1058   979       4
     #> 10   A01  1095  1002       4
-    #> ..   ...   ...   ...     ...
+    #> # ... with 57,340 more rows
 
 This isn't very informative since it shows the cluster assignment for
 each droplet, which is not easy for a human to digest. Instead, this
@@ -530,9 +531,9 @@ also look at the plate results
     #> 3  C01   Mike   C   1 TRUE 14256    TRUE             0       12879
     #> 4  C05  Emily   C   5 TRUE 14109   FALSE             0          NA
     #>   drops_non_empty drops_empty_fraction concentration
-    #> 1            2130                0.865           159
-    #> 2            1882                0.857           169
-    #> 3            1377                0.903           112
+    #> 1            2130                0.865           170
+    #> 2            1882                0.857           181
+    #> 3            1377                0.903           120
     #> 4              NA                   NA            NA
 
 Now there's a bit more information in the results table. The *success*
@@ -845,10 +846,10 @@ Take a look at the results
     #> 4  F05   Mary   F   5 TRUE 15377    TRUE             0       14126
     #> 5  C05  Emily   C   5 TRUE 14109   FALSE             0          NA
     #>   drops_non_empty drops_empty_fraction concentration mutant_border
-    #> 1            2130                0.865           159          4194
-    #> 2            1882                0.857           169          3789
-    #> 3            1377                0.903           112          4356
-    #> 4            1251                0.919            92          3926
+    #> 1            2130                0.865           170          4194
+    #> 2            1882                0.857           181          3789
+    #> 3            1377                0.903           120          4356
+    #> 4            1251                0.919            99          3926
     #> 5              NA                   NA            NA            NA
     #>   filled_border significant_mutant_cluster mutant_num wildtype_num
     #> 1          8286                      FALSE          4         1827
@@ -916,7 +917,7 @@ the `params()` function
     #>  $ GENERAL        :List of 4
     #>   ..$ X_VAR         : chr "HEX"
     #>   ..$ Y_VAR         : chr "FAM"
-    #>   ..$ DROPLET_VOLUME: num 0.00091
+    #>   ..$ DROPLET_VOLUME: num 0.00085
     #>   ..$ RANDOM_SEED   : num 8
     #>  $ REMOVE_FAILURES:List of 3
     #>   ..$ TOTAL_DROPS_T      : num 5000
