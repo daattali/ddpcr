@@ -250,13 +250,12 @@ button.btn-primary.lg-btn {
   border-bottom: 0;
 }
 
-#metaTable .ColVis_Button {
-  height: auto;
-  font-size: 1.2em;
+#metaTable .dt-buttons {
+  float: right;
 }
 
-ul.ColVis_collection {
-  width: auto !important;
+.dt-button-collection {
+  width: auto;
 }
 
 #aggregateDesc {

@@ -1,3 +1,6 @@
+# ddpcr 1.5.x 2016-08-11
+- upgrade to DT v0.2
+
 # ddpcr 1.5 2016-08-03
 
 - better error message when trying to read directory that doesn't have any data files (#10)

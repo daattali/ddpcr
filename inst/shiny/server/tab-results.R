@@ -110,19 +110,21 @@ output$metaTable <- DT::renderDataTable({
   meta <- dataValues$plate %>% plate_meta(only_used = TRUE)
   meta[] <- lapply(meta, format, scientific = FALSE, big.mark = ",", drop0trailing = TRUE) 
   colnames <- meta %>% colnames %>% humanFriendlyNames
-  DT::datatable(meta,
-                rownames = FALSE,
-                class = 'cell-border stripe',
-                colnames = colnames,
-                extensions = c("ColVis"),
-                options = list(
-                  searching = FALSE, paging = FALSE,
-                  scrollX = TRUE, scrollY = 500,
-                  columnDefs = list(list(visible = FALSE,
-                                         targets = metaColsHideIdx())),
-                  dom = 'C<"clear">lfrtp',
-                  scrollCollapse = TRUE
-                )
+  DT::datatable(
+    meta,
+    rownames = FALSE,
+    class = 'cell-border stripe',
+    colnames = colnames,
+    extensions = "Buttons",
+    options = list(
+      searching = FALSE, paging = FALSE,
+      scrollX = TRUE, scrollY = 500,
+      columnDefs = list(list(visible = FALSE,
+                             targets = metaColsHideIdx())),
+      dom = 'C<"clear">Blftp',
+      scrollCollapse = TRUE,
+      buttons = I('colvis')
+    )
   )
 })
 
@@ -132,7 +134,7 @@ output$metaAggregate <- DT::renderDataTable({
     return()
   }
   
-  wells <- input$metaTable_rows_selected
+  wells <- wells_used(dataValues$plate)[input$metaTable_rows_selected]
   vars <- metaNumericVars()
   niceVars <- humanFriendlyNames(vars)
   selectInput("exploreVarSelect", "Choose summary variable",
