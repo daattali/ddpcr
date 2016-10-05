@@ -1,4 +1,5 @@
-# ddpcr 1.5.x 2016-08-11
+# ddpcr 1.5.xxxx
+- suppress messages from readr
 - upgrade to DT v0.2
 
 # ddpcr 1.5 2016-08-03

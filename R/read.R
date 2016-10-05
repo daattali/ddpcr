@@ -71,9 +71,8 @@ read_files <- function(plate, data_files, meta_file) {
     plate_data <-
       lapply(data_files, function(x) {
         wellNum <- get_well_from_data_file(x)
-        wdat <-
-          readr::read_csv(x, progress = FALSE) %>%
-          dplyr::select_(~ 2:1)
+        wdat <- suppressMessages(readr::read_csv(x, progress = FALSE))
+        wdat <- dplyr::select_(wdat, ~ 2:1)
         wdat[['well']] <- wellNum
         wdat
       }) %>%
