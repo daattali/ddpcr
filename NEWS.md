@@ -1,4 +1,5 @@
 # ddpcr 1.5.xxxx
+- add reference to f1000 paper in shiny app About section
 - suppress messages from readr
 - upgrade to DT v0.2
 
