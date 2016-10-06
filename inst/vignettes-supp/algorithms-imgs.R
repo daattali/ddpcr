@@ -95,7 +95,7 @@ p1 <- ggExtra::ggMarginal(p, xparams = list(colour = "transparent"))
 # Identify mutant vs wildtype droplets
 
 full <- full %>% dplyr::filter(FAM >= filled_border)
-range <- ggplot_build(p)$panel$x_scales[[1]]$range$range
+range <- ggplot_build(p)$layout$panel_scales$x[[1]]$range$range
 dens_smooth <- stats::density(full$HEX)
 maxima_idx <- local_maxima(dens_smooth$y)
 minima_idx <- local_minima(dens_smooth$y)

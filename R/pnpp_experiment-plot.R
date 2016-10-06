@@ -148,17 +148,17 @@ plot.pnpp_experiment <- function(
         hjust = 0.5
         vjust = 0.5
       } else if (positive_dim(plate) == "Y") {
-        text_pos_x <- ggb$panel$ranges[[1]]$x.range[1] +
-          diff(ggb$panel$ranges[[1]]$x.range) * 0.95
-        text_pos_y <- ggb$panel$ranges[[1]]$y.range[1] +
-          diff(ggb$panel$ranges[[1]]$y.range) * 0.1
+        text_pos_x <- ggb$layout$panel_ranges[[1]]$x.range[1] +
+          diff(ggb$layout$panel_ranges[[1]]$x.range) * 0.95
+        text_pos_y <- ggb$layout$panel_ranges[[1]]$y.range[1] +
+          diff(ggb$layout$panel_ranges[[1]]$y.range) * 0.1
         hjust = 1
         vjust = 0
       } else {
-        text_pos_x <- ggb$panel$ranges[[1]]$x.range[1] +
-          diff(ggb$panel$ranges[[1]]$x.range) * 0.1
-        text_pos_y <- ggb$panel$ranges[[1]]$y.range[1] +
-          diff(ggb$panel$ranges[[1]]$y.range) * 0.95
+        text_pos_x <- ggb$layout$panel_ranges[[1]]$x.range[1] +
+          diff(ggb$layout$panel_ranges[[1]]$x.range) * 0.1
+        text_pos_y <- ggb$layout$panel_ranges[[1]]$y.range[1] +
+          diff(ggb$layout$panel_ranges[[1]]$y.range) * 0.95
         hjust = 0
         vjust = 1
       }

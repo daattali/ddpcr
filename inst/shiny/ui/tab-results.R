@@ -229,7 +229,7 @@ tabPanel(
         actionButton(
           "plotBtn",
           "Plot",
-          class = "btn-primary btn-lg"
+          class = "btn-primary"
         ),
         hidden(downloadButton("downloadPlot", "Save figure")),
         hidden(
