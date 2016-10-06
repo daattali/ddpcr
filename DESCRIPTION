@@ -1,6 +1,6 @@
 Package: ddpcr
 Title: Analysis and Visualization of Droplet Digital PCR in R and on the Web
-Version: 1.5.9000
+Version: 1.6
 Authors@R: c(
     person("Dean", "Attali", email = "daattali@gmail.com", role = c("aut", "cre"))
     )
@@ -16,7 +16,7 @@ Depends:
 Imports: 
     DT (>= 0.2),
     dplyr (>= 0.5.0),
-    ggplot2 (>= 1.0.1.9003),
+    ggplot2 (>= 2.2.0),
     lazyeval (>= 0.1.10),
     magrittr (>= 1.5),
     mixtools (>= 1.0.2),
