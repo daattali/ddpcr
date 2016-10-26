@@ -195,7 +195,7 @@ plot.ddpcr_plate <- function(
   
   # basic plot
   p <-
-    ggplot2::ggplot(meta) +
+    ggplot2::ggplot() +
     ggplot2::xlab(xlab) +
     ggplot2::ylab(ylab) +
     ggplot2::ggtitle(title) +
