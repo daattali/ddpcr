@@ -211,3 +211,21 @@ No errors, warnings, or notes
 2016-08-03 Duncan Murdoch
 
 Thanks, on CRAN now
+
+# Version 1.6
+
+## Test environments
+
+* Windows 7, R 3.3.1 (local)
+* ubuntu 12.04, R 3.3.1 (on travis-ci)
+* ubuntu 14.04, R 3.3.1 (on my DigitalOcean droplet)
+
+## Round 1
+
+### Submission comments
+
+2016-11-11
+
+updating to work with new ggplot2 version; no errors, warnings, or notes
+
+## Reviewer comments
