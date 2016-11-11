@@ -358,7 +358,7 @@ We can see all the droplets data with `plate_data()`
 
     plate %>% plate_data()
 
-    #> # A tibble: 72,727 x 4
+    #> # A tibble: 72,727 × 4
     #>     well   HEX   FAM cluster
     #>    <chr> <int> <int>   <int>
     #> 1    A01   577   494       1
@@ -503,7 +503,7 @@ which steps were remaining). We can also look at the droplets data
 
     plate %>% plate_data()
 
-    #> # A tibble: 57,350 x 4
+    #> # A tibble: 57,350 × 4
     #>     well   HEX   FAM cluster
     #>    <chr> <int> <int>   <int>
     #> 1    A01   577   494       4
@@ -805,7 +805,7 @@ Now we can analyze the plate
 
     #> Identifying empty droplets...
 
-    #> DONE (0 seconds)
+    #> DONE (1 seconds)
 
     #> Classifying droplets...
 
@@ -1005,7 +1005,7 @@ the `restart = TRUE` parameter.
 
     #> Identifying empty droplets...
 
-    #> DONE (0 seconds)
+    #> DONE (1 seconds)
 
     #> Analysis complete
 
