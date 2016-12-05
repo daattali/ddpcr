@@ -5,6 +5,7 @@ tabPanel(
   title = "Analyze",
   id    = "analyzeTab",
   value = "analyzeTab",
+  class = "fade",
   icon  = icon("calculator"),
   
   conditionalPanel(

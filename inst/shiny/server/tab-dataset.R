@@ -22,7 +22,7 @@ observeEvent(input$uploadFilesBtn, {
                 type = plate_types$fam_positive_pnpp)
     
     output$datasetChosen <- reactive({ TRUE })
-    show("datasetNextMsg")
+    updateTabsetPanel(session, "mainNav", "settingsTab")
   })
 })
 
@@ -33,7 +33,7 @@ observeEvent(input$loadFileBtn, {
     dataValues$plate <- load_plate(file$datapath)
     
     output$datasetChosen <- reactive({ TRUE })
-    show("datasetNextMsg")
+    updateTabsetPanel(session, "mainNav", "settingsTab")
   })
 })
 
@@ -43,7 +43,7 @@ observeEvent(input$loadSampleBtn, {
     dataValues$plate <- sample_plate(input$sampleDatasetType)
     
     output$datasetChosen <- reactive({ TRUE })
-    show("datasetNextMsg")
+    updateTabsetPanel(session, "mainNav", "settingsTab")
   })
 })
 
@@ -61,9 +61,4 @@ output$sampleResultsFile <- downloadHandler(
   content = function(file) {
     file.copy(from = sample_results_file(), to = file, overwrite = TRUE)
   }
-)
-
-# change to settings tab when clicking on link
-observeEvent(input$toSettings,
-  updateTabsetPanel(session, "mainNav", "settingsTab")
 )

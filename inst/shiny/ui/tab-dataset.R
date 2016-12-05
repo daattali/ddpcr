@@ -6,6 +6,7 @@ tabPanel(
   id    = "datasetTab",
   value = "datasetTab",
   name  = "datasetTab",
+  class = "fade in",
   icon  = icon("table"),
   
   tabsetPanel(
@@ -100,15 +101,6 @@ tabPanel(
           class = "btn-primary"
         )
       )
-    )
-  ),
-  
-  hidden(
-    div(
-      id = "datasetNextMsg",
-      class = "next-msg",
-      "The data has been loaded, you can",
-      actionLink("toSettings", "continue to Settings")
     )
   )
 )

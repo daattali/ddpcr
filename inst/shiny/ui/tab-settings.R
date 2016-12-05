@@ -6,6 +6,7 @@ tabPanel(
   id = "settingsTab",
   value = "settingsTab",
   name = "settingsTab",
+  class = "fade",
   icon  = icon("cog"),
 
   conditionalPanel(

@@ -6,6 +6,7 @@ tabPanel(
   id    = "resultsTab",
   value = "resultsTab",
   name  = "resultsTab",
+  class = "fade",
   icon  = icon("bar-chart"),
   
   conditionalPanel(

@@ -1,4 +1,9 @@
+# ddpcr 1.7 2016-12-05
+
+- some improvements to Shiny UI
+
 # ddpcr 1.6 2016-11-11
+
 - fix all ggplot2 code to work with new version ggplot2 2.2.0
 - add reference to f1000 paper in shiny app About section
 - suppress messages from readr

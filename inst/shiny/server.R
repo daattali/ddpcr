@@ -55,7 +55,6 @@ shinyServer(function(input, output, session) {
     hide("errorDiv")
     
     # hide the "finished, move on to next tab" messages
-    hide("datasetNextMsg")
     hide("analyzeNextMsg")
   })
 

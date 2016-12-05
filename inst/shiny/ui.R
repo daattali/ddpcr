@@ -21,7 +21,6 @@ tagList(
     id = "mainNav",
     inverse = TRUE,
     fluid = FALSE,
-    position = "fixed-top",
     collapsible = TRUE,
     header = source(file.path("ui", "header.R"),  local = TRUE)$value,
     

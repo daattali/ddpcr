@@ -1,6 +1,6 @@
 Package: ddpcr
 Title: Analysis and Visualization of Droplet Digital PCR in R and on the Web
-Version: 1.6
+Version: 1.7
 Authors@R: c(
     person("Dean", "Attali", email = "daattali@gmail.com", role = c("aut", "cre"))
     )
