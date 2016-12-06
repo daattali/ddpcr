@@ -5,13 +5,15 @@ body {
 }
 
 #loading-content {
-  position: absolute;
+  position: fixed;
   background: #000000;
   z-index: 10000;
   left: 0;
   right: 0;
-  top: 50px;
+  top: 0;
+  padding-top: 50px;
   bottom: 0;
+  font-size: 50px;
   text-align: center;
   color: #FFFFFF;
 }
