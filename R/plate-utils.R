@@ -68,7 +68,7 @@ init_data <- function(plate) {
   plate
 }
 
-# Initialize the metadata of a plte
+# Initialize the metadata of a plate
 init_meta <- function(plate) {
   plate_data <- plate_data(plate)
   plate_meta <- plate_meta(plate)
@@ -77,12 +77,32 @@ init_meta <- function(plate) {
   if (is.null(plate_meta)) {
     plate_meta <- DEFAULT_PLATE_META
   } else {
-    meta_cols_keep <- c("well", "sample")
+    meta_cols_keep <- c("well", "sample", "target_ch1", "target_ch2")
     tryCatch({
+      
+      if (colnames(plate_meta)[5] == 'typeassay' | 
+          colnames(plate_meta)[5] == 'targettype'){
+        # different versions of QuantaSoft
+        if (colnames(plate_meta)[5] == 'typeassay'){
+          plate_meta %<>% dplyr::mutate(target = assay, 
+                                        channel = substr(typeassay, 1,3))
+        }
+        else{
+          plate_meta %<>% dplyr::mutate(channel = substr(targettype, 1,3))
+        }
+        plate_meta %<>%
+          dplyr::group_by(well, sample) %>%
+          dplyr::summarise(target_ch1 = unique(target[channel == 'Ch1']),
+                           target_ch2 = unique(target[channel == 'Ch2'])) %>%
+          dplyr::ungroup()
+      }
+      
+      
       plate_meta %<>%
         dplyr::select_(~ dplyr::one_of(meta_cols_keep)) %>%
-        unique %>%
-        merge_dfs_overwrite_col(DEFAULT_PLATE_META, ., "sample", "well")
+        merge_dfs_overwrite_col(DEFAULT_PLATE_META, .,
+                                c("sample", "target_ch1", "target_ch2")
+                                , "well")
     },
     error = function(err) {
       err_msg("the metadata file is invalid")
