@@ -4,7 +4,7 @@
 \alias{subset.ddpcr_plate}
 \title{Subsetting a ddPCR plate}
 \usage{
-\method{subset}{ddpcr_plate}(x, wells, samples, ...)
+\method{subset}{ddpcr_plate}(x, wells, samples, targets_ch1, targets_ch2, ...)
 }
 \arguments{
 \item{x}{The ddPCR plate to subset from.}
@@ -13,6 +13,10 @@
 section for more information).}
 
 \item{samples}{Vector of sample names to select.}
+
+\item{targets_ch1}{Vector of target names in channel 1 to select.}
+
+\item{targets_ch2}{Vector of target names in channel 2 to select.}
 
 \item{...}{Ignored}
 }
