@@ -106,7 +106,6 @@ test_that("get_col works", {
 test_that("subset targets works", {
   dir <- system.file("sample_data", "read_v174", package = "ddpcr")
   plate <- new_plate(dir)
-  expect_identical(plate %>% subset(targets_ch1 = "t1.fw") %>%
-                     wells_used,
+  expect_identical(plate %>% subset(targets_ch1 = "t1.fw") %>% wells_used,
                    c("A01")) 
 })

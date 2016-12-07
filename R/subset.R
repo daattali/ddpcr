@@ -61,7 +61,7 @@ subset.ddpcr_plate <- function(x, wells, samples,
       plate_meta(x) %>%
       dplyr::filter_(~ sample %in% samples) %>%
       .[['well']]
-  } else if (!missing(targets_ch1) | !missing(targets_ch2)) {
+  } else if (!missing(targets_ch1) || !missing(targets_ch2)) {
     wells <-
       plate_meta(x) %>%
       .[['well']]

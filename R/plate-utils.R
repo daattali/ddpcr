@@ -84,16 +84,16 @@ init_meta <- function(plate) {
           colnames(plate_meta)[5] == 'targettype'){
         # different versions of QuantaSoft
         if (colnames(plate_meta)[5] == 'typeassay'){
-          plate_meta %<>% dplyr::mutate(target = assay, 
-                                        channel = substr(typeassay, 1,3))
+          plate_meta %<>% dplyr::mutate_("target" = ~assay, 
+                                        "channel" = ~substr(typeassay, 1,3))
         }
         else{
-          plate_meta %<>% dplyr::mutate(channel = substr(targettype, 1,3))
+          plate_meta %<>% dplyr::mutate_("channel" = ~substr(targettype, 1,3))
         }
         plate_meta %<>%
-          dplyr::group_by(well, sample) %>%
-          dplyr::summarise(target_ch1 = unique(target[channel == 'Ch1']),
-                           target_ch2 = unique(target[channel == 'Ch2'])) %>%
+          dplyr::group_by_("well", "sample") %>%
+          dplyr::summarise_("target_ch1" = ~unique(target[channel == 'Ch1']),
+                            "target_ch2" = ~unique(target[channel == 'Ch2'])) %>%
           dplyr::ungroup()
       }
       
