@@ -1,5 +1,6 @@
-# ddpcr 1.7 2016-12-05
+# ddpcr 1.7 2016-12-08
 
+- add support for targets for channel 1 and 2, in newer QuantaSoft export formats (v1.7.4) (thanks @acnb)
 - some improvements to Shiny UI
 
 # ddpcr 1.6 2016-11-11

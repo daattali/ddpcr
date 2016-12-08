@@ -92,8 +92,10 @@ init_meta <- function(plate) {
         }
         plate_meta %<>%
           dplyr::group_by_("well", "sample") %>%
-          dplyr::summarise_("target_ch1" = ~unique(target[channel == 'Ch1']),
-                            "target_ch2" = ~unique(target[channel == 'Ch2'])) %>%
+          dplyr::summarise_(
+            "target_ch1" = ~unique(target[channel == 'Ch1']),
+            "target_ch2" = ~unique(target[channel == 'Ch2'])
+          ) %>%
           dplyr::ungroup()
       }
       
@@ -101,8 +103,8 @@ init_meta <- function(plate) {
       plate_meta %<>%
         dplyr::select_(~ dplyr::one_of(meta_cols_keep)) %>%
         merge_dfs_overwrite_col(DEFAULT_PLATE_META, .,
-                                c("sample", "target_ch1", "target_ch2")
-                                , "well")
+                                c("sample", "target_ch1", "target_ch2"),
+                               "well")
     },
     error = function(err) {
       err_msg("the metadata file is invalid")
