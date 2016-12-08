@@ -1,5 +1,5 @@
 Well,ExptType,Experiment,Sample,TypeAssay,Assay,Status,Concentration,TotalConfMax,TotalConfMin,PoissonConfMax,PoissonConfMin,Positives,Negatives,Ch1+Ch2+,Ch1+Ch2-,Ch1-Ch2+,Ch1-Ch2-,Linkage,AcceptedDroplets,CNV,TotalCNVMax,TotalCNVMin,PoissonCNVMax,PoissonCNVMin,ReferenceCopies,UnknownCopies,Ratio,TotalRatioMax,TotalRatioMin,PoissonRatioMax,PoissonRatioMin,FractionalAbundance,TotalFractionalAbundanceMax,TotalFractionalAbundanceMin,PoissonFractionalAbundanceMax,PoissonFractionalAbundanceMin,ReferenceAssayNumber,TargetAssayNumber,MeanAmplitudeofPositives,MeanAmplitudeofNegatives,MeanAmplitudeTotal,ExperimentComments,MergedWells
-A01,Absolute Quantification,,a1,Ch1Unknown,,Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-B02,Absolute Quantification,,b2,Ch1Unknown,,Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-A01,Absolute Quantification,,a1,Ch2Unknown,,Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-B02,Absolute Quantification,,b2,Ch2Unknown,,Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+A01,Absolute Quantification,,a1,Ch1Unknown,t1.fw,Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+B02,Absolute Quantification,,b2,Ch1Unknown,t2.fw,Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+A01,Absolute Quantification,,a1,Ch2Unknown,t1.rev,Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+B02,Absolute Quantification,,b2,Ch2Unknown,t2.rev,Manual,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

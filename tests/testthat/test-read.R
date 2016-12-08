@@ -204,3 +204,11 @@ test_that("read_files inconsistent data files, correct metadata file", {
                expected_data)
   expect_false(is.null(plate_meta(plate)))
 })
+
+test_that("read_files targets for channel 1 and 2", {
+  dir <- system.file("sample_data", "read_simple", package = "ddpcr")
+  plate <- new_plate(dir) 
+  meta <- plate %>% plate_meta(only_used = TRUE)
+  expect_equal(meta$target_ch1, c("t1.fw", "t2.fw"))
+  expect_equal(meta$target_ch2, c("t1.rev", "t2.rev"))
+})

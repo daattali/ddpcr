@@ -8,8 +8,11 @@ test_that("subset works", {
                    plate %>% wells_used)
   expect_identical(plate %>% subset(NULL) %>% wells_used,
                    plate %>% wells_used)
-  expect_identical(plate %>% subset("D08:D10") %>% wells_used,
-                   plate %>% wells_used)
+  expect_warning(plate %>% subset("D08:D10"))
+  suppressWarnings(
+    expect_identical(plate %>% subset("D08:D10") %>% wells_used,
+                     plate %>% wells_used)
+  )
   expect_identical(plate %>% subset("A05") %>% wells_used,
                    "A05")
   expect_identical(plate %>% subset(c("A05", "F05")) %>% wells_used,
@@ -101,4 +104,11 @@ test_that("num_to_col works", {
 test_that("get_col works", {
   expect_identical(get_col("C05"), "05")
   expect_identical(get_col("D11"), "11")
+})
+
+test_that("subset targets works", {
+  dir <- system.file("sample_data", "read_v174", package = "ddpcr")
+  plate <- new_plate(dir)
+  expect_identical(plate %>% subset(targets_ch1 = "t1.fw") %>% wells_used,
+                   c("A01")) 
 })

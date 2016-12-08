@@ -25,6 +25,8 @@
 #' @param wells Vector or range notation of wells to select (see Range Notation
 #' section for more information).
 #' @param samples Vector of sample names to select.
+#' @param targets_ch1 Vector of target names in channel 1 to select.
+#' @param targets_ch2 Vector of target names in channel 2 to select.
 #' @param ... Ignored
 #' @return Plate with data only from the specified wells/samples.
 #' @examples
@@ -43,7 +45,8 @@
 #' plate %>% subset(samples = "Dean") %>% wells_used
 #' plate %>% subset(samples = c("Dean", "Mike")) %>% wells_used
 #' @export
-subset.ddpcr_plate <- function(x, wells, samples, ...) {
+subset.ddpcr_plate <- function(x, wells, samples, 
+                               targets_ch1, targets_ch2, ...) {
   if (!missing(wells) && !missing(samples)) {
     err_msg("Can only subset by either `wells` or `samples`, not both")
   }
@@ -58,14 +61,37 @@ subset.ddpcr_plate <- function(x, wells, samples, ...) {
       plate_meta(x) %>%
       dplyr::filter_(~ sample %in% samples) %>%
       .[['well']]
+  } else if (!missing(targets_ch1) || !missing(targets_ch2)) {
+    wells <-
+      plate_meta(x) %>%
+      .[['well']]
   } else {
     return(x)  # if no arguments, just return the same plate
   }
   
+  if (!missing(targets_ch1)) {
+    wells_from_targets <-
+      plate_meta(x) %>%
+      dplyr::filter_(~ target_ch1 %in% targets_ch1) %>%
+      .[['well']]
+    
+    wells <- wells[wells %in% wells_from_targets]
+  }
+  
+  if (!missing(targets_ch2)) {
+    wells_from_targets <-
+      plate_meta(x) %>%
+      dplyr::filter_(~ target_ch2 %in% targets_ch2) %>%
+      .[['well']]
+    
+    wells <- wells[wells %in% wells_from_targets]
+  }
+  
   # if no valid wells were given, don't do anything
   if (sum(wells %in% (x %>% wells_used)) == 0) {
+    warn_msg("No valid wells selected. Returning plate unchanged.")
     return(x)
-  }  
+  } 
   
   # keep only the droplet data for these wells
   plate_data(x) %<>%
