@@ -5,6 +5,7 @@ ddpcr: Analysis and visualization of Droplet Digital PCR data in R and on the we
 Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
 [![CRAN
 version](http://www.r-pkg.org/badges/version/ddpcr)](https://cran.r-project.org/package=ddpcr)
+[![saythanks](http://i.imgur.com/L88apDa.png)](https://saythanks.io/to/daattali)
 
 > *Copyright 2016 [Dean Attali](http://deanattali.com). Licensed under
 > the MIT license.*
