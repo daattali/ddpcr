@@ -8,8 +8,11 @@ test_that("subset works", {
                    plate %>% wells_used)
   expect_identical(plate %>% subset(NULL) %>% wells_used,
                    plate %>% wells_used)
-  expect_identical(plate %>% subset("D08:D10") %>% wells_used,
-                   plate %>% wells_used)
+  expect_warning(plate %>% subset("D08:D10"))
+  suppressWarnings(
+    expect_identical(plate %>% subset("D08:D10") %>% wells_used,
+                     plate %>% wells_used)
+  )
   expect_identical(plate %>% subset("A05") %>% wells_used,
                    "A05")
   expect_identical(plate %>% subset(c("A05", "F05")) %>% wells_used,

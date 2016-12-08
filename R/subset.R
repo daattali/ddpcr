@@ -89,6 +89,7 @@ subset.ddpcr_plate <- function(x, wells, samples,
   
   # if no valid wells were given, don't do anything
   if (sum(wells %in% (x %>% wells_used)) == 0) {
+    warn_msg("No valid wells selected. Returning plate unchanged.")
     return(x)
   } 
   
