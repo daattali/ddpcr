@@ -89,9 +89,30 @@ read_files <- function(plate, data_files, meta_file) {
   # Read the metadata file if one was given
   if (!is.null(meta_file)) {
     tryCatch({
-      plate_meta <-
-        utils::read.csv(meta_file, stringsAsFactors = FALSE) %>%
-        magrittr::set_colnames(colnames(.) %>% tolower)
+      cn <- 
+        utils::read.csv(meta_file, stringsAsFactors = FALSE, 
+                        nrows=1, header = F) %>%
+        unlist(.[1,]) %>%
+        unname() %>%
+        tolower()
+      
+      plate_meta_tmp <- utils::read.csv(meta_file, 
+                                        stringsAsFactors = FALSE, 
+                                        skip = 1, 
+                                        nrows=5, 
+                                        header = FALSE)
+      
+      #meta file for version 1.7.4 end with ','
+      if (length(cn) == (ncol(plate_meta_tmp) - 1)){
+        cn <- c(cn, 'dummy') 
+      }
+      
+      plate_meta <- utils::read.csv(meta_file, 
+                                    stringsAsFactors = FALSE, 
+                                    skip = 1, 
+                                    header = FALSE,
+                                    col.names = cn)
+      
     },
     error = function(err) {
       err_msg("there was a problem with the metadata file")
