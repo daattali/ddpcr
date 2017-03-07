@@ -89,24 +89,30 @@ read_files <- function(plate, data_files, meta_file) {
   # Read the metadata file if one was given
   if (!is.null(meta_file)) {
     tryCatch({
+      # read meta header
       cn <- 
         utils::read.csv(meta_file, stringsAsFactors = FALSE, 
-                        nrows=1, header = F) %>%
-        unlist(.[1,]) %>%
+                        nrows = 1, header = FALSE) %>%
+        head() %>%
+        unlist() %>%
         unname() %>%
         tolower()
       
+      # read first 5 lines to determine column number of meta data 
       plate_meta_tmp <- utils::read.csv(meta_file, 
                                         stringsAsFactors = FALSE, 
                                         skip = 1, 
-                                        nrows=5, 
+                                        nrows = 5, 
                                         header = FALSE)
       
-      #meta file for version 1.7.4 end with ','
+      # meta files from version 1.7.4 end with ',' 
+      # blank column names are ignored
+      # add 'dummy' as additional column name, if header is missing one column  
       if (length(cn) == (ncol(plate_meta_tmp) - 1)){
         cn <- c(cn, 'dummy') 
       }
       
+      # read meta data with adjusted column names
       plate_meta <- utils::read.csv(meta_file, 
                                     stringsAsFactors = FALSE, 
                                     skip = 1, 
