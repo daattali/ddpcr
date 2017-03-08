@@ -93,7 +93,6 @@ read_files <- function(plate, data_files, meta_file) {
       cn <- 
         utils::read.csv(meta_file, stringsAsFactors = FALSE, 
                         nrows = 1, header = FALSE) %>%
-        head() %>%
         unlist() %>%
         unname() %>%
         tolower()
