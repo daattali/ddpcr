@@ -1,4 +1,4 @@
-# This script generates images that are used in the algorithms vignette 
+# This script generates images that are used in the algorithms vignette
 
 library(ggplot2)
 library(grid)
@@ -73,7 +73,7 @@ dev.off()
 
 plate <- new_plate(data_files = "inst/vignettes-supp/vignette_data_B06_Amplitude.csv",
                    type = plate_types$fam_positive_pnpp) %>%
-  subset("b6") %>% 
+  subset("b6") %>%
   `plate_data<-`(plate_data(.) %>% dplyr::filter(FAM < 11000, HEX < 10000))
 full_orig <- plate_data(plate)
 quiet( mixmdl <- mixtools::normalmixEM(full_orig$FAM, k = 2) )
@@ -83,20 +83,24 @@ full <- full_orig %>% dplyr::filter(FAM >= cutoff)
 mixmdl <- mixtools::normalmixEM(full$FAM, k = 2)
 larger_comp <- mixmdl$mu %>% which.max
 filled_border <-
-  mixmdl$mu[larger_comp] - 
+  mixmdl$mu[larger_comp] -
   (mixmdl$sigma[larger_comp] *
      params(plate, 'CLASSIFY', 'CLUSTERS_BORDERS_NUM_SD'))
 p <- ggplot(full, aes(HEX, FAM)) +
   geom_point(alpha = 0.2, size = 2) + theme_classic(15) +
   geom_point(data = full_orig, colour = "transparent") +
-  geom_hline(yintercept = mixmdl$mu[larger_comp]) + 
+  geom_hline(yintercept = mixmdl$mu[larger_comp]) +
   geom_hline(yintercept = filled_border, linetype = 2)
 p1 <- ggExtra::ggMarginal(p, xparams = list(colour = "transparent"))
 
 # Identify mutant vs wildtype droplets
 
 full <- full %>% dplyr::filter(FAM >= filled_border)
-range <- ggplot_build(p)$layout$panel_scales$x[[1]]$range$range
+if (utils::packageVersion("ggplot2") > "2.2.1") {
+  range <- ggplot_build(p)$layout$panel_scales_x[[1]]$range$range
+} else {
+  range <- ggplot_build(p)$layout$panel_scales$x[[1]]$range$range
+}
 dens_smooth <- stats::density(full$HEX)
 maxima_idx <- local_maxima(dens_smooth$y)
 minima_idx <- local_minima(dens_smooth$y)
@@ -108,8 +112,8 @@ p <- ggplot(full, aes(HEX, FAM)) +
   geom_point(alpha = 0.2, size = 2) + theme_classic(15) +
   geom_point(data = full_orig, colour = "transparent") +
   scale_x_continuous(limits = range) +
-  geom_vline(xintercept = negative_border, linetype = 2) + 
-  geom_vline(xintercept = dens_smooth$x[maxima_idx]) 
+  geom_vline(xintercept = negative_border, linetype = 2) +
+  geom_vline(xintercept = dens_smooth$x[maxima_idx])
 p2 <- ggExtra::ggMarginal(p, yparams = list(colour = "transparent"))
 
 
@@ -123,7 +127,7 @@ full[full$FAM <= filled_border, ]$colour <- "blue"
 full[full$FAM <= cutoff, ]$colour <- "black"
 p <- ggplot(full, aes(HEX, FAM)) +
   geom_point(alpha = 0.3, size = 2, colour = full$colour) + theme_classic(15) +
-  geom_hline(yintercept = c(cutoff, filled_border), linetype = 2, alpha = 0.5) + 
+  geom_hline(yintercept = c(cutoff, filled_border), linetype = 2, alpha = 0.5) +
   geom_vline(xintercept = negative_border, linetype = 2, alpha = 0.5)
 p3 <- ggExtra::ggMarginal(p, colour = "transparent")
 
