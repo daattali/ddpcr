@@ -106,19 +106,19 @@ Main features
 </h2>
 The main features include:
 
--   **Identify failed wells** - identify wells with a failed
-    ddPCR reaction. These wells will be excluded from all
-    downstream analysis. No template control (NTC) wells will be deemed
-    as failures by this tool.
+-   **Identify failed wells** - identify wells with a failed ddPCR
+    reaction. These wells will be excluded from all downstream analysis.
+    No template control (NTC) wells will be deemed as failures by this
+    tool.
 -   **Identify outlier droplets** - sometimes a few droplets can have an
     extremely high fluorescent intensity value that is probably
-    erroneous, perhaps as a result of an error with the
-    fluorescence reader. These droplets are identified and removed from
-    the downstream analysis.
+    erroneous, perhaps as a result of an error with the fluorescence
+    reader. These droplets are identified and removed from the
+    downstream analysis.
 -   **Identify empty droplets** - droplets with very low fluorescent
-    amplitudes are considered empty and are removed from the
-    downstream analysis. Removing these droplets is beneficial for two
-    reasons: 1. the size of the data is greatly reduced, which means the
+    amplitudes are considered empty and are removed from the downstream
+    analysis. Removing these droplets is beneficial for two reasons: 1.
+    the size of the data is greatly reduced, which means the
     computations will be faster on the remaining droplets, and 2. the
     real signal of interest is in the non-empty droplets, and empty
     droplets can be regarded as noise.
@@ -133,8 +133,8 @@ The main features include:
     can gate the data with custom thresholds just like on QuantaSoft.
 -   **Explore results** - the results from each well (\# of drops, \# of
     outliers, \# of empty drops, concentration, etc.) can be explored as
-    a histogram or boxplot to see the distribution of all wells in
-    the plate.
+    a histogram or boxplot to see the distribution of all wells in the
+    plate.
 -   **Plot** - you can plot the data in the plate with many customizable
     parameters
 
@@ -152,8 +152,8 @@ gate the droplets. In order to benefit from the full automatic analysis,
 your ddPCR experiment needs to have these characteristics:
 
 -   The experiment uses a two-channel ddPCR assay with three expected
-    droplet clusters: double-negative, double-positive,
-    and single-positive.
+    droplet clusters: double-negative, double-positive, and
+    single-positive.
 -   The majority of droplets are empty (double-negative).
 -   The majority of non-empty droplets are double-positive.
 -   There can be a third cluster of either FAM+ or HEX+ droplets, but
@@ -253,7 +253,7 @@ analysis. Explanation will follow, these are just here as a teaser.
       plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, alpha_drops = 0.3,
            title = "Automatic gating\nworks with PNPP experiments")
 
-<img src="vignettes/overview_files/figure-markdown_strict/quickstart-1.png" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/quickstart-2.png" width="50%" />
+<img src="inst/vignette_files/overview_files/figure-markdown_strict/quickstart-1.png" width="50%" /><img src="inst/vignette_files/overview_files/figure-markdown_strict/quickstart-2.png" width="50%" />
 
 <h2 id="walkthrough">
 Running a basic analysis - detailed walkthrough
@@ -315,7 +315,7 @@ first and easiest thing to do is to plot the raw data.
 
     plot(plate)
 
-![](vignettes/overview_files/figure-markdown_strict/plotraw-1.png)
+![](inst/vignette_files/overview_files/figure-markdown_strict/plotraw-1.png)
 
 Another way to get a quick overview of the data is by simply printing
 the plate object.
@@ -359,18 +359,18 @@ We can see all the droplets data with `plate_data()`
 
     plate %>% plate_data()
 
-    #> # A tibble: 72,727 × 4
+    #> # A tibble: 72,727 x 4
     #>     well   HEX   FAM cluster
     #>    <chr> <int> <int>   <int>
-    #> 1    A01   577   494       1
-    #> 2    A01   515   495       1
-    #> 3    A01   690   645       1
-    #> 4    A01   929   860       1
-    #> 5    A01   844   868       1
-    #> 6    A01   942   907       1
-    #> 7    A01   985   923       1
-    #> 8    A01  1058   966       1
-    #> 9    A01  1058   979       1
+    #>  1   A01   577   494       1
+    #>  2   A01   515   495       1
+    #>  3   A01   690   645       1
+    #>  4   A01   929   860       1
+    #>  5   A01   844   868       1
+    #>  6   A01   942   907       1
+    #>  7   A01   985   923       1
+    #>  8   A01  1058   966       1
+    #>  9   A01  1058   979       1
     #> 10   A01  1095  1002       1
     #> # ... with 72,717 more rows
 
@@ -392,12 +392,12 @@ We can see the results of the plate so far with `plate_meta()`
 
     plate %>% plate_meta(only_used = TRUE)
 
-    #>   well sample row col used drops
-    #> 1  A01   Dean   A   1 TRUE 15820
-    #> 2  A05   Dave   A   5 TRUE 13165
-    #> 3  C01   Mike   C   1 TRUE 14256
-    #> 4  C05  Emily   C   5 TRUE 14109
-    #> 5  F05   Mary   F   5 TRUE 15377
+    #>   well sample row col used    target_ch1     target_ch2 drops
+    #> 1  A01   Dean   A   1 TRUE Consensus_FAM WTspecific_HEX 15820
+    #> 2  A05   Dave   A   5 TRUE Consensus_FAM WTspecific_HEX 13165
+    #> 3  C01   Mike   C   1 TRUE Consensus_FAM WTspecific_HEX 14256
+    #> 4  C05  Emily   C   5 TRUE Consensus_FAM WTspecific_HEX 14109
+    #> 5  F05   Mary   F   5 TRUE Consensus_FAM WTspecific_HEX 15377
 
 The `only_used` parameter is used so that we'll only get data about the
 5 existing wells and ignore the other 91 unused wells on the plate.
@@ -504,18 +504,18 @@ which steps were remaining). We can also look at the droplets data
 
     plate %>% plate_data()
 
-    #> # A tibble: 57,350 × 4
+    #> # A tibble: 57,350 x 4
     #>     well   HEX   FAM cluster
     #>    <chr> <int> <int>   <int>
-    #> 1    A01   577   494       4
-    #> 2    A01   515   495       4
-    #> 3    A01   690   645       4
-    #> 4    A01   929   860       4
-    #> 5    A01   844   868       4
-    #> 6    A01   942   907       4
-    #> 7    A01   985   923       4
-    #> 8    A01  1058   966       4
-    #> 9    A01  1058   979       4
+    #>  1   A01   577   494       4
+    #>  2   A01   515   495       4
+    #>  3   A01   690   645       4
+    #>  4   A01   929   860       4
+    #>  5   A01   844   868       4
+    #>  6   A01   942   907       4
+    #>  7   A01   985   923       4
+    #>  8   A01  1058   966       4
+    #>  9   A01  1058   979       4
     #> 10   A01  1095  1002       4
     #> # ... with 57,340 more rows
 
@@ -526,16 +526,21 @@ also look at the plate results
 
     plate %>% plate_meta(only_used = TRUE)
 
-    #>   well sample row col used drops success drops_outlier drops_empty
-    #> 1  A01   Dean   A   1 TRUE 15820    TRUE             2       13690
-    #> 2  A05   Dave   A   5 TRUE 13165    TRUE             1       11283
-    #> 3  C01   Mike   C   1 TRUE 14256    TRUE             0       12879
-    #> 4  C05  Emily   C   5 TRUE 14109   FALSE             0          NA
-    #>   drops_non_empty drops_empty_fraction concentration
-    #> 1            2130                0.865           170
-    #> 2            1882                0.857           181
-    #> 3            1377                0.903           120
-    #> 4              NA                   NA            NA
+    #>   well sample row col used    target_ch1     target_ch2 drops success
+    #> 1  A01   Dean   A   1 TRUE Consensus_FAM WTspecific_HEX 15820    TRUE
+    #> 2  A05   Dave   A   5 TRUE Consensus_FAM WTspecific_HEX 13165    TRUE
+    #> 3  C01   Mike   C   1 TRUE Consensus_FAM WTspecific_HEX 14256    TRUE
+    #> 4  C05  Emily   C   5 TRUE Consensus_FAM WTspecific_HEX 14109   FALSE
+    #>   drops_outlier drops_empty drops_non_empty drops_empty_fraction
+    #> 1             2       13690            2130                0.865
+    #> 2             1       11283            1882                0.857
+    #> 3             0       12879            1377                0.903
+    #> 4             0          NA              NA                   NA
+    #>   concentration
+    #> 1           170
+    #> 2           181
+    #> 3           120
+    #> 4            NA
 
 Now there's a bit more information in the results table. The *success*
 column indicates whether or not the ddPCR run was successful in that
@@ -558,7 +563,7 @@ function.
 
     plate %>% plot()
 
-![](vignettes/overview_files/figure-markdown_strict/plotsimple-1.png)
+![](inst/vignette_files/overview_files/figure-markdown_strict/plotsimple-1.png)
 
 Notice well `C05` is grayed out, which means that it is a failed well.
 By default, failed wells have a grey background, and empty and outlier
@@ -591,7 +596,7 @@ parameters.
     plate %>% plot(wells = "A01,A05", superimpose = TRUE,
                    show_grid = TRUE, show_grid_labels = TRUE, title = "Superimpose")
 
-<img src="vignettes/overview_files/figure-markdown_strict/plotparams-1.png" width="50%" /><img src="vignettes/overview_files/figure-markdown_strict/plotparams-2.png" width="50%" />
+<img src="inst/vignette_files/overview_files/figure-markdown_strict/plotparams-1.png" width="50%" /><img src="inst/vignette_files/overview_files/figure-markdown_strict/plotparams-2.png" width="50%" />
 
 > To see all the available plot parameters, run `?plot.ddpcr_plate`.
 
@@ -667,7 +672,7 @@ the draw the thresholds
 
     plot(plate_manual, show_grid_labels = TRUE)
 
-![](vignettes/overview_files/figure-markdown_strict/plotcrosshair-1.png)
+![](inst/vignette_files/overview_files/figure-markdown_strict/plotcrosshair-1.png)
 
 If you noticed, there's a droplet in well *A05* that has a much larger
 fluorescence value and is probably an outlier, which is the reason the
@@ -701,20 +706,25 @@ Now the plate is ready and we can plot it or look at its results
 
     plate_meta(plate_manual, only_used = TRUE)
 
-    #>   well sample row col used drops drops_outlier drops_empty
-    #> 1  A01   Dean   A   1 TRUE 15820             2       13909
-    #> 2  A05   Dave   A   5 TRUE 13165             1       11512
-    #> 3  C01   Mike   C   1 TRUE 14256             0       12967
-    #> 4  C05  Emily   C   5 TRUE 14109             0       14011
-    #>   drops_x_positive drops_y_positive drops_both_positive
-    #> 1               20               20                1869
-    #> 2               34              390                1228
-    #> 3                8                7                1274
-    #> 4               15               11                  72
+    #>   well sample row col used    target_ch1     target_ch2 drops
+    #> 1  A01   Dean   A   1 TRUE Consensus_FAM WTspecific_HEX 15820
+    #> 2  A05   Dave   A   5 TRUE Consensus_FAM WTspecific_HEX 13165
+    #> 3  C01   Mike   C   1 TRUE Consensus_FAM WTspecific_HEX 14256
+    #> 4  C05  Emily   C   5 TRUE Consensus_FAM WTspecific_HEX 14109
+    #>   drops_outlier drops_empty drops_x_positive drops_y_positive
+    #> 1             2       13909               20               20
+    #> 2             1       11512               34              390
+    #> 3             0       12967                8                7
+    #> 4             0       14011               15               11
+    #>   drops_both_positive
+    #> 1                1869
+    #> 2                1228
+    #> 3                1274
+    #> 4                  72
 
     plot(plate_manual)
 
-![](vignettes/overview_files/figure-markdown_strict/crosshairresults-1.png)
+![](inst/vignette_files/overview_files/figure-markdown_strict/crosshairresults-1.png)
 
 By default, the droplets in each quadrant are a different colour. If you
 want to change the colour of some droplets, we can use the `col_drops_*`
@@ -810,7 +820,7 @@ Now we can analyze the plate
 
     #> Classifying droplets...
 
-    #> DONE (0 seconds)
+    #> DONE (1 seconds)
 
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
 
@@ -840,30 +850,30 @@ Take a look at the results
 
     plate_pnpp %>% plate_meta(only_used = TRUE)
 
-    #>   well sample row col used drops success drops_outlier drops_empty
-    #> 1  A01   Dean   A   1 TRUE 15820    TRUE             2       13690
-    #> 2  A05   Dave   A   5 TRUE 13165    TRUE             1       11283
-    #> 3  C01   Mike   C   1 TRUE 14256    TRUE             0       12879
-    #> 4  F05   Mary   F   5 TRUE 15377    TRUE             0       14126
-    #> 5  C05  Emily   C   5 TRUE 14109   FALSE             0          NA
-    #>   drops_non_empty drops_empty_fraction concentration mutant_border
-    #> 1            2130                0.865           170          4194
-    #> 2            1882                0.857           181          3789
-    #> 3            1377                0.903           120          4356
-    #> 4            1251                0.919            99          3926
-    #> 5              NA                   NA            NA            NA
-    #>   filled_border significant_mutant_cluster mutant_num wildtype_num
-    #> 1          8286                      FALSE          4         1827
-    #> 2          8136                       TRUE        368         1224
-    #> 3          8445                      FALSE          3         1248
-    #> 4          8294                       TRUE        211          855
-    #> 5            NA                         NA         NA           NA
-    #>   mutant_freq
-    #> 1       0.218
-    #> 2      23.100
-    #> 3       0.240
-    #> 4      19.800
-    #> 5          NA
+    #>   well sample row col used    target_ch1     target_ch2 drops success
+    #> 1  A01   Dean   A   1 TRUE Consensus_FAM WTspecific_HEX 15820    TRUE
+    #> 2  A05   Dave   A   5 TRUE Consensus_FAM WTspecific_HEX 13165    TRUE
+    #> 3  C01   Mike   C   1 TRUE Consensus_FAM WTspecific_HEX 14256    TRUE
+    #> 4  F05   Mary   F   5 TRUE Consensus_FAM WTspecific_HEX 15377    TRUE
+    #> 5  C05  Emily   C   5 TRUE Consensus_FAM WTspecific_HEX 14109   FALSE
+    #>   drops_outlier drops_empty drops_non_empty drops_empty_fraction
+    #> 1             2       13690            2130                0.865
+    #> 2             1       11283            1882                0.857
+    #> 3             0       12879            1377                0.903
+    #> 4             0       14126            1251                0.919
+    #> 5             0          NA              NA                   NA
+    #>   concentration mutant_border filled_border significant_mutant_cluster
+    #> 1           170          4194          8286                      FALSE
+    #> 2           181          3789          8136                       TRUE
+    #> 3           120          4356          8445                      FALSE
+    #> 4            99          3926          8294                       TRUE
+    #> 5            NA            NA            NA                         NA
+    #>   mutant_num wildtype_num mutant_freq
+    #> 1          4         1827       0.218
+    #> 2        368         1224      23.100
+    #> 3          3         1248       0.240
+    #> 4        211          855      19.800
+    #> 5         NA           NA          NA
 
 Explanation of some of the variables:
 
@@ -878,7 +888,7 @@ Plotting the data is usually the best way to see the results
 
     plate_pnpp %>% plot(text_size_mutant_freq = 8)
 
-![](vignettes/overview_files/figure-markdown_strict/pnppplot-1.png)
+![](inst/vignette_files/overview_files/figure-markdown_strict/pnppplot-1.png)
 
 > To see all the available plot parameters for this plate type, run
 > `?plot.pnpp_experiment`. In addition, any plot parameter that is

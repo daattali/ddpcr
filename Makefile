@@ -21,15 +21,16 @@ README.md : vignettes/overview.Rmd
 #	echo "Correcting image paths"
 #	sed -i -- 's,../inst,inst,g' vignettes/overview.md
 	Rscript -e 'file <- gsub("../inst", "inst", readLines("vignettes/overview.md")); writeLines(file, "vignettes/overview.md")'
+	Rscript -e 'dir.create("inst/vignette_files/", showWarnings = FALSE);file.copy("vignettes/overview_files/", "inst/vignette_files/", overwrite = TRUE, recursive = TRUE)'
 #	sed -i -- 's,overview_files,vignettes/overview_files,g' vignettes/overview.md
-	Rscript -e 'file <- gsub("overview_files", "vignettes/overview_files", readLines("vignettes/overview.md")); writeLines(file, "vignettes/overview.md")'
+	Rscript -e 'file <- gsub("overview_files", "inst/vignette_files/overview_files", readLines("vignettes/overview.md")); writeLines(file, "vignettes/overview.md")'
 #	echo "Correcting paths to other reference vignettes"
 	Rscript -e 'file <- gsub("\\((.*)\\.([rR]md)","(vignettes/\\1.\\2", readLines("vignettes/overview.md")); writeLines(file, "vignettes/overview.md")'
 #	echo "Copying output to README.md"
 #	cp vignettes/overview.md README.md
 	Rscript -e 'file.copy("vignettes/overview.md", "README.md", overwrite = TRUE)'
 	Rscript -e 'suppressWarnings(file.remove("vignettes/overview.md"))'
-	
+
 $(figures) : inst/vignettes-supp/algorithms-imgs.R
 #	echo "Creating images for algorithms vignette"
 	Rscript $<

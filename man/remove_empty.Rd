@@ -26,7 +26,7 @@ directly.
 }
 \note{
 This is an S3 generic, which means that different ddPCR plate types can
-implement this function differently. 
+implement this function differently.
 \href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for
 more information on how to implement custom ddPCR plate types.
 }
