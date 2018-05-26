@@ -24,7 +24,7 @@ test_that("get_consensus_name_from_data_files works", {
     get_consensus_name_from_data_files(data_files),
     "three"
   )
-  
+
   # files have different names
   data_files <- c("one_two/three_B04_Amplitude.csv",
                   "one_two/three_B05_Amplitude.csv",
@@ -70,14 +70,14 @@ test_that("find_meta_file basic functionality works", {
   # metadata file is found
   meta_file <- find_meta_file(testdir("read_simple"), "test")
   expect_true(grepl("test.csv", meta_file))
-  
+
   # metadata file is not found
   expect_warning(
     meta_file <- find_meta_file(testdir("read_simple"), "wrong"),
     "could not find metadata file"
   )
   expect_null(meta_file)
-  
+
   # metadata file is not found
   expect_warning(
     meta_file <- find_meta_file(testdir("read_simple"), ""),
@@ -133,13 +133,13 @@ test_that("read_dir works in more complex cases", {
                                              "expected_data.csv"))
   expect_equal(plate_data(plate),
                expected_data)
-  expect_that(plate_meta(plate), is_null())
+  expect_null(plate_meta(plate))
 })
 
 test_that("read_files errors and warnings", {
   data_files_simple <- find_data_files(testdir("read_simple"))
   meta_file_simple <- find_meta_file(testdir("read_simple"), "test")
-  
+
   # no data files are given
   expect_error(
     get_empty_plate() %>% read_files(),
@@ -178,7 +178,7 @@ test_that("read_files inconsistent data files, no metadata file", {
   data_files <- find_data_files(testdir("read_complex"))
   expected_data <- readr::read_csv(file.path(testdir("read_complex"),
                                              "expected_data.csv"))
-  
+
   suppressWarnings({
     plate <- get_empty_plate() %>% read_files(data_files)
     plate2 <- get_empty_plate() %>% read_files(data_files, NULL)
@@ -187,7 +187,7 @@ test_that("read_files inconsistent data files, no metadata file", {
   expect_equal(name(plate), "test")
   expect_equal(plate_data(plate),
                expected_data)
-  expect_that(plate_meta(plate), is_null())
+  expect_null(plate_meta(plate))
 })
 
 test_that("read_files inconsistent data files, correct metadata file", {
@@ -195,7 +195,7 @@ test_that("read_files inconsistent data files, correct metadata file", {
   meta_file <- find_meta_file(testdir("read_complex"), "metadata")
   expected_data <- readr::read_csv(file.path(testdir("read_complex"),
                                              "expected_data.csv"))
-  
+
   suppressWarnings(
     plate <- get_empty_plate() %>% read_files(data_files, meta_file)
   )
@@ -207,7 +207,7 @@ test_that("read_files inconsistent data files, correct metadata file", {
 
 test_that("read_files targets for channel 1 and 2", {
   dir <- system.file("sample_data", "read_simple", package = "ddpcr")
-  plate <- new_plate(dir) 
+  plate <- new_plate(dir)
   meta <- plate %>% plate_meta(only_used = TRUE)
   expect_equal(meta$target_ch1, c("t1.fw", "t2.fw"))
   expect_equal(meta$target_ch2, c("t1.rev", "t2.rev"))
