@@ -1,3 +1,7 @@
+# ddpcr 1.9 2018-05-27
+
+- updates to work with new `testthat` package, new `dplyr` package, and new CRAN policies
+
 # ddpcr 1.8 2017-05-19
 
 - refactor code to work with new versions of `dplyr` and `ggplot2`
