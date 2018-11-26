@@ -131,7 +131,7 @@ init_meta <- function(plate) {
 # that inherit from another one (which means they will use the same params/
 # methods)
 set_plate_type <- function(plate, type) {
-  if (!missing(type) && is.null(type) && class(plate) != "list") {
+  if (!missing(type) && is.null(type) && class(plate)[1] != "list") {
     return(plate)
   }
 
