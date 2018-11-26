@@ -38,5 +38,3 @@ License: MIT + file LICENSE
 LazyData: true
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
-Remotes:
-    tidyverse/readr
