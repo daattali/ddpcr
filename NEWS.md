@@ -1,3 +1,7 @@
+# ddpcr 1.10 2018-11-26
+
+- update to work with new `readr` version
+
 # ddpcr 1.9 2018-05-27
 
 - updates to work with new `testthat` package, new `dplyr` package, and new CRAN policies
