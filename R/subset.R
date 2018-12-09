@@ -2,13 +2,13 @@
 ## Copyright (C) 2015 Dean Attali
 
 #' Subsetting a ddPCR plate
-#' 
+#'
 #' Select specific wells or samples from a ddPCR plate.
-#' 
+#'
 #' Keeps only data from the selected wells. If sample names are provided instead
 #' of well IDs, then any well corresponding to any of the sample names will be
 #' kept. Either well IDs or sample names must be provided, but not both.
-#' 
+#'
 #' @section Range notation:
 #' The most basic way to select wells is to provide a vector of wells such as
 #' \code{c("B03", "C12")}. When selecting wells, a special range notation is
@@ -20,7 +20,7 @@
 #' ranges in one selection; see the Examples section below. Note that this
 #' notation is only supported for the \code{wells} parameter, but not for the
 #' \code{samples} parameter.
-#' 
+#'
 #' @param x The ddPCR plate to subset from.
 #' @param wells Vector or range notation of wells to select (see Range Notation
 #' section for more information).
@@ -45,14 +45,14 @@
 #' plate %>% subset(samples = "Dean") %>% wells_used
 #' plate %>% subset(samples = c("Dean", "Mike")) %>% wells_used
 #' @export
-subset.ddpcr_plate <- function(x, wells, samples, 
+subset.ddpcr_plate <- function(x, wells, samples,
                                targets_ch1, targets_ch2, ...) {
   if (!missing(wells) && !missing(samples)) {
     err_msg("Can only subset by either `wells` or `samples`, not both")
   }
-  
+
   # figure out what wells to keep
-  if (!missing(wells) && !is.null(wells) && nzchar(wells)) {
+  if (!missing(wells) && !is.null(wells) && all(nzchar(wells))) {
     wells %<>% paste(collapse = ",")
     wells %<>% toupper
     wells %<>% range_list_to_vec
@@ -68,41 +68,41 @@ subset.ddpcr_plate <- function(x, wells, samples,
   } else {
     return(x)  # if no arguments, just return the same plate
   }
-  
+
   if (!missing(targets_ch1)) {
     wells_from_targets <-
       plate_meta(x) %>%
       dplyr::filter_(~ target_ch1 %in% targets_ch1) %>%
       .[['well']]
-    
+
     wells <- wells[wells %in% wells_from_targets]
   }
-  
+
   if (!missing(targets_ch2)) {
     wells_from_targets <-
       plate_meta(x) %>%
       dplyr::filter_(~ target_ch2 %in% targets_ch2) %>%
       .[['well']]
-    
+
     wells <- wells[wells %in% wells_from_targets]
   }
-  
+
   # if no valid wells were given, don't do anything
   if (sum(wells %in% (x %>% wells_used)) == 0) {
     warn_msg("No valid wells selected. Returning plate unchanged.")
     return(x)
-  } 
-  
+  }
+
   # keep only the droplet data for these wells
   plate_data(x) %<>%
     dplyr::filter_(~ well %in% wells)
-  
+
   # mark any other well as unused
   plate_meta(x) %<>%
     dplyr::filter_(~ well %in% wells) %>%
     merge_dfs_overwrite_col(DEFAULT_PLATE_META, .) %>%
     arrange_meta
-  
+
   x
 }
 
@@ -134,8 +134,8 @@ range_list_to_vec <- function(rangel) {
   if (length(ranges) == 0) {
     return(NULL)
   }
-  
-  wells <- 
+
+  wells <-
     lapply(ranges, function(range) {
       endpoints <- range_to_endpoints(range)
       get_wells_btwn(endpoints[1], endpoints[2])
@@ -162,7 +162,7 @@ range_to_endpoints <- function(range) {
   if (endpoints %>% length == 1) {
     endpoints <- c(endpoints, endpoints)
   }
-  
+
   if (!grepl(WELL_ID_REGEX, endpoints) %>% all) {
     err_msg("Invalid wells given to `subset`")
   }
@@ -185,7 +185,7 @@ range_to_seq <- function(rng) {
 #' Get all wells between two wells (assume a rectangle layout)
 #' @examples
 #' get_wells_btwn("C04", "D06")
-#' @keywords internal 
+#' @keywords internal
 #' @export
 get_wells_btwn <- function(well1, well2) {
   rows <-
@@ -193,13 +193,13 @@ get_wells_btwn <- function(well1, well2) {
     row_to_num %>%
     range_to_seq %>%
     num_to_row
-  
+
   cols <-
     get_col(c(well1, well2)) %>%
     col_to_num %>%
     range_to_seq %>%
     num_to_col
-  
+
   wells <- lapply(rows, function(x) paste(x, cols, sep = "")) %>% unlist
   wells
 }
