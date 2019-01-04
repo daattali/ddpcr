@@ -463,7 +463,7 @@ run through the steps one by one using `next_step()`.
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (0 seconds)
+    #> Identifying empty droplets... DONE (1 seconds)
     #> Analysis complete
 
     # equivalent to `plate %>% next_step(3)`
@@ -788,8 +788,8 @@ Now we can analyze the plate
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (1 seconds)
-    #> Classifying droplets... DONE (1 seconds)
+    #> Identifying empty droplets... DONE (0 seconds)
+    #> Classifying droplets... DONE (0 seconds)
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
     #> Analysis complete
 
@@ -1047,6 +1047,8 @@ different default parameters than the built-in ones.
 <h2 id="technical-details">
 Advanced topic 4: Implementation technical details
 </h2>
+The `ddpcr` package uses some advanced R programming techniques.
+
 **For details on the technical details regarding the code
 implementation, see [the *Technical details*
 vignette](vignettes/./technical_details.Rmd).**

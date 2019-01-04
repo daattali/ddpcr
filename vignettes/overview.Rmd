@@ -519,4 +519,6 @@ Each ddPCR plate has a plate type which determines what type of analysis to run 
 
 <h2 id="technical-details">Advanced topic 4: Implementation technical details</h2>
 
+The `ddpcr` package uses some advanced R programming techniques.
+
 **For details on the technical details regarding the code implementation, see [the _Technical details_ vignette](./technical_details.Rmd).**
