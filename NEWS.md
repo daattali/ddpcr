@@ -1,3 +1,7 @@
+# ddpcr 1.11 2019-01-03
+
+- Fix error-prone code that did not properly vectorize if statements
+
 # ddpcr 1.10 2018-11-26
 
 - update to work with new `readr` version

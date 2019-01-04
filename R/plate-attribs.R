@@ -448,8 +448,8 @@ step <- function(plate, step) {
 #' @export
 step_name <- function(plate, step) {
   step %<>% as.integer
-  if (step < 1 || step > plate %>% steps %>% length) {
-    err_msg(sprintf("invalid step number: %s", step))
+  if (any(step < 1) || any(step > plate %>% steps %>% length)) {
+    err_msg(sprintf("invalid step number: %s", paste(step, collapse = " ")))
   }
   plate %>% steps %>% names %>% .[step]
 }
