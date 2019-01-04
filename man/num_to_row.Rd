@@ -13,4 +13,3 @@ Convert a number to plate row
 num_to_row(4)  # "D"
 }
 \keyword{internal}
-

@@ -14,4 +14,3 @@ being the cutoff in the corresponding axis.
 Calculate the cutoff thresholds that define which droplets are empty in a well.
 }
 \keyword{internal}
-

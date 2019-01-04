@@ -20,4 +20,3 @@ Get the indices of the local minima in a list of numbers
 local_minima(c(1, 5, 3, 2, 4, 3))
 }
 \keyword{internal}
-

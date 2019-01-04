@@ -39,4 +39,3 @@ more information on how to implement custom ddPCR plate types.
 \code{\link[ddpcr]{has_signif_negative_cluster}}
 }
 \keyword{internal}
-

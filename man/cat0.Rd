@@ -13,4 +13,3 @@ cat0(...)
 Concatenate strings with no space between them
 }
 \keyword{internal}
-

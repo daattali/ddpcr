@@ -13,4 +13,3 @@
 Define plate type parameters for FAM-positive PNPP
 }
 \keyword{internal}
-

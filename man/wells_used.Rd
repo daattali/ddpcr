@@ -26,4 +26,3 @@ wells_used(plate)
 \seealso{
 \code{\link[ddpcr]{subset.ddpcr_plate}}
 }
-

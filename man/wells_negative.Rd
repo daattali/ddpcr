@@ -26,4 +26,3 @@ wells_negative(plate)
 \code{\link[ddpcr]{pnpp_experiment}}\cr
 \code{\link[ddpcr]{wells_positive}}
 }
-

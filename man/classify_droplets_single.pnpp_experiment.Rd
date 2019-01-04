@@ -12,4 +12,3 @@ If you want to see details about how a well was classified, you can set
 \code{plot = TRUE} to plot the results.
 }
 \keyword{internal}
-

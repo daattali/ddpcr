@@ -24,4 +24,3 @@ has_step(plate, 'NO_SUCH_STEP')
 }
 }
 \keyword{internal}
-

@@ -31,4 +31,3 @@ the parent type if you want to simply add new steps without defining all of them
 \code{\link[ddpcr]{define_params}}
 }
 \keyword{internal}
-

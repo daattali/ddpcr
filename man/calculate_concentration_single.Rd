@@ -13,4 +13,3 @@ The concentration (integer) in a well.
 Calculate concentration in a single well
 }
 \keyword{internal}
-

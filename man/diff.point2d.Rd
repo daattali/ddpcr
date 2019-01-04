@@ -17,4 +17,3 @@ given, then the distance to the origin is calculated.
 \code{\link[ddpcr]{point2d}}
 }
 \keyword{internal}
-

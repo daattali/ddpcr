@@ -41,4 +41,3 @@ plate \%>\% analyze \%>\% plot
 \code{\link[ddpcr]{classify_droplets}}\cr
 \code{\link[ddpcr]{reclassify_droplets}}
 }
-

@@ -10,4 +10,3 @@ capitalize(x)
 Capitalize the first letter of a string
 }
 \keyword{internal}
-

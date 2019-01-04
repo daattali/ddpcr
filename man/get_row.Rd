@@ -13,4 +13,3 @@ Get row from well ID
 get_row("C05" )  # "C"
 }
 \keyword{internal}
-

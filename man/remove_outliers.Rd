@@ -36,4 +36,3 @@ more information on how to implement custom ddPCR plate types.
 \code{\link[ddpcr]{get_outlier_cutoff}}
 }
 \keyword{internal}
-

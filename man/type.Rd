@@ -16,7 +16,7 @@ show all inherited (implicit) types as well.}
 A character vector with the plate type(s).
 }
 \description{
-Get the type of a ddPCR plate. 
+Get the type of a ddPCR plate.
 \href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for more
 information on plate types.
 }
@@ -25,9 +25,8 @@ information on plate types.
 plate <- new_plate(sample_data_dir(), type = plate_types$fam_positive_pnpp)
 type(plate)
 type(plate, TRUE)
-} 
+}
 }
 \seealso{
 \code{\link[ddpcr]{plate_types}}
 }
-

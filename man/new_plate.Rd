@@ -78,6 +78,7 @@ Most numeric parameters that are used in the algorithms of the analysis steps
 can be modified in a similar fashion. This can be used to fine-tune the 
 analysis of a plate if you require different parameters.
 }
+
 \examples{
 \dontrun{
 plate <- new_plate(sample_data_dir())
@@ -91,4 +92,3 @@ plate <- new_plate(sample_data_dir())
 \code{\link[ddpcr]{plot.ddpcr_plate}}\cr
 \code{\link[ddpcr]{params}}
 }
-

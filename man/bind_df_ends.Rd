@@ -10,4 +10,3 @@ bind_df_ends(df, cols, dir = 1)
 Helper function for move_front and move_back
 }
 \keyword{internal}
-

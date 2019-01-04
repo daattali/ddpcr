@@ -13,4 +13,3 @@
 Define plate type parameters for HEX-positive PNPP
 }
 \keyword{internal}
-

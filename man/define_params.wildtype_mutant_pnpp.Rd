@@ -13,4 +13,3 @@
 Define plate type parameters for wildtype/mutant PNPP
 }
 \keyword{internal}
-

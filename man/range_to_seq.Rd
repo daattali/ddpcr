@@ -14,4 +14,3 @@ range_to_seq(c(5, 8))   # 5:8
 range_to_seq(c(8, 5))   # 5:8
 }
 \keyword{internal}
-

@@ -13,4 +13,3 @@ Convert a plate row to a number
 row_to_num("D")  # 4L
 }
 \keyword{internal}
-

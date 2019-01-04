@@ -25,10 +25,9 @@ you should instead plot it using \code{\link[ddpcr]{plot.ddpcr_plate}}.
 \dontrun{
 plate <- new_plate(sample_data_dir())
 plate_data(plate)
-} 
+}
 }
 \seealso{
 \code{\link[ddpcr]{plate_meta}}\cr
 \code{\link[ddpcr]{plot.ddpcr_plate}}
 }
-

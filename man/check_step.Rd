@@ -21,8 +21,7 @@ check_step(plate, 2) # are we ready to start step 2?
 check_step(plate, 3) # are we ready to start step 3?
 plate <- next_step(plate)
 status(plate)
-check_step(plate, 3) # now are we ready to start step 3?  
+check_step(plate, 3) # now are we ready to start step 3?
 }
 }
 \keyword{internal}
-

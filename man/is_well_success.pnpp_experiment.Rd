@@ -12,4 +12,3 @@ except for this plate type we know where we expect to see droplets so we
 can save time by using QC metrics more specific to this plate type.
 }
 \keyword{internal}
-

@@ -14,4 +14,3 @@ using R.\cr\cr
 \href{http://daattali.com/shiny/ddpcr/}{Use the web tool} or
 \href{https://github.com/daattali/ddpcr}{read the full documentation on GitHub}.
 }
-

@@ -18,4 +18,3 @@ step(plate, 'REMOVE_OUTLIERS')
 }
 }
 \keyword{internal}
-

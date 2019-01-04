@@ -20,4 +20,3 @@ to the plate droplets.
 \code{\link[ddpcr]{plate_data}}
 }
 \keyword{internal}
-

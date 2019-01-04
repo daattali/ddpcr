@@ -11,4 +11,3 @@ This function runs the actual algorithm for classifying droplets in a single
 well.
 }
 \keyword{internal}
-

@@ -14,4 +14,3 @@ Get the name of the dye that is along the variable dimension.
 \code{\link[ddpcr]{variable_dim}}
 }
 \keyword{internal}
-

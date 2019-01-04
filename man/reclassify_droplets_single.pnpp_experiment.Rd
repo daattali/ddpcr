@@ -12,4 +12,3 @@ Reclassify droplets in a well given the ratio of where to place the MT border
 over the median WT drops
 }
 \keyword{internal}
-

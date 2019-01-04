@@ -4,8 +4,8 @@
 \alias{sample_data}
 \alias{sample_data_dir}
 \alias{sample_data_file}
-\alias{sample_plate}
 \alias{sample_results_file}
+\alias{sample_plate}
 \title{Get sample data}
 \usage{
 sample_data_dir()
@@ -37,4 +37,3 @@ plate1 <- new_plate(dir = sample_data_dir())
 plate2 <- new_plate(data_files = sample_data_file(), meta_file = sample_results_file())
 plate3 <- sample_plate()
 }
-

@@ -20,4 +20,3 @@ move_front(df, "b")
 move_front(df, c("c", "b"))
 }
 \keyword{internal}
-

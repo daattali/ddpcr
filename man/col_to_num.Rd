@@ -13,4 +13,3 @@ Convert a plate column to a number
 col_to_num("05")  # 5L
 }
 \keyword{internal}
-

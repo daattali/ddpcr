@@ -26,4 +26,3 @@ vapply(c("a", "b", "c"),
 \code{\link[ddpcr]{named_vec_to_df}}
 }
 \keyword{internal}
-

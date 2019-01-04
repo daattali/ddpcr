@@ -36,4 +36,3 @@ P(x >= 70) = 1 - pbinom(70, 5000, .01) + dbinom(70, 5000, .01) = 0.004
 So this is indeed significant, and this well would be deemed mutant.
 }
 \keyword{internal}
-

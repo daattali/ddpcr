@@ -14,4 +14,3 @@ other_dim("X")
 other_dim("Y")
 }
 \keyword{internal}
-

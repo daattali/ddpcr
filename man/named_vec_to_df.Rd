@@ -31,4 +31,3 @@ vapply(c("a", "b", "c"),
 \code{\link[ddpcr]{lol_to_df}}
 }
 \keyword{internal}
-

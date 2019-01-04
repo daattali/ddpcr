@@ -34,4 +34,3 @@ get_filled_border(plate, "F05")
 \code{\link[ddpcr]{get_filled_drops}}
 }
 \keyword{internal}
-

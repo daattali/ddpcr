@@ -17,4 +17,3 @@ analysis to re-run; \code{FALSE} otherwise
 Is the plate object dirty (ie has changed since the analysis was run)?
 }
 \keyword{internal}
-

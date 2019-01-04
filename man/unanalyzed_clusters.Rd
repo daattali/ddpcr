@@ -34,4 +34,3 @@ plate \%>\% unanalyzed_clusters(cluster(plate, "OUTLIER")) \%>\% cluster_name(pl
 \code{\link[ddpcr]{cluster}}
 }
 \keyword{internal}
-

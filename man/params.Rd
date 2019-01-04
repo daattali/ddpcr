@@ -61,4 +61,3 @@ str(params(plate, 'GENERAL'))
 \seealso{
 \code{\link[ddpcr]{x_var}}
 }
-

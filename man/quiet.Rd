@@ -17,4 +17,3 @@ otherwise, only suppress printed output (such as from \code{print} or
 Suppress all output from an expression. Works cross-platform.
 }
 \keyword{internal}
-

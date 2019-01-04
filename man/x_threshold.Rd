@@ -34,4 +34,3 @@ plot(plate)
 \code{\link[ddpcr]{y_threshold}}\cr
 \code{\link[ddpcr]{thresholds}}
 }
-

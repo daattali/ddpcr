@@ -35,4 +35,3 @@ more information on how to implement custom ddPCR plate types.
 \code{\link[ddpcr]{get_empty_cutoff}}
 }
 \keyword{internal}
-

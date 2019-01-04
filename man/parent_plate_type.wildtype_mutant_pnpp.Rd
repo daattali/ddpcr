@@ -13,4 +13,3 @@
 Parent plate type of wildtype/mutant PNPP
 }
 \keyword{internal}
-

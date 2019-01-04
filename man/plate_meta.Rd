@@ -18,9 +18,9 @@ A dataframe containing the plate metadata
 \description{
 The metadata is a collection of variables that describe each well in the plate.
 The metadata of an unanalyzed plate only contains basic information about each
-well, such as the sample name, whether the well was used, and the number of 
+well, such as the sample name, whether the well was used, and the number of
 droplets in the well. Analyzing a plate adds many more variables to the metadata,
-such as the number of empty droplets, the number of outliers, the template 
+such as the number of empty droplets, the number of outliers, the template
 concentration, and more.
 }
 \examples{
@@ -28,10 +28,9 @@ concentration, and more.
 plate <- new_plate(sample_data_dir())
 plate \%>\% plate_meta(only_used = TRUE)
 plate \%>\% analyze \%>\% plate_meta(only_used = TRUE)
-} 
+}
 }
 \seealso{
 \code{\link[ddpcr]{plate_data}}
 \code{\link[ddpcr]{plot.ddpcr_plate}}
 }
-

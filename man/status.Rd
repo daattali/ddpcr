@@ -14,7 +14,7 @@ The status of a plate corresponds to the number of analysis steps that have
 taken place. A plate that has been initialized but has not yet been analyzed
 at all has status 1.\cr\cr
 If you add custom analysis steps to a new plate type, you should make sure
-to update the status of the plate after each step. You can use 
+to update the status of the plate after each step. You can use
 \code{\link[ddpcr]{check_step}} to ensure that the plate is at an appropriate
 status before beginning each step.
 }
@@ -23,4 +23,3 @@ status before beginning each step.
 \code{\link[ddpcr]{check_step}}
 }
 \keyword{internal}
-

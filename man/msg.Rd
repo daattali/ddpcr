@@ -15,4 +15,3 @@ By default, these messages are on when the user is using R interactively
 and off otherwise. You can overwrite this setting with \code{options(ddpcr.verbose = FALSE)}.
 }
 \keyword{internal}
-

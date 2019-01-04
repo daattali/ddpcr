@@ -14,4 +14,3 @@ each dimension.
 Get the cutoff for outliers
 }
 \keyword{internal}
-

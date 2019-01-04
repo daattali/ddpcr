@@ -2,8 +2,8 @@
 % Please edit documentation in R/plate-attribs.R
 \name{x_var}
 \alias{x_var}
-\alias{x_var<-}
 \alias{y_var}
+\alias{x_var<-}
 \alias{y_var<-}
 \title{Get/set the X/Y variable (dye name)}
 \usage{
@@ -44,4 +44,3 @@ x_var(plate)
 \seealso{
 \code{\link[ddpcr]{params}}
 }
-

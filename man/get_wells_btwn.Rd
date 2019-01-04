@@ -13,4 +13,3 @@ Get all wells between two wells (assume a rectangle layout)
 get_wells_btwn("C04", "D06")
 }
 \keyword{internal}
-

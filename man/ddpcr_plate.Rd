@@ -31,4 +31,3 @@ plate \%>\% analyze \%>\% plot
 \code{\link[ddpcr]{remove_outliers}}\cr
 \code{\link[ddpcr]{remove_empty}}
 }
-

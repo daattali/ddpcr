@@ -26,4 +26,3 @@ well.
 Get droplet data from a well
 }
 \keyword{internal}
-

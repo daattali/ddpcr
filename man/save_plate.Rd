@@ -31,4 +31,3 @@ unlink("myplate.rds")
 \seealso{
 \code{\link[ddpcr]{load_plate}}
 }
-

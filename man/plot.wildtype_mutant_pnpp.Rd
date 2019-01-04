@@ -73,4 +73,3 @@ plot(plate, "A01:C05", col_drops_rain = "blue")
 \code{\link[ddpcr]{plot.pnpp_experiment}}\cr
 \code{\link[ddpcr]{wildtype_mutant_pnpp}}
 }
-

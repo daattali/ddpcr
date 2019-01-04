@@ -13,4 +13,3 @@ of the corners, so we can save time by only having an empty cutoff in one
 dimension.
 }
 \keyword{internal}
-

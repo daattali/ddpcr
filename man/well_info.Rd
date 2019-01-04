@@ -33,4 +33,3 @@ well_info(plate, "A01", "drops")
 \seealso{
 \code{\link[ddpcr]{plate_meta}}
 }
-

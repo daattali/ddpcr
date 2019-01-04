@@ -16,4 +16,3 @@ range_list_to_vec("A01, B03")
 range_list_to_vec("A01, B02:C04, C07")
 }
 \keyword{internal}
-

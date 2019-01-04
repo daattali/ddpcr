@@ -13,4 +13,3 @@ err_msg(x)
 Show an error message
 }
 \keyword{internal}
-

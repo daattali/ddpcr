@@ -46,4 +46,3 @@ plate <- analyze(plate)
 \code{\link[ddpcr]{plate_data}}\cr
 \code{\link[ddpcr]{plate_meta}}
 }
-

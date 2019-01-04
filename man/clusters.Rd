@@ -28,4 +28,3 @@ new_plate(dir) \%>\% clusters
 new_plate(dir, plate_types$fam_positive_pnpp) \%>\% clusters
 }
 }
-

@@ -14,4 +14,3 @@ suggest the ddPCR run failed; \code{TRUE} otherwise.
 This function runs the actual algorithm for determining which wells failed.
 }
 \keyword{internal}
-

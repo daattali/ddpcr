@@ -14,4 +14,3 @@ range_to_endpoints("B05:G09")   # c("B05", "G09")
 range_to_endpoints("B05")       # c("B05", "B05")
 }
 \keyword{internal}
-

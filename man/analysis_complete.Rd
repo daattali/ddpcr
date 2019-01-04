@@ -20,4 +20,3 @@ Check if a ddPCR plate has been fully analyzed or if there are remaining steps.
 \code{\link[ddpcr]{status}}\cr
 \code{\link[ddpcr]{analyze}}
 }
-

@@ -20,4 +20,3 @@ of sample, and uses the following equation:
 (-log(drops_empty / drops_total) * drops_total) / (droplet_volume * drops_total)
 }
 \keyword{internal}
-

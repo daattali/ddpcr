@@ -90,4 +90,3 @@ plot(plate, "A01:C05", col_drops_rain = "blue")
 \code{\link[ddpcr]{pnpp_experiment}}
 }
 \keyword{internal}
-

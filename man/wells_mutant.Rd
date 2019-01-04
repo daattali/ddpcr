@@ -26,4 +26,3 @@ wells_mutant(plate)
 \code{\link[ddpcr]{wildtype_mutant_pnpp}}\cr
 \code{\link[ddpcr]{wells_wildtype}}
 }
-

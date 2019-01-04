@@ -14,4 +14,3 @@ its status is 0.
 \code{\link[ddpcr]{status}}
 }
 \keyword{internal}
-

@@ -90,7 +90,7 @@ the droplets to determine how many droplets belong to each cluster.
 Bio-Rad provides an analysis software called QuantaSoft which can be
 used to perform gating. QuantaSoft can either do the gating
 automatically or allow the user to set the gates manually. Most ddPCR
-users currently gate their data manually because QuantaSoft's automatic
+users currently gate their data manually because QuantaSoft’s automatic
 gating often does a poor job and **there are no other tools available
 for gating ddPCR data**.
 
@@ -199,7 +199,7 @@ built-in experiment types.
 <h1 id="analysis-interactive">
 Analysis using the interactive tool
 </h1>
-If you're not comfortable using R and would like to use a visual tool
+If you’re not comfortable using R and would like to use a visual tool
 that requires no programming, you can [use the tool
 online](http://daattali.com/shiny/ddpcr/). You should still skim through
 the rest of this document (you can ignore the actual code/commands) as
@@ -208,7 +208,7 @@ it will explain some important concepts.
 <h1 id="analysis-r">
 Analysis using R
 </h1>
-Enough talking, let's get our hands dirty.
+Enough talking, let’s get our hands dirty.
 
 First, install `ddpcr`
 
@@ -220,7 +220,7 @@ Running the interactive tool locally through R
 Even if you do know R, using the interactive application can be easier
 and more convenient than running R commands. If you want to use the
 visual tool, simply run `ddpcr::launch()` and it will run the same
-application that's hosted online on your own machine.
+application that’s hosted online on your own machine.
 
 <h2 id="quick-start">
 Quick start
@@ -243,6 +243,9 @@ analysis. Explanation will follow, these are just here as a teaser.
       subset("A01,A05") %>%
       set_thresholds(c(5000, 7500)) %>%
       analyze()
+
+    #> Warning: package 'bindrcpp' was built under R version 3.4.4
+
     plot(plate1, show_grid_labels = TRUE, alpha_drops = 0.3,
            title = "Manually set gating thresholds\nworks with any data")
 
@@ -281,7 +284,7 @@ QuantaSoft can export the following files:
 
 The well files are the only required input to `ddpcr`, and since ddPCR
 plates contain 96 wells, you can upload anywhere from 1 to 96 well
-files. The results file is not mandatory, but if you don't provide it
+files. The results file is not mandatory, but if you don’t provide it
 then the wells will not have sample names attached to them.
 
 `ddpcr` contains a sample dataset called `small` that has 5 wells. We
@@ -293,17 +296,12 @@ files in the directory and attempt to find a matching results file.
     dir <- sample_data_dir()
     plate <- new_plate(dir)
 
-    #> Reading data files into plate...
-
-    #> DONE (0 seconds)
-
-    #> Initializing plate of type `ddpcr_plate`...
-
-    #> DONE (0 seconds)
+    #> Reading data files into plate... DONE (0 seconds)
+    #> Initializing plate of type `ddpcr_plate`... DONE (0 seconds)
 
 You will see some messages appear - every time `ddpcr` runs an analysis
 step (initializing the plate is part of the analysis), it will output a
-message describing what it's doing. You can turn off messages by
+message describing what it’s doing. You can turn off messages by
 disabling the verbose option with the command
 `options(ddpcr.verbose = FALSE)`.
 
@@ -344,7 +342,7 @@ of information. For example
 
     #> [1] "ddpcr_plate"
 
-Since we didn't specify an experiment type, this plate object has the
+Since we didn’t specify an experiment type, this plate object has the
 default type of `ddpcr_plate`.
 
 We can see what wells are in our data with `wells_used()`
@@ -360,18 +358,18 @@ We can see all the droplets data with `plate_data()`
     plate %>% plate_data()
 
     #> # A tibble: 72,727 x 4
-    #>     well   HEX   FAM cluster
+    #>    well    HEX   FAM cluster
     #>    <chr> <int> <int>   <int>
-    #>  1   A01   577   494       1
-    #>  2   A01   515   495       1
-    #>  3   A01   690   645       1
-    #>  4   A01   929   860       1
-    #>  5   A01   844   868       1
-    #>  6   A01   942   907       1
-    #>  7   A01   985   923       1
-    #>  8   A01  1058   966       1
-    #>  9   A01  1058   979       1
-    #> 10   A01  1095  1002       1
+    #>  1 A01     577   494       1
+    #>  2 A01     515   495       1
+    #>  3 A01     690   645       1
+    #>  4 A01     929   860       1
+    #>  5 A01     844   868       1
+    #>  6 A01     942   907       1
+    #>  7 A01     985   923       1
+    #>  8 A01    1058   966       1
+    #>  9 A01    1058   979       1
+    #> 10 A01    1095  1002       1
     #> # ... with 72,717 more rows
 
 > **Technical note**: This shows us the fluorescence amplitudes of each
@@ -399,7 +397,7 @@ We can see the results of the plate so far with `plate_meta()`
     #> 4  C05  Emily   C   5 TRUE Consensus_FAM WTspecific_HEX 14109
     #> 5  F05   Mary   F   5 TRUE Consensus_FAM WTspecific_HEX 15377
 
-The `only_used` parameter is used so that we'll only get data about the
+The `only_used` parameter is used so that we’ll only get data about the
 5 existing wells and ignore the other 91 unused wells on the plate.
 Notice that *meta* (short for *metadata*) is used instead of *results*.
 This is because the meta/results table contains information for each
@@ -409,7 +407,7 @@ concentration, and many other calculated values.
 <h3 id="subset">
 Subset the plate
 </h3>
-If you aren't interested in all the wells, you can use the `subset()`
+If you aren’t interested in all the wells, you can use the `subset()`
 function to retain only certain wells. Alternatively, you can use the
 `data_files` argument of the `new_plate()` function to only load certain
 well files instead of a full directory.
@@ -427,7 +425,7 @@ plate that initially contains all 96 wells.
 [![Subset
 example](inst/vignettes-supp/ex-subset.png)](inst/vignettes-supp/ex-subset.png)
 
-Back to our data: we have 5 wells, let's keep 4 of them
+Back to our data: we have 5 wells, let’s keep 4 of them
 
     plate <- plate %>% subset("A01:C05")
     # could have also used subset("A01, A05, C01, C05")
@@ -461,18 +459,9 @@ run through the steps one by one using `next_step()`.
 
     plate <- plate %>% analyze()
 
-    #> Identifying failed wells...
-
-    #> DONE (0 seconds)
-
-    #> Identifying outlier droplets...
-
-    #> DONE (0 seconds)
-
-    #> Identifying empty droplets...
-
-    #> DONE (1 seconds)
-
+    #> Identifying failed wells... DONE (0 seconds)
+    #> Identifying outlier droplets... DONE (0 seconds)
+    #> Identifying empty droplets... DONE (1 seconds)
     #> Analysis complete
 
     # equivalent to `plate %>% next_step(3)`
@@ -505,21 +494,21 @@ which steps were remaining). We can also look at the droplets data
     plate %>% plate_data()
 
     #> # A tibble: 57,350 x 4
-    #>     well   HEX   FAM cluster
+    #>    well    HEX   FAM cluster
     #>    <chr> <int> <int>   <int>
-    #>  1   A01   577   494       4
-    #>  2   A01   515   495       4
-    #>  3   A01   690   645       4
-    #>  4   A01   929   860       4
-    #>  5   A01   844   868       4
-    #>  6   A01   942   907       4
-    #>  7   A01   985   923       4
-    #>  8   A01  1058   966       4
-    #>  9   A01  1058   979       4
-    #> 10   A01  1095  1002       4
+    #>  1 A01     577   494       4
+    #>  2 A01     515   495       4
+    #>  3 A01     690   645       4
+    #>  4 A01     929   860       4
+    #>  5 A01     844   868       4
+    #>  6 A01     942   907       4
+    #>  7 A01     985   923       4
+    #>  8 A01    1058   966       4
+    #>  9 A01    1058   979       4
+    #> 10 A01    1095  1002       4
     #> # ... with 57,340 more rows
 
-This isn't very informative since it shows the cluster assignment for
+This isn’t very informative since it shows the cluster assignment for
 each droplet, which is not easy for a human to digest. Instead, this
 information can be visualized by plotting the plate (coming up). We can
 also look at the plate results
@@ -542,7 +531,7 @@ also look at the plate results
     #> 3           120
     #> 4            NA
 
-Now there's a bit more information in the results table. The *success*
+Now there’s a bit more information in the results table. The *success*
 column indicates whether or not the ddPCR run was successful in that
 particular well; notice how well `C05` was deemed a failure, and thus is
 not included the any subsequent analysis steps.
@@ -569,9 +558,9 @@ Notice well `C05` is grayed out, which means that it is a failed well.
 By default, failed wells have a grey background, and empty and outlier
 droplets are excluded from the plot.
 
-You don't have to analyze a plate object before you can plot it - a
+You don’t have to analyze a plate object before you can plot it - a
 ddPCR plate can be plotted at any time to show the data in it. If you
-plot a plate before analyzing it, it'll show the raw data.
+plot a plate before analyzing it, it’ll show the raw data.
 
 <h3 id="plot-params">
 Plot parameters
@@ -605,10 +594,10 @@ Save your data
 </h3>
 As was shown previously, you can use the `plate_meta()` function to
 retrieve a table with the results. If you want to save that table, you
-can use R's built-in `write.csv()` or `write.table()` functions.
+can use R’s built-in `write.csv()` or `write.table()` functions.
 
 You can also save a ddPCR plate object using `plate_save()`. This will
-create a single `.rds` file that contains an exact copy of the plate's
+create a single `.rds` file that contains an exact copy of the plate’s
 current state, including all the data, attributes, and analysis progress
 of the plate. The resulting file can be loaded to restore the ddPCR
 object at a later time with `plate_load()`.
@@ -667,14 +656,14 @@ initializing a new plate or by resetting an existing plate object.
     #> Completed analysis steps : INITIALIZE
     #> Remaining analysis steps : REMOVE_OUTLIERS, CLASSIFY
 
-It's usually a good idea to take a look at the raw data to decide where
+It’s usually a good idea to take a look at the raw data to decide where
 the draw the thresholds
 
     plot(plate_manual, show_grid_labels = TRUE)
 
 ![](inst/vignette_files/overview_files/figure-markdown_strict/plotcrosshair-1.png)
 
-If you noticed, there's a droplet in well *A05* that has a much larger
+If you noticed, there’s a droplet in well *A05* that has a much larger
 fluorescence value and is probably an outlier, which is the reason the
 scale is a bit too large. After analyzing the plate, it will be
 identified as an outlier and hidden automatically. Before running the
@@ -692,14 +681,8 @@ approximately 8000. Then run the analysis.
     thresholds(plate_manual) <- c(5000, 8000)
     plate_manual <- analyze(plate_manual)
 
-    #> Identifying outlier droplets...
-
-    #> DONE (0 seconds)
-
-    #> Classifying droplets...
-
-    #> DONE (0 seconds)
-
+    #> Identifying outlier droplets... DONE (0 seconds)
+    #> Classifying droplets... DONE (0 seconds)
     #> Analysis complete
 
 Now the plate is ready and we can plot it or look at its results
@@ -728,7 +711,7 @@ Now the plate is ready and we can plot it or look at its results
 
 By default, the droplets in each quadrant are a different colour. If you
 want to change the colour of some droplets, we can use the `col_drops_*`
-parameter as before. Since now we're working with a different plate
+parameter as before. Since now we’re working with a different plate
 type, the names of the droplet clusters can be different, so we need to
 first know what they are
 
@@ -755,17 +738,12 @@ is from a *(FAM+)/(FAM+HEX+)* experiment, so we can take advantage of
 the automatic gating if we set the type to
 `plate_types$fam_positive_pnpp`.
 
-Let's create a new plate object of the desired type.
+Let’s create a new plate object of the desired type.
 
     plate_pnpp <- new_plate(dir, type = plate_types$fam_positive_pnpp)
 
-    #> Reading data files into plate...
-
-    #> DONE (0 seconds)
-
-    #> Initializing plate of type `fam_positive_pnpp`...
-
-    #> DONE (0 seconds)
+    #> Reading data files into plate... DONE (0 seconds)
+    #> Initializing plate of type `fam_positive_pnpp`... DONE (0 seconds)
 
 If the data were *(HEX+)/(FAM+HEX+)*, we would have used
 `type = plate_types$hex_positive_pnpp` instead.
@@ -773,7 +751,7 @@ If the data were *(HEX+)/(FAM+HEX+)*, we would have used
 <h4 id="pnpp-clusters">
 Clusters of a PNPP experiment
 </h4>
-Before running the analysis, it's a good idea to know what are the
+Before running the analysis, it’s a good idea to know what are the
 possible cluster groupings that a droplet can belong to
 
     clusters(plate_pnpp)
@@ -781,10 +759,10 @@ possible cluster groupings that a droplet can belong to
     #> [1] "UNDEFINED" "FAILED"    "OUTLIER"   "EMPTY"     "RAIN"      "POSITIVE" 
     #> [7] "NEGATIVE"
 
-The first 4 clusters we've seen before, as they are common to all plate
+The first 4 clusters we’ve seen before, as they are common to all plate
 types. Droplets in the *HEX+FAM+* cluster are considered *POSITIVE*,
 while droplets in the *FAM+* cluster are considered *NEGATIVE* since
-they are *HEX-*. Any droplets that are not empty but don't emit enough
+they are *HEX-*. Any droplets that are not empty but don’t emit enough
 fluorescent intensity to be in the *POSITIVE* or *NEGATIVE* clusters are
 considered *RAIN*.
 
@@ -806,24 +784,11 @@ Now we can analyze the plate
 
     plate_pnpp <- analyze(plate_pnpp)
 
-    #> Identifying failed wells...
-
-    #> DONE (0 seconds)
-
-    #> Identifying outlier droplets...
-
-    #> DONE (0 seconds)
-
-    #> Identifying empty droplets...
-
-    #> DONE (1 seconds)
-
-    #> Classifying droplets...
-
-    #> DONE (1 seconds)
-
+    #> Identifying failed wells... DONE (0 seconds)
+    #> Identifying outlier droplets... DONE (0 seconds)
+    #> Identifying empty droplets... DONE (1 seconds)
+    #> Classifying droplets... DONE (1 seconds)
     #> Reclassifying droplets... skipped (not enough wells with significant mutant clusters)
-
     #> Analysis complete
 
 One of the key goals in running the analysis is to determine the number
@@ -832,10 +797,10 @@ and similarly the *mutant frequency* (if a well has 95 wildtype droplets
 and 5 mutant droplets, then the *mutant frequency* in the well is 5%).
 
 You can see from the output that the two last steps are **classifying**
-and **reclassifying** the droplets, and that the reclassification didn't
+and **reclassifying** the droplets, and that the reclassification didn’t
 take place. The classification step identifies all the non-empty
 droplets as either rain, mutant, or wildtype by analyzing each well
-individually. Wells with a very low *mutant frequency* (i.e. there are
+individually. Wells with a very low *mutant frequency* (i.e. there are
 very few mutant droplets) are much harder to gate accurately, which is
 the reason for the reclassification step. The reclassification step uses
 information from wells with high a *mutant frequency*, where the gates
@@ -971,7 +936,7 @@ are failures, you can change the setting
 
     #> [1] 1000
 
-If you look at the full parameters of the plate, you'll notice that by
+If you look at the full parameters of the plate, you’ll notice that by
 default `ddpcr` assumes that the dyes used are *FAM* and *HEX*. If you
 are using a different dye and want the name of that dye appear in the
 results instead, you can use the `x_var()` or `y_var()` functions.
@@ -1002,22 +967,10 @@ the `restart = TRUE` parameter.
 
     #> Restarting analysis
 
-    #> Initializing plate of type `ddpcr_plate`...
-
-    #> DONE (0 seconds)
-
-    #> Identifying failed wells...
-
-    #> DONE (0 seconds)
-
-    #> Identifying outlier droplets...
-
-    #> DONE (0 seconds)
-
-    #> Identifying empty droplets...
-
-    #> DONE (1 seconds)
-
+    #> Initializing plate of type `ddpcr_plate`... DONE (0 seconds)
+    #> Identifying failed wells... DONE (0 seconds)
+    #> Identifying outlier droplets... DONE (0 seconds)
+    #> Identifying empty droplets... DONE (1 seconds)
     #> Analysis complete
 
 <h2 id="algorithms">
@@ -1057,18 +1010,18 @@ by running `ddpcr:::init_plate`.
     #> function(plate) {
     #>   stopifnot(plate %>% inherits("ddpcr_plate"))
     #>   step_begin(sprintf("Initializing plate of type `%s`", type(plate)))
-    #>   
+    #> 
     #>   plate %<>%
     #>     set_default_clusters %>%
     #>     set_default_steps %>%
     #>     init_data %>%
     #>     init_meta
-    #>   
+    #> 
     #>   status(plate) <- step(plate, 'INITIALIZE')
     #>   plate[['version']] <- as.character(utils::packageVersion("ddpcr"))
     #>   plate[['dirty']] <- FALSE
     #>   step_end()
-    #>   
+    #> 
     #>   plate
     #> }
     #> <environment: namespace:ddpcr>

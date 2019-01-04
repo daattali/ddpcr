@@ -13,4 +13,3 @@ is_dir(path)
 Determine if a given path is a valid directory
 }
 \keyword{internal}
-

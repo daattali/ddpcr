@@ -14,4 +14,3 @@ Get the name of the dye that is along the positive dimension.
 \code{\link[ddpcr]{positive_dim}}
 }
 \keyword{internal}
-

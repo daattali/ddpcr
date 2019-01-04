@@ -19,4 +19,3 @@ cluster_name(plate, 4)
 }
 }
 \keyword{internal}
-

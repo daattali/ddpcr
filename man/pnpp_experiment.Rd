@@ -58,4 +58,3 @@ type(plate)
 \code{\link[ddpcr]{classify_droplets}}\cr
 \code{\link[ddpcr]{reclassify_droplets}}
 }
-

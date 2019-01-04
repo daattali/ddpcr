@@ -19,4 +19,3 @@ An earlier call to \code{step_begin} must have taken place.
 \code{\link[ddpcr]{step_begin}}
 }
 \keyword{internal}
-

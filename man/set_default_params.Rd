@@ -26,4 +26,3 @@ plate <- set_default_params(plate)
 \seealso{
 \code{\link[ddpcr]{params}}
 }
-

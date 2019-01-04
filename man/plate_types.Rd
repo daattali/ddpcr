@@ -35,4 +35,3 @@ new_plate(dir, type = plate_types$fam_positive_pnpp)
 \code{\link[ddpcr]{type}}
 }
 \keyword{datasets}
-

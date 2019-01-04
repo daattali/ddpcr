@@ -37,4 +37,3 @@ more information on how to implement custom ddPCR plate types.
 \code{\link[ddpcr]{is_well_success}}
 }
 \keyword{internal}
-

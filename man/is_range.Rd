@@ -18,4 +18,3 @@ is_range("C05:F05")        # TRUE
 is_range("C05.F05")        # FALSE
 }
 \keyword{internal}
-

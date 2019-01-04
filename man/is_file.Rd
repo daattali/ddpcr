@@ -13,4 +13,3 @@ is_file(path)
 Determine if a given path is a valid file
 }
 \keyword{internal}
-

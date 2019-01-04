@@ -15,4 +15,3 @@ normalize_to_rds("somefile.rds")   # somefile.rds
 normalize_to_rds("somefile.r")     # somefile.r.rds
 }
 \keyword{internal}
-

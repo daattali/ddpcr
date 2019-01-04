@@ -27,4 +27,3 @@ unlink("myplate.rds")
 \seealso{
 \code{\link[ddpcr]{save_plate}}
 }
-

@@ -10,4 +10,3 @@ reclassify_droplets_single(plate, well_id, ...)
 Reclassify droplets in a well
 }
 \keyword{internal}
-

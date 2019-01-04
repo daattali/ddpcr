@@ -13,4 +13,3 @@ Get column from well ID
 get_col("C05" )  # "05"
 }
 \keyword{internal}
-

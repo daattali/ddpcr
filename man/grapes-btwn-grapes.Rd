@@ -15,4 +15,3 @@ x \%btwn\% rng
 Determine if a numeric value is within a range
 }
 \keyword{internal}
-

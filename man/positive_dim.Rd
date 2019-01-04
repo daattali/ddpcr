@@ -28,4 +28,3 @@ positive_dim(plate) <- "Y"
 \code{\link[ddpcr]{variable_dim}}
 }
 \keyword{internal}
-

@@ -28,4 +28,3 @@ name(plate) <- "foo"
 name(plate)
 }
 }
-

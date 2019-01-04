@@ -19,4 +19,3 @@ Representation of a 2D point
 point2d(c(10, 20))
 }
 \keyword{internal}
-

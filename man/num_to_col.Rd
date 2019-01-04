@@ -13,4 +13,3 @@ Convert a number to plate column
 num_to_col(5)  # "05"
 }
 \keyword{internal}
-

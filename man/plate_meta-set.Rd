@@ -19,4 +19,3 @@ to add/change variables in the plate metadata.
 \code{\link[ddpcr]{plate_meta}}
 }
 \keyword{internal}
-

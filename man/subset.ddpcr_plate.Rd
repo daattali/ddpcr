@@ -4,7 +4,8 @@
 \alias{subset.ddpcr_plate}
 \title{Subsetting a ddPCR plate}
 \usage{
-\method{subset}{ddpcr_plate}(x, wells, samples, targets_ch1, targets_ch2, ...)
+\method{subset}{ddpcr_plate}(x, wells, samples, targets_ch1, targets_ch2,
+  ...)
 }
 \arguments{
 \item{x}{The ddPCR plate to subset from.}
@@ -44,6 +45,7 @@ ranges in one selection; see the Examples section below. Note that this
 notation is only supported for the \code{wells} parameter, but not for the
 \code{samples} parameter.
 }
+
 \examples{
 plate <- new_plate(sample_data_dir())
 plate \%>\% wells_used
@@ -60,4 +62,3 @@ plate \%>\% subset("A01:A05, C01:C05, F05") \%>\% wells_used
 plate \%>\% subset(samples = "Dean") \%>\% wells_used
 plate \%>\% subset(samples = c("Dean", "Mike")) \%>\% wells_used
 }
-
