@@ -7,8 +7,8 @@ Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-
 version](http://www.r-pkg.org/badges/version/ddpcr)](https://cran.r-project.org/package=ddpcr)
 [![saythanks](http://i.imgur.com/L88apDa.png)](https://saythanks.io/to/daattali)
 
-> *Copyright 2016 [Dean Attali](http://deanattali.com). Licensed under
-> the MIT license.*
+> *Copyright 2016-2019 [Dean Attali](http://deanattali.com). Licensed
+> under the MIT license.*
 
 This package provides an interface to explore, analyze, and visualize
 droplet digital PCR (ddPCR) data in R. It also includes an interactive
@@ -19,7 +19,9 @@ locally](#r-interactive).
 
 This document explains the purpose of this package and includes a
 tutorial on how to use it. It should take about 20 minutes to go through
-the entire document.
+the entire document. A peer-reviewed publication describing this tool is
+available in
+[F1000Research](https://f1000research.com/articles/5-1411/).
 
 Table of contents
 =================
@@ -461,7 +463,7 @@ run through the steps one by one using `next_step()`.
 
     #> Identifying failed wells... DONE (0 seconds)
     #> Identifying outlier droplets... DONE (0 seconds)
-    #> Identifying empty droplets... DONE (1 seconds)
+    #> Identifying empty droplets... DONE (0 seconds)
     #> Analysis complete
 
     # equivalent to `plate %>% next_step(3)`
