@@ -378,11 +378,22 @@ bind_df_ends <- function(df, cols, dir = 1) {
   is_tbl <- dplyr::is.tbl(df)
   
   # Bind together the two parts of the data.frame
-  df <-
-    cbind(
-      df %>% dplyr::select_(~(dir * dplyr::one_of(cols))),
-      df %>% dplyr::select_(~(-dir * dplyr::one_of(cols)))
-    )
+  if (dir == 1) {
+    df <-
+      cbind(
+        df %>% dplyr::select_(~(dplyr::one_of(cols))),
+        df %>% dplyr::select_(~(-dplyr::one_of(cols)))
+      )
+  } else if (dir == -1) {
+    df <-
+      cbind(
+        df %>% dplyr::select_(~(-dplyr::one_of(cols))),
+        df %>% dplyr::select_(~(dplyr::one_of(cols)))
+      )
+  } else {
+    stop("bind_df_ends: dir can only be -1 or 1", call. = FALSE)
+  }
+
   
   # If the input was a tbl_df, make sure to return that object too
   if (is_tbl) {

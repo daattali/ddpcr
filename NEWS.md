@@ -1,3 +1,7 @@
+# ddpcr 1.12 2020-01-12
+
+- Make code work with new `tidyselect` and fix CRAN errors/warnings
+
 # ddpcr 1.11 2019-01-03
 
 - Fix error-prone code that did not properly vectorize if statements

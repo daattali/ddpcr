@@ -7,3 +7,6 @@
 ^.*\.o$
 inst/shiny/datasets/
 ^cran-comments\.md$
+^doc$
+^Meta$
+^\.github$

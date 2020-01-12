@@ -5,7 +5,6 @@ ddpcr: Analysis and visualization of Droplet Digital PCR data in R and on the we
 Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
 [![CRAN
 version](http://www.r-pkg.org/badges/version/ddpcr)](https://cran.r-project.org/package=ddpcr)
-[![saythanks](http://i.imgur.com/L88apDa.png)](https://saythanks.io/to/daattali)
 
 > *Copyright 2016-2019 [Dean Attali](http://deanattali.com). Licensed
 > under the MIT license.*
@@ -147,7 +146,7 @@ While this tool was originally developed to automatically gate data for
 a particular ddPCR assay ([*Quantitative Detection and Resolution of
 BRAF V600 Status in Colorectal Cancer Using Droplet Digital PCR and a
 Novel Wild-Type Negative
-Assay*](http://jmd.amjpathol.org/article/S1525-1578(15)00262-7/) by Roza
+Assay*](https://jmd.amjpathol.org/article/S1525-1578(15)00262-7/) by Roza
 Bidshahri, Dean Attali, et al.), any ddPCR experiment using an assay
 with similar characteristics can also use this tool to automatically
 gate the droplets. In order to benefit from the full automatic analysis,
