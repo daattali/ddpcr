@@ -25,7 +25,7 @@ more information on plate types.
 plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 type(plate)
 plate \%>\% analyze \%>\% plot
-} 
+}
 }
 \seealso{
 \code{\link[ddpcr]{plate_types}}\cr

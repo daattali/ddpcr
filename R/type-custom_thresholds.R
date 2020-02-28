@@ -2,22 +2,22 @@
 ## Copyright (C) 2015 Dean Attali
 
 #' Plate type: custom thresholds
-#' 
+#'
 #' The \code{custom_thresholds} plate type is used when you want to gate ddPCR
 #' droplet data into four quadrants according to HEX and FAM values that you
 #' manually set. All wells in the plate will use the same threshold values.
-#' 
+#'
 #' Plates with this type have only three analysis steps: \code{INITIALIZE},
 #' \code{REMOVE_OUTLIERS}, and \code{CLASSIFY} (according to the custom thresholds).
-#' 
+#'
 #' Plates with this type have the following droplet clusters:
 #' \code{UNDEFINED}, \code{OUTLIER}, \code{EMPTY} (bottom-left quadrant),
 #' \code{X_POSITIVE} (bottom-right quadrant), \code{Y_POSITIVE} (top-left quadrant),
 #' \code{BOTH_POSITIVE} (top-right quadrant).
-#' 
+#'
 #' \href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for
 #' more information on plate types.
-#' 
+#'
 #' @seealso
 #' \code{\link[ddpcr]{plate_types}}\cr
 #' \code{\link[ddpcr]{x_threshold}}\cr
@@ -27,12 +27,12 @@
 #' \code{\link[ddpcr]{remove_outliers}}\cr
 #' \code{\link[ddpcr]{classify_thresholds}}
 #' @name custom_thresholds
-#' @examples 
+#' @examples
 #' \dontrun{
 #' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' type(plate)
 #' plate %>% analyze %>% plot
-#' } 
+#' }
 NULL
 
 plate_types[['custom_thresholds']] <- "custom_thresholds"
@@ -42,7 +42,7 @@ plate_types[['custom_thresholds']] <- "custom_thresholds"
 #' @keywords internal
 define_params.custom_thresholds <- function(plate) {
   params <- NextMethod("define_params")
-  
+
   new_params <- list(
     'CLASSIFY' = list(
       'X_THRESHOLD' = 5000,   # very arbitrary value
@@ -50,7 +50,7 @@ define_params.custom_thresholds <- function(plate) {
     )
   )
   params %<>% utils::modifyList(new_params)
-  
+
   params
 }
 
@@ -80,16 +80,16 @@ define_steps.custom_thresholds <- function(plate) {
 }
 
 #' Get/set the X threshold
-#' 
+#'
 #' For ddPCR plates of type \code{custom_thresholds}, get or set the threshold
 #' along the X axis that divides the droplet quadrants.
 #' @name x_threshold
 #' @param plate A ddPCR plate.
-#' @seealso 
+#' @seealso
 #' \code{\link[ddpcr]{custom_thresholds}}\cr
 #' \code{\link[ddpcr]{y_threshold}}\cr
 #' \code{\link[ddpcr]{thresholds}}
-#' @examples 
+#' @examples
 #' \dontrun{
 #' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' x_threshold(plate)
@@ -115,16 +115,16 @@ x_threshold <- function(plate) {
 }
 
 #' Get/set the Y threshold
-#' 
+#'
 #' For ddPCR plates of type \code{custom_thresholds}, get or set the threshold
 #' along the Y axis that divides the droplet quadrants.
 #' @name y_threshold
 #' @param plate A ddPCR plate.
-#' @seealso 
+#' @seealso
 #' \code{\link[ddpcr]{custom_thresholds}}\cr
 #' \code{\link[ddpcr]{x_threshold}}\cr
 #' \code{\link[ddpcr]{thresholds}}
-#' @examples 
+#' @examples
 #' \dontrun{
 #' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' y_threshold(plate)
@@ -150,18 +150,18 @@ y_threshold <- function(plate) {
 }
 
 #' Get/set the thresholds
-#' 
+#'
 #' For ddPCR plates of type \code{custom_thresholds}, get or set the thresholds
 #' that divide the four droplet quadrants.
 #' @name thresholds
 #' @param plate A ddPCR plate.
 #' @param value The new thresholds as a 2-element numeric vector
 #' @return The current thresholds
-#' @seealso 
+#' @seealso
 #' \code{\link[ddpcr]{custom_thresholds}}\cr
 #' \code{\link[ddpcr]{x_threshold}}\cr
 #' \code{\link[ddpcr]{y_threshold}}
-#' @examples 
+#' @examples
 #' \dontrun{
 #' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' thresholds(plate)
@@ -192,12 +192,12 @@ set_thresholds <- function(plate, value) {
 }
 
 #' Analysis step: Classify droplets
-#' 
+#'
 #' The main analysis step for ddPCR plates of type \code{custom_thresholds}.
 #' Assign each droplet into one of four quadrants based on the thresholds.\cr\cr
 #' \href{https://github.com/daattali/ddpcr#advanced-topic-2-algorithms-used-in-each-step}{See the README} for
 #' more information.
-#' 
+#'
 #' This function is recommended to be run as part of an analysis pipeline (ie.
 #' within the \code{\link[ddpcr]{analyze}} function) rather than being called
 #' directly.
@@ -212,24 +212,24 @@ set_thresholds <- function(plate, value) {
 #' @keywords internal
 classify_thresholds <- function(plate) {
   stopifnot(plate %>% inherits("custom_thresholds"))
-  
+
   CURRENT_STEP <- plate %>% step('CLASSIFY')
-  plate %>% check_step(CURRENT_STEP)  
+  plate %>% check_step(CURRENT_STEP)
   step_begin("Classifying droplets")
-  
+
   x_threshold <- plate %>% x_threshold
   y_threshold <- plate %>% y_threshold
   data <- plate_data(plate)
   x_var <- x_var(plate)
   y_var <- y_var(plate)
   CLUSTERS_UNANALYZED <- unanalyzed_clusters(plate, 'EMPTY')
-  
+
   # get the indices of all droplets that are in each quadrant
   unanalyzed_idx <- data[['cluster']] %in% CLUSTERS_UNANALYZED
   ypos_idx <-
     unanalyzed_idx &
     data[[y_var]] >= y_threshold
-  bothpos_idx <- 
+  bothpos_idx <-
     unanalyzed_idx &
     data[[x_var]] >= x_threshold
   xpos_idx <-
@@ -245,35 +245,36 @@ classify_thresholds <- function(plate) {
   data[bothpos_idx, 'cluster'] <- plate %>% cluster('BOTH_POSITIVE')
   data[xpos_idx, 'cluster'] <- plate %>% cluster('X_POSITIVE')
   data[empty_idx, 'cluster'] <- plate %>% cluster('EMPTY')
-  
+
   plate_data(plate) <- data
-  
+
   # record how many drops are in each quadrant
-  drops_per_quadrant <- 
+  drops_per_quadrant <-
     plyr::ddply(data, ~ well, function(x) {
       data.frame(
         'drops_empty' = sum(x[['cluster']] == cluster(plate, 'EMPTY')),
         'drops_x_positive' = sum(x[['cluster']] == cluster(plate, 'X_POSITIVE')),
         'drops_y_positive' = sum(x[['cluster']] == cluster(plate, 'Y_POSITIVE')),
-        'drops_both_positive' = sum(x[['cluster']] == cluster(plate, 'BOTH_POSITIVE'))
+        'drops_both_positive' = sum(x[['cluster']] == cluster(plate, 'BOTH_POSITIVE')),
+        stringsAsFactors = TRUE
       )
     })
   plate_meta(plate) %<>%
     dplyr::left_join(drops_per_quadrant, by = "well")
-  
+
   status(plate) <- CURRENT_STEP
   step_end()
-  
+
   plate
 }
 
 #' Plot a ddPCR plate of type custom thresholds
-#' 
+#'
 #' Same plot as \code{\link[ddpcr]{plot.ddpcr_plate}} but with a few extra
 #' features that are specific to plates with custom thresholds. Take a look
 #' at \code{\link[ddpcr]{plot.ddpcr_plate}} to see all supported parameters
 #' and more information.
-#' 
+#'
 #' @inheritParams plot.ddpcr_plate
 #' @param show_thresholds If \code{TRUE}, show the thresholds.
 #' @param col_thresholds The colour of the threshold lines.
@@ -289,7 +290,7 @@ classify_thresholds <- function(plate) {
 #' @seealso
 #' \code{\link[ddpcr]{plot.ddpcr_plate}}\cr
 #' \code{\link[ddpcr]{custom_thresholds}}
-#' @examples 
+#' @examples
 #' \dontrun{
 #' plate <- new_plate(sample_data_dir(), type = plate_types$custom_thresholds)
 #' plate %>% set_thresholds(c(5500, 8000)) %>% analyze %>% plot
@@ -313,7 +314,7 @@ plot.custom_thresholds <- function(
                   col_drops_x_positive = col_drops_x_positive,
                   col_drops_y_positive = col_drops_y_positive,
                   col_drops_both_positive = col_drops_both_positive)
-  
+
   # Show the custom thresholds
   if (show_thresholds) {
     x <- subset(x, wells, samples)
@@ -332,6 +333,6 @@ plot.custom_thresholds <- function(
         color = col_thresholds
       )
   }
-  
+
   p
 }

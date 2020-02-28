@@ -15,7 +15,7 @@ move_back(df, cols)
 This function is taken from daattali/rsalad R package.
 }
 \examples{
-df <- data.frame(a = character(0), b = character(0), c = character(0))
+df <- data.frame(a = character(0), b = character(0), c = character(0), stringsAsFactors = TRUE)
 move_back(df, "b")
 move_back(df, c("b", "a"))
 }

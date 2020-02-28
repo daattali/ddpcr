@@ -1,3 +1,7 @@
+# ddpcr 1.13 2020-02-28
+
+- Prepare for R 4.0.0 by adding `stringsAsFactors = TRUE` where needed
+
 # ddpcr 1.12 2020-01-12
 
 - Make code work with new `tidyselect` and fix CRAN errors/warnings

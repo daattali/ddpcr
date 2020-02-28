@@ -30,7 +30,7 @@ metaNumericVars <- eventReactive(dataValues$plate, {
 observeEvent(dataValues$plate, {
   updateTextInput(session, "plotParam_xlab", value = dataValues$plate %>% x_var)
   updateTextInput(session, "plotParam_ylab", value = dataValues$plate %>% y_var)
-  
+
   # hide/show the droplet options only for droplets that exist in this plate type
   hide(selector = "[data-ddpcr-type]")
   show(selector = sprintf("[data-ddpcr-type~=%s]", dataValues$plate %>% type))
@@ -41,7 +41,7 @@ observeEvent(dataValues$plate, {
     updateCheckboxInput(
       session, "plotParam_show_mutant_freq",
       label = sprintf("Show %s frequency",
-                      meta_var_name(dataValues$plate, "negative"))) 
+                      meta_var_name(dataValues$plate, "negative")))
     updateNumericInput(
       session, "plotParam_text_size_mutant_freq",
       label = sprintf("%s frequency text size",
@@ -49,7 +49,7 @@ observeEvent(dataValues$plate, {
     updateCheckboxInput(
       session, "plotParam_show_low_high_mut_freq",
       label = sprintf("Different colours for wells with high vs low %s frequency",
-                      meta_var_name(dataValues$plate, "negative"))) 
+                      meta_var_name(dataValues$plate, "negative")))
     updateSelectInput(
       session, "plotParam_bg_mutant",
       label = sprintf("%s wells colour",
@@ -84,7 +84,7 @@ output$dropletsTable <- DT::renderDataTable(
 
 # download droplets data
 output$saveDropletsBtn <- downloadHandler(
-  filename = function() { 
+  filename = function() {
     sprintf("%s-droplets.csv", dataValues$plate %>% name)
   },
   content = function(file) {
@@ -108,7 +108,7 @@ output$clustersMapping <- renderUI({
 # show plate summary table
 output$metaTable <- DT::renderDataTable({
   meta <- dataValues$plate %>% plate_meta(only_used = TRUE)
-  meta[] <- lapply(meta, format, scientific = FALSE, big.mark = ",", drop0trailing = TRUE) 
+  meta[] <- lapply(meta, format, scientific = FALSE, big.mark = ",", drop0trailing = TRUE)
   colnames <- meta %>% colnames %>% humanFriendlyNames
   DT::datatable(
     meta,
@@ -133,29 +133,29 @@ output$metaAggregate <- DT::renderDataTable({
   if (is.null(input$metaTable_rows_selected)) {
     return()
   }
-  
+
   wells <- wells_used(dataValues$plate)[input$metaTable_rows_selected]
   vars <- metaNumericVars()
   niceVars <- humanFriendlyNames(vars)
   selectInput("exploreVarSelect", "Choose summary variable",
               stats::setNames(vars, niceVars))
-  
+
   meta <-
     dataValues$plate %>%
     subset(wells) %>%
     plate_meta(only_used = TRUE) %>%
     dplyr::select_(~ dplyr::one_of(vars)) %>%
     magrittr::set_colnames(humanFriendlyNames(colnames(.)))
-  
+
   # calculate mean and standard error for each numeric variable
-  data <- 
+  data <-
     plyr::ldply(meta, function(x) {
       data.frame(Mean = mean(x, na.rm = TRUE),
                  `Standard error` = stats::sd(x, na.rm = TRUE) / sqrt(length(x)),
-                 check.names = FALSE)},
+                 check.names = FALSE, stringsAsFactors = TRUE)},
       .id = "Variable"
     )
-  data[] <- lapply(data, format, scientific = FALSE, big.mark = ",", drop0trailing = TRUE) 
+  data[] <- lapply(data, format, scientific = FALSE, big.mark = ",", drop0trailing = TRUE)
 
   DT::datatable(data,
                 rownames = FALSE,
@@ -168,9 +168,9 @@ output$metaAggregate <- DT::renderDataTable({
   )
 })
 
-# download plate summary 
+# download plate summary
 output$saveMetaBtn <- downloadHandler(
-  filename = function() { 
+  filename = function() {
     sprintf("%s-summary.csv", dataValues$plate %>% name)
   },
   content = function(file) {
@@ -196,7 +196,7 @@ makeExplorePlot <- function() {
   if (is.null(input$exploreVarSelect)) {
     return()
   }
-  
+
   data <- dataValues$plate %>% plate_meta %>% .[[input$exploreVarSelect]]
   niceVar <- humanFriendlyNames(input$exploreVarSelect)
   title <- sprintf("%s per well", niceVar)
@@ -218,7 +218,7 @@ output$explorePlot <- renderPlot({
 
 # save exploratory plot
 output$saveExplorePlot <- downloadHandler(
-  filename = function() { 
+  filename = function() {
     sprintf("%s-%s.png", dataValues$plate %>% name, input$exploreVarSelect)
   },
   content = function(file) {
@@ -246,7 +246,7 @@ observeEvent(input$plotBtn, {
 
 # download plot
 output$downloadPlot <- downloadHandler(
-  filename = function() { 
+  filename = function() {
     sprintf("%s-plot.png", dataValues$plate %>% name)
   },
   content = function(file) {
@@ -267,23 +267,23 @@ calcPlotHeight <- eventReactive(makePlot(), {
   if (input$plotParam_height_type == "custom") {
     return(input$plotParam_height)
   }
-  
+
   # calculate height based on number of rows and the plot parameters
   plot <- makePlot()
   rows <- attr(plot, 'ddpcr_rows')
   cols <- attr(plot, 'ddpcr_cols')
   size <- ifelse(cols > 8, 70, 100)
-  height <- 
+  height <-
     (rows * size) +
     (nzchar(input$plotParam_title) * input$plotParam_text_size_title) +
     (nzchar(input$plotParam_xlab) * input$plotParam_text_size_axes_labels) +
     (isTRUE(input$plotParam_show_grid_labels) * 2 * input$plotParam_text_size_grid_labels) +
-    input$plotParam_text_size_row_col + 
+    input$plotParam_text_size_row_col +
     100
-  
+
   # update the custom height input so that the user can see what height was used
   updateNumericInput(session, "plotParam_height", value = height)
-  
+
   height
 })
 
@@ -304,21 +304,21 @@ calcPlotWidthForce <- eventReactive(makePlot(), {
   if (input$plotParam_width_type == "custom") {
     return(input$plotParam_width)
   }
-  
+
   # calculate width based on number of columns and the plot parameters
   plot <- makePlot()
   cols <- attr(plot, 'ddpcr_cols')
   size <- ifelse(cols > 8, 70, 100)
-  width <- 
+  width <-
     (cols * size) +
     (nzchar(input$plotParam_ylab) * input$plotParam_text_size_axes_labels) +
     (isTRUE(input$plotParam_show_grid_labels) * 2 * input$plotParam_text_size_grid_labels) +
     input$plotParam_text_size_row_col +
     100
-  
+
   # update the custom width input so that the user can see what width was used
   updateNumericInput(session, "plotParam_width", value = width)
-  
+
   width
 })
 
@@ -327,7 +327,7 @@ makePlot <- eventReactive(input$plotBtn, {
   withBusyIndicator("plotBtn", {
     plotParams <- list()
     plotParams[['x']] <- dataValues$plate
-    
+
     # gather all general settings
     if (input$plotParamSubsetType == 'wells' && !is.null(input$plotParamWells)) {
       plotParams[['wells']] <- input$plotParamWells
@@ -348,11 +348,11 @@ makePlot <- eventReactive(input$plotBtn, {
         stats::setNames(value, x) %>% as.list
       })
     generalParams <- unlist(generalParams, recursive = FALSE)
-    plotParams <- append(plotParams, generalParams)    
-    
+    plotParams <- append(plotParams, generalParams)
+
     # gather all droplet settings
     if (input$plotParam_show_drops) {
-      dropsParams <- 
+      dropsParams <-
         lapply(dataValues$plate %>% clusters %>% tolower, function(x) {
           inputNameShow <- sprintf("plotParamDropShow-%s", x)
           inputNameCol <- sprintf("plotParamDropCol-%s", x)
@@ -375,7 +375,7 @@ makePlot <- eventReactive(input$plotBtn, {
       dropsParams <- unlist(dropsParams, recursive = FALSE)
       plotParams <- append(plotParams, dropsParams)
     }
-    
+
     # gather all figure settings
     if (nzchar(input$plotParam_title)) {
       plotParams[['title']] <- input$plotParam_title
@@ -407,7 +407,7 @@ makePlot <- eventReactive(input$plotBtn, {
       })
     figureParams <- unlist(figureParams, recursive = FALSE)
     plotParams <- append(plotParams, figureParams)
-    
+
     # gather all well colour settings
     wellParamNames <-
       c("bg_unused", "bg_failed", "alpha_bg_failed",
@@ -424,11 +424,11 @@ makePlot <- eventReactive(input$plotBtn, {
       })
     wellParams <- unlist(wellParams, recursive = FALSE)
     plotParams <- append(plotParams, wellParams)
-    
+
     # now we have all the plot settings, create the plot and save it
     plot <- do.call(plot, plotParams)
     dataValues$lastPlot <- plot
-    
+
     plot
   })
 })
@@ -467,7 +467,7 @@ observeEvent(input$plotParam_show_failed_wells, {
 observe({
   paramsDropShowRegex <- "^plotParamDropShow-(.*)$"
   paramsDropShow <- grep(paramsDropShowRegex, names(input), value = TRUE)
-  
+
   lapply(paramsDropShow, function(x) {
     name <- gsub(paramsDropShowRegex, "\\1", x)
     toggle(sprintf("plotParamDropCol-%s", name), condition = as.logical(input[[x]]))
@@ -475,7 +475,7 @@ observe({
   })
 })
 
-# when the main transparency for drops changes, update all individual drops 
+# when the main transparency for drops changes, update all individual drops
 observeEvent(input$plotParam_alpha_drops, {
   value <- input$plotParam_alpha_drops
   paramsDropAlphaRegex <- "^plotParamDropAlpha-(.*)$"

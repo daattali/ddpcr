@@ -26,7 +26,7 @@ dir <- sample_data_dir()
 plate <- new_plate(dir) \%>\% analyze
 plate \%>\% wells_success
 plate \%>\% wells_failed
-} 
+}
 }
 \seealso{
 \code{\link[ddpcr]{remove_failures}}

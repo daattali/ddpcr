@@ -64,7 +64,7 @@ test_that("%btwn% works", {
   expect_true(6 %btwn% c(10, 5))
   expect_false(4 %btwn% c(10, 5))
   expect_equal(1:5 %btwn% c(4, 10),
-               c(FALSE, FALSE, FALSE, TRUE, TRUE))  
+               c(FALSE, FALSE, FALSE, TRUE, TRUE))
 })
 
 test_that("local_maxima works", {
@@ -89,7 +89,7 @@ test_that("diff.point2d works", {
 })
 
 test_that("move_front and move_back work", {
-  df <- data.frame(a = character(0), b = character(0), c = character(0))
+  df <- data.frame(a = character(0), b = character(0), c = character(0), stringsAsFactors = TRUE)
   expect_equal(move_front(df, "c") %>% colnames,
                c("c", "a", "b"))
   expect_equal(move_front(df, c("c", "b")) %>% colnames,
@@ -111,8 +111,8 @@ test_that("lol_to_df works", {
   expected <-
     dplyr::data_frame(key = c("a", "b", "c"),
                       low = key,
-                      up = toupper(key)) %>%    
-    as.data.frame
+                      up = toupper(key)) %>%
+    as.data.frame(stringsAsFactors = TRUE)
   expect_identical(actual, expected)
 })
 
@@ -124,8 +124,8 @@ test_that("named_vec_to_df works", {
     named_vec_to_df("capital", "letter")
   expected <-
     dplyr::data_frame(capital = factor(c("A", "B", "C")),
-                      letter = c("a", "b", "c")) %>%    
-    as.data.frame %>%
+                      letter = c("a", "b", "c")) %>%
+    as.data.frame(stringsAsFactors = TRUE) %>%
     magrittr::set_rownames(c("a", "b", "c"))
   expect_identical(actual, expected)
 })
@@ -138,7 +138,7 @@ test_that("capitalize works", {
 test_that("get_single_well works", {
   file <- system.file("sample_data", "small", "analyzed_pnpp.rds", package = "ddpcr")
   plate <- load_plate(file)
-  
+
   expect_identical(
     get_single_well(plate, "A05"),
     plate_data(plate) %>%
@@ -159,18 +159,18 @@ test_that("get_single_well works", {
       dplyr::filter(well == "A05") %>%
       dplyr::filter(cluster > cluster(plate, "EMPTY")) %>%
       dplyr::select(-well)
-  )  
+  )
   expect_identical(
     get_single_well(plate, "A05", empty = TRUE, clusters = TRUE),
     plate_data(plate) %>%
       dplyr::filter(well == "A05") %>%
       dplyr::filter(cluster > cluster(plate, "OUTLIER")) %>%
       dplyr::select(-well)
-  )  
+  )
   expect_identical(
     get_single_well(plate, "A05", empty = TRUE, outliers = TRUE, clusters = TRUE),
     plate_data(plate) %>%
       dplyr::filter(well == "A05") %>%
       dplyr::select(-well)
-  )  
+  )
 })
