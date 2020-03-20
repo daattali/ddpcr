@@ -64,7 +64,7 @@ remove_outliers.ddpcr_plate <- function(plate) {
       data %>%
       dplyr::filter_(~ cluster == CLUSTER_OUTLIER) %>%
       dplyr::group_by_("well") %>%
-      dplyr::summarise_("drops_outlier" = ~ n()) %>%
+      dplyr::summarise_("drops_outlier" = ~ dplyr::n()) %>%
       merge_dfs_overwrite_col(drops_outlies_df, ., "drops_outlier") %>%
       merge_dfs_overwrite_col(plate_meta(plate), ., "drops_outlier")
     

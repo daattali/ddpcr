@@ -1,3 +1,7 @@
+# ddpcr 1.13 2020-03-20
+
+- Make ddpcr work with dplyr v1.0.0
+
 # ddpcr 1.13 2020-02-28
 
 - Prepare for R 4.0.0 by adding `stringsAsFactors = TRUE` where needed

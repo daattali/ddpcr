@@ -118,7 +118,7 @@ init_meta <- function(plate) {
   plate_meta <-
     plate_data %>%
     dplyr::group_by_("well") %>%
-    dplyr::summarise_("drops" = ~ n()) %>%
+    dplyr::summarise_("drops" = ~ dplyr::n()) %>%
     dplyr::left_join(plate_meta, ., by = "well") %>%
     arrange_meta
 

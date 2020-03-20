@@ -71,7 +71,7 @@ read_files <- function(plate, data_files, meta_file) {
     plate_data <-
       lapply(data_files, function(x) {
         wellNum <- get_well_from_data_file(x)
-        wdat <- readr::read_csv(x, progress = FALSE, col_types = readr::cols())
+        wdat <- readr_read_csv(x, progress = FALSE, col_types = readr::cols())
         wdat <- dplyr::select_(wdat, ~ 2:1)
         wdat[['well']] <- wellNum
         wdat

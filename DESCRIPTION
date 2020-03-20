@@ -1,6 +1,6 @@
 Package: ddpcr
 Title: Analysis and Visualization of Droplet Digital PCR in R and on the Web
-Version: 1.13
+Version: 1.14
 Authors@R: c(
     person("Dean", "Attali", email = "daattali@gmail.com", role = c("aut", "cre"))
     )
@@ -23,7 +23,8 @@ Imports:
     plyr (>= 1.8.1),
     readr (>= 0.1.0),
     shiny (>= 0.11.0),
-    shinyjs (>= 0.4.0)
+    shinyjs (>= 0.4.0),
+    tibble
 Suggests: 
     ggExtra (>= 0.3.0),
     graphics,

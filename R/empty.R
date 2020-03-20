@@ -88,7 +88,7 @@ remove_empty.ddpcr_plate <- function(plate) {
       data %>%
       dplyr::filter_(~ cluster == plate %>% cluster('EMPTY')) %>%
       dplyr::group_by_("well") %>%
-      dplyr::summarise_("drops_empty" = ~ n()) %>%
+      dplyr::summarise_("drops_empty" = ~ dplyr::n()) %>%
       merge_dfs_overwrite_col(plate_meta(plate), ., "drops_empty") %>%
       dplyr::mutate_(.dots = stats::setNames(
         list(

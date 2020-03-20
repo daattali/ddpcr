@@ -397,7 +397,7 @@ bind_df_ends <- function(df, cols, dir = 1) {
 
   # If the input was a tbl_df, make sure to return that object too
   if (is_tbl) {
-    df <- dplyr::tbl_df(df)
+    df <- tibble::as_tibble(df)
   }
 
   df
@@ -409,4 +409,12 @@ bind_df_ends <- function(df, cols, dir = 1) {
 capitalize <- function(x) {
   paste(toupper(substring(x, 1, 1)), substring(x, 2),
         sep = "", collapse = " ")
+}
+
+# At some point around 2019, read_csv introduced new attributes that broke tests
+readr_read_csv <- function(...) {
+  data <- readr::read_csv(...)
+  class(data) <- setdiff(class(data), "spec_tbl_df")
+  attr(data, "spec") <- NULL
+  data
 }

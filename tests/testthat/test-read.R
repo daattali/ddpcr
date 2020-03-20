@@ -99,7 +99,7 @@ test_that("read_dir basic functionality works", {
   plate <- get_empty_plate() %>% read_dir(testdir("read_simple"))
   expect_equal(name(plate), "test")
   expect_equal(plate_data(plate),
-               readr::read_csv(file.path(testdir("read_simple"),
+               readr_read_csv(file.path(testdir("read_simple"),
                                          "expected_data.csv"))
   )
   expect_false(is.null(plate_meta(plate)))
@@ -129,7 +129,7 @@ test_that("read_dir works in more complex cases", {
     plate <- get_empty_plate() %>% read_dir(testdir("read_complex"))
   )
   expect_equal(name(plate), "test")
-  expected_data <- readr::read_csv(file.path(testdir("read_complex"),
+  expected_data <- readr_read_csv(file.path(testdir("read_complex"),
                                              "expected_data.csv"))
   expect_equal(plate_data(plate),
                expected_data)
@@ -168,7 +168,7 @@ test_that("read_files basic functionality works", {
   plate <- get_empty_plate() %>% read_files(data_files, meta_file)
   expect_equal(name(plate), "test")
   expect_equal(plate_data(plate),
-               readr::read_csv(file.path(testdir("read_simple"),
+               readr_read_csv(file.path(testdir("read_simple"),
                                          "expected_data.csv"))
   )
   expect_false(is.null(plate_meta(plate)))
@@ -176,7 +176,7 @@ test_that("read_files basic functionality works", {
 
 test_that("read_files inconsistent data files, no metadata file", {
   data_files <- find_data_files(testdir("read_complex"))
-  expected_data <- readr::read_csv(file.path(testdir("read_complex"),
+  expected_data <- readr_read_csv(file.path(testdir("read_complex"),
                                              "expected_data.csv"))
 
   suppressWarnings({
@@ -193,7 +193,7 @@ test_that("read_files inconsistent data files, no metadata file", {
 test_that("read_files inconsistent data files, correct metadata file", {
   data_files <- find_data_files(testdir("read_complex"))
   meta_file <- find_meta_file(testdir("read_complex"), "metadata")
-  expected_data <- readr::read_csv(file.path(testdir("read_complex"),
+  expected_data <- readr_read_csv(file.path(testdir("read_complex"),
                                              "expected_data.csv"))
 
   suppressWarnings(
