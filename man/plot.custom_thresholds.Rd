@@ -4,10 +4,18 @@
 \alias{plot.custom_thresholds}
 \title{Plot a ddPCR plate of type custom thresholds}
 \usage{
-\method{plot}{custom_thresholds}(x, wells, samples, ...,
-  show_thresholds = TRUE, col_thresholds = "black",
-  show_drops_empty = TRUE, col_drops_x_positive = "green3",
-  col_drops_y_positive = "blue", col_drops_both_positive = "orange")
+\method{plot}{custom_thresholds}(
+  x,
+  wells,
+  samples,
+  ...,
+  show_thresholds = TRUE,
+  col_thresholds = "black",
+  show_drops_empty = TRUE,
+  col_drops_x_positive = "green3",
+  col_drops_y_positive = "blue",
+  col_drops_both_positive = "orange"
+)
 }
 \arguments{
 \item{x}{A ddPCR plate.}

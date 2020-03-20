@@ -4,7 +4,9 @@
 \name{WELL_ID_REGEX}
 \alias{WELL_ID_REGEX}
 \title{regex for a well ID}
-\format{An object of class \code{character} of length 1.}
+\format{
+An object of class \code{character} of length 1.
+}
 \usage{
 WELL_ID_REGEX
 }

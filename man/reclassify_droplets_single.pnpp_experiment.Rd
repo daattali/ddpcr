@@ -4,8 +4,7 @@
 \alias{reclassify_droplets_single.pnpp_experiment}
 \title{Reclassify droplets in a well}
 \usage{
-\method{reclassify_droplets_single}{pnpp_experiment}(plate, well_id, ...,
-  consensus_border_ratio)
+\method{reclassify_droplets_single}{pnpp_experiment}(plate, well_id, ..., consensus_border_ratio)
 }
 \description{
 Reclassify droplets in a well given the ratio of where to place the MT border

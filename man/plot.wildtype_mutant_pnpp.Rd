@@ -4,12 +4,22 @@
 \alias{plot.wildtype_mutant_pnpp}
 \title{Plot a ddPCR plate of type wildtype/mutant PNPP}
 \usage{
-\method{plot}{wildtype_mutant_pnpp}(x, wells, samples, ...,
-  col_drops_mutant = "purple3", col_drops_wildtype = "green3",
-  col_drops_rain = "black", show_mutant_freq = TRUE,
-  text_size_mutant_freq = 4, alpha_drops_low_mutant_freq = 0.5,
-  show_low_high_mut_freq = TRUE, bg_mutant = "purple3",
-  bg_wildtype = "green3", alpha_bg_low_high_mut_freq = 0.1)
+\method{plot}{wildtype_mutant_pnpp}(
+  x,
+  wells,
+  samples,
+  ...,
+  col_drops_mutant = "purple3",
+  col_drops_wildtype = "green3",
+  col_drops_rain = "black",
+  show_mutant_freq = TRUE,
+  text_size_mutant_freq = 4,
+  alpha_drops_low_mutant_freq = 0.5,
+  show_low_high_mut_freq = TRUE,
+  bg_mutant = "purple3",
+  bg_wildtype = "green3",
+  alpha_bg_low_high_mut_freq = 0.1
+)
 }
 \arguments{
 \item{x}{A ddPCR plate.}

@@ -4,8 +4,7 @@
 \alias{subset.ddpcr_plate}
 \title{Subsetting a ddPCR plate}
 \usage{
-\method{subset}{ddpcr_plate}(x, wells, samples, targets_ch1, targets_ch2,
-  ...)
+\method{subset}{ddpcr_plate}(x, wells, samples, targets_ch1, targets_ch2, ...)
 }
 \arguments{
 \item{x}{The ddPCR plate to subset from.}

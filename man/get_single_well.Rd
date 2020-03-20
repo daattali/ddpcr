@@ -4,8 +4,13 @@
 \alias{get_single_well}
 \title{Get droplet data from a well}
 \usage{
-get_single_well(plate, well_id, empty = FALSE, outliers = FALSE,
-  clusters = FALSE)
+get_single_well(
+  plate,
+  well_id,
+  empty = FALSE,
+  outliers = FALSE,
+  clusters = FALSE
+)
 }
 \arguments{
 \item{plate}{A ddPCR plate.}

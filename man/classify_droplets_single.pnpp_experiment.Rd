@@ -4,8 +4,7 @@
 \alias{classify_droplets_single.pnpp_experiment}
 \title{Classify droplets in a well}
 \usage{
-\method{classify_droplets_single}{pnpp_experiment}(plate, well_id, ...,
-  plot = FALSE)
+\method{classify_droplets_single}{pnpp_experiment}(plate, well_id, ..., plot = FALSE)
 }
 \description{
 If you want to see details about how a well was classified, you can set

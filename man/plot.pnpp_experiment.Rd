@@ -4,13 +4,25 @@
 \alias{plot.pnpp_experiment}
 \title{Plot a ddPCR plate of type PNPP experiment}
 \usage{
-\method{plot}{pnpp_experiment}(x, wells, samples, ...,
-  col_drops_negative = "purple3", col_drops_positive = "green3",
-  col_drops_rain = "black", show_negative_freq = TRUE,
-  text_size_negative_freq = 4, alpha_drops_low_negative_freq = 0.5,
-  show_low_high_neg_freq = TRUE, bg_negative = "purple3",
-  bg_positive = "green3", alpha_bg_low_high_neg_freq = 0.1,
-  superimpose = FALSE, show_drops = TRUE, drops_size = 1)
+\method{plot}{pnpp_experiment}(
+  x,
+  wells,
+  samples,
+  ...,
+  col_drops_negative = "purple3",
+  col_drops_positive = "green3",
+  col_drops_rain = "black",
+  show_negative_freq = TRUE,
+  text_size_negative_freq = 4,
+  alpha_drops_low_negative_freq = 0.5,
+  show_low_high_neg_freq = TRUE,
+  bg_negative = "purple3",
+  bg_positive = "green3",
+  alpha_bg_low_high_neg_freq = 0.1,
+  superimpose = FALSE,
+  show_drops = TRUE,
+  drops_size = 1
+)
 }
 \arguments{
 \item{x}{A ddPCR plate.}

@@ -3,7 +3,6 @@
 \docType{package}
 \name{ddpcr}
 \alias{ddpcr}
-\alias{ddpcr-package}
 \title{Analysis and visualization of Droplet Digital PCR data.}
 \description{
 An interface to explore, analyze, and visualize droplet digital PCR

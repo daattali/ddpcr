@@ -4,18 +4,39 @@
 \alias{plot.ddpcr_plate}
 \title{Plot a ddPCR plate}
 \usage{
-\method{plot}{ddpcr_plate}(x, wells, samples, superimpose = FALSE,
-  show_full_plate = FALSE, show_drops = TRUE,
-  show_drops_empty = FALSE, show_drops_outlier = FALSE,
-  show_failed_wells = TRUE, col_drops = "black",
-  col_drops_undefined = col_drops, col_drops_failed = col_drops,
-  col_drops_empty = col_drops, col_drops_outlier = "orange",
-  bg_plot = "transparent", bg_failed = "#111111",
-  bg_unused = "#FFFFFF", alpha_drops = 0.2, alpha_drops_outlier = 1,
-  alpha_bg_failed = 0.7, xlab = x_var(plate), ylab = y_var(plate),
-  title = NULL, show_grid = FALSE, show_grid_labels = FALSE,
-  drops_size = 1, text_size_title = 14, text_size_row_col = 12,
-  text_size_axes_labels = 12, text_size_grid_labels = 12, ...)
+\method{plot}{ddpcr_plate}(
+  x,
+  wells,
+  samples,
+  superimpose = FALSE,
+  show_full_plate = FALSE,
+  show_drops = TRUE,
+  show_drops_empty = FALSE,
+  show_drops_outlier = FALSE,
+  show_failed_wells = TRUE,
+  col_drops = "black",
+  col_drops_undefined = col_drops,
+  col_drops_failed = col_drops,
+  col_drops_empty = col_drops,
+  col_drops_outlier = "orange",
+  bg_plot = "transparent",
+  bg_failed = "#111111",
+  bg_unused = "#FFFFFF",
+  alpha_drops = 0.2,
+  alpha_drops_outlier = 1,
+  alpha_bg_failed = 0.7,
+  xlab = x_var(plate),
+  ylab = y_var(plate),
+  title = NULL,
+  show_grid = FALSE,
+  show_grid_labels = FALSE,
+  drops_size = 1,
+  text_size_title = 14,
+  text_size_row_col = 12,
+  text_size_axes_labels = 12,
+  text_size_grid_labels = 12,
+  ...
+)
 }
 \arguments{
 \item{x}{A ddPCR plate.}
