@@ -1,4 +1,8 @@
-# ddpcr 1.13 2020-03-20
+# ddpcr 1.15 TBD
+
+- More changes to make dplyr v1.0.0 work
+
+# ddpcr 1.14 2020-03-20
 
 - Make ddpcr work with dplyr v1.0.0
 
