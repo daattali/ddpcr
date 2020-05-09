@@ -56,7 +56,7 @@ remove_outliers.ddpcr_plate <- function(plate) {
     data[outlier_idx, 'cluster'] <- CLUSTER_OUTLIER  
     
     # count how many outlier drops are in each well and add it to the metadata
-    drops_outlies_df <- dplyr::data_frame(
+    drops_outlies_df <- tibble::tibble(
       "well" = plate %>% wells_used,
       "drops_outlier" = 0L)  
     

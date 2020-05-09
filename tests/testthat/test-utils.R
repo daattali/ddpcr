@@ -109,7 +109,7 @@ test_that("lol_to_df works", {
            list(character(1), character(1))) %>%
     lol_to_df("key")
   expected <-
-    dplyr::data_frame(key = c("a", "b", "c"),
+    tibble::tibble(key = c("a", "b", "c"),
                       low = key,
                       up = toupper(key)) %>%
     as.data.frame(stringsAsFactors = TRUE)
@@ -123,7 +123,7 @@ test_that("named_vec_to_df works", {
            character(1)) %>%
     named_vec_to_df("capital", "letter")
   expected <-
-    dplyr::data_frame(capital = factor(c("A", "B", "C")),
+    tibble::tibble(capital = factor(c("A", "B", "C")),
                       letter = c("a", "b", "c")) %>%
     as.data.frame(stringsAsFactors = TRUE) %>%
     magrittr::set_rownames(c("a", "b", "c"))

@@ -5,10 +5,14 @@
 DEFAULT_PLATE_META <-
   expand.grid(LETTERS[1:8], 1:12, stringsAsFactors = FALSE) %>%
   magrittr::set_colnames(c("row", "col")) %>%
-  dplyr::mutate_("well" = ~ sprintf("%s%02d", row, col),
-                 "sample" = NA, "target_ch1" = NA,  "target_ch2" = NA,
-                 "used" = FALSE) %>%
-  dplyr::select_("well", "sample", "row", "col", "used")
+  dplyr::mutate(
+    well = sprintf("%s%02d", row, col),
+    sample = NA, 
+    target_ch1 = NA,
+    target_ch2 = NA,
+    used = FALSE
+  ) %>%
+  dplyr::select(c("well", "sample", "row", "col", "used"))
 
 #' Supported plate types
 #' 
