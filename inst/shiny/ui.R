@@ -8,6 +8,7 @@ library(ddpcr)
 source(file.path("ui", "helpers.R"))
 
 tagList(
+  shinydisconnect::disconnectMessage2(),
   useShinyjs(),
   tags$head(
     tags$script(src = "ddpcr.js"),

@@ -1,6 +1,6 @@
 Package: ddpcr
 Title: Analysis and Visualization of Droplet Digital PCR in R and on the Web
-Version: 1.14
+Version: 1.15
 Authors@R: c(
     person("Dean", "Attali", email = "daattali@gmail.com", role = c("aut", "cre"))
     )
@@ -35,6 +35,8 @@ Suggests:
     stats,
     testthat (>= 0.11.0),
     utils
+Remotes:
+    daattali/shinydisconnect
 License: MIT + file LICENSE
 LazyData: true
 VignetteBuilder: knitr
