@@ -1,13 +1,11 @@
 ddpcr: Analysis and visualization of Droplet Digital PCR data in R and on the web
 =================================================================================
 
-[![Build
-Status](https://travis-ci.org/daattali/ddpcr.svg?branch=master)](https://travis-ci.org/daattali/ddpcr)
+[![R Build Status](https://github.com/daattali/ddpcr/workflows/R-CMD-check/badge.svg)](https://github.com/daattali/ddpcr/actions)
 [![CRAN
 version](http://www.r-pkg.org/badges/version/ddpcr)](https://cran.r-project.org/package=ddpcr)
 
-> *Copyright 2016-2019 [Dean Attali](http://deanattali.com). Licensed
-> under the MIT license.*
+> Created by [Dean Attali](http://deanattali.com)
 
 This package provides an interface to explore, analyze, and visualize
 droplet digital PCR (ddPCR) data in R. It also includes an interactive

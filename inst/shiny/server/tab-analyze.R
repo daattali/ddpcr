@@ -11,7 +11,10 @@ observeEvent(input$analyzeBtn, {
         html("analyzeProgress", m$message, TRUE)
       },
       warning = function(m) {
-        html("analyzeProgress", paste0(m$message, "\n"), TRUE)
+        # Don't show all the dplyr deprecation warnings
+        if (!grepl("dplyr 0.7", m$message)) {
+          html("analyzeProgress", paste0(m$message, "\n"), TRUE)
+        }
       }
     )
     show("analyzeNextMsg")
