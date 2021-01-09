@@ -2,7 +2,6 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README-.*\.png$
-^\.travis\.yml$
 ^Makefile$
 ^.*\.o$
 inst/shiny/datasets/
