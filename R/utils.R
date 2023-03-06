@@ -412,9 +412,34 @@ capitalize <- function(x) {
 }
 
 # At some point around 2019, read_csv introduced new attributes that broke tests
+# NOTE: the first argument should be the path to the file to be read
 readr_read_csv <- function(...) {
-  data <- readr::read_csv(...)
+  # detect any non-delimited rows at the top of the file
+  skips <- detect_skip(..1)
+  # silence readr repairing names
+  data <- readr::read_csv(..., skip = skips, name_repair = "unique_quiet", show_col_types = FALSE)
+  # drop empty columns
+  data <- data[, vapply(data, function(x) !all(is.na(x)), TRUE)]
   class(data) <- setdiff(class(data), "spec_tbl_df")
   attr(data, "spec") <- NULL
   data
+}
+
+# Newer versions of exports contain header rows with e.g.
+# Target Value of 0 = negative
+# Target Value of 1 = positive
+# Target Value of u = unclassified (Advanced Classification Mode)
+#  -- this detects that they should be skipped and otherwise
+#     returns 0 meaning nothing needs to be skipped
+detect_skip <- function(file) {
+  n <- 0
+  found_data <- FALSE
+  while (!found_data) {
+    n <- n + 1
+    d <- readLines(file, n = n)
+    if (!grepl("^Target|^$", utils::tail(d, 1))) {
+      found_data <- TRUE
+    }
+  }
+  n - 1
 }
