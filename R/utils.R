@@ -429,17 +429,18 @@ readr_read_csv <- function(...) {
 # Target Value of 0 = negative
 # Target Value of 1 = positive
 # Target Value of u = unclassified (Advanced Classification Mode)
-#  -- this detects that they should be skipped and otherwise
-#     returns 0 meaning nothing needs to be skipped
+#  -- this detects and returns the number of lines that should be skipped
 detect_skip <- function(file) {
   n <- 0
   found_data <- FALSE
-  while (!found_data) {
+  lines_in_file <- length(readLines(file, warn = FALSE))
+  while (!found_data && n <= lines_in_file) {
     n <- n + 1
     d <- readLines(file, n = n)
     if (!grepl("^Target|^$", utils::tail(d, 1))) {
       found_data <- TRUE
     }
   }
+  if (n == lines_in_file) stop("Reached end of file without detecting any data")
   n - 1
 }

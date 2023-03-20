@@ -212,3 +212,22 @@ test_that("read_files targets for channel 1 and 2", {
   expect_equal(meta$target_ch1, c("t1.fw", "t2.fw"))
   expect_equal(meta$target_ch2, c("t1.rev", "t2.rev"))
 })
+
+
+# -------- Updated data format  ---------
+
+test_that("new data format can be read", {
+  plate <- new_plate(testdir("SMN2CNV"))
+  meta <- plate_meta(plate, only_used = TRUE)
+  wells <- rep(sort(apply(expand.grid(LETTERS[1:8], 0, 1:2), 1, paste0, collapse = "")), each = 2)
+  expect_equal(meta$well, wells)
+})
+
+test_that("headers to be skipped are detected", {
+  well_file <- list.files(testdir("SMN2CNV"), pattern = ".*A01.*", full.names = TRUE)
+  legacy_file <- list.files(testdir("read_simple"), pattern = ".*A01.*", full.names = TRUE)
+  meta_file <- list.files(testdir("SMN2CNV"), pattern = ".*752.csv", full.names = TRUE)
+  expect_equal(detect_skip(well_file), 4L)
+  expect_equal(detect_skip(legacy_file), 0L)
+  expect_equal(detect_skip(meta_file), 0L)
+})
