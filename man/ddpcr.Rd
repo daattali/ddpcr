@@ -10,6 +10,6 @@ An interface to explore, analyze, and visualize droplet digital PCR
 analyzing ddPCR data. An interactive tool was also created and is available
 online to facilitate this analysis for anyone who is not comfortable with
 using R.\cr\cr
-\href{http://daattali.com/shiny/ddpcr/}{Use the web tool} or
+\href{https://daattali.com/shiny/ddpcr/}{Use the web tool} or
 \href{https://github.com/daattali/ddpcr}{read the full documentation on GitHub}.
 }

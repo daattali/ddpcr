@@ -3,15 +3,15 @@ ddpcr: Analysis and visualization of Droplet Digital PCR data in R and on the we
 
 [![R Build Status](https://github.com/daattali/ddpcr/workflows/R-CMD-check/badge.svg)](https://github.com/daattali/ddpcr/actions)
 [![CRAN
-version](http://www.r-pkg.org/badges/version/ddpcr)](https://cran.r-project.org/package=ddpcr)
+version](https://www.r-pkg.org/badges/version/ddpcr)](https://cran.r-project.org/package=ddpcr)
 
-> Created by [Dean Attali](http://deanattali.com)
+> Created by [Dean Attali](https://deanattali.com)
 
 This package provides an interface to explore, analyze, and visualize
 droplet digital PCR (ddPCR) data in R. It also includes an interactive
 web application with a visual user interface to facilitate analysis for
 anyone who is not comfortable with using R. The app is [available
-online](http://daattali.com/shiny/ddpcr/) or it can be [run
+online](https://daattali.com/shiny/ddpcr/) or it can be [run
 locally](#r-interactive).
 
 This document explains the purpose of this package and includes a
@@ -200,7 +200,7 @@ Analysis using the interactive tool
 </h1>
 If you’re not comfortable using R and would like to use a visual tool
 that requires no programming, you can [use the tool
-online](http://daattali.com/shiny/ddpcr/). You should still skim through
+online](https://daattali.com/shiny/ddpcr/). You should still skim through
 the rest of this document (you can ignore the actual code/commands) as
 it will explain some important concepts.
 

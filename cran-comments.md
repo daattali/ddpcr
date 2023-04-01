@@ -12,7 +12,7 @@
 
 2016-02-18
 
-R CMD check passed with 0 warnings or errors, and notes about the provided sample data being large (4MB) and an invalid URL that will be valid once the package is on CRAN (http://cran.r-project.org/package=ddpcr)
+R CMD check passed with 0 warnings or errors, and notes about the provided sample data being large (4MB) and an invalid URL that will be valid once the package is on CRAN (https://cran.r-project.org/package=ddpcr)
 
 ### Reviewer comments
 
@@ -79,7 +79,7 @@ Added cran-comments to buildignore
 We also see
 
 Found the following (possibly) invalid URLs:
-  URL: http://cran.r-project.org/package=ddpcr
+  URL: https://cran.r-project.org/package=ddpcr
     From: inst/doc/overview.html
     Status: 404
     Message: Not Found
