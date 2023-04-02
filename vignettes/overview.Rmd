@@ -23,7 +23,7 @@ options(ddpcr.verbose = TRUE)
 
 This package provides an interface to explore, analyze, and visualize droplet digital PCR (ddPCR) data in R. It also includes an interactive web application with a visual user interface to facilitate analysis for anyone who is not comfortable with using R.  The app is [available online](https://daattali.com/shiny/ddpcr/) or it can be [run locally](#r-interactive).
 
-This document explains the purpose of this package and includes a tutorial on how to use it. It should take about 20 minutes to go through the entire document. A peer-reviewed publication describing this tool is available in [F1000Research](https://f1000research.com/articles/5-1411/).
+This document explains the purpose of this package and includes a tutorial on how to use it. It should take about 20 minutes to go through the entire document. A peer-reviewed publication describing this tool is available in [F1000Research](https://f1000research.com/articles/5-1411).
 
 # Table of contents
 
@@ -127,7 +127,7 @@ Even if you do know R, using the interactive application can be easier and more 
 
 Here are two basic examples of how to use `ddpcr` to analyze and plot your ddPCR data. One example shows an analysis where the gating thresholds are manually set, and the other example uses the automated analysis. Explanation will follow, these are just here as a teaser.
 
-> Note how `ddpcr` is designed to play nicely with the [magrittr pipe](https://github.com/smbache/magrittr) `%>%` for easier pipeline workflows.
+> Note how `ddpcr` is designed to play nicely with the [magrittr pipe](https://github.com/tidyverse/magrittr) `%>%` for easier pipeline workflows.
 
 ```{r quickstart, message = FALSE, fig.show='hold', out.width='50%', fig.retina=FALSE}
 library(ddpcr)

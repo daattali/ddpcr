@@ -18,7 +18,7 @@ This document explains the purpose of this package and includes a
 tutorial on how to use it. It should take about 20 minutes to go through
 the entire document. A peer-reviewed publication describing this tool is
 available in
-[F1000Research](https://f1000research.com/articles/5-1411/).
+[F1000Research](https://f1000research.com/articles/5-1411).
 
 Table of contents
 =================
@@ -230,7 +230,7 @@ thresholds are manually set, and the other example uses the automated
 analysis. Explanation will follow, these are just here as a teaser.
 
 > Note how `ddpcr` is designed to play nicely with the [magrittr
-> pipe](https://github.com/smbache/magrittr) `%>%` for easier pipeline
+> pipe](https://github.com/tidyverse/magrittr) `%>%` for easier pipeline
 > workflows.
 
     library(ddpcr)
