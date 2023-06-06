@@ -3,22 +3,22 @@ ddpcr: Analysis and visualization of Droplet Digital PCR data in R and on the we
 
 [![R Build Status](https://github.com/daattali/ddpcr/workflows/R-CMD-check/badge.svg)](https://github.com/daattali/ddpcr/actions)
 [![CRAN
-version](http://www.r-pkg.org/badges/version/ddpcr)](https://cran.r-project.org/package=ddpcr)
+version](https://www.r-pkg.org/badges/version/ddpcr)](https://cran.r-project.org/package=ddpcr)
 
-> Created by [Dean Attali](http://deanattali.com)
+> Created by [Dean Attali](https://deanattali.com)
 
 This package provides an interface to explore, analyze, and visualize
 droplet digital PCR (ddPCR) data in R. It also includes an interactive
 web application with a visual user interface to facilitate analysis for
 anyone who is not comfortable with using R. The app is [available
-online](http://daattali.com/shiny/ddpcr/) or it can be [run
+online](https://daattali.com/shiny/ddpcr/) or it can be [run
 locally](#r-interactive).
 
 This document explains the purpose of this package and includes a
 tutorial on how to use it. It should take about 20 minutes to go through
 the entire document. A peer-reviewed publication describing this tool is
 available in
-[F1000Research](https://f1000research.com/articles/5-1411/).
+[F1000Research](https://f1000research.com/articles/5-1411).
 
 Table of contents
 =================
@@ -200,7 +200,7 @@ Analysis using the interactive tool
 </h1>
 If you’re not comfortable using R and would like to use a visual tool
 that requires no programming, you can [use the tool
-online](http://daattali.com/shiny/ddpcr/). You should still skim through
+online](https://daattali.com/shiny/ddpcr/). You should still skim through
 the rest of this document (you can ignore the actual code/commands) as
 it will explain some important concepts.
 
@@ -230,7 +230,7 @@ thresholds are manually set, and the other example uses the automated
 analysis. Explanation will follow, these are just here as a teaser.
 
 > Note how `ddpcr` is designed to play nicely with the [magrittr
-> pipe](https://github.com/smbache/magrittr) `%>%` for easier pipeline
+> pipe](https://github.com/tidyverse/magrittr) `%>%` for easier pipeline
 > workflows.
 
     library(ddpcr)

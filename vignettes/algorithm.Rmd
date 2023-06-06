@@ -15,7 +15,7 @@ knitr::opts_chunk$set(tidy = FALSE, comment = "#>")
 
 # Algorithms used to analyze ddPCR droplets
 
-The algorithm described below consists of five main steps that are used to analyze a ddPCR assay with (FAM+)/(FAM+HEX+) clusters. Droplets in the (FAM+HEX+) cluster will be referred to as *wildtype*, and droplets in the (FAM+HEX-) cluster will be referred to as *mutant*. The final goal is to calculate the mutant frequency (*MF*) in each well by classifying all template-containing droplets as wildtype or mutant. A more detailed explanation of the algorithm is available in Chapter 2 of [my MSc thesis](http://hdl.handle.net/2429/57928). 
+The algorithm described below consists of five main steps that are used to analyze a ddPCR assay with (FAM+)/(FAM+HEX+) clusters. Droplets in the (FAM+HEX+) cluster will be referred to as *wildtype*, and droplets in the (FAM+HEX-) cluster will be referred to as *mutant*. The final goal is to calculate the mutant frequency (*MF*) in each well by classifying all template-containing droplets as wildtype or mutant. A more detailed explanation of the algorithm is available in Chapter 2 of [my MSc thesis](https://hdl.handle.net/2429/57928). 
 
 Assays with (HEX+)/(FAM+HEX+) clusters use a very similar algorithm but HEX and FAM are swapped in every step. Assays that are neither (FAM+)/(FAM+HEX+) nor (HEX+)/(FAM+HEX+) only benefit from the first three steps of the pipeline (droplet gating is not performed). 
 

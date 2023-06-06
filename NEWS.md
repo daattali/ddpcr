@@ -1,3 +1,7 @@
+# ddpcr 1.15.1 2023-04-01
+
+- Small maintenance work to keep the package on CRAN
+
 # ddpcr 1.15 2020-06-01
 
 - More changes to make dplyr v1.0.0 work
