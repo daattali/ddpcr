@@ -411,8 +411,7 @@ capitalize <- function(x) {
         sep = "", collapse = " ")
 }
 
-# At some point around 2019, read_csv introduced new attributes that broke tests
-# NOTE: the first argument should be the path to the file to be read
+# The first argument should be the path to the file to be read
 readr_read_csv <- function(...) {
   # detect any non-delimited rows at the top of the file
   skips <- detect_skip(..1)
