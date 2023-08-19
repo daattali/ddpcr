@@ -86,7 +86,7 @@ Calculate the starting concentration of the target DNA molecule in the sample, d
 
 <h2 id="supported-types">Supported experiment types</h2>
 
-While this tool was originally developed to automatically gate data for a particular ddPCR assay (<a href="https://jmd.amjpathol.org/article/S1525-1578(15)00262-7/"><em>Quantitative Detection and Resolution of BRAF V600 Status in Colorectal Cancer Using Droplet Digital PCR and a Novel Wild-Type Negative Assay</em></a> by Roza Bidshahri, Dean Attali, et al.), any ddPCR experiment using an assay with similar characteristics can also use this tool to automatically gate the droplets. In order to benefit from the full automatic analysis, your ddPCR experiment needs to have these characteristics:  
+While this tool was originally developed to automatically gate data for a particular ddPCR assay (<a href="https://www.jmdjournal.org/article/S1525-1578(15)00262-7/fulltext"><em>Quantitative Detection and Resolution of BRAF V600 Status in Colorectal Cancer Using Droplet Digital PCR and a Novel Wild-Type Negative Assay</em></a> by Roza Bidshahri, Dean Attali, et al.), any ddPCR experiment using an assay with similar characteristics can also use this tool to automatically gate the droplets. In order to benefit from the full automatic analysis, your ddPCR experiment needs to have these characteristics:  
 
 - The experiment uses a two-channel ddPCR assay with three expected droplet clusters: double-negative, double-positive, and single-positive.
 - The majority of droplets are empty (double-negative).
