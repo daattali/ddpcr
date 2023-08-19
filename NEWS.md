@@ -1,3 +1,7 @@
+# ddpcr 1.15.2 2023-08-19
+
+- Add correct package file documentation (see https://github.com/r-lib/roxygen2/issues/1491)
+
 # ddpcr 1.15.1 2023-04-01
 
 - Small maintenance work to keep the package on CRAN

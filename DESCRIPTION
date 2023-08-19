@@ -1,6 +1,6 @@
 Package: ddpcr
 Title: Analysis and Visualization of Droplet Digital PCR in R and on the Web
-Version: 1.15.1
+Version: 1.15.2
 Authors@R: c(
     person("Dean", "Attali", email = "daattali@gmail.com", role = c("aut", "cre"),
     comment= c(ORCID="0000-0002-5645-3493"))
@@ -10,7 +10,7 @@ Description: An interface to explore, analyze, and visualize droplet digital PCR
     two-channel ddPCR data. An interactive tool was also created and is available
     online to facilitate this analysis for anyone who is not comfortable with
     using R.
-URL: https://github.com/daattali/ddpcr
+URL: https://github.com/daattali/ddpcr, https://daattali.com/shiny/ddpcr/
 BugReports: https://github.com/daattali/ddpcr/issues
 Depends: 
     R (>= 3.1.0)
