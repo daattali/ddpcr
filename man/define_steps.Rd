@@ -18,7 +18,7 @@ and the value of each item is the function to call to perform the step.
 Every ddPCR plate type has an ordered set of steps that are run to analyze
 the data. When creating a new plate type, if your plate type has different
 analysis steps than its parent type, you must define this function to return
-a named list of the analysis steps. When defining this function, you can use 
+a named list of the analysis steps. When defining this function, you can use
 \code{NextMethod("define_steps")} to get a list of the steps available in
 the parent type if you want to simply add new steps without defining all of them.
 }

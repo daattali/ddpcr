@@ -16,7 +16,7 @@ A list of potential droplet clusters for the plate type.
 Every ddPCR plate type has a set of potential clusters the droplets can be
 assigned to. When creating a custom plate type, if your plate type uses a
 different set of clusters than its parent type, you must define this function
-to return the cluster names. When defining this function, you can use 
+to return the cluster names. When defining this function, you can use
 \code{NextMethod("define_clusters")} to get a list of the clusters available
 in the parent type if you want to simply add new clusters without defining
 all of them.

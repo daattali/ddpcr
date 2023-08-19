@@ -4,10 +4,7 @@
 \alias{step_end}
 \title{Inform the user that an analysis step finished}
 \usage{
-step_end(time)
-}
-\arguments{
-\item{text}{The text to show the user when this step begins.}
+step_end()
 }
 \description{
 When an analysis step is done, it's recommended to call this function

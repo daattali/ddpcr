@@ -12,7 +12,7 @@ double-positive (FAM+HEX+; represent the "PP" in PNPP), and singly-positive
 }
 \details{
 Every \code{pnpp_experiment} plate must define which dimension is its \emph{positive
-dimension}.  The positive dimension is defined as the dimension that corresponds 
+dimension}.  The positive dimension is defined as the dimension that corresponds
 to the dye that has a high fluoresence intensity in all non-empty droplets. The other
 dimension is defined as the \emph{variable dimension}. For example, assuming
 the HEX dye is plotted along the X axis and the FAM dye is along the Y axis,
@@ -41,7 +41,7 @@ more information on plate types.
 \dontrun{
 plate <- new_plate(sample_data_dir(), type = plate_types$pnpp_experiment)
 type(plate)
-} 
+}
 }
 \seealso{
 \code{\link[ddpcr]{plate_types}}\cr

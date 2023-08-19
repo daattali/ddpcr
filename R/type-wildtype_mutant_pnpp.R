@@ -2,7 +2,7 @@
 ## Copyright (C) 2015 Dean Attali
 
 #' Plate type: wildtype/mutant PNPP
-#' 
+#'
 #' A plate of type \code{wildtype_mutant_pnpp} is a subtype of
 #' \code{\link[ddpcr]{pnpp_experiment}} that assumes the double-positive cluster
 #' denotes wildtype and the other non-empty cluster denotes mutant droplets.
@@ -14,15 +14,15 @@
 #' Plates with this type have the following analysis steps: \code{INITIALIZE},
 #' \code{REMOVE_FAILURES}, \code{REMOVE_OUTLIERS}, \code{REMOVE_EMPTY},
 #' \code{CLASSIFY}, \code{RECLASSIFY}.
-#' 
+#'
 #' Plates with this type have the following droplet clusters:
 #' \code{UNDEFINED}, \code{FAILED}, \code{OUTLIER}, \code{EMPTY} (double-negative),
 #' \code{RAIN} (not empty but not wildtype nor negative), \code{POSITIVE} (wildtype),
 #' \code{NEGATIVE} (mutant).
-#' 
+#'
 #' \href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for
 #' more information on plate types.
-#' 
+#'
 #' @seealso
 #' \code{\link[ddpcr]{plate_types}}\cr
 #' \code{\link[ddpcr]{fam_positive_pnpp}}\cr
@@ -35,17 +35,18 @@
 #' \code{\link[ddpcr]{classify_droplets}}\cr
 #' \code{\link[ddpcr]{reclassify_droplets}}
 #' @name wildtype_mutant_pnpp
-#' @examples 
+#' @examples
 #' \dontrun{
 #' plate <- new_plate(sample_data_dir(), type = plate_types$wildtype_mutant_pnpp)
 #' type(plate)
-#' } 
+#' }
 NULL
 
 plate_types[['wildtype_mutant_pnpp']] <- "wildtype_mutant_pnpp"
 
 #' Parent plate type of wildtype/mutant PNPP
 #' @inheritParams parent_plate_type
+#' @export
 #' @keywords internal
 parent_plate_type.wildtype_mutant_pnpp <- function(plate) {
   "pnpp_experiment"
@@ -53,10 +54,11 @@ parent_plate_type.wildtype_mutant_pnpp <- function(plate) {
 
 #' Define plate type parameters for wildtype/mutant PNPP
 #' @inheritParams define_params
+#' @export
 #' @keywords internal
 define_params.wildtype_mutant_pnpp <- function(plate) {
   params <- NextMethod("define_params")
-  
+
   new_params <- list(
     'GENERAL' = list(
       'POSITIVE_NAME' = 'wildtype',
@@ -64,12 +66,12 @@ define_params.wildtype_mutant_pnpp <- function(plate) {
     )
   )
   params %<>% utils::modifyList(new_params)
-  
+
   params
 }
 
 #' Get wildtype wells
-#' 
+#'
 #' After a ddPCR plate of type \code{wildtype_mutant_pnpp} has been analyzed,
 #' get the wells that were deemed as wildtype.
 #' @param plate A ddPCR plate.
@@ -77,7 +79,7 @@ define_params.wildtype_mutant_pnpp <- function(plate) {
 #' @seealso
 #' \code{\link[ddpcr]{wildtype_mutant_pnpp}}\cr
 #' \code{\link[ddpcr]{wells_mutant}}
-#' @examples 
+#' @examples
 #' \dontrun{
 #' plate <- new_plate(sample_data_dir(), type = plate_types$fam_positive_pnpp) %>% analyze
 #' wells_wildtype(plate)
@@ -89,14 +91,14 @@ wells_wildtype <- function(plate) {
 }
 
 #' Get mutant wells
-#' 
+#'
 #' After a ddPCR plate of type \code{wildtype_mutant_pnpp} has been analyzed,
 #' get the wells that were deemed as mutant.
 #' @param plate A ddPCR plate.
 #' @return Character vector with well IDs of mutant wells
 #' @seealso \code{\link[ddpcr]{wildtype_mutant_pnpp}}\cr
 #' \code{\link[ddpcr]{wells_wildtype}}
-#' @examples 
+#' @examples
 #' \dontrun{
 #' plate <- new_plate(sample_data_dir(), type = plate_types$fam_positive_pnpp) %>% analyze
 #' wells_mutant(plate)
@@ -108,12 +110,12 @@ wells_mutant <- function(plate) {
 }
 
 #' Plot a ddPCR plate of type wildtype/mutant PNPP
-#' 
+#'
 #' Same plot as \code{\link[ddpcr]{plot.pnpp_experiment}} but with a few extra
 #' features that are specific to wildtype/mutant PNPP plates. Take a look
 #' at \code{\link[ddpcr]{plot.pnpp_experiment}} to see all supported parameters
 #' and more information.
-#' 
+#'
 #' @inheritParams plot.pnpp_experiment
 #' @param col_drops_mutant The colour to use for mutant droplets.
 #' @param col_drops_wildtype The colour to use for wildtype droplets.
@@ -139,7 +141,7 @@ wells_mutant <- function(plate) {
 #' \code{\link[ddpcr]{plot.ddpcr_plate}}\cr
 #' \code{\link[ddpcr]{plot.pnpp_experiment}}\cr
 #' \code{\link[ddpcr]{wildtype_mutant_pnpp}}
-#' @examples 
+#' @examples
 #' \dontrun{
 #' plate <- new_plate(sample_data_dir(), type = plate_types$fam_positive_pnpp) %>% analyze
 #' wells_wildtype(plate)
@@ -169,9 +171,9 @@ plot.wildtype_mutant_pnpp <- function(
   if (missing(col_drops_wildtype) && !is.null(dots[["col_drops_positive"]])) {
     col_drops_wildtype <- dots[["col_drops_positive"]]
   }
-  
+
   # call the plot function for general mutant/wildtype ddpcr plates
-  # but use more user-friendly param names 
+  # but use more user-friendly param names
   NextMethod("plot", x,
              col_drops_negative = col_drops_mutant,
              col_drops_positive = col_drops_wildtype,
