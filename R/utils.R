@@ -223,8 +223,8 @@ merge_dfs_overwrite_col <- function(olddf, newdf, cols, bycol = "well") {
                                     result[[colname_x]],
                                     result[[colname_y]])
       result %<>%
-        dplyr::rename_(.dots = stats::setNames(colname_x, colname)) %>%
-        dplyr::select_(lazyeval::interp(~ -colname, colname = as.name(colname_y)))
+        dplyr::rename(!!colname := colname_x) %>%
+        dplyr::select(-all_of(colname_y))
     }
   }
 

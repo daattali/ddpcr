@@ -22,7 +22,7 @@ test_that("calculate_negative_freqs works", {
     plate %>%
     calculate_negative_freqs %>%
     plate_meta %>%
-    .[['negative_freq']] %>%
+    .[["negative_freq"]] %>%
     .[!is.na(.)]
   expect_equal(neg_freqs, c(0.218, 23.1, 0.24, 19.8))
 })
