@@ -24,20 +24,20 @@ get_single_well <- function(plate, well_id,
 
   result <-
     plate_data(plate) %>%
-    dplyr::filter_(~ well == well_id) %>%
-    dplyr::select_(quote(-well))
+    dplyr::filter(well == well_id) %>%
+    dplyr::select(-well)
 
   if (!empty) {
     result %<>%
-      dplyr::filter_(~ cluster != plate %>% cluster('EMPTY'))
+      dplyr::filter(cluster != plate %>% cluster('EMPTY'))
   }
   if (!outliers) {
     result %<>%
-      dplyr::filter_(~ cluster != plate %>% cluster('OUTLIER'))
+      dplyr::filter(cluster != plate %>% cluster('OUTLIER'))
   }
   if (!clusters) {
     result %<>%
-      dplyr::select_(~ -cluster)
+      dplyr::select(-cluster)
   }
 
   result
@@ -381,14 +381,14 @@ bind_df_ends <- function(df, cols, dir = 1) {
   if (dir == 1) {
     df <-
       cbind(
-        df %>% dplyr::select_(~(dplyr::one_of(cols))),
-        df %>% dplyr::select_(~(-dplyr::one_of(cols)))
+        df %>% dplyr::select(one_of(cols)),
+        df %>% dplyr::select(-one_of(cols))
       )
   } else if (dir == -1) {
     df <-
       cbind(
-        df %>% dplyr::select_(~(-dplyr::one_of(cols))),
-        df %>% dplyr::select_(~(dplyr::one_of(cols)))
+        df %>% dplyr::select(-one_of(cols)),
+        df %>% dplyr::select(one_of(cols))
       )
   } else {
     stop("bind_df_ends: dir can only be -1 or 1", call. = FALSE)

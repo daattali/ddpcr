@@ -175,7 +175,7 @@ plot.ddpcr_plate <- function(
              },
              logical(1)
       )  
-    data %<>% dplyr::filter_(~ show_clusters[cluster]) %>% droplevels
+    data %<>% dplyr::filter(show_clusters[cluster]) %>% droplevels
   }
     
   # make sure after removing unwanted drops/wells, we still have something to show
@@ -183,14 +183,14 @@ plot.ddpcr_plate <- function(
     err_msg("There are no wells to show.")
   }
 
-  meta_used <- meta %>% dplyr::filter_(~ used)
+  meta_used <- meta %>% dplyr::filter(used)
   
   # remove unused rows/columns from the plate
   if (!show_full_plate) {
     meta %<>%
-      dplyr::filter_(~ col %in% (meta_used[['col']] %>% unique),
-                     ~ row %in% (meta_used[['row']] %>% unique)) %>%
-      dplyr::arrange_(~ row, ~ col)
+      dplyr::filter(col %in% (meta_used[['col']] %>% unique),
+                    row %in% (meta_used[['row']] %>% unique)) %>%
+      dplyr::arrange(row, col)
   }
   
   # basic plot
@@ -224,7 +224,7 @@ plot.ddpcr_plate <- function(
     if (sum(!meta[['used']], na.rm = TRUE) > 0) {
       p <- p +
         ggplot2::geom_rect(
-          data = dplyr::filter_(meta, ~ !used),
+          data = dplyr::filter(meta, ~ !used),
           xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, fill = bg_unused)
     }
   }
@@ -286,7 +286,7 @@ plot.ddpcr_plate <- function(
     if (sum(!meta_used[['success']], na.rm = TRUE) > 0) {
       p <- p +
         ggplot2::geom_rect(
-          data = dplyr::filter_(meta_used, ~ !success),
+          data = dplyr::filter(meta_used, ~ !success),
           ggplot2::aes(xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf),
           alpha = alpha_bg_failed,
           fill = bg_failed)

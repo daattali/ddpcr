@@ -62,7 +62,7 @@ remove_empty.ddpcr_plate <- function(plate) {
       }
 
       # find the cutoffs for this well and mark all droplets below as empty
-      cutoffs <- empty_cutoff_map %>% dplyr::filter_(~ well == well_id)
+      cutoffs <- empty_cutoff_map %>% dplyr::filter(well == well_id)
       cutoff_x <- cutoffs[['x']]
       cutoff_y <- cutoffs[['y']]
 
@@ -79,16 +79,16 @@ remove_empty.ddpcr_plate <- function(plate) {
 
     data <-
       plate_data(plate) %>%
-      dplyr::group_by_("well") %>%
+      dplyr::group_by(well) %>%
       dplyr::do(do_work(.)) %>%
       dplyr::ungroup()
 
     # calculate a few metadata variables
     meta <-
       data %>%
-      dplyr::filter_(~ cluster == plate %>% cluster('EMPTY')) %>%
-      dplyr::group_by_("well") %>%
-      dplyr::summarise_("drops_empty" = ~ dplyr::n()) %>%
+      dplyr::filter(cluster == plate %>% cluster('EMPTY')) %>%
+      dplyr::group_by(well) %>%
+      dplyr::summarise("drops_empty" = dplyr::n()) %>%
       merge_dfs_overwrite_col(plate_meta(plate), ., "drops_empty") %>%
       dplyr::mutate_(.dots = stats::setNames(
         list(
