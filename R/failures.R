@@ -62,7 +62,7 @@ remove_failures.ddpcr_plate <- function(plate) {
   CLUSTER_FAILED <- plate %>% cluster('FAILED')
   failed_wells <-
     well_success_map %>%
-    dplyr::filter(!success) %>%
+    dplyr::filter(!.data[["success"]]) %>%
     .[['well']]
   failed_idx <-
     (data[['well']] %in% failed_wells) & (data[['cluster']] <= CLUSTER_FAILED)
@@ -168,7 +168,7 @@ wells_success <- function(plate) {
   }
   plate %>%
     plate_meta %>%
-    dplyr::filter(success) %>%
+    dplyr::filter(.data[["success"]]) %>%
     .[['well']]
 }
 #' @rdname wells_success
@@ -182,6 +182,6 @@ wells_failed <- function(plate) {
   }
   plate %>%
     plate_meta %>%
-    dplyr::filter(!success) %>%
+    dplyr::filter(!.data[["success"]]) %>%
     .[['well']]
 }

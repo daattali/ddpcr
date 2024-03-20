@@ -150,7 +150,7 @@ plate_meta <- function(plate, only_used = FALSE) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
 
   if (only_used) {
-    plate[['plate_meta']] %>% dplyr::filter(used)
+    plate[['plate_meta']] %>% dplyr::filter(.data[["used"]])
   } else {
     plate[['plate_meta']]
   }
@@ -171,9 +171,9 @@ plate_meta <- function(plate, only_used = FALSE) {
 # Arrange the metadata such that the more general variables are near the beginning
 arrange_meta <- function(plate) {
   if ("success" %in% colnames(plate)) {
-    plate %>% dplyr::arrange(desc(used), desc(success), row, col)
+    plate %>% dplyr::arrange(desc(.data[["used"]]), desc(.data[["success"]]), .data[["row"]], .data[["col"]])
   } else {
-    plate %>% dplyr::arrange(desc(used), row, col)
+    plate %>% dplyr::arrange(desc(.data[["used"]]), .data[["row"]], .data[["col"]])
   }
 }
 

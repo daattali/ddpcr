@@ -24,20 +24,20 @@ get_single_well <- function(plate, well_id,
 
   result <-
     plate_data(plate) %>%
-    dplyr::filter(well == well_id) %>%
-    dplyr::select(-well)
+    dplyr::filter(.data[["well"]] == well_id) %>%
+    dplyr::select(-all_of("well"))
 
   if (!empty) {
     result %<>%
-      dplyr::filter(cluster != plate %>% cluster('EMPTY'))
+      dplyr::filter(.data[["cluster"]] != cluster(plate, 'EMPTY'))
   }
   if (!outliers) {
     result %<>%
-      dplyr::filter(cluster != plate %>% cluster('OUTLIER'))
+      dplyr::filter(.data[["cluster"]] != cluster(plate, 'OUTLIER'))
   }
   if (!clusters) {
     result %<>%
-      dplyr::select(-cluster)
+      dplyr::select(-all_of("cluster"))
   }
 
   result

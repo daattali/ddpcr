@@ -265,7 +265,7 @@ mark_clusters <- function(plate, wells) {
   }
   data <-
     plate_data(plate) %>%
-    dplyr::group_by(well) %>%
+    dplyr::group_by(.data[["well"]]) %>%
     dplyr::do(do_work(.)) %>%
     dplyr::ungroup()
 
