@@ -39,6 +39,7 @@ plate_types[['custom_thresholds']] <- "custom_thresholds"
 
 #' Define plate type parameters for custom thresholds plates
 #' @inheritParams define_params
+#' @export
 #' @keywords internal
 define_params.custom_thresholds <- function(plate) {
   params <- NextMethod("define_params")
@@ -56,6 +57,7 @@ define_params.custom_thresholds <- function(plate) {
 
 #' Define droplet clusters for custom thresholds plates
 #' @inheritParams define_clusters
+#' @export
 #' @keywords internal
 define_clusters.custom_thresholds <- function(plate) {
   c(
@@ -70,6 +72,7 @@ define_clusters.custom_thresholds <- function(plate) {
 
 #' Define analysis steps for custom thresholds plates
 #' @inheritParams define_steps
+#' @export
 #' @keywords internal
 define_steps.custom_thresholds <- function(plate) {
   list(

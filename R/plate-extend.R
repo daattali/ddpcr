@@ -5,14 +5,14 @@
 # a new plate type.
 
 #' Parent plate type
-#' 
-#' Each ddPCR plate has a "parent" plate type from which it inherits all its 
+#'
+#' Each ddPCR plate has a "parent" plate type from which it inherits all its
 #' properties. When creating a custom plate type, if your plate type inherits from
 #' any plate type other than the base type of \code{ddpcr_plate}, you must define
 #' this function to return the parent plate type. Inheriting
 #' from a parent plate means that the same cluster types, analysis steps, and
-#' parameters will be used by default. 
-#' 
+#' parameters will be used by default.
+#'
 #' \href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for more
 #' information on plate types.
 #' @param plate A ddPCR plate
@@ -28,7 +28,7 @@ parent_plate_type <- function(plate) {
 }
 
 #' Define plate type parameters
-#' 
+#'
 #' Every ddPCR plate type has a set of default parameters. When creating a
 #' custom plate type, if your plate type needs a different set of parameters
 #' than its parent type, you must define this function to return the parameters
@@ -36,7 +36,7 @@ parent_plate_type <- function(plate) {
 #' \code{NextMethod("define_params")} to get a list of the parameters of the
 #' parent type so that you can simply add to that list rather than redefining
 #' all the parameters.
-#' @seealso 
+#' @seealso
 #' \code{\link[ddpcr]{params}}
 #' @param plate A ddPCR plate
 #' @return A list of default parameters for the plate type.
@@ -51,15 +51,15 @@ define_params <- function(plate) {
 }
 
 #' Define droplet clusters
-#' 
+#'
 #' Every ddPCR plate type has a set of potential clusters the droplets can be
 #' assigned to. When creating a custom plate type, if your plate type uses a
 #' different set of clusters than its parent type, you must define this function
-#' to return the cluster names. When defining this function, you can use 
+#' to return the cluster names. When defining this function, you can use
 #' \code{NextMethod("define_clusters")} to get a list of the clusters available
 #' in the parent type if you want to simply add new clusters without defining
 #' all of them.
-#' @seealso 
+#' @seealso
 #' \code{\link[ddpcr]{clusters}}
 #' @param plate A ddPCR plate
 #' @return A list of potential droplet clusters for the plate type.
@@ -74,17 +74,17 @@ define_clusters <- function(plate) {
 }
 
 #' Define analysis steps
-#' 
+#'
 #' Every ddPCR plate type has an ordered set of steps that are run to analyze
 #' the data. When creating a new plate type, if your plate type has different
 #' analysis steps than its parent type, you must define this function to return
-#' a named list of the analysis steps. When defining this function, you can use 
+#' a named list of the analysis steps. When defining this function, you can use
 #' \code{NextMethod("define_steps")} to get a list of the steps available in
 #' the parent type if you want to simply add new steps without defining all of them.
 #' @param plate A ddPCR plate
 #' @return A named list of analysis steps in the order they should be run on a dataset.
 #' The name of each item in the list is the human-readable name of the step
-#' and the value of each item is the function to call to perform the step. 
+#' and the value of each item is the function to call to perform the step.
 #' @seealso \code{\link[ddpcr]{steps}}\cr
 #' \code{\link[ddpcr]{step_begin}}\cr
 #' \code{\link[ddpcr]{step_end}}\cr
@@ -98,7 +98,7 @@ define_steps <- function(plate) {
 }
 
 #' Inform the user that an analysis step is starting
-#' 
+#'
 #' When an analysis step starts running, it's recommended to call this function
 #' so that the user will know what step is taking place. The time when a step
 #' begins gets recorded so that the user will see exactly how long it took.
@@ -112,16 +112,15 @@ step_begin <- function(text) {
 }
 
 #' Inform the user that an analysis step finished
-#' 
+#'
 #' When an analysis step is done, it's recommended to call this function
 #' so that the user will know the step finished. The time when a step
 #' finishes gets recorded so that the user will see exactly how long it took.
 #' An earlier call to \code{step_begin} must have taken place.
-#' @param text The text to show the user when this step begins.
 #' @seealso \code{\link[ddpcr]{step_begin}}
 #' @export
 #' @keywords internal
-step_end <- function(time) {
+step_end <- function() {
   msg(sprintf("DONE (%s seconds)",
                   round(proc.time() - .globals$get("step_tstart"))[1]))
 }

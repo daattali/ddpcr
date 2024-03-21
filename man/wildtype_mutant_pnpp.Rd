@@ -29,7 +29,7 @@ more information on plate types.
 \dontrun{
 plate <- new_plate(sample_data_dir(), type = plate_types$wildtype_mutant_pnpp)
 type(plate)
-} 
+}
 }
 \seealso{
 \code{\link[ddpcr]{plate_types}}\cr

@@ -144,7 +144,7 @@ While this tool was originally developed to automatically gate data for
 a particular ddPCR assay ([*Quantitative Detection and Resolution of
 BRAF V600 Status in Colorectal Cancer Using Droplet Digital PCR and a
 Novel Wild-Type Negative
-Assay*](https://jmd.amjpathol.org/article/S1525-1578(15)00262-7/) by Roza
+Assay*](https://www.jmdjournal.org/article/S1525-1578(15)00262-7/fulltext) by Roza
 Bidshahri, Dean Attali, et al.), any ddPCR experiment using an assay
 with similar characteristics can also use this tool to automatically
 gate the droplets. In order to benefit from the full automatic analysis,

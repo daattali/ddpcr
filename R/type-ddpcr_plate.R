@@ -2,38 +2,39 @@
 ## Copyright (C) 2015 Dean Attali
 
 #' Plate type: ddPCR plate
-#' 
+#'
 #' The default plate type that all other plates inherit from. If you initialize
 #' a ddPCR plate without specifying a plate type, \code{ddpcr_plate} will be the
 #' plate's type.
-#' 
+#'
 #' Plates with this type have the following analysis steps: \code{INITIALIZE},
 #' \code{REMOVE_FAILURES}, \code{REMOVE_OUTLIERS}, \code{REMOVE_EMPTY}.
-#' 
+#'
 #' Plates with this type have the following droplet clusters: \code{UNDEFINED},
 #' \code{FAILED}, \code{OUTLIER}, \code{EMPTY}.
-#' 
+#'
 #' \href{https://github.com/daattali/ddpcr#advanced-topic-3-creating-new-plate-types}{See the README} for
 #' more information on plate types.
-#' 
+#'
 #' @seealso
 #' \code{\link[ddpcr]{plate_types}}\cr
 #' \code{\link[ddpcr]{remove_failures}}\cr
 #' \code{\link[ddpcr]{remove_outliers}}\cr
 #' \code{\link[ddpcr]{remove_empty}}
 #' @name ddpcr_plate
-#' @examples 
+#' @examples
 #' \dontrun{
 #' plate <- new_plate(sample_data_dir(), type = plate_types$ddpcr_plate)
 #' type(plate)
 #' plate %>% analyze %>% plot
-#' } 
+#' }
 NULL
 
 plate_types[['ddpcr_plate']] <- "ddpcr_plate"
 
 #' Parent plate type of default plates
 #' @inheritParams parent_plate_type
+#' @export
 #' @keywords internal
 parent_plate_type.ddpcr_plate <- function(plate) {
   # this is the default plate type -- there is no parent
@@ -42,6 +43,7 @@ parent_plate_type.ddpcr_plate <- function(plate) {
 
 #' Parent plate type of any plate
 #' @inheritParams parent_plate_type
+#' @export
 #' @keywords internal
 parent_plate_type.default <- function(plate) {
   # if a plate doesn't have an explicit type, its parent is the default type
@@ -50,6 +52,7 @@ parent_plate_type.default <- function(plate) {
 
 #' Define plate type parameters for default plates
 #' @inheritParams define_params
+#' @export
 #' @keywords internal
 define_params.ddpcr_plate <- function(plate) {
   # Each parameter has a somewhat descriptive name of what it is used for, and
@@ -79,6 +82,7 @@ define_params.ddpcr_plate <- function(plate) {
 
 #' Define droplet clusters for default plates
 #' @inheritParams define_clusters
+#' @export
 #' @keywords internal
 define_clusters.ddpcr_plate <- function(plate) {
   c(
@@ -91,6 +95,7 @@ define_clusters.ddpcr_plate <- function(plate) {
 
 #' Define analysis steps for default plates
 #' @inheritParams define_steps
+#' @export
 #' @keywords internal
 define_steps.ddpcr_plate <- function(plate) {
   list(

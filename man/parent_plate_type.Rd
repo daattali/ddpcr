@@ -13,7 +13,7 @@ parent_plate_type(plate)
 The parent type of the given plate.
 }
 \description{
-Each ddPCR plate has a "parent" plate type from which it inherits all its 
+Each ddPCR plate has a "parent" plate type from which it inherits all its
 properties. When creating a custom plate type, if your plate type inherits from
 any plate type other than the base type of \code{ddpcr_plate}, you must define
 this function to return the parent plate type. Inheriting
