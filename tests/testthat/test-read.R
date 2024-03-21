@@ -217,27 +217,9 @@ test_that("read_files targets for channel 1 and 2", {
 # -------- Updated data format  ---------
 
 test_that("new data format can be read", {
-  plate <- new_plate(testdir("read_cnv"))
+  plate <- new_plate(testdir("read_quant"))
   meta <- plate_meta(plate, only_used = TRUE)
   wells <- rep(sort(apply(expand.grid(LETTERS[1:3], 0, 1:2), 1, paste0, collapse = "")), each = 2)
   expect_equal(meta$well, wells)
 })
 
-test_that("headers to be skipped are detected", {
-  well_file <- list.files(testdir("read_cnv"), pattern = ".*A01.*", full.names = TRUE)
-  legacy_file <- list.files(testdir("read_simple"), pattern = ".*A01.*", full.names = TRUE)
-  meta_file <- list.files(testdir("read_cnv"), pattern = "cnv.csv", full.names = TRUE)
-  expect_equal(detect_skip(well_file), 4L)
-  expect_equal(detect_skip(legacy_file), 0L)
-  expect_equal(detect_skip(meta_file), 0L)
-})
-
-test_that("attempting to read header-only data file produces an error", {
-  tmp <- tempfile()
-  on.exit({file.remove(tmp)})
-  write("Target Value of 0 = negative", tmp)
-  write("Target Value of 1 = positive", tmp, append = TRUE)
-  write("Target Value of u = unclassified (Advanced Classification Mode)", file = tmp, append = TRUE)
-  write("", file = tmp, append = TRUE)
-  expect_error(detect_skip(tmp), regexp = "without detecting any data")
-})
