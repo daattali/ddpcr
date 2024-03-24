@@ -1,3 +1,7 @@
+# Unreleased
+
+- Some versoins of QuantaSoft add a few lines at the top of amplitude data files, this is now supported (#24)
+
 # ddpcr 1.15.2 2023-08-19
 
 - Add correct package file documentation (see https://github.com/r-lib/roxygen2/issues/1491)
