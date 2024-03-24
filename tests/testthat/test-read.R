@@ -212,3 +212,14 @@ test_that("read_files targets for channel 1 and 2", {
   expect_equal(meta$target_ch1, c("t1.fw", "t2.fw"))
   expect_equal(meta$target_ch2, c("t1.rev", "t2.rev"))
 })
+
+
+# -------- Updated data format  ---------
+
+test_that("new data format can be read", {
+  plate <- new_plate(testdir("read_quant"))
+  meta <- plate_meta(plate, only_used = TRUE)
+  wells <- rep(sort(apply(expand.grid(LETTERS[1:3], 0, 1:2), 1, paste0, collapse = "")), each = 2)
+  expect_equal(meta$well, wells)
+})
+
