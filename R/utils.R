@@ -25,7 +25,7 @@ get_single_well <- function(plate, well_id,
   result <-
     plate_data(plate) %>%
     dplyr::filter(.data[["well"]] == well_id) %>%
-    dplyr::select(-all_of("well"))
+    dplyr::select(-dplyr::all_of("well"))
 
   if (!empty) {
     result %<>%
@@ -37,7 +37,7 @@ get_single_well <- function(plate, well_id,
   }
   if (!clusters) {
     result %<>%
-      dplyr::select(-all_of("cluster"))
+      dplyr::select(-dplyr::all_of("cluster"))
   }
 
   result
@@ -224,7 +224,7 @@ merge_dfs_overwrite_col <- function(olddf, newdf, cols, bycol = "well") {
                                     result[[colname_y]])
       result %<>%
         dplyr::rename(!!colname := all_of(colname_x)) %>%
-        dplyr::select(-all_of(colname_y))
+        dplyr::select(-dplyr::all_of(colname_y))
     }
   }
 
@@ -381,14 +381,14 @@ bind_df_ends <- function(df, cols, dir = 1) {
   if (dir == 1) {
     df <-
       cbind(
-        df %>% dplyr::select(one_of(cols)),
-        df %>% dplyr::select(-one_of(cols))
+        df %>% dplyr::select(dplyr::one_of(cols)),
+        df %>% dplyr::select(-dplyr::one_of(cols))
       )
   } else if (dir == -1) {
     df <-
       cbind(
-        df %>% dplyr::select(-one_of(cols)),
-        df %>% dplyr::select(one_of(cols))
+        df %>% dplyr::select(-dplyr::one_of(cols)),
+        df %>% dplyr::select(dplyr::one_of(cols))
       )
   } else {
     stop("bind_df_ends: dir can only be -1 or 1", call. = FALSE)
