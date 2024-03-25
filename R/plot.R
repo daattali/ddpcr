@@ -190,7 +190,7 @@ plot.ddpcr_plate <- function(
     meta %<>%
       dplyr::filter(.data[["col"]] %in% unique(meta_used[['col']]),
                     .data[["row"]] %in% unique(meta_used[['row']])) %>%
-      dplyr::arrange(row, col)
+      dplyr::arrange(.data[["row"]], .data[["col"]])
   }
   
   # basic plot
