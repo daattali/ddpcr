@@ -255,7 +255,7 @@ wells_positive <- function(plate) {
   }
   plate %>%
     plate_meta %>%
-    dplyr::filter(!(!!sym(var_name))) %>%
+    dplyr::filter(!(.data[[var_name]])) %>%
     dplyr::pull("well")
 }
 
@@ -286,7 +286,7 @@ wells_negative <- function(plate) {
 
   plate %>%
     plate_meta %>%
-    dplyr::filter(!!sym(var_name)) %>%
+    dplyr::filter(.data[[var_name]]) %>%
     dplyr::pull("well")
 }
 

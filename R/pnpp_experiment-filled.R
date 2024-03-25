@@ -78,5 +78,5 @@ get_filled_drops <- function(plate, well_id, border) {
   
   well_data <- get_single_well(plate, well_id)
   well_data %>%
-    dplyr::filter(!!sym(positive_dim_var(plate)) >= border)
+    dplyr::filter(.data[[positive_dim_var(plate)]] >= border)
 }
