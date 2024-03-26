@@ -101,7 +101,7 @@ subset.ddpcr_plate <- function(x, wells, samples,
   plate_meta(x) %<>%
     dplyr::filter(.data[["well"]] %in% wells) %>%
     merge_dfs_overwrite_col(DEFAULT_PLATE_META, .) %>%
-    arrange_meta
+    arrange_meta()
 
   x
 }

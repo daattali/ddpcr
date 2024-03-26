@@ -56,7 +56,7 @@ remove_failures.ddpcr_plate <- function(plate) {
     merge_dfs_overwrite_col(plate_meta(plate),
                             well_success_map,
                             "success") %>%
-    arrange_meta
+    arrange_meta()
 
   # set the cluster to failed for every droplet in a failed well
   CLUSTER_FAILED <- plate %>% cluster('FAILED')

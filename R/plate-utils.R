@@ -102,7 +102,7 @@ init_meta <- function(plate) {
 
 
       plate_meta %<>%
-        dplyr::select(one_of(meta_cols_keep)) %>%
+        dplyr::select(dplyr::one_of(meta_cols_keep)) %>%
         merge_dfs_overwrite_col(DEFAULT_PLATE_META, .,
                                 c("sample", "target_ch1", "target_ch2"),
                                "well")
