@@ -184,7 +184,7 @@ well_info <- function(plate, well_ids, var) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
   
   plate_meta(plate) %>%
-    dplyr::filter_(~ well %in% well_ids) %>%
+    dplyr::filter(.data[["well"]] %in% well_ids) %>%
     .[[var]]
 }
 
@@ -207,7 +207,7 @@ wells_used <- function(plate) {
   
   plate %>%
     plate_meta %>%
-    dplyr::filter_(~ used) %>%
+    dplyr::filter(.data[["used"]]) %>%
     .[['well']]
 }
 

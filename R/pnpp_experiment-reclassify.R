@@ -64,14 +64,14 @@ reclassify_droplets.pnpp_experiment <- function(plate) {
              function(x) {
                negative_max <- 
                  data %>%
-                 dplyr::filter_(~ well == x,
-                                ~ cluster == CLUSTER_NEGATIVE) %>%
+                 dplyr::filter(.data[["well"]] == x,
+                               .data[["cluster"]] == CLUSTER_NEGATIVE) %>%
                  .[[variable_var]] %>%
                  max
-               positive_median <- 
+               positive_median <-
                  data %>%
-                 dplyr::filter_(~ well == x,
-                                ~ cluster == CLUSTER_POSITIVE) %>%
+                 dplyr::filter(.data[["well"]] == x,
+                               .data[["cluster"]] == CLUSTER_POSITIVE) %>%
                  .[[variable_var]] %>%
                  stats::median()               
                ratio <- negative_max / positive_median
@@ -129,7 +129,7 @@ reclassify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., cons
   CLUSTER_POSITIVE <- plate %>% cluster('POSITIVE')
   positive_median <- 
     well_data %>%
-    dplyr::filter_(~ cluster == CLUSTER_POSITIVE) %>%
+    dplyr::filter(.data[["cluster"]] == CLUSTER_POSITIVE) %>%
     .[[variable_var]] %>%
     stats::median()
   

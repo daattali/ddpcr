@@ -249,15 +249,14 @@ wells_positive <- function(plate) {
 
   var_name <- meta_var_name(plate, "significant_negative_cluster")
 
-  if (status(plate) < step(plate, 'CLASSIFY') ||
+  if (status(plate) < step(plate, "CLASSIFY") ||
       (!var_name %in% (plate %>% plate_meta %>% names))) {
     return(c())
   }
-
   plate %>%
     plate_meta %>%
-    dplyr::filter_(lazyeval::interp(~ !var, var = as.name(var_name))) %>%
-    .[['well']]
+    dplyr::filter(!(.data[[var_name]])) %>%
+    dplyr::pull("well")
 }
 
 #' Get negative wells
@@ -287,7 +286,8 @@ wells_negative <- function(plate) {
 
   plate %>%
     plate_meta %>%
-    dplyr::filter_(as.name(var_name)) %>% .[['well']]
+    dplyr::filter(.data[[var_name]]) %>%
+    dplyr::pull("well")
 }
 
 #' Name of variable in PNPP experiment metadata

@@ -118,8 +118,9 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
     while (TRUE) {
       btwn_right_mins <-
         filled %>%
-        dplyr::filter_(lazyeval::interp(~ var %btwn% dens_smooth$x[utils::tail(minima_idx, 2)],
-                                        var = as.name(variable_var)))
+        dplyr::filter(
+          .data[[variable_var]] %btwn% dens_smooth$x[utils::tail(minima_idx, 2)]
+        )
 
       if (nrow(btwn_right_mins) < nrow(filled) * 0.1) {
         # discard rightmost extreme points
@@ -175,11 +176,9 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
 
   # mark all the negative and positive droplets according to the border
   negative_drops <- filled %>%
-    dplyr::filter_(lazyeval::interp(~ var <= negative_border,
-                                    var = as.name(variable_var)))
+    dplyr::filter(.data[[variable_var]] <= negative_border)
   positive_drops <- filled %>%
-    dplyr::filter_(lazyeval::interp(~ var > negative_border,
-                                    var = as.name(variable_var)))
+    dplyr::filter(.data[[variable_var]] > negative_border)
 
   # to try to replicate the human approach, we want to get the mutant border as
   # close as possible to the mutant cluster rather than in the middle between
@@ -190,11 +189,9 @@ classify_droplets_single.pnpp_experiment <- function(plate, well_id, ..., plot =
   if (!is.na(negative_border_tight) && negative_border_tight < negative_border) {
     negative_border <- negative_border_tight
     negative_drops <- filled %>%
-      dplyr::filter_(lazyeval::interp(~ var <= negative_border,
-                                      var = as.name(variable_var)))
+      dplyr::filter(.data[[variable_var]] <= negative_border)
     positive_drops <- filled %>%
-      dplyr::filter_(lazyeval::interp(~ var > negative_border,
-                                      var = as.name(variable_var)))
+      dplyr::filter(.data[[variable_var]] > negative_border)
   }
 
   negative_freq <- calc_negative_freq_simple(nrow(negative_drops), nrow(positive_drops))
@@ -268,7 +265,7 @@ mark_clusters <- function(plate, wells) {
   }
   data <-
     plate_data(plate) %>%
-    dplyr::group_by_("well") %>%
+    dplyr::group_by(.data[["well"]]) %>%
     dplyr::do(do_work(.)) %>%
     dplyr::ungroup()
 

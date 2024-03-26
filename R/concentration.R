@@ -35,12 +35,12 @@ calculate_concentration <- function(plate) {
 calculate_concentration_single <- function(plate, well_id) {
   total_drops <-
     plate_meta(plate) %>%
-    dplyr::filter_(~ well == well_id) %>%
+    dplyr::filter(.data[["well"]] == well_id) %>%
     .[['drops']]
   
   empty_fraction <- 
     plate_meta(plate) %>%
-    dplyr::filter_(~ well == well_id) %>%
+    dplyr::filter(.data[["well"]] == well_id) %>%
     .[['drops_empty_fraction']]
   
   total_volume <- params(plate, 'GENERAL', 'DROPLET_VOLUME') * total_drops

@@ -24,20 +24,20 @@ get_single_well <- function(plate, well_id,
 
   result <-
     plate_data(plate) %>%
-    dplyr::filter_(~ well == well_id) %>%
-    dplyr::select_(quote(-well))
+    dplyr::filter(.data[["well"]] == well_id) %>%
+    dplyr::select(-dplyr::all_of("well"))
 
   if (!empty) {
     result %<>%
-      dplyr::filter_(~ cluster != plate %>% cluster('EMPTY'))
+      dplyr::filter(.data[["cluster"]] != cluster(plate, 'EMPTY'))
   }
   if (!outliers) {
     result %<>%
-      dplyr::filter_(~ cluster != plate %>% cluster('OUTLIER'))
+      dplyr::filter(.data[["cluster"]] != cluster(plate, 'OUTLIER'))
   }
   if (!clusters) {
     result %<>%
-      dplyr::select_(~ -cluster)
+      dplyr::select(-dplyr::all_of("cluster"))
   }
 
   result
@@ -223,8 +223,8 @@ merge_dfs_overwrite_col <- function(olddf, newdf, cols, bycol = "well") {
                                     result[[colname_x]],
                                     result[[colname_y]])
       result %<>%
-        dplyr::rename_(.dots = stats::setNames(colname_x, colname)) %>%
-        dplyr::select_(lazyeval::interp(~ -colname, colname = as.name(colname_y)))
+        dplyr::rename("{colname}" := dplyr::all_of(colname_x)) %>%
+        dplyr::select(-dplyr::all_of(colname_y))
     }
   }
 
@@ -381,14 +381,14 @@ bind_df_ends <- function(df, cols, dir = 1) {
   if (dir == 1) {
     df <-
       cbind(
-        df %>% dplyr::select_(~(dplyr::one_of(cols))),
-        df %>% dplyr::select_(~(-dplyr::one_of(cols)))
+        df %>% dplyr::select(dplyr::one_of(cols)),
+        df %>% dplyr::select(-dplyr::one_of(cols))
       )
   } else if (dir == -1) {
     df <-
       cbind(
-        df %>% dplyr::select_(~(-dplyr::one_of(cols))),
-        df %>% dplyr::select_(~(dplyr::one_of(cols)))
+        df %>% dplyr::select(-dplyr::one_of(cols)),
+        df %>% dplyr::select(dplyr::one_of(cols))
       )
   } else {
     stop("bind_df_ends: dir can only be -1 or 1", call. = FALSE)

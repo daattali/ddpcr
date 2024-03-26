@@ -144,7 +144,7 @@ output$metaAggregate <- DT::renderDataTable({
     dataValues$plate %>%
     subset(wells) %>%
     plate_meta(only_used = TRUE) %>%
-    dplyr::select_(~ dplyr::one_of(vars)) %>%
+    dplyr::select(dplyr::one_of(vars)) %>%
     magrittr::set_colnames(humanFriendlyNames(colnames(.)))
 
   # calculate mean and standard error for each numeric variable

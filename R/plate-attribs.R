@@ -150,7 +150,7 @@ plate_meta <- function(plate, only_used = FALSE) {
   stopifnot(plate %>% inherits("ddpcr_plate"))
 
   if (only_used) {
-    plate[['plate_meta']] %>% dplyr::filter_(quote(used))
+    plate[['plate_meta']] %>% dplyr::filter(.data[["used"]])
   } else {
     plate[['plate_meta']]
   }
@@ -171,9 +171,9 @@ plate_meta <- function(plate, only_used = FALSE) {
 # Arrange the metadata such that the more general variables are near the beginning
 arrange_meta <- function(plate) {
   if ("success" %in% colnames(plate)) {
-    plate %>% dplyr::arrange_(~ desc(used), ~ desc(success), ~ row, ~ col)
+    plate %>% dplyr::arrange(desc(.data[["used"]]), desc(.data[["success"]]), .data[["row"]], .data[["col"]])
   } else {
-    plate %>% dplyr::arrange_(~ desc(used), ~ row, ~ col)
+    plate %>% dplyr::arrange(desc(.data[["used"]]), .data[["row"]], .data[["col"]])
   }
 }
 
@@ -542,7 +542,7 @@ y_var <- function(plate) {
 
   value %<>% make.names
   plate_data(plate) %<>%
-    dplyr::rename_(.dots = stats::setNames(x_var(plate), value))
+    dplyr::rename("{value}" := x_var(plate))
   params(plate, 'GENERAL', 'X_VAR') <- value
   plate
 }
@@ -553,7 +553,7 @@ y_var <- function(plate) {
 
   value %<>% make.names
   plate_data(plate) %<>%
-    dplyr::rename_(.dots = stats::setNames(y_var(plate), value))
+    dplyr::rename("{value}" := y_var(plate))
   params(plate, 'GENERAL', 'Y_VAR') <- value
   plate
 }

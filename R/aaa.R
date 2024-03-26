@@ -12,7 +12,7 @@ DEFAULT_PLATE_META <-
     target_ch2 = NA,
     used = FALSE
   ) %>%
-  dplyr::select(c("well", "sample", "row", "col", "used"))
+  dplyr::select(dplyr::all_of(c("well", "sample", "row", "col", "used")))
 
 #' Supported plate types
 #' 

@@ -72,13 +72,13 @@ read_files <- function(plate, data_files, meta_file) {
       lapply(data_files, function(x) {
         wellNum <- get_well_from_data_file(x)
         wdat <- readr_read_csv(x, progress = FALSE, col_types = readr::cols())
-        wdat <- dplyr::select_(wdat, ~ 2:1)
+        wdat <- dplyr::select(wdat, 2:1)
         wdat[['well']] <- wellNum
         wdat
       }) %>%
       dplyr::bind_rows() %>%
       move_front("well") %>%
-      dplyr::arrange_("well")
+      dplyr::arrange(.data[["well"]])
   },
   error = function(err) {
     err_msg("there was a problem reading one or more of the data files")

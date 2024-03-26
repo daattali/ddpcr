@@ -62,9 +62,9 @@ remove_outliers.ddpcr_plate <- function(plate) {
     
     meta <-
       data %>%
-      dplyr::filter_(~ cluster == CLUSTER_OUTLIER) %>%
-      dplyr::group_by_("well") %>%
-      dplyr::summarise_("drops_outlier" = ~ dplyr::n()) %>%
+      dplyr::filter(.data[["cluster"]] == CLUSTER_OUTLIER) %>%
+      dplyr::group_by(.data[["well"]]) %>%
+      dplyr::summarise("drops_outlier" = dplyr::n()) %>%
       merge_dfs_overwrite_col(drops_outlies_df, ., "drops_outlier") %>%
       merge_dfs_overwrite_col(plate_meta(plate), ., "drops_outlier")
     
@@ -95,7 +95,7 @@ get_outlier_cutoff <- function(plate) {
 get_outlier_cutoff.ddpcr_plate <- function(plate) {
   data <-
     plate_data(plate) %>%
-    dplyr::filter_(~ well %in% wells_success(plate))
+    dplyr::filter(.data[["well"]] %in% wells_success(plate))
   
   x_var <- x_var(plate)
   y_var <- y_var(plate)

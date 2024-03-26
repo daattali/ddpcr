@@ -59,7 +59,7 @@ subset.ddpcr_plate <- function(x, wells, samples,
   } else if (!missing(samples)) {
     wells <-
       plate_meta(x) %>%
-      dplyr::filter_(~ sample %in% samples) %>%
+      dplyr::filter(.data[["sample"]] %in% samples) %>%
       .[['well']]
   } else if (!missing(targets_ch1) || !missing(targets_ch2)) {
     wells <-
@@ -72,7 +72,7 @@ subset.ddpcr_plate <- function(x, wells, samples,
   if (!missing(targets_ch1)) {
     wells_from_targets <-
       plate_meta(x) %>%
-      dplyr::filter_(~ target_ch1 %in% targets_ch1) %>%
+      dplyr::filter(.data[["target_ch1"]] %in% targets_ch1) %>%
       .[['well']]
 
     wells <- wells[wells %in% wells_from_targets]
@@ -81,7 +81,7 @@ subset.ddpcr_plate <- function(x, wells, samples,
   if (!missing(targets_ch2)) {
     wells_from_targets <-
       plate_meta(x) %>%
-      dplyr::filter_(~ target_ch2 %in% targets_ch2) %>%
+      dplyr::filter(.data[["target_ch2"]] %in% targets_ch2) %>%
       .[['well']]
 
     wells <- wells[wells %in% wells_from_targets]
@@ -95,13 +95,13 @@ subset.ddpcr_plate <- function(x, wells, samples,
 
   # keep only the droplet data for these wells
   plate_data(x) %<>%
-    dplyr::filter_(~ well %in% wells)
+    dplyr::filter(.data[["well"]] %in% wells)
 
   # mark any other well as unused
   plate_meta(x) %<>%
-    dplyr::filter_(~ well %in% wells) %>%
+    dplyr::filter(.data[["well"]] %in% wells) %>%
     merge_dfs_overwrite_col(DEFAULT_PLATE_META, .) %>%
-    arrange_meta
+    arrange_meta()
 
   x
 }

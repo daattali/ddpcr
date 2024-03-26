@@ -326,12 +326,12 @@ plot.custom_thresholds <- function(
     meta[['y_threshold']] <- y_threshold(x)
     p <- p +
       ggplot2::geom_hline(
-        data = dplyr::filter_(meta, ~ used),
+        data = dplyr::filter(meta, .data[["used"]]),
         ggplot2::aes_string(yintercept = "y_threshold"),
         color = col_thresholds
       ) +
       ggplot2::geom_vline(
-        data = dplyr::filter_(meta, ~ used),
+        data = dplyr::filter(meta, .data[["used"]]),
         ggplot2::aes_string(xintercept = "x_threshold"),
         color = col_thresholds
       )

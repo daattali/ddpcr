@@ -62,7 +62,7 @@ init_data <- function(plate) {
   new_plate_data[['cluster']] <- cluster(plate, 'UNDEFINED')
   new_plate_data[[x_var]] <- as.integer(new_plate_data[[x_var]])
   new_plate_data[[y_var]] <- as.integer(new_plate_data[[y_var]])
-  new_plate_data <- dplyr::arrange_(new_plate_data, ~ well)
+  new_plate_data <- dplyr::arrange(new_plate_data, .data[["well"]])
   plate_data(plate) <- new_plate_data
 
   plate
@@ -84,24 +84,25 @@ init_meta <- function(plate) {
           colnames(plate_meta)[5] == 'targettype'){
         # different versions of QuantaSoft
         if (colnames(plate_meta)[5] == 'typeassay'){
-          plate_meta %<>% dplyr::mutate_("target" = ~assay,
-                                        "channel" = ~substr(typeassay, 1,3))
+          plate_meta %<>% dplyr::mutate(
+            "target" = .data[["assay"]],
+            "channel" = substr(.data[["typeassay"]], 1, 3))
         }
         else{
-          plate_meta %<>% dplyr::mutate_("channel" = ~substr(targettype, 1,3))
+          plate_meta %<>% dplyr::mutate(
+            "channel" = substr(.data[["targettype"]], 1,3))
         }
         plate_meta %<>%
-          dplyr::group_by_("well", "sample") %>%
-          dplyr::summarise_(
-            "target_ch1" = ~unique(target[channel == 'Ch1']),
-            "target_ch2" = ~unique(target[channel == 'Ch2'])
-          ) %>%
-          dplyr::ungroup()
+          dplyr::group_by(.data[["well"]], .data[["sample"]]) %>%
+          dplyr::reframe(
+            "target_ch1" = unique(.data[["target"]][.data[["channel"]] == 'Ch1']),
+            "target_ch2" = unique(.data[["target"]][.data[["channel"]] == 'Ch2'])
+          )
       }
 
 
       plate_meta %<>%
-        dplyr::select_(~ dplyr::one_of(meta_cols_keep)) %>%
+        dplyr::select(dplyr::one_of(meta_cols_keep)) %>%
         merge_dfs_overwrite_col(DEFAULT_PLATE_META, .,
                                 c("sample", "target_ch1", "target_ch2"),
                                "well")
@@ -117,10 +118,10 @@ init_meta <- function(plate) {
   plate_meta[['sample']][!plate_meta[['used']]] <- NA
   plate_meta <-
     plate_data %>%
-    dplyr::group_by_("well") %>%
-    dplyr::summarise_("drops" = ~ dplyr::n()) %>%
+    dplyr::group_by(.data[["well"]]) %>%
+    dplyr::summarise("drops" = dplyr::n()) %>%
     dplyr::left_join(plate_meta, ., by = "well") %>%
-    arrange_meta
+    arrange_meta()
 
   plate_meta(plate) <- plate_meta
   plate

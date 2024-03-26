@@ -75,7 +75,7 @@ plot.pnpp_experiment <- function(
   meta <- plate_meta(plate)
   meta[['row']] %<>% as.factor
   meta[['col']] %<>% as.factor
-  meta_used <- meta %>% dplyr::filter_(~ used)
+  meta_used <- meta %>% dplyr::filter(.data[["used"]])
 
   # if the drops have not been classified yet, we can't show negative freq
   if (status(plate) < step(plate, 'CLASSIFY')) {
@@ -101,8 +101,8 @@ plot.pnpp_experiment <- function(
   neg_drops_low_freq <-
     plate %>%
     plate_data %>%
-    dplyr::filter_(~ well %in% wells_positive(plate)) %>%
-    dplyr::filter_(~ cluster == cluster(plate, 'NEGATIVE'))
+    dplyr::filter(.data[["well"]] %in% wells_positive(plate)) %>%
+    dplyr::filter(.data[["cluster"]] == cluster(plate, 'NEGATIVE'))
   neg_drops_low_freq[['row']] <- substring(neg_drops_low_freq[['well']], 1, 1) %>% as.factor
   neg_drops_low_freq[['col']] <- substring(neg_drops_low_freq[['well']], 2, 3) %>% as.integer %>% as.factor
 
@@ -125,7 +125,7 @@ plot.pnpp_experiment <- function(
     if (sum(meta_used[['success']], na.rm = TRUE) > 0) {
       p <- p +
         ggplot2::geom_rect(
-          data = meta_used %>% dplyr::filter_(~ success),
+          data = meta_used %>% dplyr::filter(.data[["success"]]),
           ggplot2::aes_string(fill = meta_var_name(plate, "significant_negative_cluster"),
                               xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf),
           alpha = alpha_bg_low_high_neg_freq,
@@ -180,7 +180,7 @@ plot.pnpp_experiment <- function(
         paste0(meta_used[[meta_var_name(plate, 'negative_freq')]], "%")
       p <- p +
         ggplot2::geom_text(
-          data = dplyr::filter_(meta_used, ~ success),
+          data = dplyr::filter(meta_used, .data[["success"]]),
           ggplot2::aes_string(label = "neg_freq_text"),
           x = text_pos_x, y = text_pos_y,
           hjust = hjust, vjust = vjust,
