@@ -2,13 +2,13 @@
 ## Copyright (C) 2015 Dean Attali
 
 #' Plot a ddPCR plate
-#' 
+#'
 #' Plot the data of a ddPCR plate. A plate can be plotted throughout any stage
 #' of the analysis, and the most up-to-date data will be shown. For example,
 #' a plot performed after initializing a plat will show all the raw data, but
 #' a plot performed after analyzing a plate will show information such as
 #' empty drops and failed wells.
-#' 
+#'
 #' @param x A ddPCR plate.
 #' @param wells Only plot selected wells. Supports range notation, see
 #' \code{\link[ddpcr]{subset.ddpcr_plate}}.
@@ -56,13 +56,13 @@
 #' @param text_size_grid_labels Text size of the numeric grid line labels.
 #' @param ... Ignored.
 #' @return A ggplot2 plot object.
-#' 
+#'
 #' @section Droplet visibility options:
 #' To make it easier to support any plate type with any types of droplet
 #' clusters, there are three categories of special parameters that can always
 #' be used:
-#' 
-#' \itemize{
+#'
+#' \describe{
 #'   \item{\code{show_drops_*}}{ Whether or not to show a specific group of
 #'   droplets.}
 #'   \item{\code{col_drops_*}}{ What colour to use for a specific group of
@@ -70,11 +70,11 @@
 #'   \item{\code{alpha_drops_*}}{ What transparency to use for a specific group
 #'   of droplets.}
 #' }
-#' 
+#'
 #' The \code{*} in the parameter name can be replaced by the name of any
-#' droplet cluster. Use the \code{\link[ddpcr]{clusters}} function to 
+#' droplet cluster. Use the \code{\link[ddpcr]{clusters}} function to
 #' find out what clusters the droplets in a plate can be assigned to.
-#' 
+#'
 #' For example, the default clusters that exist in a plain \code{ddpcr_plate}
 #' are "UNDEFINED", "FAILED", "OUTLIER", and "EMPTY".  This means that if you
 #' want to hide the empty drops and make the transparency of drops in failed
@@ -83,12 +83,12 @@
 #' If another plate type defines a new clsuter of type "MUTANT" and you want to
 #' show these drops in red, you can add the parameter
 #' \code{col_drops_mutant = "red"}.
-#' 
+#'
 #' Note that some of the more common combinations of these parameters are
 #' defined by default (for example, \code{col_drops_failed} is defined in the
 #' list of parameters), but these three parameter categories will work for
 #' any cluster type.
-#' 
+#'
 #' @section Extending ddpcr_plate:
 #' If you create your own plate type, this default plot function might be
 #' enough if there is no extra information you want to display in a plot.
@@ -97,7 +97,7 @@
 #' add the code that is necessary to append to the plot.  See
 #' \code{\link[ddpcr]{plot.custom_thresholds}} as an example of how to
 #' extend this plot function.
-#' @examples 
+#' @examples
 #' \dontrun{
 #' plate <- new_plate(sample_data_dir())
 #' plot(plate)
@@ -120,39 +120,39 @@ plot.ddpcr_plate <- function(
   xlab = x_var(plate), ylab = y_var(plate), title = NULL,
   show_grid = FALSE, show_grid_labels = FALSE,
   drops_size = 1,
-  text_size_title = 14, text_size_row_col = 12, text_size_axes_labels = 12, 
+  text_size_title = 14, text_size_row_col = 12, text_size_axes_labels = 12,
   text_size_grid_labels = 12,
   ...)
 {
   # only keep the requested wells/samples
   plate <- subset(x, wells, samples)
   rm(x)
-  
+
   # don't show failed wells
   if (!show_failed_wells &&
       plate %>% has_step('REMOVE_FAILURES') &&
       status(plate) >= step(plate, 'REMOVE_FAILURES')) {
     plate %<>% subset(wells_success(.))
   }
-  
+
   x_var <- x_var(plate)
   y_var <- y_var(plate)
-  
+
   meta <- plate_meta(plate)
   data <- plate_data(plate)
-  
+
   # make a list of all parameters available, including default and ... params
-  all_params <- c(as.list(environment()), list(...))  
-  
+  all_params <- c(as.list(environment()), list(...))
+
   # prepare the data to be plotted
   meta[['row']] %<>% as.factor
   meta[['col']] %<>% as.factor
-  
+
   if (show_drops) {
     data[['row']] <- data[['well']] %>% get_row %>% as.factor
     data[['col']] <- data[['well']] %>% get_col %>% as.integer %>% as.factor
     data[['cluster']] %<>% as.factor
-    
+
     # Remove drops that we don't want to show
     visible_clusters <-
       data[['cluster']] %>%
@@ -161,7 +161,7 @@ plot.ddpcr_plate <- function(
       as.numeric %>%
       sort %>%
       cluster_name(plate, .)
-    show_clusters <- 
+    show_clusters <-
       vapply(visible_clusters,
              function(cluster) {
                param_name <- paste0("show_drops_", cluster) %>% tolower
@@ -174,17 +174,17 @@ plot.ddpcr_plate <- function(
                show_cluster
              },
              logical(1)
-      )  
+      )
     data %<>% dplyr::filter(show_clusters[.data[["cluster"]]]) %>% droplevels
   }
-    
+
   # make sure after removing unwanted drops/wells, we still have something to show
   if (plate %>% wells_used %>% length == 0) {
     err_msg("There are no wells to show.")
   }
 
   meta_used <- meta %>% dplyr::filter(.data[["used"]])
-  
+
   # remove unused rows/columns from the plate
   if (!show_full_plate) {
     meta %<>%
@@ -192,7 +192,7 @@ plot.ddpcr_plate <- function(
                     .data[["row"]] %in% unique(meta_used[['row']])) %>%
       dplyr::arrange(.data[["row"]], .data[["col"]])
   }
-  
+
   # basic plot
   p <-
     ggplot2::ggplot() +
@@ -210,7 +210,7 @@ plot.ddpcr_plate <- function(
       plot.background  = ggplot2::element_rect(fill = bg_plot, color = bg_plot),
       aspect.ratio     = 1
     )
-  
+
   # superimpose all the data from all the wells onto one plot instead of a grid
   if (superimpose) {
     show_drops <- TRUE
@@ -228,13 +228,13 @@ plot.ddpcr_plate <- function(
           xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, fill = bg_unused)
     }
   }
-  
+
   # show the drops
   if (show_drops) {
-    
+
     # define the colour of each droplet
     visible_clusters <- data[['cluster']] %>% unique %>% as.character %>% as.numeric %>% sort
-    cluster_cols <- 
+    cluster_cols <-
       vapply(visible_clusters,
              function(cluster) {
                cluster_name <- cluster_name(plate, cluster) %>% tolower
@@ -249,9 +249,9 @@ plot.ddpcr_plate <- function(
             },
             character(1)
       )
-    
+
     # Find out what alpha (transparency) value to give each cluster
-    cluster_alphas <- 
+    cluster_alphas <-
       vapply(visible_clusters,
              function(cluster) {
                cluster_name <- cluster_name(plate, cluster) %>% tolower
@@ -280,7 +280,7 @@ plot.ddpcr_plate <- function(
     }
 
   # show the failed ddPCR runs
-  if (show_failed_wells && !superimpose && 
+  if (show_failed_wells && !superimpose &&
       plate %>% has_step('REMOVE_FAILURES') &&
       status(plate) >= step(plate, 'REMOVE_FAILURES')) {
     if (sum(!meta_used[['success']], na.rm = TRUE) > 0) {
@@ -292,7 +292,7 @@ plot.ddpcr_plate <- function(
           fill = bg_failed)
     }
   }
-  
+
   # plot visual parameters
   if (!show_grid) {
     p <- p +
@@ -303,13 +303,13 @@ plot.ddpcr_plate <- function(
       ggplot2::theme(axis.text = ggplot2::element_blank(),
                      axis.ticks = ggplot2::element_blank())
   }
-  
+
   # so that R won't complain when we don't show the drops
   if (!show_drops) {
     p <- p +
       ggplot2::geom_text(data = meta, ggplot2::aes(0, 0, label = ""))
   }
-  
+
   # attach information about how many rows and columns are displayed
   rows <- meta[['row']] %>% unique %>% length
   cols <- meta[['col']] %>% unique %>% length
@@ -319,7 +319,7 @@ plot.ddpcr_plate <- function(
   }
   attr(p, 'ddpcr_rows') <- rows
   attr(p, 'ddpcr_cols') <- cols
-  
+
   # Done!
   p
 }

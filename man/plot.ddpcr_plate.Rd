@@ -132,7 +132,7 @@ To make it easier to support any plate type with any types of droplet
 clusters, there are three categories of special parameters that can always
 be used:
 
-\itemize{
+\describe{
   \item{\code{show_drops_*}}{ Whether or not to show a specific group of
   droplets.}
   \item{\code{col_drops_*}}{ What colour to use for a specific group of
@@ -142,7 +142,7 @@ be used:
 }
 
 The \code{*} in the parameter name can be replaced by the name of any
-droplet cluster. Use the \code{\link[ddpcr]{clusters}} function to 
+droplet cluster. Use the \code{\link[ddpcr]{clusters}} function to
 find out what clusters the droplets in a plate can be assigned to.
 
 For example, the default clusters that exist in a plain \code{ddpcr_plate}
