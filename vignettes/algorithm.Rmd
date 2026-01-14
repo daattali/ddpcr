@@ -46,7 +46,7 @@ If ddPCR data was normally distributed and this method could be used, only the u
 
 Any droplet in any well that has a FAM value exceeding the FAM outlier threshold or a HEX value exceeding the HEX outlier threshold is considered an outlier droplet, and removed from further analysis. The figure below shows a summary of this method.
 
-![Remove outliers](outliers.png)
+![Remove outliers](figures/outliers.png)
 
 Plot A shows a well with a clear outlier on the far right. The dotted line shows the HEX value that corresponds to _Q3 + 5\*IQR_ of all HEX values, which is clearly a poor threshold for determining outliers. Plot B shows only the 1% of droplets with the highest HEX value, while the dotted line shows the value of _Q3 + 5\*IQR_ of the HEX values of only those droplets. Plot C shows the full well data and the outlier threshold calculated using the top 1% of the droplets. Using this threshold, the lone outlier point at the extreme HEX value (marked in red) is identified as an outlier.
 
@@ -58,7 +58,7 @@ Empty droplets are identified in each well separately. First, a two-component Ga
 
 Any droplets in the well with a FAM value lower than the threshold are deemed empty and not considered in further analysis. The figure below shows a summary of this step.
 
-![Remove empty](empty.png)
+![Remove empty](figures/empty.png)
 
 Plot A shows a well and a marginal density plot of the FAM values of its droplets. The solid lines are the means of the two Gaussian distributions fitted to the FAM values, while the dotted line is the _mean + 7\*sd_ of the lower one. Plot B shows that using the _mean + 7\*sd_ value is a fairly accurate threshold for the empty droplets (marked in red).
 
@@ -85,7 +85,7 @@ A couple heuristics are also implemented to ensure the most accurate gating. Fir
 
 The figure below shows a simple visualization of how rain droplets are identified and the filled droplets are classified as mutant vs wildtype.
 
-![Classify droplets](gating.png)
+![Classify droplets](figures/gating.png)
 
 Plot A shows the same well after removing empty droplets and a marginal density plot of the FAM values of its droplets. The solid line is the mean of the larger of the two Gaussian distributions fitted to the FAM values, while the dotted line is the _mean - 3\*sd_ of the distribution. This dotted line acts as the threshold under which all droplets are considered rain.  Plot B shows the filled droplets only, along with a marginal density plot of their HEX values. The solid lines represent the two local maxima in the density kernel, while the dotted lines is the value of the local minimum between the two maxima. The dotted line is used as a threshold to distinguish between mutant droplets to its left and wildtype droplets to its right.  Plot C shows the full well and the classification of each droplet, along with the thresholds used to determine these assignments. The outlier droplet is excluded from the visualization.  The black droplets are classified as empty, blue droplets are rain, green droplets contain wildtype template, and purple droplets contain mutant DNA.
 

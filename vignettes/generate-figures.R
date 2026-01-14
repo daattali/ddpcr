@@ -6,6 +6,8 @@ library(grid)
 library(gridExtra)
 library(ddpcr)
 
+dir.create(file.path("figures"), showWarnings = FALSE)
+
 plotWithLabel <- function(p, label) {
   labelFont <- gpar(col="black", fontsize=20, fontfamily="Times Roman", fontface="bold")
   arrangeGrob(p, top = textGrob(label,
@@ -39,7 +41,7 @@ p3 <- p + geom_vline(xintercept = line, linetype = 2) +
 p1 <- plotWithLabel(p1, "A")
 p2 <- plotWithLabel(p2, "B")
 p3 <- plotWithLabel(p3, "C")
-png("outliers.png", width = 1000, height = 300)
+png(file.path("figures", "outliers.png"), width = 1000, height = 300)
 grid.arrange(p1, p2, p3, ncol = 3)
 dev.off()
 
@@ -66,7 +68,7 @@ p2 <- ggExtra::ggMarginal(p2, margins = "y", colour = "transparent")
 
 p1 <- plotWithLabel(p1, "A")
 p2 <- plotWithLabel(p2, "B")
-png("empty.png", width = 700, height = 300)
+png(file.path("figures", "empty.png"), width = 700, height = 300)
 grid.arrange(p1, p2, ncol = 2)
 dev.off()
 
@@ -135,6 +137,11 @@ p3 <- ggExtra::ggMarginal(p, colour = "transparent")
 p1 <- plotWithLabel(p1, "A")
 p2 <- plotWithLabel(p2, "B")
 p3 <- plotWithLabel(p3, "C")
-png("gating.png", width = 1000, height = 300)
+png(file.path("figures", "gating.png"), width = 1000, height = 300)
 grid.arrange(p1, p2, p3, ncol = 3)
 dev.off()
+
+rmarkdown::render("overview.Rmd", output_format = "md_document")
+file.copy("overview_files", "figures", recursive = TRUE, overwrite = TRUE)
+unlink("overview_files", recursive = TRUE)
+unlink("overview.md")
