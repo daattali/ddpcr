@@ -1,6 +1,6 @@
-# Unreleased
+# ddpcr 1.16.0 2026-01-14
 
-- Some versoins of QuantaSoft add a few lines at the top of amplitude data files, this is now supported (#24)
+- Some versions of QuantaSoft add a few lines at the top of amplitude data files, this is now supported (#24)
 - Refactor all old dplyr code that used outdated tidy evaluation (#27)
 
 # ddpcr 1.15.2 2023-08-19
