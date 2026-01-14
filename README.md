@@ -68,7 +68,7 @@ intensity) with 20,000 points (each droplet represents a point). The
 following figure is an example of a scatterplot from ddPCR data.
 
 [![Sample ddPCR
-data](vignettes/ddpcr-example.png)](vignettes/ddpcr-example.png)
+data](vignettes/figures/ddpcr-example.png)](vignettes/figures/ddpcr-example.png)
 
 This package is designed to analyze two-channel ddPCR experiments
 (experiments utilizing both fluorescence channels). Single-channel
@@ -168,7 +168,7 @@ which is a reflection of the droplet clusters. Here is what a typical
 well from a PNPP experiment looks like:
 
 [![Supported experiment
-types](vignettes/supported-exp-types.png)](vignettes/supported-exp-types.png)
+types](vignettes/figures/supported-exp-types.png)](vignettes/figures/supported-exp-types.png)
 
 If your experiment matches the criteria for a **PNPP** experiment
 (either a **(FAM+)/(FAM+HEX+)** or a **(HEX+)/(FAM+HEX+)** experiment),
@@ -180,7 +180,7 @@ be assigned into one of the main clusters. Here is the result of
 analyzing a single well from a **(FAM+)/(FAM+HEX+)** experiment:
 
 [![Analyze
-result](vignettes/pnpp-simple-result.png)](vignettes/pnpp-simple-result.png)
+result](vignettes/figures/pnpp-simple-result.png)](vignettes/figures/pnpp-simple-result.png)
 
 If your ddPCR experiment is not a **PNPP** type, you can still use this
 tool for the rest of the analysis, exploration, and plotting, but it
@@ -255,7 +255,7 @@ analysis. Explanation will follow, these are just here as a teaser.
       plot(show_mutant_freq = FALSE, show_grid_labels = TRUE, alpha_drops = 0.3,
            title = "Automatic gating\nworks with PNPP experiments")
 
-<img src="inst/vignette_files/overview_files/figure-markdown_strict/quickstart-1.png" width="50%" /><img src="inst/vignette_files/overview_files/figure-markdown_strict/quickstart-2.png" width="50%" />
+<img src="vignettes/figures/overview_files/figure-markdown_strict/quickstart-1.png" width="50%" /><img src="vignettes/figures/overview_files/figure-markdown_strict/quickstart-2.png" width="50%" />
 
 <h2 id="walkthrough">
 Running a basic analysis - detailed walkthrough
@@ -312,7 +312,7 @@ first and easiest thing to do is to plot the raw data.
 
     plot(plate)
 
-![](inst/vignette_files/overview_files/figure-markdown_strict/plotraw-1.png)
+![](vignettes/figures/overview_files/figure-markdown_strict/plotraw-1.png)
 
 Another way to get a quick overview of the data is by simply printing
 the plate object.
@@ -422,8 +422,8 @@ subsetting with a range notation of `A01:H03, C05, E06, B07:C08` on a
 plate that initially contains all 96 wells.
 
 [![Subset
-example](vignettes/ex-subset.png)](vignettes/ex-subset.png)
-
+example](vignettes/figures/ex-subset.png)](vignettes/figures/ex-subset.png)
+  
 Back to our data: we have 5 wells, let’s keep 4 of them
 
     plate <- plate %>% subset("A01:C05")
@@ -551,7 +551,7 @@ function.
 
     plate %>% plot()
 
-![](inst/vignette_files/overview_files/figure-markdown_strict/plotsimple-1.png)
+![](vignettes/figures/overview_files/figure-markdown_strict/plotsimple-1.png)
 
 Notice well `C05` is grayed out, which means that it is a failed well.
 By default, failed wells have a grey background, and empty and outlier
@@ -584,7 +584,7 @@ parameters.
     plate %>% plot(wells = "A01,A05", superimpose = TRUE,
                    show_grid = TRUE, show_grid_labels = TRUE, title = "Superimpose")
 
-<img src="inst/vignette_files/overview_files/figure-markdown_strict/plotparams-1.png" width="50%" /><img src="inst/vignette_files/overview_files/figure-markdown_strict/plotparams-2.png" width="50%" />
+<img src="vignettes/figures/overview_files/figure-markdown_strict/plotparams-1.png" width="50%" /><img src="vignettes/figures/overview_files/figure-markdown_strict/plotparams-2.png" width="50%" />
 
 > To see all the available plot parameters, run `?plot.ddpcr_plate`.
 
@@ -660,7 +660,7 @@ the draw the thresholds
 
     plot(plate_manual, show_grid_labels = TRUE)
 
-![](inst/vignette_files/overview_files/figure-markdown_strict/plotcrosshair-1.png)
+![](vignettes/figures/overview_files/figure-markdown_strict/plotcrosshair-1.png)
 
 If you noticed, there’s a droplet in well *A05* that has a much larger
 fluorescence value and is probably an outlier, which is the reason the
@@ -706,7 +706,7 @@ Now the plate is ready and we can plot it or look at its results
 
     plot(plate_manual)
 
-![](inst/vignette_files/overview_files/figure-markdown_strict/crosshairresults-1.png)
+![](vignettes/figures/overview_files/figure-markdown_strict/crosshairresults-1.png)
 
 By default, the droplets in each quadrant are a different colour. If you
 want to change the colour of some droplets, we can use the `col_drops_*`
@@ -852,7 +852,7 @@ Plotting the data is usually the best way to see the results
 
     plate_pnpp %>% plot(text_size_mutant_freq = 8)
 
-![](inst/vignette_files/overview_files/figure-markdown_strict/pnppplot-1.png)
+![](vignettes/figures/overview_files/figure-markdown_strict/pnppplot-1.png)
 
 > To see all the available plot parameters for this plate type, run
 > `?plot.pnpp_experiment`. In addition, any plot parameter that is
