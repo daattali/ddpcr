@@ -1,4 +1,5 @@
-# This script generates images that are used in the algorithms vignette
+# This script generates a few of the images that are used in the vignettes
+# and README. It needs to be run from within the vignettes directory.
 
 library(ggplot2)
 library(grid)
@@ -16,7 +17,7 @@ plotWithLabel <- function(p, label) {
 
 # Remove outliers step image
 
-plate <- new_plate(data_files = "inst/vignettes-supp/vignette_data_B06_Amplitude.csv") %>% subset("b6") %>%
+plate <- new_plate(data_files = "vignette_data_B06_Amplitude.csv") %>% subset("b6") %>%
   `plate_data<-`(plate_data(.) %>% dplyr::filter(FAM < 11000))
 full <- plate_data(plate)
 ndrops <- nrow(full)
@@ -38,14 +39,14 @@ p3 <- p + geom_vline(xintercept = line, linetype = 2) +
 p1 <- plotWithLabel(p1, "A")
 p2 <- plotWithLabel(p2, "B")
 p3 <- plotWithLabel(p3, "C")
-png(file.path("inst", "vignettes-supp", "outliers.png"), width = 1000, height = 300)
+png("outliers.png", width = 1000, height = 300)
 grid.arrange(p1, p2, p3, ncol = 3)
 dev.off()
 
 
 # Remove empty droplets step image
 
-plate <- new_plate(data_files = "inst/vignettes-supp/vignette_data_B06_Amplitude.csv") %>% subset("b6") %>%
+plate <- new_plate(data_files = "vignette_data_B06_Amplitude.csv") %>% subset("b6") %>%
   `plate_data<-`(plate_data(.) %>% dplyr::filter(FAM < 11000, HEX < 10000))
 full <- plate_data(plate)
 quiet( mixmdl <- mixtools::normalmixEM(full$FAM, k = 2) )
@@ -65,13 +66,13 @@ p2 <- ggExtra::ggMarginal(p2, margins = "y", colour = "transparent")
 
 p1 <- plotWithLabel(p1, "A")
 p2 <- plotWithLabel(p2, "B")
-png(file.path("inst", "vignettes-supp", "empty.png"), width = 700, height = 300)
+png("empty.png", width = 700, height = 300)
 grid.arrange(p1, p2, ncol = 2)
 dev.off()
 
 # Identify rain droplets
 
-plate <- new_plate(data_files = "inst/vignettes-supp/vignette_data_B06_Amplitude.csv",
+plate <- new_plate(data_files = "vignette_data_B06_Amplitude.csv",
                    type = plate_types$fam_positive_pnpp) %>%
   subset("b6") %>%
   `plate_data<-`(plate_data(.) %>% dplyr::filter(FAM < 11000, HEX < 10000))
@@ -117,7 +118,7 @@ p <- ggplot(full, aes(HEX, FAM)) +
 p2 <- ggExtra::ggMarginal(p, yparams = list(colour = "transparent"))
 
 
-plate <- new_plate(data_files = "inst/vignettes-supp/vignette_data_B06_Amplitude.csv") %>% subset("b6") %>%
+plate <- new_plate(data_files = "vignette_data_B06_Amplitude.csv") %>% subset("b6") %>%
   `plate_data<-`(plate_data(.) %>% dplyr::filter(FAM < 11000, HEX < 10000))
 full <- plate_data(plate)
 full$colour <- "black"
@@ -134,6 +135,6 @@ p3 <- ggExtra::ggMarginal(p, colour = "transparent")
 p1 <- plotWithLabel(p1, "A")
 p2 <- plotWithLabel(p2, "B")
 p3 <- plotWithLabel(p3, "C")
-png(file.path("inst", "vignettes-supp", "gating.png"), width = 1000, height = 300)
+png("gating.png", width = 1000, height = 300)
 grid.arrange(p1, p2, p3, ncol = 3)
 dev.off()

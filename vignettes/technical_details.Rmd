@@ -8,7 +8,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---
-  
+
 ```{r setup, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(tidy = FALSE, comment = "#>")
 ```
@@ -21,12 +21,12 @@ The *ddpcr* package makes extensive use of the S3 class inheritance system in R.
 
 Every S3 object has a base type upon which it is built.  The base type of a plate object is a list, as it allows for an easy way to bundle together the several different R objects describing a plate into one.  All information required to analyze a plate is part of the plate object.  Every plate object contains the following nine items:
 
-- **plate_data** - A data.frame containing the fluorescence amplitude values and the cluster assignment for each droplet.  The fluorescence values remain static throughout an analysis, while the cluster assignments start as "undefined" and are assigned specific clusters during the analysis.   
+- **plate_data** - A data.frame containing the fluorescence amplitude values and the cluster assignment for each droplet.  The fluorescence values remain static throughout an analysis, while the cluster assignments start as "undefined" and are assigned specific clusters during the analysis.
 - **plate_meta** - A data.frame containing the metadata information about each well.  Each analysis step adds more variables to the metadata.
 - **name** - A string representing the name of the dataset.
 - **status** - An integer indicating the number of steps in the analysis pipeline that the plate has already run through.
 - **params** - A list containing all the parameters used in the analysis algorithm.
-- **clusters** - A vector of names of all the possible clusters a droplet can be assigned to.  For example, any plate with a PN/PP type has seven possible clusters: undefined (a droplet that has not been analyzed yet), failed (a droplet in a failed well), outlier, empty, rain, positive (PP), negative (PN).    
+- **clusters** - A vector of names of all the possible clusters a droplet can be assigned to.  For example, any plate with a PN/PP type has seven possible clusters: undefined (a droplet that has not been analyzed yet), failed (a droplet in a failed well), outlier, empty, rain, positive (PP), negative (PN).
 - **steps** - A named list containing the steps required to analyze the given plate.  The name of each item in the list is a short descriptive name of the analysis step, and the value is the name of the function that contains the code to run the step.  The items in the list of steps are ordered in the same order that the analysis is carried out.
 - **dirty** - A Boolean flag indicating whether or not the analysis parameters have been modified since the analysis was run.  If any parameters have changed, the `dirty` flag is set to true and the user is informed that the plate should be re-analyzed in order for the new parameters to take effect.
 - **version** - A number representing the version of *ddpcr* at the time of plate creation.  This information is not directly used by the program, but it can be useful when inspecting an old plate object to know whether it was created with the most up to date version of the package.
@@ -41,12 +41,12 @@ Since the plate object is an S3 object, it can benefit from the use of generic f
 
 Inheritance means that every plate type has a parent plate type from which it inherits all its features, but specific behaviour can be added or modified.  In *ddpcr*, transitive inheritance is implemented, which means that features are inherited from all ancestors rather than only the most immediate one.  Multiple inheritance is not supported, meaning that each plate object can only have one parent.
 
-The notion of inheritance is an important part of the *ddpcr* package, as it allows ddPCR data from different assay types to share many properties.  For example, PN/PP assays are first treated using the analysis steps common to all ddPCR experiments, and then gated with an assay-specific step, so PN/PP assays can be thought of as inheriting the analysis from general ddPCR assays.  Furthermore, FAM-positive and HEX-positive assays (defined in Section 2.1) are both PN/PP assays that share many similarities, so they can be thought of as inheriting many properties of a PN/PP assay.  Another benefit of the *ddpcr* inheritance is that it allows any user to easily extend the functionality of the package by adding custom ddPCR plate types.  
+The notion of inheritance is an important part of the *ddpcr* package, as it allows ddPCR data from different assay types to share many properties.  For example, PN/PP assays are first treated using the analysis steps common to all ddPCR experiments, and then gated with an assay-specific step, so PN/PP assays can be thought of as inheriting the analysis from general ddPCR assays.  Furthermore, FAM-positive and HEX-positive assays (defined in Section 2.1) are both PN/PP assays that share many similarities, so they can be thought of as inheriting many properties of a PN/PP assay.  Another benefit of the *ddpcr* inheritance is that it allows any user to easily extend the functionality of the package by adding custom ddPCR plate types.
 
 
 ## Analysis of different built-in plate types
 
-The most basic plate type is `ddpcr_plate`, and every plate type inherits from it, either directly or by inheriting from other plate types that are descendants of `ddpcr_plate`.  This is useful because it means that all functionality that is common to all ddPCR experiments is implemented once for `ddpcr_plate`, and every other plate type automatically inherits all the methods that `ddpcr_plate` has.  When a new plate object is created (with the `new_plate()` function) without specifying a plate type, the `ddpcr_plate` type is assumed. 
+The most basic plate type is `ddpcr_plate`, and every plate type inherits from it, either directly or by inheriting from other plate types that are descendants of `ddpcr_plate`.  This is useful because it means that all functionality that is common to all ddPCR experiments is implemented once for `ddpcr_plate`, and every other plate type automatically inherits all the methods that `ddpcr_plate` has.  When a new plate object is created (with the `new_plate()` function) without specifying a plate type, the `ddpcr_plate` type is assumed.
 
 Calling the `analyze()` function on any plate will result in running the ddPCR data through a series of steps that are defined for the given plate type, and the read droplets will be assigned to one of several clusters associated with the given plate type.  The exact set of analysis steps and potential clusters are determined by the plate type.  Plates of type `ddpcr_plate` have four possible droplet clusters: "undefined" for any droplet that has not been assigned a cluster yet, "failed" for droplets in failed wells, "outlier" for outlier droplets, and "empty" for droplets without any template in them.  Plates of type `ddpcr_plate` have 4 analysis steps: "INITIALIZE", "REMOVE_FAILURES", "REMOVE_OUTLIERS", and "REMOVE_EMPTY".  This means that any plate that is created will perform these basic steps of removing failed wells, outlier droplets, and empty droplets.  Other plate types inherit the same clusters and steps by default, and can alter them to be more appropriate for each specific type.  For example, PN/PP plate types use the same clusters, as well as three more: "rain", "positive" (PP), and "negative" (PN).  PN/PP plate types also use the same list of steps as the base type, with the addition of steps at the end to perform droplet gating.
 

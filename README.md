@@ -68,7 +68,7 @@ intensity) with 20,000 points (each droplet represents a point). The
 following figure is an example of a scatterplot from ddPCR data.
 
 [![Sample ddPCR
-data](inst/vignettes-supp/ddpcr-example.png)](inst/vignettes-supp/ddpcr-example.png)
+data](vignettes/ddpcr-example.png)](vignettes/ddpcr-example.png)
 
 This package is designed to analyze two-channel ddPCR experiments
 (experiments utilizing both fluorescence channels). Single-channel
@@ -168,7 +168,7 @@ which is a reflection of the droplet clusters. Here is what a typical
 well from a PNPP experiment looks like:
 
 [![Supported experiment
-types](inst/vignettes-supp/supported-exp-types.png)](inst/vignettes-supp/supported-exp-types.png)
+types](vignettes/supported-exp-types.png)](vignettes/supported-exp-types.png)
 
 If your experiment matches the criteria for a **PNPP** experiment
 (either a **(FAM+)/(FAM+HEX+)** or a **(HEX+)/(FAM+HEX+)** experiment),
@@ -180,7 +180,7 @@ be assigned into one of the main clusters. Here is the result of
 analyzing a single well from a **(FAM+)/(FAM+HEX+)** experiment:
 
 [![Analyze
-result](inst/vignettes-supp/pnpp-simple-result.png)](inst/vignettes-supp/pnpp-simple-result.png)
+result](vignettes/pnpp-simple-result.png)](vignettes/pnpp-simple-result.png)
 
 If your ddPCR experiment is not a **PNPP** type, you can still use this
 tool for the rest of the analysis, exploration, and plotting, but it
@@ -422,7 +422,7 @@ subsetting with a range notation of `A01:H03, C05, E06, B07:C08` on a
 plate that initially contains all 96 wells.
 
 [![Subset
-example](inst/vignettes-supp/ex-subset.png)](inst/vignettes-supp/ex-subset.png)
+example](vignettes/ex-subset.png)](vignettes/ex-subset.png)
 
 Back to our data: we have 5 wells, let’s keep 4 of them
 

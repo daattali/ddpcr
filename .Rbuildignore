@@ -2,7 +2,6 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README-.*\.png$
-^Makefile$
 ^.*\.o$
 inst/shiny/datasets/
 ^cran-comments\.md$
