@@ -25,7 +25,8 @@ Imports:
     shiny (>= 0.11.0),
     shinydisconnect,
     shinyjs (>= 0.4.0),
-    tibble
+    tibble,
+    rlang
 Suggests: 
     ggExtra (>= 0.3.0),
     graphics,
@@ -38,5 +39,5 @@ Suggests:
     utils
 License: MIT + file LICENSE
 VignetteBuilder: knitr
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.3
 Encoding: UTF-8
